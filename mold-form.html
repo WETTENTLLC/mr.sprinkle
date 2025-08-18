@@ -183,6 +183,17 @@
             font-size: 1rem;
         }
 
+        input[type="file"] {
+            padding: 0.5rem;
+            border: 2px dashed #FFD700;
+            background-color: #2a2a2a;
+        }
+
+        input[type="file"]:hover {
+            border-color: #1E90FF;
+            background-color: #333;
+        }
+
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #FFD700;
@@ -285,7 +296,7 @@
                     <div id="selectedTeethList">None selected</div>
                 </div>
 
-                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST">
+                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="customerName">Full Name:</label>
                         <input type="text" id="customerName" name="customerName" required>
@@ -302,19 +313,66 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="goldType">Gold Type:</label>
-                        <select id="goldType" name="goldType" required>
-                            <option value="">Select Gold Type</option>
-                            <option value="10k">10K Gold</option>
-                            <option value="14k">14K Gold</option>
-                            <option value="18k">18K Gold</option>
-                            <option value="24k">24K Gold</option>
+                        <label for="materialType">Material Type:</label>
+                        <select id="materialType" name="materialType" required>
+                            <option value="">Select Material</option>
+                            <option value="10k-gold">10K Gold</option>
+                            <option value="14k-gold">14K Gold</option>
+                            <option value="18k-gold">18K Gold</option>
+                            <option value="24k-gold">24K Gold</option>
+                            <option value="white-gold">White Gold</option>
+                            <option value="platinum">Platinum</option>
+                            <option value="silver">Silver</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="design">Design Preferences:</label>
-                        <textarea id="design" name="design" rows="4" placeholder="Describe your desired design, patterns, or special requests..."></textarea>
+                        <label for="budget">Budget Range:</label>
+                        <select id="budget" name="budget" required>
+                            <option value="">Select Budget Range</option>
+                            <option value="under-500">Under $500</option>
+                            <option value="500-1000">$500 - $1,000</option>
+                            <option value="1000-2500">$1,000 - $2,500</option>
+                            <option value="2500-5000">$2,500 - $5,000</option>
+                            <option value="5000-10000">$5,000 - $10,000</option>
+                            <option value="over-10000">Over $10,000</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="diamondType">Diamonds & Gems:</label>
+                        <select id="diamondType" name="diamondType">
+                            <option value="">No Diamonds/Gems</option>
+                            <option value="white-diamonds">White Diamonds</option>
+                            <option value="yellow-diamonds">Yellow Diamonds</option>
+                            <option value="black-diamonds">Black Diamonds</option>
+                            <option value="colored-diamonds">Colored Diamonds</option>
+                            <option value="rubies">Rubies</option>
+                            <option value="sapphires">Sapphires</option>
+                            <option value="emeralds">Emeralds</option>
+                            <option value="custom-gems">Custom Gems</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gemPlacement">Gem Placement Instructions:</label>
+                        <textarea id="gemPlacement" name="gemPlacement" rows="3" placeholder="Describe where you want diamonds/gems placed on your selected teeth..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="designImage">Upload Design Image:</label>
+                        <input type="file" id="designImage" name="designImage" accept="image/*">
+                        <small style="color: #ccc; display: block; margin-top: 0.5rem;">Upload an image showing your desired design or pattern</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imageInstructions">Image Placement Instructions:</label>
+                        <textarea id="imageInstructions" name="imageInstructions" rows="3" placeholder="Describe where and how you want this image/design applied to your teeth..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="design">Additional Design Preferences:</label>
+                        <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
                     </div>
 
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
