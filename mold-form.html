@@ -285,7 +285,7 @@
                     <div id="selectedTeethList">None selected</div>
                 </div>
 
-                <form id="moldForm">
+                <form id="moldForm" action="https://formspree.io/f/xpznvqko" method="POST">
                     <div class="form-group">
                         <label for="customerName">Full Name:</label>
                         <input type="text" id="customerName" name="customerName" required>
@@ -318,6 +318,9 @@
                     </div>
 
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
+                    <input type="hidden" name="_replyto" value="bayhef@mrsprinklereno.com">
+                    <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
+                    <input type="hidden" name="_next" value="https://wettentllc.github.io/mr.sprinkle/thank-you.html">
                     
                     <button type="submit" class="submit-btn">Submit Mold Request</button>
                 </form>
@@ -360,39 +363,17 @@
 
         // Form submission
         document.getElementById('moldForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             if (selectedTeeth.length === 0) {
+                e.preventDefault();
                 alert('Please select at least one tooth for gold work.');
                 return;
             }
             
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
+            // Update hidden field with selected teeth before submission
+            document.getElementById('selectedTeeth').value = selectedTeeth.sort((a, b) => a - b).join(', ');
             
-            // Create email content
-            const emailSubject = `NEW MOLD REQUEST - ${data.customerName}`;
-            const emailBody = `NEW MOLD REQUEST RECEIVED:\n\n` +
-                `Customer: ${data.customerName}\n` +
-                `Email: ${data.email}\n` +
-                `Phone: ${data.phone}\n` +
-                `Gold Type: ${data.goldType}\n` +
-                `Selected Teeth: ${selectedTeeth.sort((a, b) => a - b).join(', ')}\n` +
-                `Design Preferences: ${data.design || 'None specified'}\n\n` +
-                `Please contact this customer within 24 hours.`;
-            
-            // Send email notification
-            window.open(`mailto:bayhef@mrsprinklereno.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`, '_blank');
-            
-            alert('Mold request submitted successfully! We will contact you within 24 hours.');
-            
-            // Reset form
-            this.reset();
-            selectedTeeth = [];
-            updateSelectedTeethDisplay();
-            document.querySelectorAll('.tooth.selected').forEach(tooth => {
-                tooth.classList.remove('selected');
-            });
+            // Form will automatically submit to Formspree and send email to bayhef@mrsprinklereno.com
+            alert('Submitting your mold request... You will be redirected to a confirmation page.');
         });
     </script>
 </body>
