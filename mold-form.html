@@ -183,16 +183,7 @@
             font-size: 1rem;
         }
 
-        input[type="file"] {
-            padding: 0.5rem;
-            border: 2px dashed #FFD700;
-            background-color: #2a2a2a;
-        }
 
-        input[type="file"]:hover {
-            border-color: #1E90FF;
-            background-color: #333;
-        }
 
         input:focus, textarea:focus, select:focus {
             outline: none;
@@ -296,7 +287,7 @@
                     <div id="selectedTeethList">None selected</div>
                 </div>
 
-                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST" enctype="multipart/form-data">
+                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST">
                     <div class="form-group">
                         <label for="customerName">Full Name:</label>
                         <input type="text" id="customerName" name="customerName" required>
@@ -360,14 +351,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="designImage">Upload Design Image:</label>
-                        <input type="file" id="designImage" name="designImage" accept="image/*">
-                        <small style="color: #ccc; display: block; margin-top: 0.5rem;">Upload an image showing your desired design or pattern</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="imageInstructions">Image Placement Instructions:</label>
-                        <textarea id="imageInstructions" name="imageInstructions" rows="3" placeholder="Describe where and how you want this image/design applied to your teeth..."></textarea>
+                        <label for="imageDescription">Custom Image/Logo Description:</label>
+                        <textarea id="imageDescription" name="imageDescription" rows="4" placeholder="Describe any custom images, logos, or symbols you want on your teeth and specify which teeth you want them on..."></textarea>
                     </div>
 
                     <div class="form-group">
