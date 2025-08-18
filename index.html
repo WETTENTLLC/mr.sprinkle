@@ -84,6 +84,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Animated Video Intro Overlay -->
+    <div id="videoIntro" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center;">
+        <video id="introVideo" autoplay muted style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="assets/intro.mp4" type="video/mp4">
+        </video>
+        <div style="position: absolute; bottom: 30px; right: 30px; color: #FFD700; font-size: 14px; cursor: pointer;" onclick="skipIntro()">Skip Intro →</div>
+    </div>
     <header>
         <div class="container">
             <div class="logo">
@@ -470,14 +477,54 @@
         });
     </script>
     
-    <!-- Google Analytics 4 (Replace GA_MEASUREMENT_ID with your actual ID) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRSPRINKLE2025"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
+        gtag('config', 'G-MRSPRINKLE2025');
     </script>
+    
+    <!-- Video Intro Control -->
+    <script>
+        function skipIntro() {
+            document.getElementById('videoIntro').style.display = 'none';
+            sessionStorage.setItem('introSeen', 'true');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('introVideo');
+            const intro = document.getElementById('videoIntro');
+            
+            // Skip intro if already seen this session
+            if (sessionStorage.getItem('introSeen')) {
+                intro.style.display = 'none';
+                return;
+            }
+            
+            // Enable sound after user interaction
+            intro.addEventListener('click', function() {
+                video.muted = false;
+            }, { once: true });
+            
+            // Auto-hide intro when video ends
+            video.addEventListener('ended', function() {
+                intro.style.opacity = '0';
+                intro.style.transition = 'opacity 1s';
+                setTimeout(() => {
+                    intro.style.display = 'none';
+                    sessionStorage.setItem('introSeen', 'true');
+                }, 1000);
+            });
+        });
+    </script>
+    
+    <!-- Revolutionary Client Attraction System -->
+    <script src="smart-client-attraction.js"></script>
+    <script src="social-proof-engine.js"></script>
+    <script src="advanced-seo-schema.js"></script>
+    <script src="ai-lead-scoring.js"></script>
     
 </body>
 </html>
