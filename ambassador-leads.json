@@ -1,0 +1,30 @@
+[
+  {
+    "phoneNumber": "530-555-AMBASSADOR",
+    "timestamp": "2025-08-18T19:18:26.444Z",
+    "message": "grill girl",
+    "status": "application_sent",
+    "followUpDate": "2025-08-19T19:18:26.446Z"
+  },
+  {
+    "phoneNumber": "530-555-0006",
+    "timestamp": "2025-08-18T19:18:39.451Z",
+    "message": "grill girl",
+    "status": "application_sent",
+    "followUpDate": "2025-08-19T19:18:39.451Z"
+  },
+  {
+    "phoneNumber": "530-555-0006",
+    "timestamp": "2025-08-18T19:41:52.019Z",
+    "message": "grill girl",
+    "status": "application_sent",
+    "followUpDate": "2025-08-19T19:41:52.019Z"
+  },
+  {
+    "phoneNumber": "530-555-0006",
+    "timestamp": "2025-08-18T19:42:24.369Z",
+    "message": "grill girl",
+    "status": "application_sent",
+    "followUpDate": "2025-08-19T19:42:24.369Z"
+  }
+]

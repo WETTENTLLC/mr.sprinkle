@@ -1,0 +1,25 @@
+{
+  "name": "mr-sprinkle-mcp-system",
+  "version": "1.0.0",
+  "description": "Automated client acquisition system for Mr. Sprinkle",
+  "main": "hybrid-mcp-system.js",
+  "scripts": {
+    "start": "node hybrid-mcp-system.js",
+    "test": "node hybrid-mcp-system.js --test",
+    "dev": "node hybrid-mcp-system.js --debug"
+  },
+  "keywords": [
+    "automation",
+    "social-media",
+    "lead-generation",
+    "grillz",
+    "reno"
+  ],
+  "author": "Mr. Sprinkle",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^22.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0"
+  }
+}
