@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mrsprinklereno.com/sitemap.xml
+
+# Block backup folder
+Disallow: /nextjs-backup/
+
+# Allow important pages
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+
+# Crawl delay
+Crawl-delay: 1

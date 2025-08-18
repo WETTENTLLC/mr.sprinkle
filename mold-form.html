@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Mold Form - Mr. Sprinkle Gold Teeth Jeweler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: #000000;
+            padding: 1rem 0;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #FFD700;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #1E90FF;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #FFD700;
+        }
+
+        h1, h2 {
+            color: #FFD700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .form-container {
+            background-color: #1a1a1a;
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 2px solid #FFD700;
+        }
+
+        .tooth-diagram {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            margin: 2rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tooth {
+            width: 50px;
+            height: 60px;
+            background-color: #ffffff;
+            border: 2px solid #ccc;
+            border-radius: 8px 8px 15px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .tooth:hover {
+            background-color: #FFD700;
+            border-color: #FFD700;
+            transform: scale(1.1);
+        }
+
+        .tooth.selected {
+            background-color: #FFD700;
+            border-color: #FFD700;
+            color: #000;
+        }
+
+        .jaw-label {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            background-color: #333;
+            border: 2px solid #555;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .submit-btn {
+            background-color: #FFD700;
+            color: #000;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #1E90FF;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .selected-teeth {
+            background-color: #333;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .instructions {
+            background-color: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border-left: 4px solid #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Mr. Sprinkle</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="mold-form.html">Mold Form</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Dental Mold Form</h1>
+            
+            <div class="instructions">
+                <h2>Instructions</h2>
+                <p>Click on the teeth below to select which teeth you want gold work done on. Selected teeth will turn gold.</p>
+            </div>
+
+            <div class="form-container">
+                <h2>Select Your Teeth</h2>
+                
+                <div class="tooth-diagram">
+                    <div class="jaw-label">Upper Jaw</div>
+                    <div class="tooth" data-tooth="18">18</div>
+                    <div class="tooth" data-tooth="17">17</div>
+                    <div class="tooth" data-tooth="16">16</div>
+                    <div class="tooth" data-tooth="15">15</div>
+                    <div class="tooth" data-tooth="14">14</div>
+                    <div class="tooth" data-tooth="13">13</div>
+                    <div class="tooth" data-tooth="12">12</div>
+                    <div class="tooth" data-tooth="11">11</div>
+                    
+                    <div class="tooth" data-tooth="21">21</div>
+                    <div class="tooth" data-tooth="22">22</div>
+                    <div class="tooth" data-tooth="23">23</div>
+                    <div class="tooth" data-tooth="24">24</div>
+                    <div class="tooth" data-tooth="25">25</div>
+                    <div class="tooth" data-tooth="26">26</div>
+                    <div class="tooth" data-tooth="27">27</div>
+                    <div class="tooth" data-tooth="28">28</div>
+                    
+                    <div class="jaw-label">Lower Jaw</div>
+                    <div class="tooth" data-tooth="48">48</div>
+                    <div class="tooth" data-tooth="47">47</div>
+                    <div class="tooth" data-tooth="46">46</div>
+                    <div class="tooth" data-tooth="45">45</div>
+                    <div class="tooth" data-tooth="44">44</div>
+                    <div class="tooth" data-tooth="43">43</div>
+                    <div class="tooth" data-tooth="42">42</div>
+                    <div class="tooth" data-tooth="41">41</div>
+                    
+                    <div class="tooth" data-tooth="31">31</div>
+                    <div class="tooth" data-tooth="32">32</div>
+                    <div class="tooth" data-tooth="33">33</div>
+                    <div class="tooth" data-tooth="34">34</div>
+                    <div class="tooth" data-tooth="35">35</div>
+                    <div class="tooth" data-tooth="36">36</div>
+                    <div class="tooth" data-tooth="37">37</div>
+                    <div class="tooth" data-tooth="38">38</div>
+                </div>
+
+                <div class="selected-teeth">
+                    <label>Selected Teeth:</label>
+                    <div id="selectedTeethList">None selected</div>
+                </div>
+
+                <form id="moldForm">
+                    <div class="form-group">
+                        <label for="customerName">Full Name:</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goldType">Gold Type:</label>
+                        <select id="goldType" name="goldType" required>
+                            <option value="">Select Gold Type</option>
+                            <option value="10k">10K Gold</option>
+                            <option value="14k">14K Gold</option>
+                            <option value="18k">18K Gold</option>
+                            <option value="24k">24K Gold</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="design">Design Preferences:</label>
+                        <textarea id="design" name="design" rows="4" placeholder="Describe your desired design, patterns, or special requests..."></textarea>
+                    </div>
+
+                    <input type="hidden" id="selectedTeeth" name="selectedTeeth">
+                    
+                    <button type="submit" class="submit-btn">Submit Mold Request</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let selectedTeeth = [];
+
+        // Tooth selection functionality
+        document.querySelectorAll('.tooth').forEach(tooth => {
+            tooth.addEventListener('click', function() {
+                const toothNumber = this.dataset.tooth;
+                
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedTeeth = selectedTeeth.filter(t => t !== toothNumber);
+                } else {
+                    this.classList.add('selected');
+                    selectedTeeth.push(toothNumber);
+                }
+                
+                updateSelectedTeethDisplay();
+            });
+        });
+
+        function updateSelectedTeethDisplay() {
+            const display = document.getElementById('selectedTeethList');
+            const hiddenInput = document.getElementById('selectedTeeth');
+            
+            if (selectedTeeth.length === 0) {
+                display.textContent = 'None selected';
+                hiddenInput.value = '';
+            } else {
+                display.textContent = selectedTeeth.sort((a, b) => a - b).join(', ');
+                hiddenInput.value = selectedTeeth.join(',');
+            }
+        }
+
+        // Form submission
+        document.getElementById('moldForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (selectedTeeth.length === 0) {
+                alert('Please select at least one tooth for gold work.');
+                return;
+            }
+            
+            alert('Mold request submitted successfully! We will contact you within 24 hours.');
+            // Here you would normally send the data to your server
+        });
+    </script>
+</body>
+</html>

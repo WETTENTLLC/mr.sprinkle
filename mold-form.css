@@ -1,0 +1,1068 @@
+/* Mold Form Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    color: #fff;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    border-radius: 10px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.form-section h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+.form.group textarea:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form-group input:focus,
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.form.group input:focus,
+    border-color: #ffd700,
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3
