@@ -319,7 +319,6 @@
 
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
-                    <input type="hidden" name="_next" value="thank-you.html">
                     
                     <button type="submit" class="submit-btn">Submit Mold Request</button>
                 </form>
@@ -371,8 +370,7 @@
             // Update hidden field with selected teeth before submission
             document.getElementById('selectedTeeth').value = selectedTeeth.sort((a, b) => a - b).join(', ');
             
-            // Form will automatically submit to Formspree and send email to bayhef@mrsprinklereno.com
-            alert('Submitting your mold request... You will be redirected to a confirmation page.');
+            // Let form submit naturally to Formspree
         });
     </script>
 </body>
