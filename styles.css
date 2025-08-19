@@ -39,9 +39,9 @@ header .container {
 }
 
 .logo img {
-    height: 150px;
+    height: 200px;
     width: auto;
-    max-width: 400px;
+    max-width: 500px;
 }
 
 nav ul {
@@ -66,7 +66,7 @@ nav a:hover {
 
 /* Main Content */
 main {
-    margin-top: 200px;
+    margin-top: 250px;
 }
 
 section {
@@ -445,8 +445,8 @@ footer {
     }
     
     .logo img {
-        height: 100px;
-        max-width: 250px;
+        height: 120px;
+        max-width: 300px;
     }
     
     nav ul {
@@ -459,7 +459,7 @@ footer {
     }
     
     main {
-        margin-top: 160px;
+        margin-top: 180px;
     }
     
     .sticky-content {
