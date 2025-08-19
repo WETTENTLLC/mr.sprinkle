@@ -31,20 +31,25 @@ header {
 }
 
 header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 1rem;
 }
 
 .logo img {
-    height: 50px;
+    height: 80px;
     width: auto;
+    max-width: 200px;
 }
 
 nav ul {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 nav a {
@@ -52,6 +57,7 @@ nav a {
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s;
+    font-size: 0.9rem;
 }
 
 nav a:hover {
@@ -60,7 +66,7 @@ nav a:hover {
 
 /* Main Content */
 main {
-    margin-top: 80px;
+    margin-top: 140px;
 }
 
 section {
@@ -430,9 +436,30 @@ footer {
         font-size: 1.8rem;
     }
     
+    header {
+        padding: 0.5rem 0;
+    }
+    
+    .logo {
+        margin-bottom: 0.5rem;
+    }
+    
+    .logo img {
+        height: 60px;
+        max-width: 150px;
+    }
+    
     nav ul {
-        flex-direction: column;
         gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    nav a {
+        font-size: 0.8rem;
+    }
+    
+    main {
+        margin-top: 120px;
     }
     
     .sticky-content {
