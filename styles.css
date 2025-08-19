@@ -39,9 +39,24 @@ header .container {
 }
 
 .logo img {
-    height: 200px;
+    height: 300px;
     width: auto;
-    max-width: 500px;
+    max-width: 600px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.4));
+    animation: sparkle 1.5s ease-in-out;
+}
+
+@keyframes sparkle {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+    25% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 40px rgba(30, 144, 255, 0.6)); }
+    50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1)) drop-shadow(0 0 50px rgba(30, 144, 255, 0.8)) drop-shadow(0 0 60px rgba(255, 255, 255, 0.4)); }
+    75% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 40px rgba(30, 144, 255, 0.6)); }
 }
 
 nav ul {
@@ -66,7 +81,7 @@ nav a:hover {
 
 /* Main Content */
 main {
-    margin-top: 250px;
+    margin-top: 320px;
 }
 
 section {
@@ -445,8 +460,8 @@ footer {
     }
     
     .logo img {
-        height: 120px;
-        max-width: 300px;
+        height: 180px;
+        max-width: 400px;
     }
     
     nav ul {
@@ -459,7 +474,7 @@ footer {
     }
     
     main {
-        margin-top: 180px;
+        margin-top: 220px;
     }
     
     .sticky-content {
