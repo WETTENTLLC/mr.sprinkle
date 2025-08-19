@@ -631,16 +631,13 @@
         }
 
         function loadSavedProspects() {
-            try {
-                const saved = localStorage.getItem('real_prospects');
-                if (saved) {
-                    realProspects = JSON.parse(saved);
-                    displayProspects();
-                    updateDashboard();
-                }
-            } catch (error) {
-                console.error('Error loading saved prospects:', error);
-            }
+            // Clear old data and start fresh
+            localStorage.removeItem('real_prospects');
+            localStorage.removeItem('messages_generated');
+            localStorage.removeItem('auto_search_active');
+            realProspects = [];
+            displayProspects();
+            updateDashboard();
         }
 
         function exportProspects() {
