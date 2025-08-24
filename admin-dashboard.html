@@ -101,6 +101,17 @@
             <div style="margin-bottom: 20px;">
                 <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
                 <a href="ambassador-dashboard.php" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
+                <button class="btn" onclick="showImportAmbassadors()">Import Existing Ambassadors</button>
+            </div>
+            
+            <div id="importAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">Import Existing Ambassadors</h3>
+                <p style="margin-bottom: 15px; color: #ccc;">Add ambassadors you already have. Enter one per line in format: Name,Email,Phone,Code</p>
+                <textarea id="importAmbassadorData" placeholder="Example:\nMIKE,mike@email.com,(555) 111-2222,MIKE456\nSARAH,sarah@email.com,(555) 333-4444,SARAH123" style="width: 100%; height: 120px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; font-family: monospace;"></textarea>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-confirm" onclick="importAmbassadors()">Import Ambassadors</button>
+                    <button class="btn btn-delete" onclick="hideImportAmbassadors()">Cancel</button>
+                </div>
             </div>
             
             <div id="addAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
@@ -333,8 +344,82 @@
         // Ambassador Management Functions
         let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
         
+        // Load sample ambassadors if empty (including MIKE)
+        if (ambassadors.length === 0) {
+            ambassadors = [
+                {
+                    id: 1,
+                    name: 'MIKE',
+                    email: 'mike@email.com',
+                    phone: '(555) 111-2222',
+                    code: 'MIKE456',
+                    status: 'active',
+                    dateAdded: '2025-01-19',
+                    totalReferrals: 1,
+                    totalEarnings: 0
+                }
+            ];
+            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+        }
+        
         function showAddAmbassador() {
             document.getElementById('addAmbassadorForm').style.display = 'block';
+            document.getElementById('importAmbassadorForm').style.display = 'none';
+        }
+        
+        function showImportAmbassadors() {
+            document.getElementById('importAmbassadorForm').style.display = 'block';
+            document.getElementById('addAmbassadorForm').style.display = 'none';
+        }
+        
+        function hideImportAmbassadors() {
+            document.getElementById('importAmbassadorForm').style.display = 'none';
+            document.getElementById('importAmbassadorData').value = '';
+        }
+        
+        function importAmbassadors() {
+            const data = document.getElementById('importAmbassadorData').value.trim();
+            if (!data) {
+                alert('Please enter ambassador data');
+                return;
+            }
+            
+            const lines = data.split('\n');
+            let imported = 0;
+            
+            lines.forEach(line => {
+                const parts = line.split(',').map(p => p.trim());
+                if (parts.length >= 4) {
+                    const [name, email, phone, code] = parts;
+                    
+                    // Check if ambassador already exists
+                    if (!ambassadors.find(a => a.code === code)) {
+                        const newAmbassador = {
+                            id: Date.now() + Math.random(),
+                            name: name,
+                            email: email,
+                            phone: phone,
+                            code: code,
+                            status: 'active',
+                            dateAdded: new Date().toISOString().split('T')[0],
+                            totalReferrals: 0,
+                            totalEarnings: 0
+                        };
+                        
+                        ambassadors.push(newAmbassador);
+                        imported++;
+                    }
+                }
+            });
+            
+            if (imported > 0) {
+                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+                renderAmbassadorTable();
+                alert(`✅ Successfully imported ${imported} ambassadors!`);
+                hideImportAmbassadors();
+            } else {
+                alert('No new ambassadors to import (they may already exist)');
+            }
         }
         
         function hideAddAmbassador() {
