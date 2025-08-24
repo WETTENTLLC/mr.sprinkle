@@ -95,6 +95,61 @@
                 <!-- Ambassador summaries will be loaded here -->
             </div>
         </div>
+        
+        <div class="section">
+            <h2>🎆 Ambassador Management</h2>
+            <div style="margin-bottom: 20px;">
+                <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
+                <button class="btn" onclick="showAmbassadorLogin()">Ambassador Portal Login</button>
+            </div>
+            
+            <div id="addAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">Add New Ambassador</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <input type="text" id="newAmbassadorName" placeholder="Full Name" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
+                    <input type="email" id="newAmbassadorEmail" placeholder="Email" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <input type="tel" id="newAmbassadorPhone" placeholder="Phone" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
+                    <input type="text" id="newAmbassadorCode" placeholder="Ambassador Code (auto-generated)" readonly style="padding: 10px; background: #444; border: 1px solid #555; border-radius: 5px; color: #ccc;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <button class="btn" onclick="generateAmbassadorCode()">Generate Code</button>
+                    <button class="btn btn-confirm" onclick="addAmbassador()">Add Ambassador</button>
+                    <button class="btn btn-delete" onclick="hideAddAmbassador()">Cancel</button>
+                </div>
+            </div>
+            
+            <div id="ambassadorLoginForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">Ambassador Portal Access</h3>
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="ambassadorLoginCode" placeholder="Enter Ambassador Code" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; width: 300px;">
+                </div>
+                <div>
+                    <button class="btn btn-confirm" onclick="accessAmbassadorPortal()">Access Portal</button>
+                    <button class="btn btn-delete" onclick="hideAmbassadorLogin()">Cancel</button>
+                </div>
+            </div>
+            
+            <div id="ambassadorPortal" style="display: none;">
+                <!-- Ambassador portal content will be loaded here -->
+            </div>
+            
+            <table id="ambassadorTable" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Name</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Code</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Email</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Status</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ambassadorTableBody">
+                    <!-- Ambassador list will be loaded here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -286,7 +341,190 @@
         renderPendingLeads();
         renderConfirmedSales();
         renderAmbassadorSummary();
+        renderAmbassadorTable();
 
+        // Ambassador Management Functions
+        let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+        
+        function showAddAmbassador() {
+            document.getElementById('addAmbassadorForm').style.display = 'block';
+            document.getElementById('ambassadorLoginForm').style.display = 'none';
+            document.getElementById('ambassadorPortal').style.display = 'none';
+        }
+        
+        function hideAddAmbassador() {
+            document.getElementById('addAmbassadorForm').style.display = 'none';
+            document.getElementById('newAmbassadorName').value = '';
+            document.getElementById('newAmbassadorEmail').value = '';
+            document.getElementById('newAmbassadorPhone').value = '';
+            document.getElementById('newAmbassadorCode').value = '';
+        }
+        
+        function showAmbassadorLogin() {
+            document.getElementById('ambassadorLoginForm').style.display = 'block';
+            document.getElementById('addAmbassadorForm').style.display = 'none';
+            document.getElementById('ambassadorPortal').style.display = 'none';
+        }
+        
+        function hideAmbassadorLogin() {
+            document.getElementById('ambassadorLoginForm').style.display = 'none';
+            document.getElementById('ambassadorLoginCode').value = '';
+        }
+        
+        function generateAmbassadorCode() {
+            const name = document.getElementById('newAmbassadorName').value.trim();
+            if (!name) {
+                alert('Please enter a name first');
+                return;
+            }
+            const code = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
+            document.getElementById('newAmbassadorCode').value = code;
+        }
+        
+        function addAmbassador() {
+            const name = document.getElementById('newAmbassadorName').value.trim();
+            const email = document.getElementById('newAmbassadorEmail').value.trim();
+            const phone = document.getElementById('newAmbassadorPhone').value.trim();
+            const code = document.getElementById('newAmbassadorCode').value.trim();
+            
+            if (!name || !email || !code) {
+                alert('Please fill in all required fields and generate a code');
+                return;
+            }
+            
+            const newAmbassador = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                code: code,
+                status: 'active',
+                dateAdded: new Date().toISOString().split('T')[0],
+                totalReferrals: 0,
+                totalEarnings: 0
+            };
+            
+            ambassadors.push(newAmbassador);
+            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+            renderAmbassadorTable();
+            hideAddAmbassador();
+            
+            // Generate welcome email
+            const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
+            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code is: ${code}\n\nAccess your portal at: https://mrsprinklereno.com/admin-dashboard.html\nUse the "Ambassador Portal Login" section and enter your code: ${code}\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
+            
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink);
+            
+            alert(`✅ Ambassador ${name} added successfully! Welcome email opened.`);
+        }
+        
+        function accessAmbassadorPortal() {
+            const code = document.getElementById('ambassadorLoginCode').value.trim();
+            if (!code) {
+                alert('Please enter an ambassador code');
+                return;
+            }
+            
+            const ambassador = ambassadors.find(a => a.code === code);
+            if (!ambassador) {
+                alert('Invalid ambassador code');
+                return;
+            }
+            
+            showAmbassadorDashboard(ambassador);
+        }
+        
+        function showAmbassadorDashboard(ambassador) {
+            const portal = document.getElementById('ambassadorPortal');
+            const referralLink = `https://mrsprinklereno.com/mold-form.html?ref=${ambassador.code}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(referralLink)}`;
+            
+            // Calculate ambassador stats
+            const ambassadorSales = confirmedSales.filter(sale => sale.ambassadorCode === ambassador.code);
+            const totalEarnings = ambassadorSales.reduce((sum, sale) => sum + calculateCommission(sale.payment, ambassador.code), 0);
+            const tier = ambassadorSales.length >= 11 ? 'Gold (20%)' : ambassadorSales.length >= 6 ? 'Silver (15%)' : 'Bronze (10%)';
+            
+            portal.innerHTML = `
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3 style="color: #FFD700; margin-bottom: 15px;">🎯 ${ambassador.name}'s Dashboard</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 1.5em; font-weight: bold;">$${totalEarnings.toFixed(2)}</div>
+                            <div style="color: #ccc;">Total Earnings</div>
+                        </div>
+                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 1.5em; font-weight: bold;">${ambassadorSales.length}</div>
+                            <div style="color: #ccc;">Total Referrals</div>
+                        </div>
+                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
+                            <div style="font-size: 1.2em; font-weight: bold; color: #FFD700;">${tier}</div>
+                            <div style="color: #ccc;">Current Tier</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <h4 style="color: #FFD700; margin-bottom: 10px;">📱 Your QR Code</h4>
+                            <div style="text-align: center; background: white; padding: 15px; border-radius: 10px; display: inline-block;">
+                                <img src="${qrUrl}" style="width: 150px; height: 150px;">
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: #FFD700; margin-bottom: 10px;">🔗 Your Referral Link</h4>
+                            <div style="background: rgba(255,215,0,0.1); padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace; margin-bottom: 10px;">${referralLink}</div>
+                            <button class="btn" onclick="copyToClipboard('${referralLink}')">Copy Link</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-delete" onclick="hideAmbassadorPortal()">Close Portal</button>
+                </div>
+            `;
+            
+            portal.style.display = 'block';
+            document.getElementById('ambassadorLoginForm').style.display = 'none';
+        }
+        
+        function hideAmbassadorPortal() {
+            document.getElementById('ambassadorPortal').style.display = 'none';
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+        
+        function deleteAmbassador(id) {
+            if (confirm('Are you sure you want to delete this ambassador?')) {
+                ambassadors = ambassadors.filter(a => a.id !== id);
+                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+                renderAmbassadorTable();
+            }
+        }
+        
+        function renderAmbassadorTable() {
+            const tbody = document.getElementById('ambassadorTableBody');
+            tbody.innerHTML = '';
+            
+            ambassadors.forEach(ambassador => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">${ambassador.name}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2); font-family: monospace;">${ambassador.code}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">${ambassador.email}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <span style="padding: 3px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 0.8em;">${ambassador.status.toUpperCase()}</span>
+                    </td>
+                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                        <button class="btn" onclick="showAmbassadorDashboard(${JSON.stringify(ambassador).replace(/"/g, '&quot;')})">View Portal</button>
+                        <button class="btn btn-delete" onclick="deleteAmbassador(${ambassador.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
         // Add new lead function (would be called when form submissions come in)
         function addNewLead(customerData) {
             const newLead = {
