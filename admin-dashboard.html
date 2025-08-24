@@ -100,7 +100,7 @@
             <h2>🎆 Ambassador Management</h2>
             <div style="margin-bottom: 20px;">
                 <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
-                <button class="btn" onclick="showAmbassadorLogin()">Ambassador Portal Login</button>
+                <a href="ambassador-dashboard.php" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
             </div>
             
             <div id="addAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
@@ -120,20 +120,7 @@
                 </div>
             </div>
             
-            <div id="ambassadorLoginForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <h3 style="color: #FFD700; margin-bottom: 15px;">Ambassador Portal Access</h3>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="ambassadorLoginCode" placeholder="Enter Ambassador Code" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; width: 300px;">
-                </div>
-                <div>
-                    <button class="btn btn-confirm" onclick="accessAmbassadorPortal()">Access Portal</button>
-                    <button class="btn btn-delete" onclick="hideAmbassadorLogin()">Cancel</button>
-                </div>
-            </div>
-            
-            <div id="ambassadorPortal" style="display: none;">
-                <!-- Ambassador portal content will be loaded here -->
-            </div>
+
             
             <table id="ambassadorTable" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
@@ -348,8 +335,6 @@
         
         function showAddAmbassador() {
             document.getElementById('addAmbassadorForm').style.display = 'block';
-            document.getElementById('ambassadorLoginForm').style.display = 'none';
-            document.getElementById('ambassadorPortal').style.display = 'none';
         }
         
         function hideAddAmbassador() {
@@ -358,17 +343,6 @@
             document.getElementById('newAmbassadorEmail').value = '';
             document.getElementById('newAmbassadorPhone').value = '';
             document.getElementById('newAmbassadorCode').value = '';
-        }
-        
-        function showAmbassadorLogin() {
-            document.getElementById('ambassadorLoginForm').style.display = 'block';
-            document.getElementById('addAmbassadorForm').style.display = 'none';
-            document.getElementById('ambassadorPortal').style.display = 'none';
-        }
-        
-        function hideAmbassadorLogin() {
-            document.getElementById('ambassadorLoginForm').style.display = 'none';
-            document.getElementById('ambassadorLoginCode').value = '';
         }
         
         function generateAmbassadorCode() {
@@ -411,7 +385,7 @@
             
             // Generate welcome email
             const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code is: ${code}\n\nAccess your portal at: https://mrsprinklereno.com/admin-dashboard.html\nUse the "Ambassador Portal Login" section and enter your code: ${code}\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
+            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code is: ${code}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
             
             const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink);
@@ -491,7 +465,7 @@
         
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Link copied to clipboard!');
+                alert('Ambassador code copied to clipboard!');
             });
         }
         
@@ -517,7 +491,7 @@
                         <span style="padding: 3px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 0.8em;">${ambassador.status.toUpperCase()}</span>
                     </td>
                     <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">
-                        <button class="btn" onclick="showAmbassadorDashboard(${JSON.stringify(ambassador).replace(/"/g, '&quot;')})">View Portal</button>
+                        <button class="btn" onclick="copyToClipboard('${ambassador.code}')">Copy Code</button>
                         <button class="btn btn-delete" onclick="deleteAmbassador(${ambassador.id})">Delete</button>
                     </td>
                 `;
