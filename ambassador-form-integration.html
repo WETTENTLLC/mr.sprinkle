@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Grillz - Mr. Sprinkle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #aaa;
+        }
+
+        select option {
+            background: #333;
+            color: #fff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .discount-info {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .contact-info a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Mr. Sprinkle</div>
+            <div class="subtitle">Custom Grillz Since 2002 • Reno, Nevada</div>
+        </div>
+
+        <div id="discountInfo" class="discount-info">
+            🎉 Ambassador Discount Applied - 5% Off Your Service!
+        </div>
+
+        <form id="bookingForm" data-ambassador-form>
+            <div class="form-group">
+                <label for="customerName">Full Name *</label>
+                <input type="text" id="customerName" name="customer_name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="customerEmail">Email Address *</label>
+                <input type="email" id="customerEmail" name="customer_email" required placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="customerPhone">Phone Number *</label>
+                <input type="tel" id="customerPhone" name="customer_phone" required placeholder="(555) 123-4567">
+            </div>
+
+            <div class="form-group">
+                <label for="serviceType">Service Type *</label>
+                <select id="serviceType" name="service_type" required>
+                    <option value="">Select a service</option>
+                    <option value="consultation">Consultation ($50)</option>
+                    <option value="single_tooth_iced">Single Tooth Fully Iced ($180)</option>
+                    <option value="three_teeth_iced">3 Teeth Fully Iced ($540)</option>
+                    <option value="eight_teeth_iced">8 Teeth Fully Iced ($1,440)</option>
+                    <option value="gap_filler_clips">Gap Filler + 2 Back Clips ($300)</option>
+                    <option value="custom_design">Custom Design (Quote)</option>
+                    <option value="repair">Repair Service ($100)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingDate">Preferred Date</label>
+                <input type="date" id="bookingDate" name="booking_date" min="">
+            </div>
+
+            <div class="form-group">
+                <label for="additionalNotes">Additional Notes</label>
+                <textarea id="additionalNotes" name="additional_notes" rows="4" placeholder="Tell us about your vision, special requests, or any questions..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Book Your Appointment
+            </button>
+        </form>
+
+        <div class="contact-info">
+            <p><strong>Questions? Contact Us:</strong></p>
+            <p>📞 <a href="tel:5302140676">(530) 214-0676</a></p>
+            <p>✉️ <a href="mailto:info@mrsprinklereno.com">info@mrsprinklereno.com</a></p>
+            <p>🌐 <a href="https://mrsprinklereno.com" target="_blank">mrsprinklereno.com</a></p>
+        </div>
+    </div>
+
+    <script src="ambassador-tracking.js"></script>
+    <script>
+        // Set minimum date to today
+        document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
+
+        // Show discount info if ambassador code exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const ambassadorCode = urlParams.get('ref') || localStorage.getItem('ambassadorCode');
+        
+        if (ambassadorCode) {
+            document.getElementById('discountInfo').style.display = 'block';
+        }
+
+        // Form validation and submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            
+            // Collect form data
+            const formData = new FormData(this);
+            
+            // Add ambassador code if exists
+            if (ambassadorCode) {
+                formData.append('ambassador_code', ambassadorCode);
+            }
+            
+            // Submit to backend
+            fetch('/api/process-booking.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessMessage(data.booking_id);
+                    this.reset();
+                } else {
+                    showErrorMessage(data.message || 'Booking failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorMessage('Network error. Please check your connection and try again.');
+            })
+            .finally(() => {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            });
+        });
+
+        function showSuccessMessage(bookingId) {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #4CAF50, #45a049);
+                color: white;
+                padding: 30px;
+                border-radius: 15px;
+                text-align: center;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                max-width: 90%;
+            `;
+            message.innerHTML = `
+                <div style="font-size: 24px; margin-bottom: 15px;">✅ Booking Confirmed!</div>
+                <div style="font-size: 16px; margin-bottom: 10px;">Booking ID: #${bookingId}</div>
+                <div style="font-size: 14px; opacity: 0.9;">We'll contact you within 24 hours to schedule your appointment.</div>
+            `;
+            
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 5000);
+        }
+
+        function showErrorMessage(text) {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #f44336, #d32f2f);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                max-width: 90%;
+            `;
+            message.innerHTML = `❌ ${text}`;
+            
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 5000);
+        }
+
+        // Phone number formatting
+        document.getElementById('customerPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

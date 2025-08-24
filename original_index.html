@@ -490,24 +490,6 @@
         gtag('config', 'G-MRSPRINKLE2025');
     </script>
     
-    <!-- Ambassador Tracking -->
-    <script>
-        // Check for ambassador referral on homepage load
-        const urlParams = new URLSearchParams(window.location.search);
-        const ambassadorCode = urlParams.get('ref');
-        
-        if (ambassadorCode) {
-            // Store ambassador code for later use
-            localStorage.setItem('ambassadorCode', ambassadorCode);
-            
-            // Update mold form link to include referral code
-            const moldFormLinks = document.querySelectorAll('a[href="mold-form.html"]');
-            moldFormLinks.forEach(link => {
-                link.href = `mold-form.html?ref=${ambassadorCode}`;
-            });
-        }
-    </script>
-    
     <!-- Video Intro Control -->
     <script>
         function skipIntro() {

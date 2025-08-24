@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambassador Program - Mr. Sprinkle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a1a1a, #333); color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 2.5em; font-weight: bold; background: linear-gradient(45deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
+        .referral-link { background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 10px; margin: 20px 0; word-break: break-all; font-family: monospace; border: 1px solid rgba(255, 215, 0, 0.3); }
+        .copy-btn { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input { width: 100%; padding: 15px; border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .generate-btn { width: 100%; padding: 18px; background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Mr. Sprinkle Ambassador Program</div>
+            <div style="color: #ccc; margin-top: 10px;">Earn 10-20% Commission on Every Referral!</div>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #FFD700; margin-bottom: 20px;">🔗 Generate Your Referral Link</h3>
+            <div class="form-group">
+                <input type="text" id="ambassadorName" placeholder="Enter your name (e.g., John Smith)" style="margin-bottom: 15px;">
+                <button class="generate-btn" onclick="generateLink()">Generate My Referral Link</button>
+            </div>
+            
+            <div id="linkSection" style="display: none;">
+                <h4 style="color: #FFD700; margin: 20px 0 10px 0;">Your Referral Link:</h4>
+                <div class="referral-link" id="referralLink"></div>
+                <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+                
+                <h4 style="color: #FFD700; margin: 20px 0 10px 0;">QR Code:</h4>
+                <div style="text-align: center; background: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <img id="qrCode" style="width: 200px; height: 200px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #FFD700; margin-bottom: 20px;">💰 Commission Structure</h3>
+            <ul style="line-height: 2;">
+                <li><strong>Bronze (1-5 referrals):</strong> 10% commission</li>
+                <li><strong>Silver (6-10 referrals):</strong> 15% commission</li>
+                <li><strong>Gold (11+ referrals):</strong> 20% commission</li>
+                <li><strong>Bonus:</strong> $10 for every 5th referral each month!</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #FFD700; margin-bottom: 20px;">📋 How It Works</h3>
+            <ol style="line-height: 2;">
+                <li>Generate your unique referral link above</li>
+                <li>Share it on social media, with friends, or print QR codes</li>
+                <li>When someone books through your link, they get 5% off</li>
+                <li>You earn commission based on your tier level</li>
+                <li>We track everything and pay monthly via Venmo/CashApp</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #FFD700; margin-bottom: 20px;">📞 Contact & Support</h3>
+            <p><strong>Phone:</strong> (530) 214-0676</p>
+            <p><strong>Email:</strong> mrsprinklereno@gmail.com</p>
+            <p><strong>Questions about commissions?</strong> Text us anytime!</p>
+        </div>
+    </div>
+
+    <script>
+        function generateLink() {
+            const name = document.getElementById('ambassadorName').value.trim();
+            if (!name) {
+                alert('Please enter your name first!');
+                return;
+            }
+            
+            // Create simple ambassador code from name
+            const code = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
+            const link = `https://mrsprinklereno.com?ref=${code}`;
+            
+            // Show the link section
+            document.getElementById('linkSection').style.display = 'block';
+            document.getElementById('referralLink').textContent = link;
+            
+            // Generate QR code
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+            document.getElementById('qrCode').src = qrUrl;
+            
+            // Store for tracking (you can send this to Google Sheets later)
+            localStorage.setItem('ambassadorCode', code);
+            localStorage.setItem('ambassadorName', name);
+            
+            // Send ambassador info to Google Sheets (you'll need to set this up)
+            sendToGoogleSheets(name, code, link);
+        }
+        
+        function copyLink() {
+            const linkText = document.getElementById('referralLink').textContent;
+            navigator.clipboard.writeText(linkText).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#4CAF50';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)';
+                }, 2000);
+            });
+        }
+        
+        function sendToGoogleSheets(name, code, link) {
+            // This will send ambassador data to Google Sheets
+            // You'll need to set up a Google Apps Script webhook
+            const data = {
+                name: name,
+                code: code,
+                link: link,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Replace with your Google Apps Script URL
+            const webhookUrl = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+            
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(err => console.log('Tracking will be manual for now'));
+        }
+    </script>
+</body>
+</html>

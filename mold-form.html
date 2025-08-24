@@ -263,6 +263,10 @@
         <div class="container">
             <h1>Dental Mold Form</h1>
             
+            <div id="discountBanner" class="discount-banner" style="display: none; background: linear-gradient(45deg, #4CAF50, #45a049); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; color: white;">
+                🎉 Ambassador Discount Applied - 5% Off Your Service!
+            </div>
+            
             <div class="instructions">
                 <h2>Instructions</h2>
                 <p>Click on the teeth below to select which teeth you want gold work done on. Selected teeth will turn gold.</p>
@@ -397,6 +401,7 @@
                     </div>
 
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
+                    <input type="hidden" id="ambassadorCode" name="ambassadorCode">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
                     <button type="submit" class="submit-btn">Submit Mold Request</button>
@@ -435,6 +440,26 @@
             } else {
                 display.textContent = selectedTeeth.sort((a, b) => a - b).join(', ');
                 hiddenInput.value = selectedTeeth.join(',');
+            }
+        }
+
+        // Check for ambassador referral on page load
+        const urlParams = new URLSearchParams(window.location.search);
+        const ambassadorCode = urlParams.get('ref');
+        
+        if (ambassadorCode) {
+            // Show discount banner
+            document.getElementById('discountBanner').style.display = 'block';
+            // Store ambassador code
+            document.getElementById('ambassadorCode').value = ambassadorCode;
+            // Store in localStorage for future visits
+            localStorage.setItem('ambassadorCode', ambassadorCode);
+        } else {
+            // Check if we have a stored ambassador code
+            const storedCode = localStorage.getItem('ambassadorCode');
+            if (storedCode) {
+                document.getElementById('discountBanner').style.display = 'block';
+                document.getElementById('ambassadorCode').value = storedCode;
             }
         }
 
