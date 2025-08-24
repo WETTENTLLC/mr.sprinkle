@@ -208,18 +208,34 @@
         }
 
         @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { max-width: 100%; }
             .dashboard-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
-            
+            .card { padding: 20px; }
             .referrals-table {
-                font-size: 0.9em;
+                font-size: 0.8em;
+                overflow-x: auto;
+                display: block;
+                white-space: nowrap;
             }
-            
             .referrals-table th,
             .referrals-table td {
-                padding: 10px 5px;
+                padding: 8px 4px;
+                min-width: 80px;
             }
+            .logo { font-size: 2rem; }
+            .stat-value { font-size: 2rem; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 5px; }
+            .card { padding: 15px; }
+            .logo { font-size: 1.8rem; }
+            .stat-value { font-size: 1.8rem; }
+            .login-form { padding: 20px; margin: 50px auto; }
         }
     </style>
 </head>

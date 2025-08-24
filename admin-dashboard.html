@@ -6,7 +6,22 @@
     <title>Admin Dashboard - Mr. Sprinkle</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 20px; }
+        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 10px; }
+        
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .container { max-width: 100%; }
+            .section { padding: 15px; }
+            table { font-size: 0.8em; overflow-x: auto; display: block; }
+            th, td { padding: 8px 4px; }
+            .ambassador-card { padding: 10px; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 2px; }
+            .section { padding: 10px; }
+            .logo { font-size: 1.5rem; }
+        }
         .container { max-width: 1200px; margin: 0 auto; }
         .header { text-align: center; margin-bottom: 30px; }
         .logo { color: #FFD700; font-size: 2rem; font-weight: bold; }

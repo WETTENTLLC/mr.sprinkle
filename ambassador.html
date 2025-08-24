@@ -10,8 +10,23 @@
             background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
             color: #fff; 
             font-family: Arial, sans-serif; 
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .container { max-width: 100%; }
+            .form-section { padding: 15px; margin-bottom: 15px; }
+            .header { padding: 15px; }
+            .header h1 { font-size: 1.5rem; }
+            .header p { font-size: 1rem; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 2px; }
+            .form-section { padding: 10px; }
+            .checkbox-group { grid-template-columns: 1fr; }
         }
         .container { max-width: 600px; margin: 0 auto; }
         .header { 

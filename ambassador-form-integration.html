@@ -16,7 +16,8 @@
             background: linear-gradient(135deg, #1a1a1a, #333);
             color: #fff;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+            margin: 0;
         }
 
         .container {
@@ -139,13 +140,43 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
+            body {
+                padding: 5px;
             }
-            
+            .container {
+                padding: 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
             .logo {
-                font-size: 2em;
+                font-size: 1.8em;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            input, select, textarea {
+                padding: 12px;
+                font-size: 16px;
+            }
+            .submit-btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 2px;
+            }
+            .container {
+                padding: 10px;
+                margin: 2px;
+            }
+            .logo {
+                font-size: 1.6em;
+            }
+            .subtitle {
+                font-size: 1em;
             }
         }
     </style>
