@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Mr. Sprinkle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { color: #FFD700; font-size: 2rem; font-weight: bold; }
+        .section { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .pending-leads { background: rgba(255,193,7,0.1); border: 2px solid #FFC107; }
+        .confirmed-sales { background: rgba(40,167,69,0.1); border: 2px solid #28a745; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        th { background: rgba(255,215,0,0.2); color: #FFD700; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 2px; }
+        .btn-confirm { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+        .payment-input { width: 80px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 3px; }
+        .ambassador-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .ambassador-card { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,215,0,0.3); }
+        .total-owed { color: #28a745; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Mr. Sprinkle Admin Dashboard</div>
+            <p>Manage Ambassador Referrals & Commissions</p>
+        </div>
+
+        <div class="section pending-leads">
+            <h2>⏳ Pending Ambassador Leads</h2>
+            <p>Customers who came through ambassador links but haven't been confirmed as paid</p>
+            <table id="pendingTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Ambassador Code</th>
+                        <th>Service</th>
+                        <th>Payment Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingLeads">
+                    <!-- Pending leads will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section confirmed-sales">
+            <h2>✅ Confirmed Sales</h2>
+            <p>Customers who have paid - commissions calculated</p>
+            <table id="confirmedTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Ambassador Code</th>
+                        <th>Service</th>
+                        <th>Payment</th>
+                        <th>Commission</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="confirmedSales">
+                    <!-- Confirmed sales will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>💰 Ambassador Commission Summary</h2>
+            <div class="ambassador-summary" id="ambassadorSummary">
+                <!-- Ambassador summaries will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data structure - in real implementation, this would come from your database/spreadsheet
+        let pendingLeads = JSON.parse(localStorage.getItem('pendingLeads') || '[]');
+        let confirmedSales = JSON.parse(localStorage.getItem('confirmedSales') || '[]');
+
+        // Load sample data if empty
+        if (pendingLeads.length === 0) {
+            pendingLeads = [
+                {
+                    id: 1,
+                    date: '2025-01-20',
+                    customer: 'John Smith',
+                    phone: '(555) 123-4567',
+                    email: 'john@email.com',
+                    ambassadorCode: 'SARAH123',
+                    service: 'Single Tooth Fully Iced',
+                    notes: 'Wants gold with diamond'
+                },
+                {
+                    id: 2,
+                    date: '2025-01-19',
+                    customer: 'Maria Garcia',
+                    phone: '(555) 987-6543',
+                    email: 'maria@email.com',
+                    ambassadorCode: 'MIKE456',
+                    service: '3 Teeth Fully Iced',
+                    notes: 'Custom design request'
+                }
+            ];
+            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
+        }
+
+        function renderPendingLeads() {
+            const tbody = document.getElementById('pendingLeads');
+            tbody.innerHTML = '';
+            
+            pendingLeads.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lead.date}</td>
+                    <td>${lead.customer}</td>
+                    <td>${lead.phone}</td>
+                    <td><strong>${lead.ambassadorCode}</strong></td>
+                    <td>${lead.service}</td>
+                    <td>
+                        $<input type="number" class="payment-input" id="payment-${lead.id}" placeholder="0" min="0" step="0.01">
+                    </td>
+                    <td>
+                        <button class="btn btn-confirm" onclick="confirmSale(${lead.id})">Confirm Paid</button>
+                        <button class="btn btn-delete" onclick="deleteLead(${lead.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderConfirmedSales() {
+            const tbody = document.getElementById('confirmedSales');
+            tbody.innerHTML = '';
+            
+            confirmedSales.forEach(sale => {
+                const commission = calculateCommission(sale.payment, sale.ambassadorCode);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sale.date}</td>
+                    <td>${sale.customer}</td>
+                    <td><strong>${sale.ambassadorCode}</strong></td>
+                    <td>${sale.service}</td>
+                    <td>$${sale.payment}</td>
+                    <td>$${commission.toFixed(2)} (${getCommissionRate(sale.ambassadorCode)}%)</td>
+                    <td>
+                        <button class="btn btn-delete" onclick="deleteSale(${sale.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function calculateCommission(payment, ambassadorCode) {
+            const rate = getCommissionRate(ambassadorCode) / 100;
+            return payment * rate;
+        }
+
+        function getCommissionRate(ambassadorCode) {
+            // Get ambassador's tier based on confirmed sales count
+            const salesCount = confirmedSales.filter(sale => sale.ambassadorCode === ambassadorCode).length;
+            if (salesCount >= 11) return 20; // Gold
+            if (salesCount >= 6) return 15;  // Silver
+            return 10; // Bronze
+        }
+
+        function confirmSale(leadId) {
+            const paymentInput = document.getElementById(`payment-${leadId}`);
+            const payment = parseFloat(paymentInput.value);
+            
+            if (!payment || payment <= 0) {
+                alert('Please enter a valid payment amount');
+                return;
+            }
+            
+            const lead = pendingLeads.find(l => l.id === leadId);
+            if (!lead) return;
+            
+            // Move to confirmed sales
+            const sale = {
+                ...lead,
+                payment: payment,
+                confirmedDate: new Date().toISOString().split('T')[0]
+            };
+            
+            confirmedSales.push(sale);
+            pendingLeads = pendingLeads.filter(l => l.id !== leadId);
+            
+            // Save to localStorage
+            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
+            localStorage.setItem('confirmedSales', JSON.stringify(confirmedSales));
+            
+            // Refresh displays
+            renderPendingLeads();
+            renderConfirmedSales();
+            renderAmbassadorSummary();
+            
+            alert(`✅ Sale confirmed! $${payment} payment recorded for ${lead.customer}`);
+        }
+
+        function deleteLead(leadId) {
+            if (confirm('Are you sure you want to delete this lead?')) {
+                pendingLeads = pendingLeads.filter(l => l.id !== leadId);
+                localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
+                renderPendingLeads();
+            }
+        }
+
+        function deleteSale(saleId) {
+            if (confirm('Are you sure you want to delete this confirmed sale?')) {
+                confirmedSales = confirmedSales.filter(s => s.id !== saleId);
+                localStorage.setItem('confirmedSales', JSON.stringify(confirmedSales));
+                renderConfirmedSales();
+                renderAmbassadorSummary();
+            }
+        }
+
+        function renderAmbassadorSummary() {
+            const summary = {};
+            
+            // Calculate totals for each ambassador
+            confirmedSales.forEach(sale => {
+                if (!summary[sale.ambassadorCode]) {
+                    summary[sale.ambassadorCode] = {
+                        code: sale.ambassadorCode,
+                        salesCount: 0,
+                        totalSales: 0,
+                        totalCommission: 0
+                    };
+                }
+                
+                summary[sale.ambassadorCode].salesCount++;
+                summary[sale.ambassadorCode].totalSales += sale.payment;
+                summary[sale.ambassadorCode].totalCommission += calculateCommission(sale.payment, sale.ambassadorCode);
+            });
+            
+            const container = document.getElementById('ambassadorSummary');
+            container.innerHTML = '';
+            
+            Object.values(summary).forEach(ambassador => {
+                const tier = ambassador.salesCount >= 11 ? 'Gold' : ambassador.salesCount >= 6 ? 'Silver' : 'Bronze';
+                const rate = getCommissionRate(ambassador.code);
+                
+                const card = document.createElement('div');
+                card.className = 'ambassador-card';
+                card.innerHTML = `
+                    <h3>${ambassador.code}</h3>
+                    <p><strong>Tier:</strong> ${tier} (${rate}%)</p>
+                    <p><strong>Sales:</strong> ${ambassador.salesCount}</p>
+                    <p><strong>Total Sales:</strong> $${ambassador.totalSales.toFixed(2)}</p>
+                    <p class="total-owed"><strong>Total Owed:</strong> $${ambassador.totalCommission.toFixed(2)}</p>
+                `;
+                container.appendChild(card);
+            });
+            
+            if (Object.keys(summary).length === 0) {
+                container.innerHTML = '<p>No confirmed sales yet</p>';
+            }
+        }
+
+        // Initialize dashboard
+        renderPendingLeads();
+        renderConfirmedSales();
+        renderAmbassadorSummary();
+
+        // Add new lead function (would be called when form submissions come in)
+        function addNewLead(customerData) {
+            const newLead = {
+                id: Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                ...customerData
+            };
+            
+            pendingLeads.push(newLead);
+            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
+            renderPendingLeads();
+        }
+    </script>
+</body>
+</html>
