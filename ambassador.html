@@ -357,16 +357,37 @@
     
     <script>
         document.getElementById('ambassadorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             // Track form submission
             console.log('Ambassador application submitted');
             
-            // You can add analytics tracking here
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'ambassador_application', {
                     'event_category': 'Ambassador Program',
                     'event_label': 'Form Submission'
                 });
             }
+            
+            // Submit form data to Formspree
+            const formData = new FormData(this);
+            fetch('https://formspree.io/f/myzpanyg', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Redirect to referral link generation page
+                    window.location.href = 'ambassador-new.html';
+                } else {
+                    alert('There was an error submitting your application. Please try again.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting your application. Please try again.');
+            });
         });
     </script>
 </body>
