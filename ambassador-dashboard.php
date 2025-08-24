@@ -318,7 +318,7 @@
         $stmt->execute([$ambassadorCode]);
         $recentReferrals = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        $referralLink = "https://mrsprinklereno.com?ref=" . $ambassadorCode;
+        $referralLink = "https://mrsprinklereno.com/mold-form.html?ref=" . $ambassadorCode;
         $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($referralLink);
         ?>
         
@@ -354,6 +354,13 @@
                     <h3>👥 Total Referrals</h3>
                     <div class="stat-value"><?= $stats['total_referrals'] ?></div>
                     <div class="stat-label">Successful Bookings</div>
+                    <?php 
+                    $tier = $stats['total_referrals'] >= 11 ? 'Gold (20%)' : ($stats['total_referrals'] >= 6 ? 'Silver (15%)' : 'Bronze (10%)');
+                    $tierColor = $stats['total_referrals'] >= 11 ? '#FFD700' : ($stats['total_referrals'] >= 6 ? '#C0C0C0' : '#CD7F32');
+                    ?>
+                    <div style="margin-top: 10px; padding: 8px 15px; background: rgba(255,255,255,0.1); border-radius: 20px; display: inline-block;">
+                        <span style="color: <?= $tierColor ?>; font-weight: bold;"><?= $tier ?> Tier</span>
+                    </div>
                 </div>
                 
                 <div class="card">
@@ -375,7 +382,22 @@
                     <div class="referral-link" id="referralLink"><?= $referralLink ?></div>
                     <button class="copy-btn" onclick="copyLink()">Copy Link</button>
                     <div style="margin-top: 15px; font-size: 0.9em; color: #ccc;">
-                        Share this link to earn 20% commission on every booking!
+                        Share this link to earn 10-20% commission on every booking!
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📱 Promotional Materials</h3>
+                    <div style="margin-bottom: 15px;">
+                        <button class="copy-btn" onclick="copyPromoText('story')">Copy Instagram Story Text</button>
+                        <button class="copy-btn" onclick="copyPromoText('post')">Copy Post Caption</button>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <button class="copy-btn" onclick="copyPromoText('tiktok')">Copy TikTok Caption</button>
+                        <button class="copy-btn" onclick="copyPromoText('text')">Copy Text Message</button>
+                    </div>
+                    <div style="font-size: 0.9em; color: #ccc;">
+                        Ready-to-use promotional content for all platforms!
                     </div>
                 </div>
                 
@@ -420,25 +442,53 @@
         </div>
         
         <script>
+            const promoTexts = {
+                story: `💎 Get 5% OFF custom grillz at Mr. Sprinkle! 💎\n\nReno's #1 grillz expert since 2002 ✨\nMedical-grade dental gold ✅\n0% tarnish guarantee 🔥\n\nUse my link: <?= $referralLink ?>\n\n#MrSprinkle #RenoGrillz #CustomGold #GrillzLife`,
+                
+                post: `👑 GRILLZ GAME STRONG with Mr. Sprinkle! 👑\n\nY'all know I only rep the BEST, and Mr. Sprinkle is Reno's #1 custom grillz expert since 2002! 🔥\n\n✨ Medical-grade dental gold\n✨ 0% tarnish guarantee\n✨ Safe for eating/drinking/smoking\n✨ Custom designs & diamonds available\n\nGet 5% OFF when you use my link! 💎\n<?= $referralLink ?>\n\nDM me your grillz pics when you get yours! 📸\n\n#MrSprinkle #RenoGrillz #CustomGold #GrillzLife #Ambassador #RenoNevada #LakeTahoe`,
+                
+                tiktok: `POV: You found Reno's best grillz spot 💎 Mr. Sprinkle been doing this since 2002! Medical grade gold, 0% tarnish 🔥 Get 5% off with my link: <?= $referralLink ?> #MrSprinkle #RenoGrillz #CustomGold #GrillzTok #Nevada`,
+                
+                text: `Hey! 💎 I found the BEST grillz spot in Reno - Mr. Sprinkle! They've been doing custom gold grillz since 2002 with medical-grade dental gold. Get 5% off with my link: <?= $referralLink ?> 🔥`
+            };
+            
             function copyLink() {
                 const linkElement = document.getElementById('referralLink');
-                const textArea = document.createElement('textarea');
-                textArea.value = linkElement.textContent;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                // Show success message
-                const button = event.target;
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.style.background = '#4CAF50';
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)';
-                }, 2000);
+                copyToClipboard(linkElement.textContent, event.target);
+            }
+            
+            function copyPromoText(type) {
+                copyToClipboard(promoTexts[type], event.target);
+            }
+            
+            function copyToClipboard(text, button) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.style.background = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.style.background = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)';
+                    }, 2000);
+                });
             }
             
             // Auto-refresh stats every 5 minutes
