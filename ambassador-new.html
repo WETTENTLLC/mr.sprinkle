@@ -128,14 +128,23 @@ Link: ${link}
 Timestamp: ${new Date().toISOString()}
 
 Next steps:
-1. Add to ambassador tracking spreadsheet
-2. Send welcome message with commission details
-3. Monitor referrals from this code`;
+1. Review application and approve/deny
+2. If approved, send welcome email with:
+   - Ambassador code: ${code}
+   - Portal access: https://mrsprinklereno.com/ambassador-dashboard.php
+   - Commission structure details
+3. Add to ambassador tracking system
+
+Sample approval email:
+"Welcome to the Mr. Sprinkle Ambassador Program! Your ambassador code is: ${code}
+
+Access your portal at: https://mrsprinklereno.com/ambassador-dashboard.php
+Use your ambassador code to log in and start tracking your earnings!"`;
             
             const mailtoLink = `mailto:mrsprinklereno@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink);
             
-            alert('✅ Ambassador registration sent! You\'ll receive commission details via email within 24 hours.');
+            alert('✅ Application submitted! You\'ll receive your ambassador code and portal access via email within 24 hours if approved.');
         }
     </script>
 </body>
