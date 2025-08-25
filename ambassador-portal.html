@@ -91,6 +91,29 @@
 
     <script>
         let currentAmbassador = null;
+        
+        // Initialize sample data if localStorage is empty
+        function initializeSampleData() {
+            let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+            if (ambassadors.length === 0) {
+                ambassadors = [
+                    {
+                        id: 1,
+                        name: 'MIKE',
+                        email: 'mike@email.com',
+                        phone: '(555) 111-2222',
+                        code: 'MIKE456',
+                        status: 'active',
+                        dateAdded: '2025-01-19',
+                        totalReferrals: 1,
+                        totalEarnings: 0
+                    }
+                ];
+                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+                console.log('Initialized sample ambassador data');
+            }
+            return ambassadors;
+        }
 
         function login() {
             const code = document.getElementById('ambassadorCode').value.trim();
@@ -100,7 +123,7 @@
             }
 
             // Get ambassador data from localStorage (shared with admin dashboard)
-            const ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+            const ambassadors = initializeSampleData();
             console.log('Available ambassadors:', ambassadors);
             console.log('Looking for code:', code);
             
