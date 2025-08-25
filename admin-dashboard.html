@@ -102,6 +102,7 @@
                 <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
                 <a href="ambassador-portal.html" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
                 <button class="btn" onclick="showImportAmbassadors()">Import Existing Ambassadors</button>
+                <button class="btn" onclick="exportAmbassadors()" style="background: #17a2b8; color: white;">Export Ambassador Codes</button>
             </div>
             
             <div id="importAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
@@ -620,6 +621,20 @@
                 `;
                 tbody.appendChild(row);
             });
+        }
+        
+        function exportAmbassadors() {
+            const exportData = ambassadors.map(a => `${a.name},${a.email},${a.phone || ''},${a.code}`).join('\n');
+            
+            const blob = new Blob([exportData], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ambassador-codes.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            alert('Ambassador codes exported! You can use this file to import them elsewhere.');
         }
         
         // Add new lead function (would be called when form submissions come in)
