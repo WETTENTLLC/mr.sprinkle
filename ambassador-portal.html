@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambassador Portal - Mr. Sprinkle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a1a1a, #333); color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 2.5em; font-weight: bold; background: linear-gradient(45deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .login-form { max-width: 400px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #FFD700; font-weight: bold; }
+        .form-group input { width: 100%; padding: 12px; background: #333; border: 1px solid #555; border-radius: 8px; color: #fff; font-size: 16px; }
+        .login-btn { width: 100%; padding: 15px; background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .dashboard { display: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .stat-card { background: rgba(255,215,0,0.1); padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #FFD700; }
+        .referral-tools { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .referral-link { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px; word-break: break-all; font-family: monospace; margin: 10px 0; }
+        .copy-btn { background: #28a745; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .logo { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Mr. Sprinkle Ambassador Portal</div>
+            <p>Track Your Earnings & Get Your Links</p>
+        </div>
+
+        <div id="loginSection" class="login-form">
+            <h2 style="color: #FFD700; text-align: center; margin-bottom: 20px;">Ambassador Login</h2>
+            <div class="form-group">
+                <label for="ambassadorCode">Ambassador Code</label>
+                <input type="text" id="ambassadorCode" placeholder="Enter your ambassador code">
+            </div>
+            <button class="login-btn" onclick="login()">Access Portal</button>
+        </div>
+
+        <div id="dashboardSection" class="dashboard">
+            <div style="text-align: right; margin-bottom: 20px;">
+                <button onclick="logout()" style="background: #dc3545; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+            </div>
+            
+            <h2 style="color: #FFD700; margin-bottom: 20px;">Welcome, <span id="ambassadorName"></span>!</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEarnings">$0.00</div>
+                    <div>Total Earnings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalReferrals">0</div>
+                    <div>Total Referrals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="currentTier">Bronze</div>
+                    <div>Current Tier</div>
+                </div>
+            </div>
+
+            <div class="referral-tools">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">🔗 Your Referral Tools</h3>
+                <p><strong>Your Referral Link:</strong></p>
+                <div class="referral-link" id="referralLink"></div>
+                <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+                
+                <p style="margin-top: 20px;"><strong>QR Code:</strong></p>
+                <div style="text-align: center; margin: 15px 0;">
+                    <img id="qrCode" style="background: white; padding: 15px; border-radius: 10px;">
+                </div>
+            </div>
+
+            <div class="referral-tools">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">📱 Promotional Content</h3>
+                <button class="copy-btn" onclick="copyPromo('instagram')">Copy Instagram Post</button>
+                <button class="copy-btn" onclick="copyPromo('story')">Copy Story Text</button>
+                <button class="copy-btn" onclick="copyPromo('tiktok')">Copy TikTok Caption</button>
+                <button class="copy-btn" onclick="copyPromo('text')">Copy Text Message</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAmbassador = null;
+
+        function login() {
+            const code = document.getElementById('ambassadorCode').value.trim();
+            if (!code) {
+                alert('Please enter your ambassador code');
+                return;
+            }
+
+            // Get ambassador data from localStorage (shared with admin dashboard)
+            const ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+            const ambassador = ambassadors.find(a => a.code === code);
+
+            if (!ambassador) {
+                alert('Invalid ambassador code. Please check with admin.');
+                return;
+            }
+
+            currentAmbassador = ambassador;
+            showDashboard();
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            
+            // Update dashboard with ambassador data
+            document.getElementById('ambassadorName').textContent = currentAmbassador.name;
+            
+            // Get confirmed sales for this ambassador
+            const confirmedSales = JSON.parse(localStorage.getItem('confirmedSales') || '[]');
+            const ambassadorSales = confirmedSales.filter(sale => sale.ambassadorCode === currentAmbassador.code);
+            
+            // Calculate earnings
+            let totalEarnings = 0;
+            ambassadorSales.forEach(sale => {
+                const rate = getCommissionRate(ambassadorSales.length) / 100;
+                totalEarnings += sale.payment * rate;
+            });
+            
+            // Update stats
+            document.getElementById('totalEarnings').textContent = '$' + totalEarnings.toFixed(2);
+            document.getElementById('totalReferrals').textContent = ambassadorSales.length;
+            
+            const tier = ambassadorSales.length >= 11 ? 'Gold (20%)' : ambassadorSales.length >= 6 ? 'Silver (15%)' : 'Bronze (10%)';
+            document.getElementById('currentTier').textContent = tier;
+            
+            // Set referral link and QR code
+            const referralLink = `https://mrsprinklereno.com/mold-form.html?ref=${currentAmbassador.code}`;
+            document.getElementById('referralLink').textContent = referralLink;
+            
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(referralLink)}`;
+            document.getElementById('qrCode').src = qrUrl;
+        }
+
+        function getCommissionRate(salesCount) {
+            if (salesCount >= 11) return 20; // Gold
+            if (salesCount >= 6) return 15;  // Silver
+            return 10; // Bronze
+        }
+
+        function logout() {
+            currentAmbassador = null;
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('ambassadorCode').value = '';
+        }
+
+        function copyLink() {
+            const link = document.getElementById('referralLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Referral link copied to clipboard!');
+            });
+        }
+
+        function copyPromo(type) {
+            const code = currentAmbassador.code;
+            const link = `https://mrsprinklereno.com/mold-form.html?ref=${code}`;
+            
+            const promos = {
+                instagram: `💎 Get 5% OFF custom grillz at Mr. Sprinkle! 💎\n\nReno's #1 grillz expert since 2002 ✨\nMedical-grade dental gold ✅\n0% tarnish guarantee 🔥\n\nUse my link: ${link}\n\n#MrSprinkle #RenoGrillz #CustomGold #GrillzLife`,
+                story: `💎 5% OFF grillz with my link! 💎\nMr. Sprinkle - Reno's best since 2002\n${link}`,
+                tiktok: `POV: You found Reno's best grillz spot 💎 Mr. Sprinkle been doing this since 2002! Medical grade gold, 0% tarnish 🔥 Get 5% off: ${link} #MrSprinkle #RenoGrillz #GrillzTok`,
+                text: `Hey! 💎 I found the BEST grillz spot in Reno - Mr. Sprinkle! Get 5% off with my link: ${link} 🔥`
+            };
+            
+            navigator.clipboard.writeText(promos[type]).then(() => {
+                alert(`${type.charAt(0).toUpperCase() + type.slice(1)} content copied to clipboard!`);
+            });
+        }
+    </script>
+</body>
+</html>

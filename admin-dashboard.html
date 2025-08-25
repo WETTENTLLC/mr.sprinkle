@@ -100,7 +100,7 @@
             <h2>🎆 Ambassador Management</h2>
             <div style="margin-bottom: 20px;">
                 <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
-                <a href="ambassador-dashboard.php" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
+                <a href="ambassador-portal.html" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
                 <button class="btn" onclick="showImportAmbassadors()">Import Existing Ambassadors</button>
             </div>
             
@@ -503,7 +503,7 @@
                 
                 // Generate welcome email
                 const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-                const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${finalCode}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
+                const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code: ${finalCode}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-portal.html\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
                 
                 const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 window.open(mailtoLink);
