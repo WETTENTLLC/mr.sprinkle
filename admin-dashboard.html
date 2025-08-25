@@ -158,6 +158,27 @@
         // Sample data structure - in real implementation, this would come from your database/spreadsheet
         let pendingLeads = JSON.parse(localStorage.getItem('pendingLeads') || '[]');
         let confirmedSales = JSON.parse(localStorage.getItem('confirmedSales') || '[]');
+        
+        // Ambassador Management Variables - declare at top to avoid hoisting issues
+        let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+        
+        // Load sample ambassadors if empty (including MIKE)
+        if (ambassadors.length === 0) {
+            ambassadors = [
+                {
+                    id: 1,
+                    name: 'MIKE',
+                    email: 'mike@email.com',
+                    phone: '(555) 111-2222',
+                    code: 'MIKE456',
+                    status: 'active',
+                    dateAdded: '2025-01-19',
+                    totalReferrals: 1,
+                    totalEarnings: 0
+                }
+            ];
+            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+        }
 
         // Load sample data if empty
         if (pendingLeads.length === 0) {
@@ -346,25 +367,6 @@
         renderAmbassadorTable();
 
         // Ambassador Management Functions
-        let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
-        
-        // Load sample ambassadors if empty (including MIKE)
-        if (ambassadors.length === 0) {
-            ambassadors = [
-                {
-                    id: 1,
-                    name: 'MIKE',
-                    email: 'mike@email.com',
-                    phone: '(555) 111-2222',
-                    code: 'MIKE456',
-                    status: 'active',
-                    dateAdded: '2025-01-19',
-                    totalReferrals: 1,
-                    totalEarnings: 0
-                }
-            ];
-            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-        }
         
         function showAddAmbassador() {
             document.getElementById('addAmbassadorForm').style.display = 'block';
