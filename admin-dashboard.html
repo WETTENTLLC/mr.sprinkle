@@ -125,6 +125,10 @@
                     <input type="text" id="newAmbassadorCode" placeholder="Ambassador Code (auto-generated)" readonly style="padding: 10px; background: #444; border: 1px solid #555; border-radius: 5px; color: #ccc;">
                 </div>
                 <div style="margin-bottom: 15px;">
+                    <input type="text" id="newAmbassadorPassword" placeholder="Custom Ambassador Password (optional - will use code if empty)" style="width: 100%; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
+                    <small style="color: #ccc; margin-top: 5px; display: block;">If left empty, ambassador will use their code as password</small>
+                </div>
+                <div style="margin-bottom: 15px;">
                     <button class="btn" onclick="generateAmbassadorCode()">Generate Code</button>
                     <button class="btn btn-confirm" onclick="addAmbassador()">Add Ambassador</button>
                     <button class="btn btn-delete" onclick="hideAddAmbassador()">Cancel</button>
@@ -428,6 +432,7 @@
             document.getElementById('newAmbassadorEmail').value = '';
             document.getElementById('newAmbassadorPhone').value = '';
             document.getElementById('newAmbassadorCode').value = '';
+            document.getElementById('newAmbassadorPassword').value = '';
         }
         
         function generateAmbassadorCode() {
@@ -445,11 +450,14 @@
             const email = document.getElementById('newAmbassadorEmail').value.trim();
             const phone = document.getElementById('newAmbassadorPhone').value.trim();
             const code = document.getElementById('newAmbassadorCode').value.trim();
+            const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
             
             if (!name || !email || !code) {
                 alert('Please fill in all required fields and generate a code');
                 return;
             }
+            
+            const password = customPassword || code; // Use custom password or default to code
             
             const newAmbassador = {
                 id: Date.now(),
@@ -457,6 +465,7 @@
                 email: email,
                 phone: phone,
                 code: code,
+                password: password,
                 status: 'active',
                 dateAdded: new Date().toISOString().split('T')[0],
                 totalReferrals: 0,
@@ -470,7 +479,7 @@
             
             // Generate welcome email
             const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code is: ${code}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
+            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${code}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
             
             const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink);
