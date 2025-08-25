@@ -446,58 +446,72 @@
         }
         
         function addAmbassador() {
-            const name = document.getElementById('newAmbassadorName').value.trim();
-            const email = document.getElementById('newAmbassadorEmail').value.trim();
-            const phone = document.getElementById('newAmbassadorPhone').value.trim();
-            const code = document.getElementById('newAmbassadorCode').value.trim();
-            const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
-            
-            console.log('Validation check:', { name, email, phone, code, customPassword });
-            
-            if (!name) {
-                alert('Please enter a name');
-                return;
+            try {
+                console.log('addAmbassador function called');
+                
+                const name = document.getElementById('newAmbassadorName').value.trim();
+                const email = document.getElementById('newAmbassadorEmail').value.trim();
+                const phone = document.getElementById('newAmbassadorPhone').value.trim();
+                const code = document.getElementById('newAmbassadorCode').value.trim();
+                const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
+                
+                console.log('Form values:', { name, email, phone, code, customPassword });
+                
+                if (!name) {
+                    alert('Please enter a name');
+                    return;
+                }
+                if (!email) {
+                    alert('Please enter an email');
+                    return;
+                }
+                
+                // Auto-generate code if not provided
+                let finalCode = code;
+                if (!code) {
+                    finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
+                    document.getElementById('newAmbassadorCode').value = finalCode;
+                }
+                
+                const password = customPassword || finalCode;
+                
+                console.log('Creating ambassador with:', { name, email, phone, finalCode, password });
+                
+                const newAmbassador = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    code: finalCode,
+                    password: password,
+                    status: 'active',
+                    dateAdded: new Date().toISOString().split('T')[0],
+                    totalReferrals: 0,
+                    totalEarnings: 0
+                };
+                
+                console.log('New ambassador object:', newAmbassador);
+                
+                ambassadors.push(newAmbassador);
+                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
+                
+                console.log('Ambassador added to array, rendering table...');
+                renderAmbassadorTable();
+                hideAddAmbassador();
+                
+                // Generate welcome email
+                const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
+                const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${finalCode}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
+                
+                const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.open(mailtoLink);
+                
+                alert(`✅ Ambassador ${name} added successfully! Welcome email opened.`);
+                
+            } catch (error) {
+                console.error('Error in addAmbassador:', error);
+                alert('Error adding ambassador: ' + error.message);
             }
-            if (!email) {
-                alert('Please enter an email');
-                return;
-            }
-            
-            // Auto-generate code if not provided
-            let finalCode = code;
-            if (!code) {
-                finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
-                document.getElementById('newAmbassadorCode').value = finalCode;
-            }
-            
-            const password = customPassword || finalCode; // Use custom password or default to code
-            
-            const newAmbassador = {
-                id: Date.now(),
-                name: name,
-                email: email,
-                phone: phone,
-                code: finalCode,
-                password: password,
-                status: 'active',
-                dateAdded: new Date().toISOString().split('T')[0],
-                totalReferrals: 0,
-                totalEarnings: 0
-            };
-            
-            ambassadors.push(newAmbassador);
-            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-            renderAmbassadorTable();
-            hideAddAmbassador();
-            
-            // Generate welcome email
-            const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${finalCode}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
-            
-            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.open(mailtoLink);
-            
-            alert(`✅ Ambassador ${name} added successfully! Welcome email opened.`);
         }
         
         function accessAmbassadorPortal() {
