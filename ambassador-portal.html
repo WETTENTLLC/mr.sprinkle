@@ -83,11 +83,41 @@
             </div>
 
             <div class="referral-tools">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">🖼️ Brand Assets</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="text-align: center;">
+                        <img src="assets/trans.png" style="width: 120px; height: auto; background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                        <div><button class="copy-btn" onclick="downloadLogo('trans')">Download Logo</button></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="assets/logo-gold.png" style="width: 120px; height: auto; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                        <div><button class="copy-btn" onclick="downloadLogo('gold')">Download Gold Logo</button></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="referral-tools">
                 <h3 style="color: #FFD700; margin-bottom: 15px;">📱 Promotional Content</h3>
-                <button class="copy-btn" onclick="copyPromo('instagram')">Copy Instagram Post</button>
-                <button class="copy-btn" onclick="copyPromo('story')">Copy Story Text</button>
-                <button class="copy-btn" onclick="copyPromo('tiktok')">Copy TikTok Caption</button>
-                <button class="copy-btn" onclick="copyPromo('text')">Copy Text Message</button>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #FFD700; font-weight: bold;">Instagram Post:</label>
+                    <textarea id="instagramText" style="width: 100%; height: 100px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; margin: 5px 0; font-family: Arial;"></textarea>
+                    <button class="copy-btn" onclick="copyEditableText('instagramText')">Copy Instagram Post</button>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #FFD700; font-weight: bold;">Story Text:</label>
+                    <textarea id="storyText" style="width: 100%; height: 60px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; margin: 5px 0; font-family: Arial;"></textarea>
+                    <button class="copy-btn" onclick="copyEditableText('storyText')">Copy Story Text</button>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #FFD700; font-weight: bold;">TikTok Caption:</label>
+                    <textarea id="tiktokText" style="width: 100%; height: 80px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; margin: 5px 0; font-family: Arial;"></textarea>
+                    <button class="copy-btn" onclick="copyEditableText('tiktokText')">Copy TikTok Caption</button>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #FFD700; font-weight: bold;">Text Message:</label>
+                    <textarea id="textMessage" style="width: 100%; height: 60px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; margin: 5px 0; font-family: Arial;"></textarea>
+                    <button class="copy-btn" onclick="copyEditableText('textMessage')">Copy Text Message</button>
+                </div>
             </div>
         </div>
     </div>
@@ -192,6 +222,9 @@
             
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(referralLink)}`;
             document.getElementById('qrCode').src = qrUrl;
+            
+            // Populate promotional text areas
+            populatePromoTexts(referralLink);
         }
 
         function getCommissionRate(salesCount) {
@@ -214,10 +247,7 @@
             });
         }
 
-        function copyPromo(type) {
-            const code = currentAmbassador.code;
-            const link = `https://mrsprinklereno.com/mold-form.html?ref=${code}`;
-            
+        function populatePromoTexts(link) {
             const promos = {
                 instagram: `💎 Get 5% OFF custom grillz at Mr. Sprinkle! 💎\n\nReno's #1 grillz expert since 2002 ✨\nMedical-grade dental gold ✅\n0% tarnish guarantee 🔥\n\nUse my link: ${link}\n\n#MrSprinkle #RenoGrillz #CustomGold #GrillzLife`,
                 story: `💎 5% OFF grillz with my link! 💎\nMr. Sprinkle - Reno's best since 2002\n${link}`,
@@ -225,9 +255,39 @@
                 text: `Hey! 💎 I found the BEST grillz spot in Reno - Mr. Sprinkle! Get 5% off with my link: ${link} 🔥`
             };
             
-            navigator.clipboard.writeText(promos[type]).then(() => {
-                alert(`${type.charAt(0).toUpperCase() + type.slice(1)} content copied to clipboard!`);
+            document.getElementById('instagramText').value = promos.instagram;
+            document.getElementById('storyText').value = promos.story;
+            document.getElementById('tiktokText').value = promos.tiktok;
+            document.getElementById('textMessage').value = promos.text;
+        }
+        
+        function copyEditableText(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            const text = textarea.value;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#4CAF50';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#28a745';
+                }, 2000);
             });
+        }
+        
+        function downloadLogo(type) {
+            const logoUrls = {
+                trans: 'assets/trans.png',
+                gold: 'assets/logo-gold.png'
+            };
+            
+            const link = document.createElement('a');
+            link.href = logoUrls[type];
+            link.download = `mr-sprinkle-logo-${type}.png`;
+            link.click();
         }
     </script>
 </body>
