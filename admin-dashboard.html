@@ -122,7 +122,7 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <input type="tel" id="newAmbassadorPhone" placeholder="Phone" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                    <input type="text" id="newAmbassadorCode" placeholder="Ambassador Code (auto-generated)" readonly style="padding: 10px; background: #444; border: 1px solid #555; border-radius: 5px; color: #ccc;">
+                    <input type="text" id="newAmbassadorCode" placeholder="Ambassador Code (enter custom or generate)" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
                 </div>
                 <div style="margin-bottom: 15px;">
                     <input type="text" id="newAmbassadorPassword" placeholder="Custom Ambassador Password (optional - will use code if empty)" style="width: 100%; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
@@ -463,15 +463,9 @@
                 return;
             }
             
-            // If no custom password and no code, generate code automatically
-            if (!code && !customPassword) {
-                alert('Please either generate an ambassador code or set a custom password');
-                return;
-            }
-            
-            // Auto-generate code if not provided but custom password exists
+            // Auto-generate code if not provided
             let finalCode = code;
-            if (!code && customPassword) {
+            if (!code) {
                 finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
                 document.getElementById('newAmbassadorCode').value = finalCode;
             }
