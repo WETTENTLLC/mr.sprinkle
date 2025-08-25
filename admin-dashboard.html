@@ -452,8 +452,18 @@
             const code = document.getElementById('newAmbassadorCode').value.trim();
             const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
             
-            if (!name || !email || !code) {
-                alert('Please fill in all required fields and generate a code');
+            console.log('Validation check:', { name, email, phone, code });
+            
+            if (!name) {
+                alert('Please enter a name');
+                return;
+            }
+            if (!email) {
+                alert('Please enter an email');
+                return;
+            }
+            if (!code) {
+                alert('Please generate an ambassador code first');
                 return;
             }
             
