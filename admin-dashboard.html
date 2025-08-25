@@ -452,7 +452,7 @@
             const code = document.getElementById('newAmbassadorCode').value.trim();
             const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
             
-            console.log('Validation check:', { name, email, phone, code });
+            console.log('Validation check:', { name, email, phone, code, customPassword });
             
             if (!name) {
                 alert('Please enter a name');
@@ -462,19 +462,28 @@
                 alert('Please enter an email');
                 return;
             }
-            if (!code) {
-                alert('Please generate an ambassador code first');
+            
+            // If no custom password and no code, generate code automatically
+            if (!code && !customPassword) {
+                alert('Please either generate an ambassador code or set a custom password');
                 return;
             }
             
-            const password = customPassword || code; // Use custom password or default to code
+            // Auto-generate code if not provided but custom password exists
+            let finalCode = code;
+            if (!code && customPassword) {
+                finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
+                document.getElementById('newAmbassadorCode').value = finalCode;
+            }
+            
+            const password = customPassword || finalCode; // Use custom password or default to code
             
             const newAmbassador = {
                 id: Date.now(),
                 name: name,
                 email: email,
                 phone: phone,
-                code: code,
+                code: finalCode,
                 password: password,
                 status: 'active',
                 dateAdded: new Date().toISOString().split('T')[0],
@@ -489,7 +498,7 @@
             
             // Generate welcome email
             const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${code}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${code}\n\nQuestions? Text (530) 214-0676`;
+            const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour login credentials:\nAmbassador Code: ${finalCode}\nPassword: ${password}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-dashboard.php\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
             
             const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink);
