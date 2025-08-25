@@ -101,10 +101,14 @@
 
             // Get ambassador data from localStorage (shared with admin dashboard)
             const ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+            console.log('Available ambassadors:', ambassadors);
+            console.log('Looking for code:', code);
+            
             const ambassador = ambassadors.find(a => a.code === code);
+            console.log('Found ambassador:', ambassador);
 
             if (!ambassador) {
-                alert('Invalid ambassador code. Please check with admin.');
+                alert(`Invalid ambassador code: ${code}. Available codes: ${ambassadors.map(a => a.code).join(', ')}`);
                 return;
             }
 
