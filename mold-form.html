@@ -40,6 +40,7 @@
             line-height: 1.6;
             padding: 0;
             margin: 0;
+            padding-top: 80px;
         }
 
         .container {
@@ -58,6 +59,11 @@
             background-color: #000000;
             padding: 1rem 0;
             border-bottom: 2px solid #FFD700;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         header .container {
@@ -345,9 +351,9 @@
     </style>
 </head>
 <body>
-    <div class="nav-bar" style="background: rgba(26, 26, 26, 0.9); padding: 15px 0; margin-bottom: 20px; border-radius: 10px; text-align: center;">
+    <div class="nav-bar" style="background: rgba(26, 26, 26, 0.9); padding: 15px 0; margin-bottom: 20px; border-radius: 10px; text-align: center; position: fixed; top: 60px; left: 0; right: 0; z-index: 999;">
         <a href="index.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">🏠 Home</a>
-        <a href="mold-form.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">📋 Mold Kit</a>
+        <a href="mold-form.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">📋 Buy/Book Now</a>
         <a href="ambassador.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">✨ Ambassador</a>
     </div>
     <header>
@@ -358,7 +364,26 @@
 
     <main>
         <div class="container">
-            <h1>Dental Mold Form</h1>
+            <h1>Buy/Book Now</h1>
+            
+            <!-- Black Friday Sale Banner -->
+            <div style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); border: 3px solid #FFD700; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 0 30px rgba(255,215,0,0.3);">
+                <h2 style="color: #FFD700; font-size: 2rem; margin-bottom: 10px;">🔥 BLACK FRIDAY SALE! 🔥</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                    <div style="background: rgba(192,192,192,0.2); padding: 15px; border-radius: 10px; border: 2px solid #C0C0C0;">
+                        <h3 style="color: #C0C0C0; font-size: 1.2rem;">SILVER</h3>
+                        <p style="font-size: 1.5rem; color: #fff; font-weight: bold;">$50/tooth</p>
+                        <p style="color: #ccc; text-decoration: line-through; font-size: 0.9rem;">Was $80</p>
+                        <p style="color: #ff4444; font-weight: bold;">37.5% OFF!</p>
+                    </div>
+                    <div style="background: rgba(255,215,0,0.2); padding: 15px; border-radius: 10px; border: 2px solid #FFD700;">
+                        <h3 style="color: #FFD700; font-size: 1.2rem;">14K GOLD</h3>
+                        <p style="font-size: 1.5rem; color: #fff; font-weight: bold;">$210/tooth</p>
+                        <p style="color: #ccc; text-decoration: line-through; font-size: 0.9rem;">Was $240</p>
+                        <p style="color: #ff4444; font-weight: bold;">12.5% OFF!</p>
+                    </div>
+                </div>
+            </div>
             
             <div id="discountBanner" class="discount-banner" style="display: none; background: linear-gradient(45deg, #4CAF50, #45a049); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; color: white;">
                 🎉 Ambassador Discount Applied - 5% Off Your Service!
@@ -367,6 +392,43 @@
             <div class="instructions">
                 <h2>Instructions</h2>
                 <p>Click on the teeth below to select which teeth you want gold work done on. Selected teeth will turn gold.</p>
+            </div>
+            
+            <!-- Price Sheet -->
+            <div style="background: rgba(255,215,0,0.1); border: 2px solid #FFD700; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 20px;">💰 Standard Pricing Guide</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #C0C0C0; margin-bottom: 10px;">Silver</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$80/tooth</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #FFD700; margin-bottom: 10px;">10K Gold</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$150/tooth</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #FFD700; margin-bottom: 10px;">14K Gold</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$240/tooth</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #FFD700; margin-bottom: 10px;">18K Gold</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$350/tooth</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #E5E4E2; margin-bottom: 10px;">White Gold</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$300/tooth</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; text-align: center;">
+                        <h3 style="color: #E5E4E2; margin-bottom: 10px;">Platinum</h3>
+                        <p style="font-size: 1.3rem; color: #fff; font-weight: bold;">$500/tooth</p>
+                    </div>
+                </div>
+                <div style="background: rgba(255,69,0,0.1); border: 2px solid #ff4500; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                    <h3 style="color: #ff4500; margin-bottom: 10px;">⚡ Rush Delivery</h3>
+                    <p style="font-size: 1.2rem; color: #fff; font-weight: bold;">$150 Flat Fee</p>
+                    <p style="color: #ccc; font-size: 0.9rem; margin-top: 5px;">Save 4+ days on your order!</p>
+                </div>
+                <p style="text-align: center; margin-top: 15px; color: #ccc; font-size: 0.9rem;">💎 Diamonds, gems, and custom designs priced separately. Contact for quote.</p>
             </div>
             
             <div class="tooth-legend">
@@ -493,6 +555,30 @@
                         <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
                     </div>
 
+                    <div class="form-group" style="background: rgba(255,69,0,0.1); border: 2px solid #ff4500; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+                        <h3 style="color: #ff4500; margin-bottom: 1rem;">⚡ Rush Delivery</h3>
+                        <label for="rushDelivery">Do you want rush delivery? (Save 4+ days for $150)</label>
+                        <select id="rushDelivery" name="rushDelivery" required>
+                            <option value="no">No - Standard Delivery</option>
+                            <option value="yes">Yes - Rush Delivery (+$150)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="background: rgba(15,160,234,0.1); border: 2px solid #0FA0EA; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+                        <h3 style="color: #0FA0EA; margin-bottom: 1rem;">💳 Payment Method</h3>
+                        <label for="paymentMethod">How would you like to pay?</label>
+                        <select id="paymentMethod" name="paymentMethod" required style="margin-bottom: 1rem;">
+                            <option value="">Select Payment Method</option>
+                            <option value="cash-in-person">Cash (In Person)</option>
+                            <option value="zelle">Zelle</option>
+                            <option value="venmo">Venmo</option>
+                            <option value="cashapp">Cash App</option>
+                            <option value="paypal">PayPal (+ transaction fee)</option>
+                            <option value="affirm">Affirm - Buy Now, Pay Later (+ transaction fee)</option>
+                        </select>
+                        <p style="color: #ccc; font-size: 0.9rem; margin-top: 0.5rem;">⚠️ Note: Online payment methods include a small transaction fee to cover processing costs.</p>
+                    </div>
+
                     <div class="form-group" style="background: rgba(255, 0, 0, 0.1); border: 2px solid #ff4444; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
                         <h3 style="color: #ff4444; margin-bottom: 1rem;">⚠️ HEALTH & SAFETY ACKNOWLEDGMENT</h3>
                         <p style="margin-bottom: 1rem; color: #ffffff;">By checking this box, I acknowledge that:</p>
@@ -513,6 +599,7 @@
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
                     <input type="hidden" id="ambassadorCode" name="ambassadorCode">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
+                    <input type="hidden" name="affirm_merchant_id" value="112343038">
                     
                     <button type="submit" class="submit-btn">Submit Mold Request</button>
                 </form>
