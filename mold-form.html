@@ -366,26 +366,6 @@
         <div class="container">
             <h1>Buy/Book Now</h1>
             
-            <!-- Black Friday Sale Banner -->
-            <div style="background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); border: 3px solid #FFD700; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 0 30px rgba(255,215,0,0.3);">
-                <h2 style="color: #FFD700; font-size: 2rem; margin-bottom: 10px;">🔥 BLACK FRIDAY SALE - THIS WEEKEND ONLY! 🔥</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
-                    <div style="background: rgba(192,192,192,0.2); padding: 15px; border-radius: 10px; border: 2px solid #C0C0C0;">
-                        <h3 style="color: #C0C0C0; font-size: 1.2rem;">SILVER</h3>
-                        <p style="font-size: 1.5rem; color: #fff; font-weight: bold;">$47/tooth</p>
-                        <p style="color: #ccc; text-decoration: line-through; font-size: 0.9rem;">Was $55</p>
-                        <p style="color: #ff4444; font-weight: bold;">15% OFF!</p>
-                    </div>
-                    <div style="background: rgba(255,215,0,0.2); padding: 15px; border-radius: 10px; border: 2px solid #FFD700;">
-                        <h3 style="color: #FFD700; font-size: 1.2rem;">14K DENTAL GOLD</h3>
-                        <p style="font-size: 1.5rem; color: #fff; font-weight: bold;">$264/tooth</p>
-                        <p style="color: #ccc; text-decoration: line-through; font-size: 0.9rem;">Was $310</p>
-                        <p style="color: #ff4444; font-weight: bold;">15% OFF!</p>
-                    </div>
-                </div>
-                <a href="pricing.html" style="display: inline-block; background: #FFD700; color: #000; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px;">View Full Pricing</a>
-            </div>
-            
             <div id="discountBanner" class="discount-banner" style="display: none; background: linear-gradient(45deg, #4CAF50, #45a049); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; color: white;">
                 🎉 Ambassador Discount Applied - 5% Off Your Service!
             </div>
@@ -538,7 +518,6 @@
                             <option value="venmo">Venmo</option>
                             <option value="cashapp">Cash App</option>
                             <option value="paypal">PayPal (+ transaction fee)</option>
-                            <option value="affirm">Affirm - Buy Now, Pay Later (+ transaction fee)</option>
                         </select>
                         <p style="color: #ccc; font-size: 0.9rem; margin-top: 0.5rem;">⚠️ Note: Online payment methods include a small transaction fee to cover processing costs.</p>
                     </div>
@@ -563,7 +542,6 @@
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
                     <input type="hidden" id="ambassadorCode" name="ambassadorCode">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
-                    <input type="hidden" name="affirm_merchant_id" value="112343038">
                     
                     <button type="submit" class="submit-btn">Submit Mold Request</button>
                 </form>
