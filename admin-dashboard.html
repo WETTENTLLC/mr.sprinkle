@@ -470,7 +470,7 @@
                 }
                 
                 // Auto-generate code if not provided
-                let finalCode = code;
+                let finalCode = code.toUpperCase();
                 if (!code) {
                     finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
                     document.getElementById('newAmbassadorCode').value = finalCode;

@@ -125,50 +125,30 @@
     <script>
         let currentAmbassador = null;
         
+        // Master ambassador list - UPDATE THIS WHEN YOU ADD NEW AMBASSADORS
+        const MASTER_AMBASSADORS = [
+            {id: 1, name: 'MIKE', email: 'mike@email.com', phone: '(555) 111-2222', code: 'MIKE456', status: 'active', dateAdded: '2025-01-19', totalReferrals: 1, totalEarnings: 0},
+            {id: 1765995386792, name: 'Nanii', email: 'daniidlrv00@gmail.com', phone: '', code: 'NANII86', password: 'NANII86', status: 'active', dateAdded: '2025-12-17', totalReferrals: 0, totalEarnings: 0},
+            {id: 1765995578570, name: 'REVLON PHILLIPS', email: 'rlifestylebusiness@gmail.com', phone: '7755649760', code: 'REVLONPH96', password: 'REVLONPH96', status: 'active', dateAdded: '2025-12-17', totalReferrals: 0, totalEarnings: 0}
+        ];
+        
         function refreshAmbassadors() {
-            // Clear existing data and reinitialize
-            localStorage.removeItem('ambassadors');
-            const ambassadors = initializeSampleData();
-            alert(`Ambassador list refreshed! Available codes: ${ambassadors.length}`);
-            console.log('Refreshed ambassadors:', ambassadors.map(a => a.code));
+            // Sync with master list
+            localStorage.setItem('ambassadors', JSON.stringify(MASTER_AMBASSADORS));
+            alert(`Ambassador list synced! ${MASTER_AMBASSADORS.length} ambassadors available.`);
+            console.log('Synced ambassadors:', MASTER_AMBASSADORS.map(a => a.code));
         }
         
-        // Initialize sample data if localStorage is empty
+        // Initialize and sync with master list
         function initializeSampleData() {
-            let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
-            if (ambassadors.length === 0) {
-                ambassadors = [
-                    {
-                        id: 1,
-                        name: 'MIKE',
-                        email: 'mike@email.com',
-                        phone: '(555) 111-2222',
-                        code: 'MIKE456',
-                        status: 'active',
-                        dateAdded: '2025-01-19',
-                        totalReferrals: 1,
-                        totalEarnings: 0
-                    },
-                    {
-                        id: 2,
-                        name: 'Jack of All Fades',
-                        email: 'jack@email.com',
-                        phone: '(555) 222-3333',
-                        code: 'JACKOFFADES25',
-                        status: 'active',
-                        dateAdded: '2025-01-20',
-                        totalReferrals: 0,
-                        totalEarnings: 0
-                    }
-                ];
-                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-                console.log('Initialized sample ambassador data');
-            }
-            return ambassadors;
+            // Always use master list and sync to localStorage
+            localStorage.setItem('ambassadors', JSON.stringify(MASTER_AMBASSADORS));
+            console.log('Synced with master ambassador list:', MASTER_AMBASSADORS);
+            return MASTER_AMBASSADORS;
         }
 
         function login() {
-            const code = document.getElementById('ambassadorCode').value.trim();
+            const code = document.getElementById('ambassadorCode').value.trim().toUpperCase();
             if (!code) {
                 alert('Please enter your ambassador code');
                 return;
@@ -179,11 +159,13 @@
             console.log('Available ambassadors:', ambassadors);
             console.log('Looking for code:', code);
             
-            const ambassador = ambassadors.find(a => a.code === code);
+            // Case-insensitive search
+            const ambassador = ambassadors.find(a => a.code.toUpperCase() === code);
             console.log('Found ambassador:', ambassador);
 
             if (!ambassador) {
-                alert('Invalid ambassador code. Please check with admin.');
+                alert('Invalid ambassador code. Please make sure you\'re using the same browser where the admin created your account, or ask admin to add you again.');
+                console.log('Available codes:', ambassadors.map(a => a.code));
                 return;
             }
 
