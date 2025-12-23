@@ -56,7 +56,16 @@
                     <p style="margin:20px 0;color:#ccc">Perfect for someone special</p>
                     <input type="number" id="giftOnly" class="price-input" placeholder="Enter amount ($100+)" min="100" step="50">
                     <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftOnlyPrice">0</span></p>
-                    <div id="paypal-giftOnly"></div>
+                    <form id="form-giftOnly" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
+                        <input type="hidden" name="item_name" value="Mr. Sprinkle Christmas Gift Card (5% OFF)">
+                        <input type="hidden" name="amount" id="amount-giftOnly">
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
+                        <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
+                    </form>
+                    <button class="buy-btn" onclick="buyGiftCard('giftOnly')">Buy Gift Card 🎁</button>
                 </div>
 
                 <div class="card-option" style="border-color:#c41e3a;border-width:3px">
@@ -65,7 +74,16 @@
                     <p style="margin:20px 0;color:#ccc">Best value! Get yours + gift one</p>
                     <input type="number" id="combo" class="price-input" placeholder="Total order amount" min="200" step="50">
                     <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="comboPrice">0</span></p>
-                    <div id="paypal-combo"></div>
+                    <form id="form-combo" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
+                        <input type="hidden" name="item_name" value="Mr. Sprinkle Grill + Gift Card Combo (15% OFF)">
+                        <input type="hidden" name="amount" id="amount-combo">
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
+                        <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
+                    </form>
+                    <button class="buy-btn" onclick="buyGiftCard('combo')">Buy Combo Deal 🔥</button>
                     <p style="font-size:0.9em;color:#888;margin-top:10px">Book your grill after payment</p>
                 </div>
             </div>
@@ -103,7 +121,6 @@
         <p style="color:#FFD700;margin-top:10px">Medical-Grade Dental Gold • 0% Tarnish Guarantee</p>
     </footer>
 
-    <script src="https://www.paypal.com/sdk/js?client-id=AeGEkRLlI_VQhaceastKJLGvF8vYVQJXuZQq15P8NjrLyIG__VdhM9IH_5Kv3e4TXSMqSz8WdQyYgtkY63pUtE0QDiYiSZsnmfno&currency=USD"></script>
     <script>
     function calculatePrice(type){
         const input=document.getElementById(type);
@@ -111,26 +128,16 @@
         const discount=type==='giftOnly'?0.05:0.15;
         const final=amount*(1-discount);
         document.getElementById(type+'Price').textContent=final.toFixed(2);
-        if(amount>=100)renderPayPal(type,amount,final);
+        document.getElementById('amount-'+type).value=final.toFixed(2);
     }
     document.getElementById('giftOnly').addEventListener('input',()=>calculatePrice('giftOnly'));
     document.getElementById('combo').addEventListener('input',()=>calculatePrice('combo'));
 
-    function renderPayPal(type,amount,final){
-        const container=document.getElementById('paypal-'+type);
-        container.innerHTML='';
-        const itemName=type==='giftOnly'?'Gift Card (5% OFF)':'Grill+Gift Card (15% OFF)';
-        
-        paypal.Buttons({
-            createOrder:(data,actions)=>actions.order.create({
-                purchase_units:[{description:`Mr. Sprinkle ${itemName}`,amount:{value:final.toFixed(2)}}]
-            }),
-            onApprove:(data,actions)=>actions.order.capture().then(()=>{
-                alert('✅ Payment successful! Check email for gift card.');
-                window.location.href='thank-you.html';
-            }),
-            onError:()=>alert('❌ Payment failed. Text (530) 214-0676 for help.')
-        }).render('#paypal-'+type);
+    function buyGiftCard(type){
+        const input=document.getElementById(type);
+        const amount=parseFloat(input.value);
+        if(!amount||amount<100){alert('Please enter $100 or more');return;}
+        document.getElementById('form-'+type).submit();
     }
     </script>
 </body>
