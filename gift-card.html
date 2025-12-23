@@ -103,6 +103,7 @@
         <p style="color:#FFD700;margin-top:10px">Medical-Grade Dental Gold • 0% Tarnish Guarantee</p>
     </footer>
 
+    <script src="https://www.paypal.com/sdk/js?client-id=EF9_Qz6YsgJXuZQq15P8NjrLyIG__VdhM9IH_5Kv3e4TXSMqSz8WdQyYgtkY63pUtE0QDiYiSZsnmfno&currency=USD"></script>
     <script>
     function calculatePrice(type){
         const input=document.getElementById(type);
@@ -124,10 +125,28 @@
         const discount=type==='giftOnly'?0.05:0.15;
         const final=(amount*(1-discount)).toFixed(2);
         const discountPercent=type==='giftOnly'?'5%':'15%';
+        const itemName=type==='giftOnly'?'Gift Card Only (5% OFF)':'Grill + Gift Card Combo (15% OFF)';
         
-        const message=`Hi! I want to purchase a ${discountPercent} OFF Christmas Gift Card.\n\nOriginal Amount: $${amount}\nDiscount: ${discountPercent}\nTotal to Pay: $${final}\n\nType: ${type==='giftOnly'?'Gift Card Only':'Grill + Gift Card Combo'}\n\nPlease send PayPal payment details.`;
-        
-        window.location.href=`sms:+15302140676?body=${encodeURIComponent(message)}`;
+        paypal.Buttons({
+            createOrder:function(data,actions){
+                return actions.order.create({
+                    purchase_units:[{
+                        description:`Mr. Sprinkle Christmas ${itemName}`,
+                        amount:{value:final},
+                        custom_id:`Original:$${amount}|Discount:${discountPercent}|Type:${type}`
+                    }]
+                });
+            },
+            onApprove:function(data,actions){
+                return actions.order.capture().then(function(details){
+                    alert('Payment successful! Check your email for gift card details.');
+                    window.location.href='thank-you.html';
+                });
+            },
+            onError:function(err){
+                alert('Payment failed. Please try again or text (530) 214-0676 for help.');
+            }
+        }).render('body');
     }
     </script>
 </body>
