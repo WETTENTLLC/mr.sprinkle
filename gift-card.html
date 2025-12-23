@@ -70,6 +70,14 @@
                 </div>
             </div>
 
+            <div id="paypal-container" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center">
+                <div style="background:#1a1a1a;padding:30px;border-radius:15px;max-width:500px;width:90%;position:relative">
+                    <button onclick="document.getElementById('paypal-container').style.display='none'" style="position:absolute;top:10px;right:10px;background:#ff4444;color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer">✕ Close</button>
+                    <h3 style="color:#FFD700;margin-bottom:20px;text-align:center">Complete Payment</h3>
+                    <div id="paypal-button-container"></div>
+                </div>
+            </div>
+
             <div class="info-box">
                 <h3 style="color:#FFD700;margin-bottom:15px">📋 How It Works</h3>
                 <ol style="text-align:left;line-height:2;color:#ccc">
@@ -103,8 +111,9 @@
         <p style="color:#FFD700;margin-top:10px">Medical-Grade Dental Gold • 0% Tarnish Guarantee</p>
     </footer>
 
-    <script src="https://www.paypal.com/sdk/js?client-id=EF9_Qz6YsgJXuZQq15P8NjrLyIG__VdhM9IH_5Kv3e4TXSMqSz8WdQyYgtkY63pUtE0QDiYiSZsnmfno&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AeGEkRLlI_VQhaceastKJLGvF8vYVQJXuZQq15P8NjrLyIG__VdhM9IH_5Kv3e4TXSMqSz8WdQyYgtkY63pUtE0QDiYiSZsnmfno&currency=USD"></script>
     <script>
+    let currentAmount,currentType;
     function calculatePrice(type){
         const input=document.getElementById(type);
         const amount=parseFloat(input.value)||0;
@@ -122,18 +131,24 @@
             alert('Please enter an amount of $100 or more');
             return;
         }
-        const discount=type==='giftOnly'?0.05:0.15;
-        const final=(amount*(1-discount)).toFixed(2);
-        const discountPercent=type==='giftOnly'?'5%':'15%';
-        const itemName=type==='giftOnly'?'Gift Card Only (5% OFF)':'Grill + Gift Card Combo (15% OFF)';
+        currentAmount=amount;
+        currentType=type;
+        document.getElementById('paypal-container').style.display='flex';
+        renderPayPalButton();
+    }
+
+    function renderPayPalButton(){
+        document.getElementById('paypal-button-container').innerHTML='';
+        const discount=currentType==='giftOnly'?0.05:0.15;
+        const final=(currentAmount*(1-discount)).toFixed(2);
+        const itemName=currentType==='giftOnly'?'Gift Card Only (5% OFF)':'Grill + Gift Card Combo (15% OFF)';
         
         paypal.Buttons({
             createOrder:function(data,actions){
                 return actions.order.create({
                     purchase_units:[{
                         description:`Mr. Sprinkle Christmas ${itemName}`,
-                        amount:{value:final},
-                        custom_id:`Original:$${amount}|Discount:${discountPercent}|Type:${type}`
+                        amount:{value:final}
                     }]
                 });
             },
@@ -144,9 +159,9 @@
                 });
             },
             onError:function(err){
-                alert('Payment failed. Please try again or text (530) 214-0676 for help.');
+                alert('Payment failed. Please try again or text (530) 214-0676.');
             }
-        }).render('body');
+        }).render('#paypal-button-container');
     }
     </script>
 </body>
