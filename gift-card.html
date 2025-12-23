@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Gift Cards - Mr. Sprinkle Gold Grillz | Holiday Special</title>
+    <meta name="description" content="Give luxury that lasts! Mr. Sprinkle gold grillz gift cards. 15% OFF when you buy grill + gift card, 5% OFF gift card only. Perfect Christmas gift.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body{background:#000;color:#fff;font-family:Arial,sans-serif;padding-top:80px}
+        .container{max-width:1000px;margin:0 auto;padding:20px}
+        .hero{background:linear-gradient(135deg,#c41e3a,#165b33);padding:50px 20px;text-align:center;border-radius:15px;margin-bottom:40px;border:3px solid #FFD700}
+        .hero h1{color:#fff;font-size:2.5em;margin-bottom:15px}
+        .card-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;margin:40px 0}
+        .card-option{background:#1a1a1a;border:2px solid #FFD700;border-radius:15px;padding:30px;text-align:center;transition:all 0.3s}
+        .card-option:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,215,0,0.4)}
+        .card-option h3{color:#FFD700;font-size:1.8em;margin-bottom:15px}
+        .discount-badge{background:#c41e3a;color:#fff;padding:8px 20px;border-radius:20px;display:inline-block;margin:10px 0;font-weight:bold}
+        .price-input{width:100%;padding:15px;font-size:1.2em;border:2px solid #FFD700;border-radius:8px;background:#2a2a2a;color:#fff;margin:15px 0}
+        .buy-btn{background:#FFD700;color:#000;padding:15px 40px;border:none;border-radius:8px;font-size:1.2em;font-weight:bold;cursor:pointer;width:100%;transition:all 0.3s}
+        .buy-btn:hover{background:#FFA500;transform:scale(1.05)}
+        .info-box{background:rgba(255,215,0,0.1);border:2px solid #FFD700;border-radius:10px;padding:20px;margin:30px 0}
+        input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo"><img src="assets/trans.png" alt="Mr. Sprinkle Logo"></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="mold-form.html">Book Now</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="hero">
+                <h1>🎄✨ CHRISTMAS GIFT CARD SPECIAL ✨🎄</h1>
+                <img src="assets/MrSprinkle Christmas Flyer.png" alt="Christmas Gift Card Special" style="max-width:100%;height:auto;border-radius:10px;margin:20px 0;box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+                <div style="background:rgba(0,0,0,0.3);padding:20px;border-radius:10px;margin:20px auto;max-width:500px">
+                    <p style="color:#FFD700;font-size:1.1em;margin:10px 0"><strong>🔥 Buy Custom Grill + Gift Card → 15% OFF</strong></p>
+                    <p style="color:#FFD700;font-size:1.1em;margin:10px 0"><strong>🎁 Buy Gift Card Only → 5% OFF</strong></p>
+                </div>
+            </div>
+
+            <div class="card-options">
+                <div class="card-option">
+                    <h3>🎁 Gift Card Only</h3>
+                    <div class="discount-badge">5% OFF INSTANT</div>
+                    <p style="margin:20px 0;color:#ccc">Perfect for someone special</p>
+                    <input type="number" id="giftOnly" class="price-input" placeholder="Enter amount ($100+)" min="100" step="50">
+                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftOnlyPrice">0</span></p>
+                    <button class="buy-btn" onclick="buyGiftCard('giftOnly')">Buy Gift Card 🎁</button>
+                </div>
+
+                <div class="card-option" style="border-color:#c41e3a;border-width:3px">
+                    <h3>🔥 Grill + Gift Card</h3>
+                    <div class="discount-badge" style="background:#165b33">15% OFF TOTAL</div>
+                    <p style="margin:20px 0;color:#ccc">Best value! Get yours + gift one</p>
+                    <input type="number" id="combo" class="price-input" placeholder="Total order amount" min="200" step="50">
+                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="comboPrice">0</span></p>
+                    <button class="buy-btn" onclick="buyGiftCard('combo')">Buy Combo Deal 🔥</button>
+                    <p style="font-size:0.9em;color:#888;margin-top:10px">Book your grill after payment</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3 style="color:#FFD700;margin-bottom:15px">📋 How It Works</h3>
+                <ol style="text-align:left;line-height:2;color:#ccc">
+                    <li>Choose your gift card amount (minimum $100)</li>
+                    <li>Pay securely via PayPal</li>
+                    <li>Receive digital gift card code via email within 24 hours</li>
+                    <li>Recipient redeems for custom grillz at mrsprinklereno.com</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <h3 style="color:#FFD700;margin-bottom:15px">💎 What Can They Get?</h3>
+                <ul style="text-align:left;line-height:2;color:#ccc">
+                    <li><strong>$200-400:</strong> Single tooth gold grill (10K-14K)</li>
+                    <li><strong>$500-1000:</strong> 2-4 tooth custom set</li>
+                    <li><strong>$1000-2500:</strong> Full 6-8 tooth set</li>
+                    <li><strong>$2500+:</strong> Diamond-encrusted premium grillz</li>
+                </ul>
+            </div>
+
+            <div style="text-align:center;margin:40px 0;padding:30px;background:#1a1a1a;border-radius:15px">
+                <h3 style="color:#FFD700;margin-bottom:20px">Questions? Contact Us</h3>
+                <p style="margin:10px 0"><a href="sms:+15302140676" style="color:#FFD700;font-size:1.2em">📱 Text (530) 214-0676</a></p>
+                <p style="margin:10px 0"><a href="mailto:info@mrsprinklereno.com" style="color:#FFD700">📧 info@mrsprinklereno.com</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background:#000;padding:40px 20px;text-align:center;color:#fff;margin-top:50px">
+        <p>&copy; 2025 Mr. Sprinkle - Christmas Gift Card Special</p>
+        <p style="color:#FFD700;margin-top:10px">Medical-Grade Dental Gold • 0% Tarnish Guarantee</p>
+    </footer>
+
+    <script>
+    function calculatePrice(type){
+        const input=document.getElementById(type);
+        const amount=parseFloat(input.value)||0;
+        const discount=type==='giftOnly'?0.05:0.15;
+        const final=amount*(1-discount);
+        document.getElementById(type+'Price').textContent=final.toFixed(2);
+    }
+    document.getElementById('giftOnly').addEventListener('input',()=>calculatePrice('giftOnly'));
+    document.getElementById('combo').addEventListener('input',()=>calculatePrice('combo'));
+
+    function buyGiftCard(type){
+        const input=document.getElementById(type);
+        const amount=parseFloat(input.value);
+        if(!amount||amount<100){
+            alert('Please enter an amount of $100 or more');
+            return;
+        }
+        const discount=type==='giftOnly'?0.05:0.15;
+        const final=(amount*(1-discount)).toFixed(2);
+        const discountPercent=type==='giftOnly'?'5%':'15%';
+        
+        const message=`Hi! I want to purchase a ${discountPercent} OFF Christmas Gift Card.\n\nOriginal Amount: $${amount}\nDiscount: ${discountPercent}\nTotal to Pay: $${final}\n\nType: ${type==='giftOnly'?'Gift Card Only':'Grill + Gift Card Combo'}\n\nPlease send PayPal payment details.`;
+        
+        window.location.href=`sms:+15302140676?body=${encodeURIComponent(message)}`;
+    }
+    </script>
+</body>
+</html>
