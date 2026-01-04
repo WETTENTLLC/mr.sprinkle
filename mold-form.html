@@ -509,6 +509,13 @@
                         <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
                     </div>
 
+                    <div class="form-group" style="background: rgba(76,175,80,0.1); border: 2px solid #4caf50; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+                        <h3 style="color:#4caf50;margin-bottom:1rem">Promo Code</h3>
+                        <label for="promoCode">Have a promo code?</label>
+                        <input type="text" id="promoCode" name="promoCode" placeholder="Enter code (e.g. TAXTIME50)" style="text-transform:uppercase">
+                        <p id="promoStatus" style="margin-top:10px;font-size:0.9em"></p>
+                    </div>
+
                     <div class="form-group" style="background: rgba(255,69,0,0.1); border: 2px solid #ff4500; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
                         <h3 style="color: #ff4500; margin-bottom: 1rem;">⚡ Rush Delivery</h3>
                         <label for="rushDelivery">Do you want rush delivery? (Save 4+ days for $150)</label>
@@ -633,6 +640,21 @@
             
             // Let form submit naturally to Formspree
         });
+        
+        // Promo code validation
+        document.getElementById('promoCode').addEventListener('input',function(){
+            const code=this.value.toUpperCase();
+            const status=document.getElementById('promoStatus');
+            if(code==='TAXTIME50'){
+                status.textContent='✓ Valid! $50 credit applied (orders $300+)';
+                status.style.color='#4caf50';
+            }else if(code.length>0){
+                status.textContent='Invalid code';
+                status.style.color='#ff4444';
+            }else{
+                status.textContent='';
+            }
+        });
     </script>
 
     <button class="chat-btn" onclick="document.getElementById('chatBox').style.display=document.getElementById('chatBox').style.display==='flex'?'none':'flex'">💬</button>
@@ -646,7 +668,7 @@
     </div>
 
     <script>
-    const API_KEY='YOUR_API_KEY_HERE';
+    const API_KEY='YOUR_GROK_API_KEY_HERE'; // REPLACE WITH YOUR KEY - DO NOT COMMIT TO GITHUB
     const msgs=[];
     async function sendMsg(){
         const input=document.getElementById('chatInput');

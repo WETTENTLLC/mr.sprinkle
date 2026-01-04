@@ -79,9 +79,30 @@
 <body>
     <div class="thank-you-container">
         <h1>Thank You!</h1>
-        <h2>Your Mold Request Has Been Submitted</h2>
+        <h2 id="mainHeading">Your Mold Request Has Been Submitted</h2>
         
-        <p>We have received your dental mold request and will contact you within 24 hours to schedule your appointment.</p>
+        <p id="mainMessage">We have received your dental mold request and will contact you within 24 hours to schedule your appointment.</p>
+        
+        <!-- Tax Time Promo Entry Confirmation (shown only for promo purchases) -->
+        <div id="promoConfirmation" style="display:none;background:linear-gradient(135deg,#1a472a,#2e7d32);padding:25px;border-radius:10px;border:3px solid #FFD700;margin:20px 0">
+            <h2 style="color:#FFD700;margin-bottom:15px">YOU'RE ENTERED TO WIN!</h2>
+            <p style="font-size:1.3em;margin:10px 0">Tax Time Icy Upgrade Giveaway</p>
+            <p style="margin:15px 0">Your $10 Upgrade Pass includes:</p>
+            <ul style="text-align:left;max-width:400px;margin:15px auto;line-height:2">
+                <li><strong>1 Giveaway Entry</strong></li>
+                <li><strong>$50 Grill Credit</strong> (on orders $300+)</li>
+                <li><strong>Priority Booking</strong></li>
+            </ul>
+            <p style="margin-top:20px;font-size:1.1em;color:#FFD700">Winner announced Feb 5, 2025 on Instagram @mr.sprinkle_reno</p>
+            <p style="margin-top:10px">Check your email for entry confirmation and credit code!</p>
+        </div>
+        
+        <div class="contact-info" style="background:#1a472a;border:2px solid #FFD700">
+            <h3 style="color:#FFD700;margin-bottom:1rem">Your $50 Grill Credit</h3>
+            <p style="margin-bottom:15px">Use code: <strong style="color:#FFD700;font-size:1.3em">TAXTIME50</strong></p>
+            <p style="font-size:0.9em;color:#ccc">Valid on orders $300+ • Expires Dec 31, 2025 • One-time use</p>
+            <p style="margin-top:15px"><a href="mold-form.html" style="display:inline-block;background:#FFD700;color:#000;padding:10px 25px;border-radius:5px;text-decoration:none;font-weight:bold">Book Your Grill Now</a></p>
+        </div>
         
         <div class="contact-info">
             <h3 style="color: #FFD700; margin-bottom: 1rem;">What Happens Next?</h3>
@@ -105,5 +126,15 @@
         
         <a href="index.html" class="back-btn">Return to Home</a>
     </div>
+    
+    <script>
+    // Check if user came from Tax Time promo purchase
+    const urlParams=new URLSearchParams(window.location.search);
+    if(urlParams.get('promo')==='taxtime'){
+        document.getElementById('promoConfirmation').style.display='block';
+        document.getElementById('mainHeading').textContent='Payment Confirmed!';
+        document.getElementById('mainMessage').textContent='Your $10 Upgrade Pass purchase is complete.';
+    }
+    </script>
 </body>
 </html>
