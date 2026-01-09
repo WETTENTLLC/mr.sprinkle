@@ -97,6 +97,14 @@
             <p style="margin-top:10px">Check your email for entry confirmation and credit code!</p>
         </div>
         
+        <div id="musicConfirmation" style="display:none;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);padding:25px;border-radius:10px;border:3px solid #FFD700;margin:20px 0">
+            <h2 style="color:#FFD700;margin-bottom:15px">Track Purchased!</h2>
+            <p style="font-size:1.3em;margin:10px 0">Damn - Mr. Sprinkle Intro Music</p>
+            <p style="margin:15px 0">Click below to download your track:</p>
+            <a href="assets/Damn.mp3" download="Damn - Mr Sprinkle.mp3" style="display:inline-block;background:#FFD700;color:#000;padding:15px 40px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:1.2em;margin:20px 0;transition:all 0.3s">Download MP3</a>
+            <p style="margin-top:15px;color:#ccc">© WETT Entertainment LLC - All Rights Reserved</p>
+        </div>
+        
         <div class="contact-info" style="background:#1a472a;border:2px solid #FFD700">
             <h3 style="color:#FFD700;margin-bottom:1rem">Your $50 Grill Credit</h3>
             <p style="margin-bottom:15px">Use code: <strong style="color:#FFD700;font-size:1.3em">TAXTIME50</strong></p>
@@ -134,6 +142,12 @@
         document.getElementById('promoConfirmation').style.display='block';
         document.getElementById('mainHeading').textContent='Payment Confirmed!';
         document.getElementById('mainMessage').textContent='Your $10 Upgrade Pass purchase is complete.';
+    }
+    // Check if user purchased music
+    if(urlParams.get('music')==='damn'){
+        document.getElementById('musicConfirmation').style.display='block';
+        document.getElementById('mainHeading').textContent='Purchase Complete!';
+        document.getElementById('mainMessage').textContent='Thank you for supporting WETT Entertainment!';
     }
     </script>
 </body>

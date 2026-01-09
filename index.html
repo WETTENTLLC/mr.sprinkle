@@ -100,7 +100,13 @@
         <video id="introVideo" autoplay muted style="width: 100%; height: 100%; object-fit: cover;">
             <source src="assets/intro.mp4" type="video/mp4">
         </video>
+        <audio id="introAudio" autoplay loop style="display:none">
+            <source src="assets/Damn.mp3" type="audio/mpeg">
+        </audio>
         <div style="position: absolute; bottom: 30px; right: 30px; color: #FFD700; font-size: 14px; cursor: pointer;" onclick="skipIntro()">Skip Intro →</div>
+        <div style="position: absolute; bottom: 30px; left: 30px;">
+            <a href="intro-music.html" style="color:#FFD700;font-size:12px;text-decoration:none;background:rgba(0,0,0,0.7);padding:8px 15px;border-radius:5px;border:1px solid #FFD700">🎵 Buy This Track - $1</a>
+        </div>
     </div>
     <header>
         <div class="container">
@@ -118,10 +124,18 @@
                     <li><a href="#guarantee">Our Guarantee</a></li>
                     <li><a href="safety-policy.html" style="color: #ff4444;">⚠️ Safety Policy</a></li>
                     <li><a href="#contact">Book Mold Day</a></li>
+                    <li style="display:flex;gap:5px;align-items:center">
+                        <button id="musicToggle" onclick="toggleMusic()" style="background:#FFD700;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:16px">▶️</button>
+                        <a href="intro-music.html" style="background:#FFD700;color:#000;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:12px;font-weight:bold">$1</a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
+
+    <audio id="bgMusic" loop style="display:none">
+        <source src="assets/Damn.mp3" type="audio/mpeg">
+    </audio>
 
     <main>
         <!-- Tax Time Promo Banner -->
@@ -552,13 +566,31 @@
     
     <!-- Video Intro Control -->
     <script>
+        const bgMusic=document.getElementById('bgMusic');
+        const musicToggle=document.getElementById('musicToggle');
+        let isPlaying=false;
+        
+        function toggleMusic(){
+            if(isPlaying){
+                bgMusic.pause();
+                musicToggle.textContent='▶️';
+                isPlaying=false;
+            }else{
+                bgMusic.play();
+                musicToggle.textContent='⏸️';
+                isPlaying=true;
+            }
+        }
+        
         function skipIntro() {
             document.getElementById('videoIntro').style.display = 'none';
+            document.getElementById('introAudio').pause();
             sessionStorage.setItem('introSeen', 'true');
         }
         
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('introVideo');
+            const audio = document.getElementById('introAudio');
             const intro = document.getElementById('videoIntro');
             
             // Skip intro if already seen this session
@@ -570,6 +602,7 @@
             // Enable sound after user interaction
             intro.addEventListener('click', function() {
                 video.muted = false;
+                audio.play();
             }, { once: true });
             
             // Auto-hide intro when video ends
@@ -578,6 +611,7 @@
                 intro.style.transition = 'opacity 1s';
                 setTimeout(() => {
                     intro.style.display = 'none';
+                    audio.pause();
                     sessionStorage.setItem('introSeen', 'true');
                 }, 1000);
             });
