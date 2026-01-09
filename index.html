@@ -612,7 +612,7 @@
             
             // Enable sound after user interaction
             intro.addEventListener('click', function() {
-                video.muted = false;
+                video.muted = true;
                 audio.play().catch(e=>console.log('Audio play failed:',e));
                 document.getElementById('clickPrompt').style.display='none';
             }, { once: true });
