@@ -97,12 +97,21 @@
 <body>
     <!-- Animated Video Intro Overlay -->
     <div id="videoIntro" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center;">
-        <video id="introVideo" autoplay muted style="width: 100%; height: 100%; object-fit: cover;">
+        <video id="introVideo" autoplay muted loop style="width: 100%; height: 100%; object-fit: cover;">
             <source src="assets/intro.mp4" type="video/mp4">
         </video>
-        <audio id="introAudio" autoplay loop style="display:none">
+        <audio id="introAudio" loop style="display:none">
             <source src="assets/Damn.mp3" type="audio/mpeg">
         </audio>
+        <div id="clickPrompt" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;animation:pulse 2s infinite">
+            <div style="background:rgba(0,0,0,0.8);padding:30px 50px;border-radius:15px;border:3px solid #FFD700">
+                <p style="color:#FFD700;font-size:2em;font-weight:bold;margin:0">CLICK TO PLAY MUSIC</p>
+                <p style="color:#fff;font-size:1.2em;margin-top:10px">🎵 Tap Anywhere</p>
+            </div>
+        </div>
+        <style>
+            @keyframes pulse{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:0.7;transform:translate(-50%,-50%) scale(1.05)}}
+        </style>
         <div style="position: absolute; bottom: 30px; right: 30px; color: #FFD700; font-size: 14px; cursor: pointer;" onclick="skipIntro()">Skip Intro →</div>
         <div style="position: absolute; bottom: 30px; left: 30px;">
             <a href="intro-music.html" style="color:#FFD700;font-size:12px;text-decoration:none;background:rgba(0,0,0,0.7);padding:8px 15px;border-radius:5px;border:1px solid #FFD700">🎵 Buy This Track - $1</a>
@@ -605,10 +614,11 @@
             intro.addEventListener('click', function() {
                 video.muted = false;
                 audio.play().catch(e=>console.log('Audio play failed:',e));
+                document.getElementById('clickPrompt').style.display='none';
             }, { once: true });
             
-            // Auto-hide intro when video ends
-            video.addEventListener('ended', function() {
+            // Auto-hide intro after 30 seconds
+            setTimeout(function(){
                 intro.style.opacity = '0';
                 intro.style.transition = 'opacity 1s';
                 setTimeout(() => {
@@ -616,7 +626,7 @@
                     audio.pause();
                     sessionStorage.setItem('introSeen', 'true');
                 }, 1000);
-            });
+            },30000);
         });
     </script>
     
