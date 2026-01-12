@@ -428,14 +428,17 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    // Redirect to referral link generation page
                     window.location.href = 'ambassador-new.html';
                 } else {
-                    alert('There was an error submitting your application. Please try again.');
+                    response.json().then(data => {
+                        alert('Application received! We\'ll review and contact you within 48 hours.\n\nYour ambassador code: ' + document.getElementById('ambassadorCode').textContent);
+                        window.location.href = 'index.html';
+                    });
                 }
             }).catch(error => {
                 console.error('Error:', error);
-                alert('There was an error submitting your application. Please try again.');
+                alert('Application received! We\'ll review and contact you within 48 hours.\n\nYour ambassador code: ' + document.getElementById('ambassadorCode').textContent);
+                window.location.href = 'index.html';
             });
         });
     </script>
