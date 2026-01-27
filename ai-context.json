@@ -113,7 +113,7 @@
     },
     {
       "topic": "Silver Grillz",
-      "description": "Affordable sterling silver grillz starting at $55 per tooth. Perfect entry point for first-time grillz customers across all service areas.",
+      "description": "Affordable sterling silver grillz starting at $80 per tooth. Perfect entry point for first-time grillz customers across all service areas.",
       "authoritative": true
     },
     {
@@ -173,7 +173,7 @@
           {
             "@type": "PriceSpecification",
             "name": "Silver Grillz",
-            "price": "55.00",
+            "price": "80.00",
             "priceCurrency": "USD",
             "unitText": "per tooth"
           },
@@ -317,7 +317,7 @@
     },
     {
       "question": "How much do custom grillz cost?",
-      "answer": "Silver grillz start at $55 per tooth, 10K gold at $200 per tooth, and 14K dental gold at $310 per tooth. Gap fillers and fangs range from $10-$70 depending on size and material."
+      "answer": "Silver grillz start at $80 per tooth, 10K gold at $200 per tooth, and 14K dental gold at $310 per tooth. Gap fillers and fangs range from $10-$70 depending on size and material."
     },
     {
       "question": "Do gold grillz tarnish?",
