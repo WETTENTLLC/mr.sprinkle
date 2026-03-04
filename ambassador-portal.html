@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ambassador Portal - Mr. Sprinkle</title>
+    <script src="config.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a1a1a, #333); color: #fff; min-height: 100vh; padding: 20px; }
@@ -221,7 +222,7 @@
             }
 
             // Validate against the database via backend
-            const backendUrl = window.location.origin + '/ambassador-backend.php?endpoint=ambassador-stats&code=' + encodeURIComponent(code);
+            const backendUrl = CONFIG.BACKEND_URL + '?endpoint=ambassador-stats&code=' + encodeURIComponent(code);
             console.log('Fetching from:', backendUrl);
             
             fetch(backendUrl)
