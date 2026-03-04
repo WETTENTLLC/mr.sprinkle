@@ -6,13 +6,12 @@ try {
     $pdo = new PDO("mysql:host=localhost;dbname=mr_sprinkle_db", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    // Generate code for Natalia (same logic as the form)
-    $name = "Natalia";
-    $code = preg_replace('/\s+/', '', strtoupper($name));
-    $code = substr($code, 0, 8) . str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
+    // Natalia's information
+    $name = "Natalia Chacon";
+    $code = "NATALIA09";  // Her specific ambassador code
     
     // Her info
-    $email = "nataliachacon0903@gmail.com";
+    $email = "nataliachacon0904@gmail.com";  // Correct email
     $phone = "775-250-9356";
     
     // Check if already exists
