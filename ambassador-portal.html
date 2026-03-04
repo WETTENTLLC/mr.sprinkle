@@ -220,23 +220,40 @@
                 return;
             }
 
-            // Get ambassador data from localStorage (shared with admin dashboard)
-            const ambassadors = initializeSampleData();
-            console.log('Available ambassadors:', ambassadors);
-            console.log('Looking for code:', code);
+            // Validate against the database via backend
+            const backendUrl = window.location.origin + '/ambassador-backend.php?endpoint=ambassador-stats&code=' + encodeURIComponent(code);
+            console.log('Fetching from:', backendUrl);
             
-            // Case-insensitive search
-            const ambassador = ambassadors.find(a => a.code.toUpperCase() === code);
-            console.log('Found ambassador:', ambassador);
-
-            if (!ambassador) {
-                alert('Invalid ambassador code. Please make sure you\'re using the same browser where the admin created your account, or ask admin to add you again.');
-                console.log('Available codes:', ambassadors.map(a => a.code));
-                return;
-            }
-
-            currentAmbassador = ambassador;
-            showDashboard();
+            fetch(backendUrl)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Backend response:', data);
+                    if (data.success && data.data) {
+                        // Found in database
+                        currentAmbassador = {
+                            name: data.data.name,
+                            code: data.data.ambassador_code,
+                            email: data.data.email,
+                            phone: data.data.phone,
+                            totalReferrals: data.data.total_referrals || 0,
+                            totalEarnings: data.data.paid_commission || 0,
+                            pendingEarnings: data.data.pending_commission || 0
+                        };
+                        console.log('Authenticated via database:', currentAmbassador);
+                        showDashboard();
+                    } else {
+                        // Not found in database
+                        alert('Invalid ambassador code. Please check your code and try again. If you believe this is an error, contact: (530) 214-0676');
+                        console.log('Backend message:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Backend lookup error:', error);
+                    alert('Unable to connect to the ambassador system. Please check your internet connection and try again.');
+                });
         }
 
         function showDashboard() {
@@ -246,22 +263,15 @@
             // Update dashboard with ambassador data
             document.getElementById('ambassadorName').textContent = currentAmbassador.name;
             
-            // Get confirmed sales for this ambassador
-            const confirmedSales = JSON.parse(localStorage.getItem('confirmedSales') || '[]');
-            const ambassadorSales = confirmedSales.filter(sale => sale.ambassadorCode === currentAmbassador.code);
-            
-            // Calculate earnings
-            let totalEarnings = 0;
-            ambassadorSales.forEach(sale => {
-                const rate = getCommissionRate(ambassadorSales.length) / 100;
-                totalEarnings += sale.payment * rate;
-            });
+            // Use data from backend if available, otherwise fall back to localStorage data
+            let totalReferrals = currentAmbassador.totalReferrals || 0;
+            let totalEarnings = currentAmbassador.totalEarnings || 0;
             
             // Update stats
-            document.getElementById('totalEarnings').textContent = '$' + totalEarnings.toFixed(2);
-            document.getElementById('totalReferrals').textContent = ambassadorSales.length;
+            document.getElementById('totalEarnings').textContent = '$' + parseFloat(totalEarnings).toFixed(2);
+            document.getElementById('totalReferrals').textContent = totalReferrals;
             
-            const tier = ambassadorSales.length >= 11 ? 'Gold (20%)' : ambassadorSales.length >= 6 ? 'Silver (15%)' : 'Bronze (10%)';
+            const tier = totalReferrals >= 11 ? 'Gold (20%)' : totalReferrals >= 6 ? 'Silver (15%)' : 'Bronze (10%)';
             document.getElementById('currentTier').textContent = tier;
             
             // Set referral link and QR code

@@ -27,7 +27,7 @@ require_once 'simple-gmail.php';
 
 // Welcome email function
 function sendWelcomeEmail($email, $name, $code) {
-    $dashboardUrl = 'http://localhost/mr-sprinkle/ambassador-dashboard.php';
+    $dashboardUrl = 'https://mrsprinklereno.com/ambassador-portal.html';
     $referralUrl = 'https://mrsprinklereno.com?ref=' . $code;
     
     $subject = 'Welcome to Mr. Sprinkle Ambassador Program!';

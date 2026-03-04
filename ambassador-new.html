@@ -100,6 +100,19 @@
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
             document.getElementById('qrCode').src = qrUrl;
             
+            // Save to localStorage for tracking
+            const ambassadorData = {
+                name: name,
+                code: code,
+                link: link,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+            let pendingAmbassadors = JSON.parse(localStorage.getItem('pendingAmbassadors') || '[]');
+            pendingAmbassadors.push(ambassadorData);
+            localStorage.setItem('pendingAmbassadors', JSON.stringify(pendingAmbassadors));
+            console.log('Saved pending ambassador:', ambassadorData);
+            
             // Send ambassador registration email
             sendAmbassadorEmail(name, code, link);
         }
@@ -131,14 +144,14 @@ Next steps:
 1. Review application and approve/deny
 2. If approved, send welcome email with:
    - Ambassador code: ${code}
-   - Portal access: https://mrsprinklereno.com/ambassador-dashboard.php
+   - Portal access: https://mrsprinklereno.com/ambassador-portal.html
    - Commission structure details
 3. Add to ambassador tracking system
 
 Sample approval email:
 "Welcome to the Mr. Sprinkle Ambassador Program! Your ambassador code is: ${code}
 
-Access your portal at: https://mrsprinklereno.com/ambassador-dashboard.php
+Access your portal at: https://mrsprinklereno.com/ambassador-portal.html
 Use your ambassador code to log in and start tracking your earnings!"`;
             
             const mailtoLink = `mailto:mrsprinklereno@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

@@ -199,12 +199,13 @@ class AmbassadorBackend {
 // Route requests
 $backend = new AmbassadorBackend();
 $request = $_SERVER['REQUEST_URI'];
+$endpoint = $_GET['endpoint'] ?? '';
 
-if (strpos($request, 'track-visit') !== false) {
+if (strpos($request, 'track-visit') !== false || $endpoint === 'track-visit') {
     $backend->trackVisit();
-} elseif (strpos($request, 'process-booking') !== false) {
+} elseif (strpos($request, 'process-booking') !== false || $endpoint === 'process-booking') {
     $backend->processBooking();
-} elseif (strpos($request, 'ambassador-stats') !== false) {
+} elseif (strpos($request, 'ambassador-stats') !== false || $endpoint === 'ambassador-stats') {
     $backend->getAmbassadorStats();
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
