@@ -54,7 +54,7 @@
                     <h3>🎁 Gift Card Only</h3>
                     <div class="discount-badge">5% OFF INSTANT</div>
                     <p style="margin:20px 0;color:#ccc">Perfect for someone special</p>
-                    <input type="number" id="giftOnly" class="price-input" placeholder="Enter amount ($100+)" min="100" step="50">
+                    <input type="number" id="giftOnly" class="price-input" placeholder="Enter amount ($100-$1500)" min="100" max="1500" step="50">
                     <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftOnlyPrice">0</span></p>
                     <form id="form-giftOnly" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
                         <input type="hidden" name="cmd" value="_xclick">
@@ -72,7 +72,7 @@
                     <h3>🔥 Grill + Gift Card</h3>
                     <div class="discount-badge" style="background:#165b33">15% OFF TOTAL</div>
                     <p style="margin:20px 0;color:#ccc">Best value! Get yours + gift one</p>
-                    <input type="number" id="combo" class="price-input" placeholder="Total order amount" min="200" step="50">
+                    <input type="number" id="combo" class="price-input" placeholder="Total order amount ($200-$2500)" min="200" max="2500" step="50">
                     <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="comboPrice">0</span></p>
                     <form id="form-combo" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
                         <input type="hidden" name="cmd" value="_xclick">
@@ -88,11 +88,41 @@
                 </div>
             </div>
 
+            <!-- Gift Card Preview -->
+            <div id="previewSection" style="display:none;margin:50px 0;text-align:center">
+                <h3 style="color:#FFD700;margin-bottom:30px;font-size:2em">✨ Your Gift Card Preview ✨</h3>
+                <div id="giftCardGraphic" style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);border-radius:20px;padding:40px;max-width:500px;margin:0 auto;box-shadow:0 20px 60px rgba(255,215,0,0.4);border:3px solid #000">
+                    <!-- Card Inner -->
+                    <div style="background:#000;border-radius:15px;padding:40px;text-align:center;position:relative;overflow:hidden">
+                        <!-- Background Pattern -->
+                        <div style="position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.05;background-image:url('data:image/svg+xml,%3Csvg width=%2720%27 height=%2720%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Ctext x=%2710%27 y=%2715%27 font-size=%2715%27 fill=%27%23FFD700%27%3EMr.%3C/text%3E%3C/svg%3E');background-repeat:repeat;pointer-events:none"></div>
+                        
+                        <!-- Content -->
+                        <div style="position:relative;z-index:1">
+                            <img src="assets/trans.png" alt="Mr. Sprinkle" style="width:80px;margin-bottom:20px">
+                            <h2 style="color:#FFD700;font-size:2.5em;margin:20px 0;text-shadow:2px 2px 4px rgba(0,0,0,0.8)">LUXURY GIFT CARD</h2>
+                            <div style="border:2px solid #FFD700;padding:20px;border-radius:10px;margin:30px 0;background:rgba(255,215,0,0.1)">
+                                <p style="color:#ccc;font-size:0.9em;margin:5px 0">GIFT CARD VALUE</p>
+                                <p style="color:#FFD700;font-size:3em;font-weight:bold;margin:10px 0">$<span id="previewAmount">0</span></p>
+                                <p style="color:#ccc;font-size:0.85em;margin-top:10px">5% OFF APPLIED</p>
+                            </div>
+                            <div style="background:rgba(255,215,0,0.15);padding:15px;border-radius:8px;margin:20px 0">
+                                <p style="color:#999;font-size:0.8em;margin:5px 0">CODE</p>
+                                <p id="previewCode" style="color:#FFD700;font-size:1.4em;font-family:monospace;font-weight:bold;letter-spacing:3px;margin:10px 0">XXXXXXXX</p>
+                            </div>
+                            <p style="color:#ccc;font-size:0.85em;margin-top:20px">🎁 PERFECT LUXURY GIFT</p>
+                            <p style="color:#999;font-size:0.75em;margin-top:10px">Redeemable at mrsprinklereno.com</p>
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#FFD700;margin-top:30px;font-size:1.1em">💾 Screenshot & Save this card to share with the recipient!</p>
+            </div>
+
             <div class="info-box">
                 <h3 style="color:#FFD700;margin-bottom:15px">📋 How It Works</h3>
                 <ol style="text-align:left;line-height:2;color:#ccc">
-                    <li>Choose your gift card amount (minimum $100)</li>
-                    <li>Pay securely via PayPal</li>
+                    <li>Choose your gift card amount ($100-$1500)</li>
+                    <li>Pay securely via PayPal (accepts Credit Cards, Visa, MasterCard, American Express, Discover)</li>
                     <li>Receive digital gift card code via email within 24 hours</li>
                     <li>Recipient redeems for custom grillz at mrsprinklereno.com</li>
                 </ol>
@@ -122,6 +152,13 @@
     </footer>
 
     <script>
+    function generateGiftCardCode(){
+        const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code='';
+        for(let i=0;i<8;i++){code+=chars.charAt(Math.floor(Math.random()*chars.length));}
+        return code;
+    }
+
     function calculatePrice(type){
         const input=document.getElementById(type);
         const amount=parseFloat(input.value)||0;
@@ -129,14 +166,26 @@
         const final=amount*(1-discount);
         document.getElementById(type+'Price').textContent=final.toFixed(2);
         document.getElementById('amount-'+type).value=final.toFixed(2);
+        
+        // Update preview for giftOnly
+        if(type==='giftOnly'&&amount>=100){
+            document.getElementById('previewAmount').textContent=amount.toFixed(2);
+            document.getElementById('previewCode').textContent=generateGiftCardCode();
+            document.getElementById('previewSection').style.display='block';
+        } else if(type==='giftOnly'&&amount<100){
+            document.getElementById('previewSection').style.display='none';
+        }
     }
+    
     document.getElementById('giftOnly').addEventListener('input',()=>calculatePrice('giftOnly'));
     document.getElementById('combo').addEventListener('input',()=>calculatePrice('combo'));
 
     function buyGiftCard(type){
         const input=document.getElementById(type);
         const amount=parseFloat(input.value);
-        if(!amount||amount<100){alert('Please enter $100 or more');return;}
+        const max=type==='giftOnly'?1500:2500;
+        if(!amount||amount<100){alert('Please enter at least $100');return;}
+        if(amount>max){alert(`Maximum amount is $${max}`);return;}
         document.getElementById('form-'+type).submit();
     }
     </script>
