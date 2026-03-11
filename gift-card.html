@@ -44,47 +44,29 @@
                 <h1>🎁 Luxury Gift Cards</h1>
                 <p style="color:#FFD700;font-size:1.3em;margin:10px 0">Give the gift of luxury that lasts forever</p>
                 <div style="background:rgba(0,0,0,0.3);padding:20px;border-radius:10px;margin:20px auto;max-width:500px">
-                    <p style="color:#FFD700;font-size:1.1em;margin:10px 0"><strong>🔥 Buy Custom Grill + Gift Card → 15% OFF</strong></p>
-                    <p style="color:#FFD700;font-size:1.1em;margin:10px 0"><strong>🎁 Buy Gift Card Only → 5% OFF</strong></p>
+                    <p style="color:#FFD700;font-size:1.2em;margin:10px 0"><strong>✨ 10% OFF Grill Orders ✨</strong></p>
+                    <p style="color:#ccc;font-size:1em;margin:10px 0">Purchase a gift card and recipient gets 10% off their custom grillz order!</p>
                 </div>
             </div>
 
             <div class="card-options">
-                <div class="card-option">
-                    <h3>🎁 Gift Card Only</h3>
-                    <div class="discount-badge">5% OFF INSTANT</div>
-                    <p style="margin:20px 0;color:#ccc">Perfect for someone special</p>
-                    <input type="number" id="giftOnly" class="price-input" placeholder="Enter amount ($100-$1500)" min="100" max="1500" step="50">
-                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftOnlyPrice">0</span></p>
-                    <form id="form-giftOnly" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
+                <div class="card-option" style="max-width:500px;margin:0 auto">
+                    <h3>🎁 Mr. Sprinkle Gift Card</h3>
+                    <div class="discount-badge">10% OFF GRILL ORDER</div>
+                    <p style="margin:20px 0;color:#ccc">Perfect luxury gift for that special someone</p>
+                    <input type="number" id="giftCard" class="price-input" placeholder="Enter amount ($100-$1500)" min="100" max="1500" step="50">
+                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftCardPrice">0</span></p>
+                    <p style="color:#ccc;font-size:0.9em;margin:10px 0">Recipient saves 10% when they order grillz!</p>
+                    <form id="form-giftCard" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
                         <input type="hidden" name="cmd" value="_xclick">
                         <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
-                        <input type="hidden" name="item_name" value="Mr. Sprinkle Gift Card (5% OFF)">
-                        <input type="hidden" name="amount" id="amount-giftOnly">
+                        <input type="hidden" name="item_name" value="Mr. Sprinkle Gift Card (10% OFF)">
+                        <input type="hidden" name="amount" id="amount-giftCard">
                         <input type="hidden" name="currency_code" value="USD">
                         <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
                         <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
                     </form>
-                    <button class="buy-btn" onclick="buyGiftCard('giftOnly')">Buy Gift Card 🎁</button>
-                </div>
-
-                <div class="card-option" style="border-color:#c41e3a;border-width:3px">
-                    <h3>🔥 Grill + Gift Card</h3>
-                    <div class="discount-badge" style="background:#165b33">15% OFF TOTAL</div>
-                    <p style="margin:20px 0;color:#ccc">Best value! Get yours + gift one</p>
-                    <input type="number" id="combo" class="price-input" placeholder="Total order amount ($200-$2500)" min="200" max="2500" step="50">
-                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="comboPrice">0</span></p>
-                    <form id="form-combo" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
-                        <input type="hidden" name="item_name" value="Mr. Sprinkle Grill + Gift Card Combo (15% OFF)">
-                        <input type="hidden" name="amount" id="amount-combo">
-                        <input type="hidden" name="currency_code" value="USD">
-                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
-                        <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
-                    </form>
-                    <button class="buy-btn" onclick="buyGiftCard('combo')">Buy Combo Deal 🔥</button>
-                    <p style="font-size:0.9em;color:#888;margin-top:10px">Book your grill after payment</p>
+                    <button class="buy-btn" onclick="buyGiftCard('giftCard')">Buy Gift Card 🎁</button>
                 </div>
             </div>
 
@@ -104,7 +86,7 @@
                             <div style="border:2px solid #FFD700;padding:20px;border-radius:10px;margin:30px 0;background:rgba(255,215,0,0.1)">
                                 <p style="color:#ccc;font-size:0.9em;margin:5px 0">GIFT CARD VALUE</p>
                                 <p style="color:#FFD700;font-size:3em;font-weight:bold;margin:10px 0">$<span id="previewAmount">0</span></p>
-                                <p style="color:#ccc;font-size:0.85em;margin-top:10px">5% OFF APPLIED</p>
+                                <p style="color:#ccc;font-size:0.85em;margin-top:10px">10% OFF GRILL ORDER</p>
                             </div>
                             <div style="background:rgba(255,215,0,0.15);padding:15px;border-radius:8px;margin:20px 0">
                                 <p style="color:#999;font-size:0.8em;margin:5px 0">CODE</p>
@@ -123,8 +105,9 @@
                 <ol style="text-align:left;line-height:2;color:#ccc">
                     <li>Choose your gift card amount ($100-$1500)</li>
                     <li>Pay securely via PayPal (accepts Credit Cards, Visa, MasterCard, American Express, Discover)</li>
-                    <li>Receive digital gift card code via email within 24 hours</li>
-                    <li>Recipient redeems for custom grillz at mrsprinklereno.com</li>
+                    <li>Receive unique digital gift card code via email within 24 hours</li>
+                    <li>Recipient redeems code for custom grillz and gets 10% OFF their order</li>
+                    <li>They use the discount at checkout - simple as that! 🎉</li>
                 </ol>
             </div>
 
@@ -162,28 +145,27 @@
     function calculatePrice(type){
         const input=document.getElementById(type);
         const amount=parseFloat(input.value)||0;
-        const discount=type==='giftOnly'?0.05:0.15;
+        const discount=0.10;
         const final=amount*(1-discount);
         document.getElementById(type+'Price').textContent=final.toFixed(2);
         document.getElementById('amount-'+type).value=final.toFixed(2);
         
-        // Update preview for giftOnly
-        if(type==='giftOnly'&&amount>=100){
+        // Update preview
+        if(type==='giftCard'&&amount>=100){
             document.getElementById('previewAmount').textContent=amount.toFixed(2);
             document.getElementById('previewCode').textContent=generateGiftCardCode();
             document.getElementById('previewSection').style.display='block';
-        } else if(type==='giftOnly'&&amount<100){
+        } else if(type==='giftCard'&&amount<100){
             document.getElementById('previewSection').style.display='none';
         }
     }
     
-    document.getElementById('giftOnly').addEventListener('input',()=>calculatePrice('giftOnly'));
-    document.getElementById('combo').addEventListener('input',()=>calculatePrice('combo'));
+    document.getElementById('giftCard').addEventListener('input',()=>calculatePrice('giftCard'));
 
     function buyGiftCard(type){
         const input=document.getElementById(type);
         const amount=parseFloat(input.value);
-        const max=type==='giftOnly'?1500:2500;
+        const max=1500;
         if(!amount||amount<100){alert('Please enter at least $100');return;}
         if(amount>max){alert(`Maximum amount is $${max}`);return;}
         document.getElementById('form-'+type).submit();
