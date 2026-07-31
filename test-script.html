@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Script Test - Mr. Sprinkle</title>
+    <style>
+        body{background:#000;color:#fff;font-family:Arial;padding:40px}
+        button{background:#FFD700;color:#000;padding:15px 30px;border:none;border-radius:8px;font-size:1.2em;font-weight:bold;cursor:pointer;margin:10px 0;display:block}
+        #result{background:#1a1a1a;border:2px solid #FFD700;border-radius:10px;padding:20px;margin-top:20px;white-space:pre-wrap;font-family:monospace;min-height:100px}
+    </style>
+</head>
+<body>
+    <h2 style="color:#FFD700">🔧 Google Apps Script Connection Test</h2>
+    <p style="color:#ccc;margin-bottom:20px">Click the buttons below to test if data is reaching Google Sheets</p>
+
+    <button onclick="testAmbassador()">Test Ambassador Submission</button>
+    <button onclick="testOrder()">Test Mold Order Submission</button>
+
+    <div id="result">Results will appear here...</div>
+
+    <script>
+    const SCRIPT = 'https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec';
+
+    async function testAmbassador(){
+        document.getElementById('result').textContent = 'Sending ambassador test...';
+        const payload = {
+            form_type: 'ambassador_application',
+            date: new Date().toLocaleDateString(),
+            name: 'TEST Ambassador',
+            email: 'test@test.com',
+            phone: '555-555-5555',
+            instagram: '@testambassador',
+            ambassador_code: 'TEST99',
+            grillz_style: 'gold-only',
+            location: 'reno',
+            status: 'pending'
+        };
+        await send(payload);
+    }
+
+    async function testOrder(){
+        document.getElementById('result').textContent = 'Sending order test...';
+        const payload = {
+            form_type: 'mold_order',
+            date: new Date().toLocaleDateString(),
+            customer_name: 'TEST Customer',
+            email: 'testcustomer@test.com',
+            phone: '555-555-5555',
+            selected_teeth: '11, 21',
+            material: '14k-gold',
+            budget: '500-1000',
+            payment_method: 'cash-in-person',
+            ambassador_code: 'TEST99',
+            rush_delivery: 'no',
+            promo_code: '',
+            design: 'Test order'
+        };
+        await send(payload);
+    }
+
+    async function send(payload){
+        const result = document.getElementById('result');
+        try {
+            const res = await fetch(SCRIPT, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            result.textContent = '✅ Request sent! (mode: no-cors means we cant see the response)\n\nNow check your Google Sheet - a new row should appear within 5 seconds.\n\nPayload sent:\n' + JSON.stringify(payload, null, 2);
+        } catch(err) {
+            result.textContent = '❌ ERROR: ' + err.message + '\n\nThis means the script URL is not reachable.';
+        }
+    }
+    </script>
+</body>
+</html>
