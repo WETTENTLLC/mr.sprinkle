@@ -5,650 +5,526 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Mr. Sprinkle</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 10px; }
-        
-        @media (max-width: 768px) {
-            body { padding: 5px; }
-            .container { max-width: 100%; }
-            .section { padding: 15px; }
-            table { font-size: 0.8em; overflow-x: auto; display: block; }
-            th, td { padding: 8px 4px; }
-            .ambassador-card { padding: 10px; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial,sans-serif;background:#1a1a1a;color:#fff;padding:20px}
+        .container{max-width:1200px;margin:0 auto}
+        .header{text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:15px}
+        .header h1{color:#000;font-size:2rem}
+        .header p{color:#000;margin-top:5px}
+        .tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+        .tab{padding:12px 25px;border:2px solid #FFD700;border-radius:8px;cursor:pointer;font-weight:bold;background:#000;color:#FFD700;transition:all 0.3s}
+        .tab.active{background:#FFD700;color:#000}
+        .section{background:rgba(255,255,255,0.05);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:25px;display:none}
+        .section.active{display:block}
+        .status-bar{background:rgba(255,215,0,0.1);border:1px solid #FFD700;border-radius:8px;padding:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:all 0.3s}
+        .btn-gold{background:#FFD700;color:#000}
+        .btn-gold:hover{background:#FFA500}
+        .btn-green{background:#4CAF50;color:#fff}
+        .btn-red{background:#dc3545;color:#fff}
+        .btn-blue{background:#1E90FF;color:#fff}
+        table{width:100%;border-collapse:collapse;margin-top:15px}
+        th{background:rgba(255,215,0,0.2);color:#FFD700;padding:12px;text-align:left;border-bottom:2px solid #FFD700}
+        td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.1);vertical-align:top}
+        tr:hover{background:rgba(255,215,0,0.05)}
+        .badge{padding:4px 10px;border-radius:20px;font-size:0.8em;font-weight:bold}
+        .badge-pending{background:#FFA500;color:#000}
+        .badge-active{background:#4CAF50;color:#fff}
+        .badge-inactive{background:#dc3545;color:#fff}
+        .badge-new{background:#1E90FF;color:#fff}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:25px}
+        .stat-card{background:rgba(255,215,0,0.1);border:2px solid #FFD700;border-radius:10px;padding:20px;text-align:center}
+        .stat-card .number{font-size:2.5em;font-weight:bold;color:#FFD700}
+        .stat-card .label{color:#ccc;margin-top:5px}
+        .add-form{background:rgba(0,0,0,0.3);border:1px solid #FFD700;border-radius:10px;padding:20px;margin-bottom:20px;display:none}
+        .add-form.show{display:block}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}
+        .form-grid input,.form-grid select{padding:10px;background:#333;border:1px solid #555;border-radius:5px;color:#fff;width:100%}
+        .form-grid input:focus,.form-grid select:focus{outline:none;border-color:#FFD700}
+        .referral-link{font-family:monospace;background:rgba(255,215,0,0.1);padding:8px;border-radius:5px;font-size:0.85em;word-break:break-all;color:#FFD700}
+        .loading{text-align:center;padding:40px;color:#FFD700;font-size:1.2em}
+        .error-msg{background:rgba(220,53,69,0.2);border:1px solid #dc3545;border-radius:8px;padding:15px;margin:10px 0;color:#ff6b6b}
+        .success-msg{background:rgba(76,175,80,0.2);border:1px solid #4CAF50;border-radius:8px;padding:15px;margin:10px 0;color:#81c784}
+        .detail-box{background:rgba(0,0,0,0.3);padding:10px;border-radius:5px;font-size:0.85em;color:#ccc;margin-top:5px}
+        @media(max-width:768px){
+            body{padding:10px}
+            .tabs{gap:5px}
+            .tab{padding:8px 15px;font-size:0.9em}
+            table{font-size:0.85em}
+            th,td{padding:8px 6px}
         }
-        
-        @media (max-width: 480px) {
-            body { padding: 2px; }
-            .section { padding: 10px; }
-            .logo { font-size: 1.5rem; }
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { color: #FFD700; font-size: 2rem; font-weight: bold; }
-        .section { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .pending-leads { background: rgba(255,193,7,0.1); border: 2px solid #FFC107; }
-        .confirmed-sales { background: rgba(40,167,69,0.1); border: 2px solid #28a745; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
-        th { background: rgba(255,215,0,0.2); color: #FFD700; }
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 2px; }
-        .btn-confirm { background: #28a745; color: white; }
-        .btn-delete { background: #dc3545; color: white; }
-        .payment-input { width: 80px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 3px; }
-        .ambassador-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
-        .ambassador-card { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,215,0,0.3); }
-        .total-owed { color: #28a745; font-size: 1.2rem; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">Mr. Sprinkle Admin Dashboard</div>
-            <p>Manage Ambassador Referrals & Commissions</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>👑 Mr. Sprinkle Admin Dashboard</h1>
+        <p>Live data from Formspree • Ambassador Management • Order Tracking</p>
+    </div>
 
-        <div class="section pending-leads">
-            <h2>⏳ Pending Ambassador Leads</h2>
-            <p>Customers who came through ambassador links but haven't been confirmed as paid</p>
-            <table id="pendingTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Ambassador Code</th>
-                        <th>Service</th>
-                        <th>Payment Amount</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="pendingLeads">
-                    <!-- Pending leads will be loaded here -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section confirmed-sales">
-            <h2>✅ Confirmed Sales</h2>
-            <p>Customers who have paid - commissions calculated</p>
-            <table id="confirmedTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Customer</th>
-                        <th>Ambassador Code</th>
-                        <th>Service</th>
-                        <th>Payment</th>
-                        <th>Commission</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="confirmedSales">
-                    <!-- Confirmed sales will be loaded here -->
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section">
-            <h2>💰 Ambassador Commission Summary</h2>
-            <div class="ambassador-summary" id="ambassadorSummary">
-                <!-- Ambassador summaries will be loaded here -->
-            </div>
-        </div>
-        
-        <div class="section">
-            <h2>🎆 Ambassador Management</h2>
-            <div style="margin-bottom: 20px;">
-                <button class="btn" onclick="showAddAmbassador()">Add New Ambassador</button>
-                <a href="ambassador-portal.html" class="btn" style="text-decoration: none; display: inline-block;">Ambassador Portal</a>
-                <button class="btn" onclick="showImportAmbassadors()">Import Existing Ambassadors</button>
-                <button class="btn" onclick="exportAmbassadors()" style="background: #17a2b8; color: white;">Export Ambassador Codes</button>
-            </div>
-            
-            <div id="importAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <h3 style="color: #FFD700; margin-bottom: 15px;">Import Existing Ambassadors</h3>
-                <p style="margin-bottom: 15px; color: #ccc;">Add ambassadors you already have. Enter one per line in format: Name,Email,Phone,Code</p>
-                <textarea id="importAmbassadorData" placeholder="Example:\nMIKE,mike@email.com,(555) 111-2222,MIKE456\nSARAH,sarah@email.com,(555) 333-4444,SARAH123" style="width: 100%; height: 120px; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff; font-family: monospace;"></textarea>
-                <div style="margin-top: 15px;">
-                    <button class="btn btn-confirm" onclick="importAmbassadors()">Import Ambassadors</button>
-                    <button class="btn btn-delete" onclick="hideImportAmbassadors()">Cancel</button>
-                </div>
-            </div>
-            
-            <div id="addAmbassadorForm" style="display: none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <h3 style="color: #FFD700; margin-bottom: 15px;">Add New Ambassador</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <input type="text" id="newAmbassadorName" placeholder="Full Name" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                    <input type="email" id="newAmbassadorEmail" placeholder="Email" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <input type="tel" id="newAmbassadorPhone" placeholder="Phone" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                    <input type="text" id="newAmbassadorCode" placeholder="Ambassador Code (enter custom or generate)" style="padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="newAmbassadorPassword" placeholder="Custom Ambassador Password (optional - will use code if empty)" style="width: 100%; padding: 10px; background: #333; border: 1px solid #555; border-radius: 5px; color: #fff;">
-                    <small style="color: #ccc; margin-top: 5px; display: block;">If left empty, ambassador will use their code as password</small>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <button class="btn" onclick="generateAmbassadorCode()">Generate Code</button>
-                    <button class="btn btn-confirm" onclick="addAmbassador()">Add Ambassador</button>
-                    <button class="btn btn-delete" onclick="hideAddAmbassador()">Cancel</button>
-                </div>
-            </div>
-            
-
-            
-            <table id="ambassadorTable" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                <thead>
-                    <tr>
-                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Name</th>
-                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Code</th>
-                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Email</th>
-                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Status</th>
-                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); background: rgba(255,215,0,0.2); color: #FFD700;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="ambassadorTableBody">
-                    <!-- Ambassador list will be loaded here -->
-                </tbody>
-            </table>
+    <div class="status-bar">
+        <span id="lastUpdated">Last updated: Never</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="loadAllData()">🔄 Refresh All Data</button>
+            <button class="btn btn-blue" onclick="toggleApiSetup()">⚙️ API Settings</button>
         </div>
     </div>
 
-    <script>
-        // Sample data structure - in real implementation, this would come from your database/spreadsheet
-        let pendingLeads = JSON.parse(localStorage.getItem('pendingLeads') || '[]');
-        let confirmedSales = JSON.parse(localStorage.getItem('confirmedSales') || '[]');
+    <!-- API Setup Panel -->
+    <div id="apiSetup" class="add-form" style="border-color:#1E90FF">
+        <h3 style="color:#1E90FF;margin-bottom:15px">⚙️ Formspree API Setup</h3>
+        <p style="color:#ccc;margin-bottom:15px">Enter your Formspree API key to load live submissions. Get it at <a href="https://formspree.io/account/apikeys" target="_blank" style="color:#FFD700">formspree.io/account/apikeys</a></p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="password" id="apiKeyInput" placeholder="Formspree API Key (fkey_...)" style="flex:1;padding:10px;background:#333;border:1px solid #FFD700;border-radius:5px;color:#fff;min-width:200px">
+            <button class="btn btn-gold" onclick="saveApiKey()">Save & Connect</button>
+            <button class="btn btn-red" onclick="clearApiKey()">Clear Key</button>
+        </div>
+        <p id="apiStatus" style="margin-top:10px;color:#ccc"></p>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('ambassadors')">✨ Ambassadors</div>
+        <div class="tab" onclick="showTab('applications')">📋 New Applications</div>
+        <div class="tab" onclick="showTab('orders')">🛒 Mold Orders</div>
+        <div class="tab" onclick="showTab('commissions')">💰 Commissions</div>
+    </div>
+
+    <!-- AMBASSADORS TAB -->
+    <div id="tab-ambassadors" class="section active">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+            <h2 style="color:#FFD700">✨ Active Ambassadors</h2>
+            <button class="btn btn-gold" onclick="toggleAddAmbassador()">+ Add Ambassador Manually</button>
+        </div>
+
+        <div id="addAmbassadorForm" class="add-form">
+            <h3 style="color:#FFD700;margin-bottom:15px">Add New Ambassador</h3>
+            <div class="form-grid">
+                <input type="text" id="newName" placeholder="Full Name *">
+                <input type="email" id="newEmail" placeholder="Email *">
+                <input type="tel" id="newPhone" placeholder="Phone">
+                <input type="text" id="newInstagram" placeholder="Instagram @handle">
+                <input type="text" id="newCode" placeholder="Ambassador Code (auto-generate or enter)">
+                <select id="newStatus">
+                    <option value="active">Active</option>
+                    <option value="pending">Pending Approval</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn btn-gold" onclick="generateCode()">⚡ Generate Code</button>
+                <button class="btn btn-green" onclick="addAmbassador()">✅ Add Ambassador</button>
+                <button class="btn btn-red" onclick="toggleAddAmbassador()">Cancel</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="number" id="totalAmbassadors">0</div><div class="label">Total Ambassadors</div></div>
+            <div class="stat-card"><div class="number" id="activeAmbassadors">0</div><div class="label">Active</div></div>
+            <div class="stat-card"><div class="number" id="pendingAmbassadors">0</div><div class="label">Pending Approval</div></div>
+            <div class="stat-card"><div class="number" id="totalReferrals">0</div><div class="label">Total Referrals</div></div>
+        </div>
+
+        <div id="ambassadorList"><div class="loading">Loading ambassadors...</div></div>
+    </div>
+
+    <!-- APPLICATIONS TAB -->
+    <div id="tab-applications" class="section">
+        <h2 style="color:#FFD700;margin-bottom:20px">📋 Ambassador Applications (from Formspree)</h2>
+        <p style="color:#ccc;margin-bottom:20px">These are people who submitted the ambassador application form. Approve them to add to your active ambassador list.</p>
+        <div id="applicationsList"><div class="loading">Connect Formspree API to load applications...</div></div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div id="tab-orders" class="section">
+        <h2 style="color:#FFD700;margin-bottom:20px">🛒 Mold Form Orders (from Formspree)</h2>
+        <p style="color:#ccc;margin-bottom:20px">All orders submitted through the mold form. Orders with ambassador codes are tracked for commission.</p>
+        <div id="ordersList"><div class="loading">Connect Formspree API to load orders...</div></div>
+    </div>
+
+    <!-- COMMISSIONS TAB -->
+    <div id="tab-commissions" class="section">
+        <h2 style="color:#FFD700;margin-bottom:20px">💰 Commission Tracking</h2>
+        <div id="commissionsList"><div class="loading">Loading commission data...</div></div>
+    </div>
+</div>
+
+<script>
+const FORM_ID = 'myzpanyg';
+let apiKey = localStorage.getItem('formspree_api_key') || '';
+let ambassadors = JSON.parse(localStorage.getItem('mrsprinkle_ambassadors') || '[]');
+let allSubmissions = [];
+
+// ── API SETUP ──────────────────────────────────────────────
+function toggleApiSetup(){
+    const el = document.getElementById('apiSetup');
+    el.classList.toggle('show');
+    if(el.classList.contains('show') && apiKey){
+        document.getElementById('apiKeyInput').value = apiKey;
+        document.getElementById('apiStatus').textContent = '✅ API key loaded';
+        document.getElementById('apiStatus').style.color = '#4CAF50';
+    }
+}
+
+function saveApiKey(){
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if(!key){alert('Please enter your API key');return;}
+    apiKey = key;
+    localStorage.setItem('formspree_api_key', key);
+    document.getElementById('apiStatus').textContent = '✅ Saved! Loading data...';
+    document.getElementById('apiStatus').style.color = '#4CAF50';
+    loadAllData();
+}
+
+function clearApiKey(){
+    apiKey = '';
+    localStorage.removeItem('formspree_api_key');
+    document.getElementById('apiKeyInput').value = '';
+    document.getElementById('apiStatus').textContent = 'API key cleared';
+    document.getElementById('apiStatus').style.color = '#ccc';
+}
+
+// ── LOAD DATA FROM FORMSPREE ───────────────────────────────
+async function loadAllData(){
+    document.getElementById('lastUpdated').textContent = 'Refreshing...';
+    if(apiKey){
+        await loadFormspreeSubmissions();
+    } else {
+        document.getElementById('applicationsList').innerHTML = '<div class="error-msg">⚠️ No Formspree API key set. Click "API Settings" above to connect.</div>';
+        document.getElementById('ordersList').innerHTML = '<div class="error-msg">⚠️ No Formspree API key set. Click "API Settings" above to connect.</div>';
+    }
+    renderAmbassadors();
+    renderCommissions();
+    document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+}
+
+async function loadFormspreeSubmissions(){
+    try {
+        const res = await fetch(`https://api.formspree.io/forms/${FORM_ID}/submissions?page_size=100`, {
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        if(!res.ok){
+            const err = await res.json();
+            showApiError('Formspree API error: ' + (err.error || res.status));
+            return;
+        }
+
+        const data = await res.json();
+        allSubmissions = data.submissions || [];
         
-        // Ambassador Management Variables - declare at top to avoid hoisting issues
-        let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
+        const applications = allSubmissions.filter(s => 
+            s.data?.form_type === 'ambassador_application' || 
+            s.data?.ambassadorName || 
+            s.data?.grillz_style ||
+            (s.data?._subject && s.data._subject.includes('AMBASSADOR'))
+        );
         
-        // Load sample ambassadors if empty (including MIKE)
-        if (ambassadors.length === 0) {
-            ambassadors = [
-                {
-                    id: 1,
-                    name: 'MIKE',
-                    email: 'mike@email.com',
-                    phone: '(555) 111-2222',
-                    code: 'MIKE456',
-                    status: 'active',
-                    dateAdded: '2025-01-19',
-                    totalReferrals: 1,
-                    totalEarnings: 0
+        const orders = allSubmissions.filter(s => 
+            s.data?.customerName || 
+            s.data?.selectedTeeth ||
+            (s.data?._subject && s.data._subject.includes('MOLD'))
+        );
+
+        renderApplications(applications);
+        renderOrders(orders);
+
+    } catch(e){
+        showApiError('Failed to connect to Formspree: ' + e.message);
+    }
+}
+
+function showApiError(msg){
+    const errHtml = `<div class="error-msg">❌ ${msg}<br><br>Make sure your API key is correct at <a href="https://formspree.io/account/apikeys" target="_blank" style="color:#FFD700">formspree.io/account/apikeys</a></div>`;
+    document.getElementById('applicationsList').innerHTML = errHtml;
+    document.getElementById('ordersList').innerHTML = errHtml;
+}
+
+// ── RENDER APPLICATIONS ────────────────────────────────────
+function renderApplications(apps){
+    const el = document.getElementById('applicationsList');
+    if(!apps.length){
+        el.innerHTML = '<div class="success-msg">No new ambassador applications found. They will appear here automatically when someone submits the form.</div>';
+        return;
+    }
+
+    let html = `<table>
+        <thead><tr>
+            <th>Date</th><th>Name</th><th>Contact</th><th>Instagram</th><th>Style</th><th>Code</th><th>Actions</th>
+        </tr></thead><tbody>`;
+
+    apps.forEach(sub => {
+        const d = sub.data || {};
+        const date = new Date(sub.submit_time).toLocaleDateString();
+        const name = d.ambassadorName || d.fullName || 'N/A';
+        const email = d.email || '';
+        const phone = d.phone || '';
+        const instagram = d.instagram || '';
+        const style = d['grillz-style'] || '';
+        const code = d.ambassador_code || generateCodeFromName(name);
+        const alreadyAdded = ambassadors.find(a => a.email === email);
+
+        html += `<tr>
+            <td>${date}</td>
+            <td><strong>${name}</strong></td>
+            <td><div>${email}</div><div style="color:#ccc;font-size:0.85em">${phone}</div></td>
+            <td>${instagram}</td>
+            <td>${style}</td>
+            <td><div class="referral-link">${code}</div></td>
+            <td>
+                ${alreadyAdded 
+                    ? '<span class="badge badge-active">✅ Added</span>' 
+                    : `<button class="btn btn-green" onclick="approveAmbassador('${name}','${email}','${phone}','${instagram}','${code}')">✅ Approve</button>`
                 }
-            ];
-            localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-        }
+            </td>
+        </tr>`;
+    });
 
-        // Load sample data if empty
-        if (pendingLeads.length === 0) {
-            pendingLeads = [
-                {
-                    id: 1,
-                    date: '2025-01-20',
-                    customer: 'John Smith',
-                    phone: '(555) 123-4567',
-                    email: 'john@email.com',
-                    ambassadorCode: 'SARAH123',
-                    service: 'Single Tooth Fully Iced',
-                    notes: 'Wants gold with diamond'
-                },
-                {
-                    id: 2,
-                    date: '2025-01-19',
-                    customer: 'Maria Garcia',
-                    phone: '(555) 987-6543',
-                    email: 'maria@email.com',
-                    ambassadorCode: 'MIKE456',
-                    service: '3 Teeth Fully Iced',
-                    notes: 'Custom design request'
-                }
-            ];
-            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
-        }
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
 
-        function renderPendingLeads() {
-            const tbody = document.getElementById('pendingLeads');
-            tbody.innerHTML = '';
-            
-            pendingLeads.forEach(lead => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${lead.date}</td>
-                    <td>${lead.customer}</td>
-                    <td>${lead.phone}</td>
-                    <td><strong>${lead.ambassadorCode}</strong></td>
-                    <td>${lead.service}</td>
-                    <td>
-                        $<input type="number" class="payment-input" id="payment-${lead.id}" placeholder="0" min="0" step="0.01">
-                    </td>
-                    <td>
-                        <button class="btn btn-confirm" onclick="confirmSale(${lead.id})">Confirm Paid</button>
-                        <button class="btn btn-delete" onclick="deleteLead(${lead.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
+// ── RENDER ORDERS ──────────────────────────────────────────
+function renderOrders(orders){
+    const el = document.getElementById('ordersList');
+    if(!orders.length){
+        el.innerHTML = '<div class="success-msg">No mold orders found yet.</div>';
+        return;
+    }
 
-        function renderConfirmedSales() {
-            const tbody = document.getElementById('confirmedSales');
-            tbody.innerHTML = '';
-            
-            confirmedSales.forEach(sale => {
-                const commission = calculateCommission(sale.payment, sale.ambassadorCode);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${sale.date}</td>
-                    <td>${sale.customer}</td>
-                    <td><strong>${sale.ambassadorCode}</strong></td>
-                    <td>${sale.service}</td>
-                    <td>$${sale.payment}</td>
-                    <td>$${commission.toFixed(2)} (${getCommissionRate(sale.ambassadorCode)}%)</td>
-                    <td>
-                        <button class="btn btn-delete" onclick="deleteSale(${sale.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
+    let html = `<table>
+        <thead><tr>
+            <th>Date</th><th>Customer</th><th>Teeth</th><th>Material</th><th>Budget</th><th>Payment</th><th>Ambassador</th><th>Status</th>
+        </tr></thead><tbody>`;
 
-        function calculateCommission(payment, ambassadorCode) {
-            const rate = getCommissionRate(ambassadorCode) / 100;
-            return payment * rate;
-        }
+    orders.forEach(sub => {
+        const d = sub.data || {};
+        const date = new Date(sub.submit_time).toLocaleDateString();
+        const ambCode = d.ambassadorCode || '';
+        const ambBadge = ambCode 
+            ? `<span class="badge badge-active">${ambCode}</span>` 
+            : '<span style="color:#666">None</span>';
 
-        function getCommissionRate(ambassadorCode) {
-            // Get ambassador's tier based on confirmed sales count
-            const salesCount = confirmedSales.filter(sale => sale.ambassadorCode === ambassadorCode).length;
-            if (salesCount >= 11) return 20; // Gold
-            if (salesCount >= 6) return 15;  // Silver
-            return 10; // Bronze
-        }
+        html += `<tr>
+            <td>${date}</td>
+            <td>
+                <strong>${d.customerName || 'N/A'}</strong>
+                <div class="detail-box">${d.email || ''}<br>${d.phone || ''}</div>
+            </td>
+            <td>${d.selectedTeeth || 'N/A'}</td>
+            <td>${d.materialType || 'N/A'}</td>
+            <td>${d.budget || 'N/A'}</td>
+            <td>${d.paymentMethod || 'N/A'}</td>
+            <td>${ambBadge}</td>
+            <td><span class="badge badge-new">New</span></td>
+        </tr>`;
+    });
 
-        function confirmSale(leadId) {
-            const paymentInput = document.getElementById(`payment-${leadId}`);
-            const payment = parseFloat(paymentInput.value);
-            
-            if (!payment || payment <= 0) {
-                alert('Please enter a valid payment amount');
-                return;
-            }
-            
-            const lead = pendingLeads.find(l => l.id === leadId);
-            if (!lead) return;
-            
-            // Move to confirmed sales
-            const sale = {
-                ...lead,
-                payment: payment,
-                confirmedDate: new Date().toISOString().split('T')[0]
-            };
-            
-            confirmedSales.push(sale);
-            pendingLeads = pendingLeads.filter(l => l.id !== leadId);
-            
-            // Save to localStorage
-            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
-            localStorage.setItem('confirmedSales', JSON.stringify(confirmedSales));
-            
-            // Refresh displays
-            renderPendingLeads();
-            renderConfirmedSales();
-            renderAmbassadorSummary();
-            
-            alert(`✅ Sale confirmed! $${payment} payment recorded for ${lead.customer}`);
-        }
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
 
-        function deleteLead(leadId) {
-            if (confirm('Are you sure you want to delete this lead?')) {
-                pendingLeads = pendingLeads.filter(l => l.id !== leadId);
-                localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
-                renderPendingLeads();
-            }
-        }
+// ── AMBASSADOR MANAGEMENT ──────────────────────────────────
+function renderAmbassadors(){
+    const el = document.getElementById('ambassadorList');
+    
+    document.getElementById('totalAmbassadors').textContent = ambassadors.length;
+    document.getElementById('activeAmbassadors').textContent = ambassadors.filter(a=>a.status==='active').length;
+    document.getElementById('pendingAmbassadors').textContent = ambassadors.filter(a=>a.status==='pending').length;
+    
+    const totalRefs = ambassadors.reduce((sum,a)=>sum+(a.referrals||0),0);
+    document.getElementById('totalReferrals').textContent = totalRefs;
 
-        function deleteSale(saleId) {
-            if (confirm('Are you sure you want to delete this confirmed sale?')) {
-                confirmedSales = confirmedSales.filter(s => s.id !== saleId);
-                localStorage.setItem('confirmedSales', JSON.stringify(confirmedSales));
-                renderConfirmedSales();
-                renderAmbassadorSummary();
-            }
-        }
+    if(!ambassadors.length){
+        el.innerHTML = '<div class="success-msg">No ambassadors yet. Approve applications from the "New Applications" tab or add manually.</div>';
+        return;
+    }
 
-        function renderAmbassadorSummary() {
-            const summary = {};
-            
-            // Calculate totals for each ambassador
-            confirmedSales.forEach(sale => {
-                if (!summary[sale.ambassadorCode]) {
-                    summary[sale.ambassadorCode] = {
-                        code: sale.ambassadorCode,
-                        salesCount: 0,
-                        totalSales: 0,
-                        totalCommission: 0
-                    };
-                }
-                
-                summary[sale.ambassadorCode].salesCount++;
-                summary[sale.ambassadorCode].totalSales += sale.payment;
-                summary[sale.ambassadorCode].totalCommission += calculateCommission(sale.payment, sale.ambassadorCode);
-            });
-            
-            const container = document.getElementById('ambassadorSummary');
-            container.innerHTML = '';
-            
-            Object.values(summary).forEach(ambassador => {
-                const tier = ambassador.salesCount >= 11 ? 'Gold' : ambassador.salesCount >= 6 ? 'Silver' : 'Bronze';
-                const rate = getCommissionRate(ambassador.code);
-                
-                const card = document.createElement('div');
-                card.className = 'ambassador-card';
-                card.innerHTML = `
-                    <h3>${ambassador.code}</h3>
-                    <p><strong>Tier:</strong> ${tier} (${rate}%)</p>
-                    <p><strong>Sales:</strong> ${ambassador.salesCount}</p>
-                    <p><strong>Total Sales:</strong> $${ambassador.totalSales.toFixed(2)}</p>
-                    <p class="total-owed"><strong>Total Owed:</strong> $${ambassador.totalCommission.toFixed(2)}</p>
-                `;
-                container.appendChild(card);
-            });
-            
-            if (Object.keys(summary).length === 0) {
-                container.innerHTML = '<p>No confirmed sales yet</p>';
-            }
-        }
+    let html = `<table>
+        <thead><tr>
+            <th>Name</th><th>Contact</th><th>Code & Link</th><th>Status</th><th>Referrals</th><th>Actions</th>
+        </tr></thead><tbody>`;
 
-        // Initialize dashboard
-        renderPendingLeads();
-        renderConfirmedSales();
-        renderAmbassadorSummary();
-        renderAmbassadorTable();
-
-        // Ambassador Management Functions
+    ambassadors.forEach((a,i) => {
+        const link = `https://mrsprinklereno.com/mold-form.html?ref=${a.code}`;
+        const refs = allSubmissions.filter(s => s.data?.ambassadorCode === a.code).length;
         
-        function showAddAmbassador() {
-            document.getElementById('addAmbassadorForm').style.display = 'block';
-            document.getElementById('importAmbassadorForm').style.display = 'none';
-        }
-        
-        function showImportAmbassadors() {
-            document.getElementById('importAmbassadorForm').style.display = 'block';
-            document.getElementById('addAmbassadorForm').style.display = 'none';
-        }
-        
-        function hideImportAmbassadors() {
-            document.getElementById('importAmbassadorForm').style.display = 'none';
-            document.getElementById('importAmbassadorData').value = '';
-        }
-        
-        function importAmbassadors() {
-            const data = document.getElementById('importAmbassadorData').value.trim();
-            if (!data) {
-                alert('Please enter ambassador data');
-                return;
-            }
-            
-            const lines = data.split('\n');
-            let imported = 0;
-            
-            lines.forEach(line => {
-                const parts = line.split(',').map(p => p.trim());
-                if (parts.length >= 4) {
-                    const [name, email, phone, code] = parts;
-                    
-                    // Check if ambassador already exists
-                    if (!ambassadors.find(a => a.code === code)) {
-                        const newAmbassador = {
-                            id: Date.now() + Math.random(),
-                            name: name,
-                            email: email,
-                            phone: phone,
-                            code: code,
-                            status: 'active',
-                            dateAdded: new Date().toISOString().split('T')[0],
-                            totalReferrals: 0,
-                            totalEarnings: 0
-                        };
-                        
-                        ambassadors.push(newAmbassador);
-                        imported++;
-                    }
-                }
-            });
-            
-            if (imported > 0) {
-                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-                renderAmbassadorTable();
-                alert(`✅ Successfully imported ${imported} ambassadors!`);
-                hideImportAmbassadors();
-            } else {
-                alert('No new ambassadors to import (they may already exist)');
-            }
-        }
-        
-        function hideAddAmbassador() {
-            document.getElementById('addAmbassadorForm').style.display = 'none';
-            document.getElementById('newAmbassadorName').value = '';
-            document.getElementById('newAmbassadorEmail').value = '';
-            document.getElementById('newAmbassadorPhone').value = '';
-            document.getElementById('newAmbassadorCode').value = '';
-            document.getElementById('newAmbassadorPassword').value = '';
-        }
-        
-        function generateAmbassadorCode() {
-            const name = document.getElementById('newAmbassadorName').value.trim();
-            if (!name) {
-                alert('Please enter a name first');
-                return;
-            }
-            const code = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
-            document.getElementById('newAmbassadorCode').value = code;
-        }
-        
-        function addAmbassador() {
-            try {
-                console.log('addAmbassador function called');
-                
-                const name = document.getElementById('newAmbassadorName').value.trim();
-                const email = document.getElementById('newAmbassadorEmail').value.trim();
-                const phone = document.getElementById('newAmbassadorPhone').value.trim();
-                const code = document.getElementById('newAmbassadorCode').value.trim();
-                const customPassword = document.getElementById('newAmbassadorPassword').value.trim();
-                
-                console.log('Form values:', { name, email, phone, code, customPassword });
-                
-                if (!name) {
-                    alert('Please enter a name');
-                    return;
-                }
-                if (!email) {
-                    alert('Please enter an email');
-                    return;
-                }
-                
-                // Auto-generate code if not provided
-                let finalCode = code.toUpperCase();
-                if (!code) {
-                    finalCode = name.replace(/\s+/g, '').toUpperCase().substring(0, 8) + Math.floor(Math.random() * 100);
-                    document.getElementById('newAmbassadorCode').value = finalCode;
-                }
-                
-                const password = customPassword || finalCode;
-                
-                console.log('Creating ambassador with:', { name, email, phone, finalCode, password });
-                
-                const newAmbassador = {
-                    id: Date.now(),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    code: finalCode,
-                    password: password,
-                    status: 'active',
-                    dateAdded: new Date().toISOString().split('T')[0],
-                    totalReferrals: 0,
-                    totalEarnings: 0
-                };
-                
-                console.log('New ambassador object:', newAmbassador);
-                
-                ambassadors.push(newAmbassador);
-                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-                
-                console.log('Ambassador added to array, rendering table...');
-                renderAmbassadorTable();
-                hideAddAmbassador();
-                
-                // Generate welcome email
-                const subject = `Welcome to Mr. Sprinkle Ambassador Program - ${name}`;
-                const body = `Welcome to the Mr. Sprinkle Ambassador Program!\n\nYour ambassador code: ${finalCode}\n\nAccess your portal at: https://mrsprinklereno.com/ambassador-portal.html\nUse your ambassador code to log in and start tracking your earnings!\n\nCommission Structure:\n- Bronze (1-5 referrals): 10%\n- Silver (6-10 referrals): 15%\n- Gold (11+ referrals): 20%\n\nYour referral link: https://mrsprinklereno.com/mold-form.html?ref=${finalCode}\n\nQuestions? Text (530) 214-0676`;
-                
-                const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.open(mailtoLink);
-                
-                alert(`✅ Ambassador ${name} added successfully! Welcome email opened.`);
-                
-            } catch (error) {
-                console.error('Error in addAmbassador:', error);
-                alert('Error adding ambassador: ' + error.message);
-            }
-        }
-        
-        function accessAmbassadorPortal() {
-            const code = document.getElementById('ambassadorLoginCode').value.trim();
-            if (!code) {
-                alert('Please enter an ambassador code');
-                return;
-            }
-            
-            const ambassador = ambassadors.find(a => a.code === code);
-            if (!ambassador) {
-                alert('Invalid ambassador code');
-                return;
-            }
-            
-            showAmbassadorDashboard(ambassador);
-        }
-        
-        function showAmbassadorDashboard(ambassador) {
-            const portal = document.getElementById('ambassadorPortal');
-            const referralLink = `https://mrsprinklereno.com/mold-form.html?ref=${ambassador.code}`;
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(referralLink)}`;
-            
-            // Calculate ambassador stats
-            const ambassadorSales = confirmedSales.filter(sale => sale.ambassadorCode === ambassador.code);
-            const totalEarnings = ambassadorSales.reduce((sum, sale) => sum + calculateCommission(sale.payment, ambassador.code), 0);
-            const tier = ambassadorSales.length >= 11 ? 'Gold (20%)' : ambassadorSales.length >= 6 ? 'Silver (15%)' : 'Bronze (10%)';
-            
-            portal.innerHTML = `
-                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3 style="color: #FFD700; margin-bottom: 15px;">🎯 ${ambassador.name}'s Dashboard</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 1.5em; font-weight: bold;">$${totalEarnings.toFixed(2)}</div>
-                            <div style="color: #ccc;">Total Earnings</div>
-                        </div>
-                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 1.5em; font-weight: bold;">${ambassadorSales.length}</div>
-                            <div style="color: #ccc;">Total Referrals</div>
-                        </div>
-                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 1.2em; font-weight: bold; color: #FFD700;">${tier}</div>
-                            <div style="color: #ccc;">Current Tier</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <div>
-                            <h4 style="color: #FFD700; margin-bottom: 10px;">📱 Your QR Code</h4>
-                            <div style="text-align: center; background: white; padding: 15px; border-radius: 10px; display: inline-block;">
-                                <img src="${qrUrl}" style="width: 150px; height: 150px;">
-                            </div>
-                        </div>
-                        <div>
-                            <h4 style="color: #FFD700; margin-bottom: 10px;">🔗 Your Referral Link</h4>
-                            <div style="background: rgba(255,215,0,0.1); padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace; margin-bottom: 10px;">${referralLink}</div>
-                            <button class="btn" onclick="copyToClipboard('${referralLink}')">Copy Link</button>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-delete" onclick="hideAmbassadorPortal()">Close Portal</button>
+        html += `<tr>
+            <td>
+                <strong>${a.name}</strong>
+                <div style="color:#ccc;font-size:0.85em">${a.instagram || ''}</div>
+            </td>
+            <td>
+                <div>${a.email}</div>
+                <div style="color:#ccc;font-size:0.85em">${a.phone || ''}</div>
+            </td>
+            <td>
+                <div class="referral-link">${a.code}</div>
+                <div style="margin-top:5px">
+                    <button class="btn btn-blue" style="padding:5px 10px;font-size:0.8em" onclick="copyText('${link}')">📋 Copy Link</button>
+                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(link)}" target="_blank" style="margin-left:5px">
+                        <button class="btn btn-gold" style="padding:5px 10px;font-size:0.8em">📱 QR Code</button>
+                    </a>
                 </div>
-            `;
-            
-            portal.style.display = 'block';
-            document.getElementById('ambassadorLoginForm').style.display = 'none';
-        }
-        
-        function hideAmbassadorPortal() {
-            document.getElementById('ambassadorPortal').style.display = 'none';
-        }
-        
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Ambassador code copied to clipboard!');
-            });
-        }
-        
-        function deleteAmbassador(id) {
-            if (confirm('Are you sure you want to delete this ambassador?')) {
-                ambassadors = ambassadors.filter(a => a.id !== id);
-                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-                renderAmbassadorTable();
-            }
-        }
-        
-        function renderAmbassadorTable() {
-            const tbody = document.getElementById('ambassadorTableBody');
-            tbody.innerHTML = '';
-            
-            ambassadors.forEach(ambassador => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">${ambassador.name}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2); font-family: monospace;">${ambassador.code}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">${ambassador.email}</td>
-                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">
-                        <span style="padding: 3px 8px; background: #4CAF50; color: white; border-radius: 3px; font-size: 0.8em;">${ambassador.status.toUpperCase()}</span>
-                    </td>
-                    <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.2);">
-                        <button class="btn" onclick="copyToClipboard('${ambassador.code}')">Copy Code</button>
-                        <button class="btn btn-delete" onclick="deleteAmbassador(${ambassador.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-        
-        function exportAmbassadors() {
-            const exportData = ambassadors.map(a => `${a.name},${a.email},${a.phone || ''},${a.code}`).join('\n');
-            
-            const blob = new Blob([exportData], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'ambassador-codes.txt';
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            alert('Ambassador codes exported! You can use this file to import them elsewhere.');
-        }
-        
-        // Add new lead function (would be called when form submissions come in)
-        function addNewLead(customerData) {
-            const newLead = {
-                id: Date.now(),
-                date: new Date().toISOString().split('T')[0],
-                ...customerData
-            };
-            
-            pendingLeads.push(newLead);
-            localStorage.setItem('pendingLeads', JSON.stringify(pendingLeads));
-            renderPendingLeads();
-        }
-    </script>
+            </td>
+            <td>
+                <select onchange="updateStatus(${i}, this.value)" style="background:#333;color:#fff;border:1px solid #FFD700;padding:5px;border-radius:5px">
+                    <option value="active" ${a.status==='active'?'selected':''}>✅ Active</option>
+                    <option value="pending" ${a.status==='pending'?'selected':''}>⏳ Pending</option>
+                    <option value="inactive" ${a.status==='inactive'?'selected':''}>❌ Inactive</option>
+                </select>
+            </td>
+            <td style="text-align:center">
+                <strong style="color:#FFD700;font-size:1.3em">${refs}</strong>
+                <div style="color:#ccc;font-size:0.8em">orders</div>
+            </td>
+            <td>
+                <button class="btn btn-gold" style="padding:5px 10px;font-size:0.8em;margin-bottom:5px" onclick="sendWelcomeEmail('${a.name}','${a.email}','${a.code}')">📧 Email</button>
+                <button class="btn btn-red" style="padding:5px 10px;font-size:0.8em" onclick="removeAmbassador(${i})">🗑️ Remove</button>
+            </td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
+
+function renderCommissions(){
+    const el = document.getElementById('commissionsList');
+    if(!ambassadors.length){
+        el.innerHTML = '<div class="success-msg">No ambassadors yet.</div>';
+        return;
+    }
+
+    let html = `<table>
+        <thead><tr>
+            <th>Ambassador</th><th>Code</th><th>Tier</th><th>Rate</th><th>Referrals</th><th>Est. Commission</th>
+        </tr></thead><tbody>`;
+
+    ambassadors.forEach(a => {
+        const refs = allSubmissions.filter(s => s.data?.ambassadorCode === a.code).length;
+        const tier = refs >= 11 ? 'Gold' : refs >= 6 ? 'Silver' : 'Bronze';
+        const rate = refs >= 11 ? 20 : refs >= 6 ? 15 : 10;
+        const tierColor = refs >= 11 ? '#FFD700' : refs >= 6 ? '#C0C0C0' : '#CD7F32';
+
+        html += `<tr>
+            <td><strong>${a.name}</strong></td>
+            <td><span class="referral-link">${a.code}</span></td>
+            <td><span style="color:${tierColor};font-weight:bold">${tier}</span></td>
+            <td>${rate}%</td>
+            <td>${refs}</td>
+            <td style="color:#4CAF50">Track manually per order</td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
+
+// ── AMBASSADOR ACTIONS ─────────────────────────────────────
+function approveAmbassador(name, email, phone, instagram, code){
+    ambassadors.push({name, email, phone, instagram, code, status:'active', dateAdded: new Date().toISOString().split('T')[0], referrals:0});
+    saveAmbassadors();
+    renderAmbassadors();
+    renderApplications(allSubmissions.filter(s => s.data?.ambassadorName || s.data?.grillz_style));
+    alert(`✅ ${name} approved as ambassador!\nCode: ${code}\n\nClick 📧 Email to send them their welcome email.`);
+}
+
+function toggleAddAmbassador(){
+    document.getElementById('addAmbassadorForm').classList.toggle('show');
+}
+
+function generateCode(){
+    const name = document.getElementById('newName').value.trim();
+    if(!name){alert('Enter a name first');return;}
+    document.getElementById('newCode').value = generateCodeFromName(name);
+}
+
+function generateCodeFromName(name){
+    const parts = name.trim().split(' ');
+    const first = parts[0].replace(/[^a-zA-Z]/g,'').toUpperCase();
+    const last = parts.length > 1 ? parts[parts.length-1][0].toUpperCase() : '';
+    return first + last + Math.floor(Math.random()*90+10);
+}
+
+function addAmbassador(){
+    const name = document.getElementById('newName').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    if(!name||!email){alert('Name and email are required');return;}
+    const code = document.getElementById('newCode').value.trim() || generateCodeFromName(name);
+    ambassadors.push({
+        name, email,
+        phone: document.getElementById('newPhone').value.trim(),
+        instagram: document.getElementById('newInstagram').value.trim(),
+        code,
+        status: document.getElementById('newStatus').value,
+        dateAdded: new Date().toISOString().split('T')[0],
+        referrals: 0
+    });
+    saveAmbassadors();
+    renderAmbassadors();
+    toggleAddAmbassador();
+    document.getElementById('newName').value='';
+    document.getElementById('newEmail').value='';
+    document.getElementById('newPhone').value='';
+    document.getElementById('newInstagram').value='';
+    document.getElementById('newCode').value='';
+    alert(`✅ ${name} added! Code: ${code}`);
+}
+
+function updateStatus(index, status){
+    ambassadors[index].status = status;
+    saveAmbassadors();
+    renderAmbassadors();
+}
+
+function removeAmbassador(index){
+    if(confirm(`Remove ${ambassadors[index].name}?`)){
+        ambassadors.splice(index,1);
+        saveAmbassadors();
+        renderAmbassadors();
+    }
+}
+
+function saveAmbassadors(){
+    localStorage.setItem('mrsprinkle_ambassadors', JSON.stringify(ambassadors));
+}
+
+function sendWelcomeEmail(name, email, code){
+    const link = `https://mrsprinklereno.com/mold-form.html?ref=${code}`;
+    const subject = `Welcome to Mr. Sprinkle Ambassador Program! 🎉`;
+    const body = `Hey ${name}!\n\nWelcome to the Mr. Sprinkle Ambassador Program! 🔥\n\nYour Ambassador Code: ${code}\nYour Referral Link: ${link}\n\nShare your link and earn:\n• Bronze (1-5 referrals): 10% commission\n• Silver (6-10 referrals): 15% commission\n• Gold (11+ referrals): 20% commission\n\nYou also get 50% OFF your own custom grillz!\n\nQuestions? Text (530) 214-0676\n\n- Mr. Sprinkle 👑`;
+    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+}
+
+function copyText(text){
+    navigator.clipboard.writeText(text).then(()=>alert('Copied to clipboard!')).catch(()=>{
+        const ta=document.createElement('textarea');
+        ta.value=text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert('Copied!');
+    });
+}
+
+// ── TABS ───────────────────────────────────────────────────
+function showTab(name){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ── INIT ───────────────────────────────────────────────────
+if(apiKey){
+    document.getElementById('apiStatus') && (document.getElementById('apiStatus').textContent = '✅ API key found');
+}
+loadAllData();
+setInterval(loadAllData, 5*60*1000); // auto-refresh every 5 minutes
+</script>
 </body>
 </html>
