@@ -513,6 +513,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="referenceImage">Reference Image (optional):</label>
+                        <input type="file" id="referenceImage" name="referenceImage" accept="image/*" style="padding:0.75rem;cursor:pointer">
+                        <p style="color:#ccc;font-size:0.85em;margin-top:0.5rem">Upload a photo of inspiration, a design you like, or your current teeth.</p>
+                    </div>
+
+                    <div class="form-group">
                         <label for="design">Additional Design Preferences:</label>
                         <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
                     </div>
@@ -645,6 +651,9 @@
             document.getElementById('selectedTeeth').value = selectedTeeth.sort((a,b)=>a-b).join(', ');
 
             const formData = new FormData(this);
+            // attach file if provided
+            const fileInput = document.getElementById('referenceImage');
+            if(fileInput.files[0]) formData.set('referenceImage', fileInput.files[0]);
             const payload = {
                 form_type: 'mold_order',
                 date: new Date().toISOString(),
