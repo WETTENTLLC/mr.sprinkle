@@ -394,8 +394,24 @@ async function saveAmbToSheet(amb){
 
 function emailAmb(name,email,code){
     const link=`https://mrsprinklereno.com/mold-form.html?ref=${code}`;
-    const body=`Hey ${name}!%0A%0AWelcome to the Mr. Sprinkle Ambassador Program! 🔥%0A%0AYour Ambassador Code: ${code}%0AYour Referral Link: ${link}%0A%0AShare your link and earn:%0A• Bronze (1-5 referrals): 10% commission%0A• Silver (6-10 referrals): 15% commission%0A• Gold (11+ referrals): 20% commission%0A%0AYou also get 50% OFF your own custom grillz!%0A%0AQuestions? Text (530) 214-0676%0A%0A- Mr. Sprinkle 👑`;
-    window.open(`https://mail.google.com/mail/?view=cm&to=${email}&su=Welcome+to+Mr.+Sprinkle+Ambassador+Program!&body=${body}`);
+    const body=`Hey ${name}!
+
+Welcome to the Mr. Sprinkle Ambassador Program! 🔥
+
+Your Ambassador Code: ${code}
+Your Referral Link: ${link}
+
+Share your link and earn:
+• Bronze (1-5 referrals): 10% commission
+• Silver (6-10 referrals): 15% commission
+• Gold (11+ referrals): 20% commission
+
+You also get 50% OFF your own custom grillz!
+
+Questions? Text (530) 214-0676
+
+- Mr. Sprinkle 👑`;
+    window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent('Welcome to Mr. Sprinkle Ambassador Program!')}&body=${encodeURIComponent(body)}`);
 }
 
 function copy(text){
