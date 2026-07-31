@@ -326,6 +326,8 @@ function renderCommissions(){
 function approve(name,email,phone,instagram,code){
     ambassadors.push({name,email,phone,instagram,code,status:'active',dateAdded:new Date().toISOString().split('T')[0]});
     saveAmbs();
+    const newAmb = ambassadors[ambassadors.length-1];
+    saveAmbToSheet(newAmb);
     renderAmbassadors();
     renderApplications();
     renderCommissions();
@@ -337,8 +339,10 @@ function addAmb(){
     const email=document.getElementById('aEmail').value.trim();
     if(!name||!email){alert('Name and email required');return;}
     const code=document.getElementById('aCode').value.trim()||genCodeFromName(name);
-    ambassadors.push({name,email,phone:document.getElementById('aPhone').value.trim(),instagram:document.getElementById('aInsta').value.trim(),code,status:document.getElementById('aStatus').value,dateAdded:new Date().toISOString().split('T')[0]});
+    const newAmb={name,email,phone:document.getElementById('aPhone').value.trim(),instagram:document.getElementById('aInsta').value.trim(),code,status:document.getElementById('aStatus').value,dateAdded:new Date().toISOString().split('T')[0]};
+    ambassadors.push(newAmb);
     saveAmbs();
+    saveAmbToSheet(newAmb);
     renderAmbassadors();
     document.getElementById('addAmbForm').classList.remove('show');
     ['aName','aEmail','aPhone','aInsta','aCode'].forEach(id=>document.getElementById(id).value='');
@@ -364,13 +368,34 @@ function removeAmb(i){
     if(confirm(`Remove ${ambassadors[i].name}?`)){ ambassadors.splice(i,1); saveAmbs(); renderAmbassadors(); renderCommissions(); }
 }
 
-function saveAmbs(){ localStorage.setItem('mrsprinkle_v2_ambassadors',JSON.stringify(ambassadors)); }
+function saveAmbs(){ 
+    localStorage.setItem('mrsprinkle_v2_ambassadors',JSON.stringify(ambassadors));
+}
+
+async function saveAmbToSheet(amb){
+    await fetch(GOOGLE_SCRIPT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            form_type: 'ambassador_application',
+            date: amb.dateAdded,
+            name: amb.name,
+            email: amb.email,
+            phone: amb.phone || '',
+            instagram: amb.instagram || '',
+            ambassador_code: amb.code,
+            grillz_style: '',
+            location: '',
+            status: amb.status
+        })
+    }).catch(e => console.error('Sheet sync error:', e));
+}
 
 function emailAmb(name,email,code){
     const link=`https://mrsprinklereno.com/mold-form.html?ref=${code}`;
-    const sub=`Welcome to Mr. Sprinkle Ambassador Program! 🎉`;
-    const body=`Hey ${name}!\n\nWelcome to the Mr. Sprinkle Ambassador Program! 🔥\n\nYour Ambassador Code: ${code}\nYour Referral Link: ${link}\n\nShare your link and earn:\n• Bronze (1-5 referrals): 10% commission\n• Silver (6-10 referrals): 15% commission\n• Gold (11+ referrals): 20% commission\n\nYou also get 50% OFF your own custom grillz!\n\nQuestions? Text (530) 214-0676\n\n- Mr. Sprinkle 👑`;
-    window.open(`mailto:${email}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`);
+    const body=`Hey ${name}!%0A%0AWelcome to the Mr. Sprinkle Ambassador Program! 🔥%0A%0AYour Ambassador Code: ${code}%0AYour Referral Link: ${link}%0A%0AShare your link and earn:%0A• Bronze (1-5 referrals): 10% commission%0A• Silver (6-10 referrals): 15% commission%0A• Gold (11+ referrals): 20% commission%0A%0AYou also get 50% OFF your own custom grillz!%0A%0AQuestions? Text (530) 214-0676%0A%0A- Mr. Sprinkle 👑`;
+    window.open(`https://mail.google.com/mail/?view=cm&to=${email}&su=Welcome+to+Mr.+Sprinkle+Ambassador+Program!&body=${body}`);
 }
 
 function copy(text){
