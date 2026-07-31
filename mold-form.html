@@ -629,24 +629,59 @@
         }
 
         // Form submission
-        document.getElementById('moldForm').addEventListener('submit', function(e) {
+        document.getElementById('moldForm').addEventListener('submit', async function(e) {
             if (selectedTeeth.length === 0) {
                 e.preventDefault();
                 alert('Please select at least one tooth for gold work.');
                 return;
             }
-            
-            const healthAcknowledgment = document.getElementById('healthAcknowledgment');
-            if (!healthAcknowledgment.checked) {
+            if (!document.getElementById('healthAcknowledgment').checked) {
                 e.preventDefault();
                 alert('You must acknowledge the health risks and safety policies before submitting.');
                 return;
             }
-            
-            // Update hidden field with selected teeth before submission
-            document.getElementById('selectedTeeth').value = selectedTeeth.sort((a, b) => a - b).join(', ');
-            
-            // Let form submit naturally to Formspree
+            e.preventDefault();
+
+            document.getElementById('selectedTeeth').value = selectedTeeth.sort((a,b)=>a-b).join(', ');
+
+            const formData = new FormData(this);
+            const payload = {
+                form_type: 'mold_order',
+                date: new Date().toISOString(),
+                customer_name: formData.get('customerName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                selected_teeth: formData.get('selectedTeeth'),
+                material: formData.get('materialType'),
+                budget: formData.get('budget'),
+                payment_method: formData.get('paymentMethod'),
+                rush_delivery: formData.get('rushDelivery'),
+                ambassador_code: formData.get('ambassadorCode') || '',
+                promo_code: formData.get('promoCode') || '',
+                design: formData.get('design') || '',
+                image_description: formData.get('imageDescription') || ''
+            };
+
+            try {
+                // Send to Formspree (email notification)
+                await fetch('https://formspree.io/f/myzpanyg', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'Accept': 'application/json'}
+                });
+
+                // Send to Zapier (Google Sheets)
+                await fetch('https://hooks.zapier.com/hooks/catch/24223124/462mezx/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                window.location.href = 'thank-you.html';
+            } catch(err) {
+                console.error(err);
+                window.location.href = 'thank-you.html';
+            }
         });
         
         // Promo code validation

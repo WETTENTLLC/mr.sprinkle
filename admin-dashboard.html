@@ -10,521 +10,385 @@
         .container{max-width:1200px;margin:0 auto}
         .header{text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:15px}
         .header h1{color:#000;font-size:2rem}
-        .header p{color:#000;margin-top:5px}
+        .header p{color:#000;margin-top:5px;font-size:0.95em}
+        .status-bar{background:rgba(255,215,0,0.1);border:1px solid #FFD700;border-radius:8px;padding:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
         .tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
         .tab{padding:12px 25px;border:2px solid #FFD700;border-radius:8px;cursor:pointer;font-weight:bold;background:#000;color:#FFD700;transition:all 0.3s}
         .tab.active{background:#FFD700;color:#000}
         .section{background:rgba(255,255,255,0.05);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:25px;display:none}
         .section.active{display:block}
-        .status-bar{background:rgba(255,215,0,0.1);border:1px solid #FFD700;border-radius:8px;padding:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-        .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:all 0.3s}
+        .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:all 0.3s;font-size:0.9em}
         .btn-gold{background:#FFD700;color:#000}
         .btn-gold:hover{background:#FFA500}
         .btn-green{background:#4CAF50;color:#fff}
         .btn-red{background:#dc3545;color:#fff}
         .btn-blue{background:#1E90FF;color:#fff}
-        table{width:100%;border-collapse:collapse;margin-top:15px}
-        th{background:rgba(255,215,0,0.2);color:#FFD700;padding:12px;text-align:left;border-bottom:2px solid #FFD700}
+        table{width:100%;border-collapse:collapse;margin-top:15px;overflow-x:auto;display:block}
+        th{background:rgba(255,215,0,0.2);color:#FFD700;padding:12px;text-align:left;border-bottom:2px solid #FFD700;white-space:nowrap}
         td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.1);vertical-align:top}
         tr:hover{background:rgba(255,215,0,0.05)}
-        .badge{padding:4px 10px;border-radius:20px;font-size:0.8em;font-weight:bold}
+        .badge{padding:4px 10px;border-radius:20px;font-size:0.8em;font-weight:bold;white-space:nowrap}
         .badge-pending{background:#FFA500;color:#000}
         .badge-active{background:#4CAF50;color:#fff}
         .badge-inactive{background:#dc3545;color:#fff}
-        .badge-new{background:#1E90FF;color:#fff}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:25px}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-bottom:25px}
         .stat-card{background:rgba(255,215,0,0.1);border:2px solid #FFD700;border-radius:10px;padding:20px;text-align:center}
         .stat-card .number{font-size:2.5em;font-weight:bold;color:#FFD700}
-        .stat-card .label{color:#ccc;margin-top:5px}
+        .stat-card .label{color:#ccc;margin-top:5px;font-size:0.9em}
         .add-form{background:rgba(0,0,0,0.3);border:1px solid #FFD700;border-radius:10px;padding:20px;margin-bottom:20px;display:none}
         .add-form.show{display:block}
-        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:15px}
         .form-grid input,.form-grid select{padding:10px;background:#333;border:1px solid #555;border-radius:5px;color:#fff;width:100%}
         .form-grid input:focus,.form-grid select:focus{outline:none;border-color:#FFD700}
-        .referral-link{font-family:monospace;background:rgba(255,215,0,0.1);padding:8px;border-radius:5px;font-size:0.85em;word-break:break-all;color:#FFD700}
+        .ref-link{font-family:monospace;background:rgba(255,215,0,0.1);padding:6px 8px;border-radius:5px;font-size:0.8em;word-break:break-all;color:#FFD700;display:block;margin-bottom:5px}
         .loading{text-align:center;padding:40px;color:#FFD700;font-size:1.2em}
-        .error-msg{background:rgba(220,53,69,0.2);border:1px solid #dc3545;border-radius:8px;padding:15px;margin:10px 0;color:#ff6b6b}
-        .success-msg{background:rgba(76,175,80,0.2);border:1px solid #4CAF50;border-radius:8px;padding:15px;margin:10px 0;color:#81c784}
-        .detail-box{background:rgba(0,0,0,0.3);padding:10px;border-radius:5px;font-size:0.85em;color:#ccc;margin-top:5px}
-        @media(max-width:768px){
-            body{padding:10px}
-            .tabs{gap:5px}
-            .tab{padding:8px 15px;font-size:0.9em}
-            table{font-size:0.85em}
-            th,td{padding:8px 6px}
-        }
+        .info-box{background:rgba(30,144,255,0.1);border:1px solid #1E90FF;border-radius:8px;padding:15px;margin-bottom:20px;color:#ccc;line-height:1.8}
+        .info-box a{color:#FFD700}
+        @media(max-width:768px){body{padding:10px}.tab{padding:8px 12px;font-size:0.85em}th,td{padding:8px 6px;font-size:0.85em}}
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>👑 Mr. Sprinkle Admin Dashboard</h1>
-        <p>Live data from Formspree • Ambassador Management • Order Tracking</p>
+        <p>Ambassador Management • Live from Google Sheets via Zapier</p>
     </div>
 
     <div class="status-bar">
         <span id="lastUpdated">Last updated: Never</span>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-gold" onclick="loadAllData()">🔄 Refresh All Data</button>
-            <button class="btn btn-blue" onclick="toggleApiSetup()">⚙️ API Settings</button>
+            <button class="btn btn-gold" onclick="loadAll()">🔄 Refresh</button>
+            <button class="btn btn-blue" onclick="document.getElementById('setupBox').classList.toggle('show')">⚙️ Setup</button>
         </div>
     </div>
 
-    <!-- API Setup Panel -->
-    <div id="apiSetup" class="add-form" style="border-color:#1E90FF">
-        <h3 style="color:#1E90FF;margin-bottom:15px">⚙️ Formspree API Setup</h3>
-        <p style="color:#ccc;margin-bottom:15px">Enter your Formspree API key to load live submissions. Get it at <a href="https://formspree.io/account/apikeys" target="_blank" style="color:#FFD700">formspree.io/account/apikeys</a></p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <input type="password" id="apiKeyInput" placeholder="Formspree API Key (fkey_...)" style="flex:1;padding:10px;background:#333;border:1px solid #FFD700;border-radius:5px;color:#fff;min-width:200px">
-            <button class="btn btn-gold" onclick="saveApiKey()">Save & Connect</button>
-            <button class="btn btn-red" onclick="clearApiKey()">Clear Key</button>
+    <!-- SETUP BOX -->
+    <div id="setupBox" class="add-form" style="border-color:#1E90FF;display:none">
+        <h3 style="color:#1E90FF;margin-bottom:15px">⚙️ Google Sheets Connection</h3>
+        <div class="info-box">
+            <strong>Your Google Sheet ID is already saved.</strong> If data isn't loading, make sure:<br>
+            1. Your Google Sheet is shared as <strong>"Anyone with the link can view"</strong><br>
+            2. Your Zapier Zap is <strong>turned ON</strong> and connected to Google Sheets<br>
+            3. The sheet tabs are named exactly: <strong>Ambassadors</strong> and <strong>Orders</strong><br><br>
+            Sheet URL: <a href="https://docs.google.com/spreadsheets/d/1p6ExixIYy7CkMu_8nZTIq2kUUZf-lmn_a4fro-rPUGQ" target="_blank">Open Google Sheet ↗</a>
         </div>
-        <p id="apiStatus" style="margin-top:10px;color:#ccc"></p>
+        <p style="color:#FFD700;margin-bottom:10px">Need to update Sheet ID?</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="text" id="sheetIdInput" placeholder="Google Sheet ID" value="1p6ExixIYy7CkMu_8nZTIq2kUUZf-lmn_a4fro-rPUGQ" style="flex:1;padding:10px;background:#333;border:1px solid #FFD700;border-radius:5px;color:#fff;min-width:200px">
+            <button class="btn btn-gold" onclick="saveSheetId()">Save</button>
+        </div>
     </div>
 
     <div class="tabs">
-        <div class="tab active" onclick="showTab('ambassadors')">✨ Ambassadors</div>
-        <div class="tab" onclick="showTab('applications')">📋 New Applications</div>
-        <div class="tab" onclick="showTab('orders')">🛒 Mold Orders</div>
-        <div class="tab" onclick="showTab('commissions')">💰 Commissions</div>
+        <div class="tab active" onclick="showTab('ambassadors',this)">✨ Ambassadors</div>
+        <div class="tab" onclick="showTab('applications',this)">📋 Pending Applications</div>
+        <div class="tab" onclick="showTab('orders',this)">🛒 Orders</div>
+        <div class="tab" onclick="showTab('commissions',this)">💰 Commissions</div>
     </div>
 
     <!-- AMBASSADORS TAB -->
     <div id="tab-ambassadors" class="section active">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px">
             <h2 style="color:#FFD700">✨ Active Ambassadors</h2>
-            <button class="btn btn-gold" onclick="toggleAddAmbassador()">+ Add Ambassador Manually</button>
+            <button class="btn btn-gold" onclick="document.getElementById('addAmbForm').classList.toggle('show')">+ Add Manually</button>
         </div>
 
-        <div id="addAmbassadorForm" class="add-form">
-            <h3 style="color:#FFD700;margin-bottom:15px">Add New Ambassador</h3>
+        <div id="addAmbForm" class="add-form">
+            <h3 style="color:#FFD700;margin-bottom:15px">Add Ambassador</h3>
             <div class="form-grid">
-                <input type="text" id="newName" placeholder="Full Name *">
-                <input type="email" id="newEmail" placeholder="Email *">
-                <input type="tel" id="newPhone" placeholder="Phone">
-                <input type="text" id="newInstagram" placeholder="Instagram @handle">
-                <input type="text" id="newCode" placeholder="Ambassador Code (auto-generate or enter)">
-                <select id="newStatus">
+                <input type="text" id="aName" placeholder="Full Name *">
+                <input type="email" id="aEmail" placeholder="Email *">
+                <input type="tel" id="aPhone" placeholder="Phone">
+                <input type="text" id="aInsta" placeholder="Instagram @handle">
+                <input type="text" id="aCode" placeholder="Code (or auto-generate)">
+                <select id="aStatus">
                     <option value="active">Active</option>
-                    <option value="pending">Pending Approval</option>
+                    <option value="pending">Pending</option>
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button class="btn btn-gold" onclick="generateCode()">⚡ Generate Code</button>
-                <button class="btn btn-green" onclick="addAmbassador()">✅ Add Ambassador</button>
-                <button class="btn btn-red" onclick="toggleAddAmbassador()">Cancel</button>
+                <button class="btn btn-blue" onclick="genCode()">⚡ Generate Code</button>
+                <button class="btn btn-green" onclick="addAmb()">✅ Add</button>
+                <button class="btn btn-red" onclick="document.getElementById('addAmbForm').classList.remove('show')">Cancel</button>
             </div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card"><div class="number" id="totalAmbassadors">0</div><div class="label">Total Ambassadors</div></div>
-            <div class="stat-card"><div class="number" id="activeAmbassadors">0</div><div class="label">Active</div></div>
-            <div class="stat-card"><div class="number" id="pendingAmbassadors">0</div><div class="label">Pending Approval</div></div>
-            <div class="stat-card"><div class="number" id="totalReferrals">0</div><div class="label">Total Referrals</div></div>
+            <div class="stat-card"><div class="number" id="statTotal">0</div><div class="label">Total Ambassadors</div></div>
+            <div class="stat-card"><div class="number" id="statActive">0</div><div class="label">Active</div></div>
+            <div class="stat-card"><div class="number" id="statPending">0</div><div class="label">Pending</div></div>
+            <div class="stat-card"><div class="number" id="statOrders">0</div><div class="label">Referred Orders</div></div>
         </div>
 
-        <div id="ambassadorList"><div class="loading">Loading ambassadors...</div></div>
+        <div id="ambList"><div class="loading">⏳ Loading ambassadors...</div></div>
     </div>
 
     <!-- APPLICATIONS TAB -->
     <div id="tab-applications" class="section">
-        <h2 style="color:#FFD700;margin-bottom:20px">📋 Ambassador Applications (from Formspree)</h2>
-        <p style="color:#ccc;margin-bottom:20px">These are people who submitted the ambassador application form. Approve them to add to your active ambassador list.</p>
-        <div id="applicationsList"><div class="loading">Connect Formspree API to load applications...</div></div>
+        <h2 style="color:#FFD700;margin-bottom:15px">📋 Pending Ambassador Applications</h2>
+        <div class="info-box">
+            These come in automatically when someone submits the ambassador form. Click <strong>✅ Approve</strong> to move them to your active ambassador list.
+        </div>
+        <div id="appList"><div class="loading">⏳ Loading applications from Google Sheets...</div></div>
     </div>
 
     <!-- ORDERS TAB -->
     <div id="tab-orders" class="section">
-        <h2 style="color:#FFD700;margin-bottom:20px">🛒 Mold Form Orders (from Formspree)</h2>
-        <p style="color:#ccc;margin-bottom:20px">All orders submitted through the mold form. Orders with ambassador codes are tracked for commission.</p>
-        <div id="ordersList"><div class="loading">Connect Formspree API to load orders...</div></div>
+        <h2 style="color:#FFD700;margin-bottom:15px">🛒 Mold Form Orders</h2>
+        <div class="info-box">
+            All orders submitted through the mold form. Orders with an ambassador code are flagged for commission tracking.
+        </div>
+        <div id="orderList"><div class="loading">⏳ Loading orders from Google Sheets...</div></div>
     </div>
 
     <!-- COMMISSIONS TAB -->
     <div id="tab-commissions" class="section">
-        <h2 style="color:#FFD700;margin-bottom:20px">💰 Commission Tracking</h2>
-        <div id="commissionsList"><div class="loading">Loading commission data...</div></div>
+        <h2 style="color:#FFD700;margin-bottom:15px">💰 Commission Summary</h2>
+        <div id="commList"><div class="loading">⏳ Loading...</div></div>
     </div>
 </div>
 
 <script>
-const FORM_ID = 'myzpanyg';
-let apiKey = localStorage.getItem('formspree_api_key') || '';
-let ambassadors = JSON.parse(localStorage.getItem('mrsprinkle_ambassadors') || '[]');
-let allSubmissions = [];
+// ── CONFIG ─────────────────────────────────────────────────
+const SHEET_ID = localStorage.getItem('sheet_id') || '1p6ExixIYy7CkMu_8nZTIq2kUUZf-lmn_a4fro-rPUGQ';
+const SHEET_AMB = 'Ambassadors';
+const SHEET_ORD = 'Orders';
 
-// ── API SETUP ──────────────────────────────────────────────
-function toggleApiSetup(){
-    const el = document.getElementById('apiSetup');
-    el.classList.toggle('show');
-    if(el.classList.contains('show') && apiKey){
-        document.getElementById('apiKeyInput').value = apiKey;
-        document.getElementById('apiStatus').textContent = '✅ API key loaded';
-        document.getElementById('apiStatus').style.color = '#4CAF50';
-    }
+let ambassadors = JSON.parse(localStorage.getItem('mrsprinkle_v2_ambassadors') || '[]');
+let sheetApplications = [];
+let sheetOrders = [];
+
+function saveSheetId(){
+    const id = document.getElementById('sheetIdInput').value.trim();
+    if(id){ localStorage.setItem('sheet_id', id); location.reload(); }
 }
 
-function saveApiKey(){
-    const key = document.getElementById('apiKeyInput').value.trim();
-    if(!key){alert('Please enter your API key');return;}
-    apiKey = key;
-    localStorage.setItem('formspree_api_key', key);
-    document.getElementById('apiStatus').textContent = '✅ Saved! Loading data...';
-    document.getElementById('apiStatus').style.color = '#4CAF50';
-    loadAllData();
+// ── FETCH GOOGLE SHEETS (public CSV export) ────────────────
+async function fetchSheet(tabName){
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}&t=${Date.now()}`;
+    try {
+        const res = await fetch(url);
+        if(!res.ok) return [];
+        const text = await res.text();
+        return parseCSV(text);
+    } catch(e){ return []; }
 }
 
-function clearApiKey(){
-    apiKey = '';
-    localStorage.removeItem('formspree_api_key');
-    document.getElementById('apiKeyInput').value = '';
-    document.getElementById('apiStatus').textContent = 'API key cleared';
-    document.getElementById('apiStatus').style.color = '#ccc';
+function parseCSV(text){
+    const lines = text.trim().split('\n');
+    if(lines.length < 2) return [];
+    const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim().toLowerCase().replace(/\s+/g,'_'));
+    return lines.slice(1).map(line => {
+        const vals = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+        const obj = {};
+        headers.forEach((h,i) => { obj[h] = (vals[i]||'').replace(/"/g,'').trim(); });
+        return obj;
+    }).filter(r => Object.values(r).some(v => v));
 }
 
-// ── LOAD DATA FROM FORMSPREE ───────────────────────────────
-async function loadAllData(){
+// ── LOAD ALL DATA ──────────────────────────────────────────
+async function loadAll(){
     document.getElementById('lastUpdated').textContent = 'Refreshing...';
-    if(apiKey){
-        await loadFormspreeSubmissions();
-    } else {
-        document.getElementById('applicationsList').innerHTML = '<div class="error-msg">⚠️ No Formspree API key set. Click "API Settings" above to connect.</div>';
-        document.getElementById('ordersList').innerHTML = '<div class="error-msg">⚠️ No Formspree API key set. Click "API Settings" above to connect.</div>';
-    }
+    const [apps, orders] = await Promise.all([fetchSheet(SHEET_AMB), fetchSheet(SHEET_ORD)]);
+    
+    // Applications = rows where status is pending or empty
+    sheetApplications = apps.filter(r => !r.status || r.status.toLowerCase() === 'pending');
+    sheetOrders = orders;
+
     renderAmbassadors();
+    renderApplications();
+    renderOrders();
     renderCommissions();
     document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
 }
 
-async function loadFormspreeSubmissions(){
-    try {
-        const res = await fetch(`https://api.formspree.io/forms/${FORM_ID}/submissions?page_size=100`, {
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Accept': 'application/json'
-            }
-        });
-
-        if(!res.ok){
-            const err = await res.json();
-            showApiError('Formspree API error: ' + (err.error || res.status));
-            return;
-        }
-
-        const data = await res.json();
-        allSubmissions = data.submissions || [];
-        
-        const applications = allSubmissions.filter(s => 
-            s.data?.form_type === 'ambassador_application' || 
-            s.data?.ambassadorName || 
-            s.data?.grillz_style ||
-            (s.data?._subject && s.data._subject.includes('AMBASSADOR'))
-        );
-        
-        const orders = allSubmissions.filter(s => 
-            s.data?.customerName || 
-            s.data?.selectedTeeth ||
-            (s.data?._subject && s.data._subject.includes('MOLD'))
-        );
-
-        renderApplications(applications);
-        renderOrders(orders);
-
-    } catch(e){
-        showApiError('Failed to connect to Formspree: ' + e.message);
-    }
-}
-
-function showApiError(msg){
-    const errHtml = `<div class="error-msg">❌ ${msg}<br><br>Make sure your API key is correct at <a href="https://formspree.io/account/apikeys" target="_blank" style="color:#FFD700">formspree.io/account/apikeys</a></div>`;
-    document.getElementById('applicationsList').innerHTML = errHtml;
-    document.getElementById('ordersList').innerHTML = errHtml;
-}
-
-// ── RENDER APPLICATIONS ────────────────────────────────────
-function renderApplications(apps){
-    const el = document.getElementById('applicationsList');
-    if(!apps.length){
-        el.innerHTML = '<div class="success-msg">No new ambassador applications found. They will appear here automatically when someone submits the form.</div>';
-        return;
-    }
-
-    let html = `<table>
-        <thead><tr>
-            <th>Date</th><th>Name</th><th>Contact</th><th>Instagram</th><th>Style</th><th>Code</th><th>Actions</th>
-        </tr></thead><tbody>`;
-
-    apps.forEach(sub => {
-        const d = sub.data || {};
-        const date = new Date(sub.submit_time).toLocaleDateString();
-        const name = d.ambassadorName || d.fullName || 'N/A';
-        const email = d.email || '';
-        const phone = d.phone || '';
-        const instagram = d.instagram || '';
-        const style = d['grillz-style'] || '';
-        const code = d.ambassador_code || generateCodeFromName(name);
-        const alreadyAdded = ambassadors.find(a => a.email === email);
-
-        html += `<tr>
-            <td>${date}</td>
-            <td><strong>${name}</strong></td>
-            <td><div>${email}</div><div style="color:#ccc;font-size:0.85em">${phone}</div></td>
-            <td>${instagram}</td>
-            <td>${style}</td>
-            <td><div class="referral-link">${code}</div></td>
-            <td>
-                ${alreadyAdded 
-                    ? '<span class="badge badge-active">✅ Added</span>' 
-                    : `<button class="btn btn-green" onclick="approveAmbassador('${name}','${email}','${phone}','${instagram}','${code}')">✅ Approve</button>`
-                }
-            </td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
-    el.innerHTML = html;
-}
-
-// ── RENDER ORDERS ──────────────────────────────────────────
-function renderOrders(orders){
-    const el = document.getElementById('ordersList');
-    if(!orders.length){
-        el.innerHTML = '<div class="success-msg">No mold orders found yet.</div>';
-        return;
-    }
-
-    let html = `<table>
-        <thead><tr>
-            <th>Date</th><th>Customer</th><th>Teeth</th><th>Material</th><th>Budget</th><th>Payment</th><th>Ambassador</th><th>Status</th>
-        </tr></thead><tbody>`;
-
-    orders.forEach(sub => {
-        const d = sub.data || {};
-        const date = new Date(sub.submit_time).toLocaleDateString();
-        const ambCode = d.ambassadorCode || '';
-        const ambBadge = ambCode 
-            ? `<span class="badge badge-active">${ambCode}</span>` 
-            : '<span style="color:#666">None</span>';
-
-        html += `<tr>
-            <td>${date}</td>
-            <td>
-                <strong>${d.customerName || 'N/A'}</strong>
-                <div class="detail-box">${d.email || ''}<br>${d.phone || ''}</div>
-            </td>
-            <td>${d.selectedTeeth || 'N/A'}</td>
-            <td>${d.materialType || 'N/A'}</td>
-            <td>${d.budget || 'N/A'}</td>
-            <td>${d.paymentMethod || 'N/A'}</td>
-            <td>${ambBadge}</td>
-            <td><span class="badge badge-new">New</span></td>
-        </tr>`;
-    });
-
-    html += '</tbody></table>';
-    el.innerHTML = html;
-}
-
-// ── AMBASSADOR MANAGEMENT ──────────────────────────────────
+// ── RENDER AMBASSADORS ─────────────────────────────────────
 function renderAmbassadors(){
-    const el = document.getElementById('ambassadorList');
-    
-    document.getElementById('totalAmbassadors').textContent = ambassadors.length;
-    document.getElementById('activeAmbassadors').textContent = ambassadors.filter(a=>a.status==='active').length;
-    document.getElementById('pendingAmbassadors').textContent = ambassadors.filter(a=>a.status==='pending').length;
-    
-    const totalRefs = ambassadors.reduce((sum,a)=>sum+(a.referrals||0),0);
-    document.getElementById('totalReferrals').textContent = totalRefs;
+    document.getElementById('statTotal').textContent = ambassadors.length;
+    document.getElementById('statActive').textContent = ambassadors.filter(a=>a.status==='active').length;
+    document.getElementById('statPending').textContent = ambassadors.filter(a=>a.status==='pending').length;
+    const refOrders = sheetOrders.filter(o => o.ambassador_code && ambassadors.find(a=>a.code===o.ambassador_code)).length;
+    document.getElementById('statOrders').textContent = refOrders;
 
     if(!ambassadors.length){
-        el.innerHTML = '<div class="success-msg">No ambassadors yet. Approve applications from the "New Applications" tab or add manually.</div>';
+        document.getElementById('ambList').innerHTML = '<div style="color:#ccc;padding:20px">No ambassadors yet. Approve applications from the "Pending Applications" tab or add manually.</div>';
         return;
     }
 
-    let html = `<table>
-        <thead><tr>
-            <th>Name</th><th>Contact</th><th>Code & Link</th><th>Status</th><th>Referrals</th><th>Actions</th>
-        </tr></thead><tbody>`;
-
+    let html = '<table><thead><tr><th>Name</th><th>Contact</th><th>Code & Link</th><th>Status</th><th>Referrals</th><th>Actions</th></tr></thead><tbody>';
     ambassadors.forEach((a,i) => {
         const link = `https://mrsprinklereno.com/mold-form.html?ref=${a.code}`;
-        const refs = allSubmissions.filter(s => s.data?.ambassadorCode === a.code).length;
-        
+        const refs = sheetOrders.filter(o => o.ambassador_code === a.code).length;
+        const statusColor = a.status==='active'?'#4CAF50':a.status==='pending'?'#FFA500':'#dc3545';
         html += `<tr>
+            <td><strong>${a.name}</strong><br><span style="color:#ccc;font-size:0.85em">${a.instagram||''}</span></td>
+            <td>${a.email}<br><span style="color:#ccc;font-size:0.85em">${a.phone||''}</span></td>
             <td>
-                <strong>${a.name}</strong>
-                <div style="color:#ccc;font-size:0.85em">${a.instagram || ''}</div>
+                <span class="ref-link">${a.code}</span>
+                <button class="btn btn-blue" style="padding:4px 8px;font-size:0.75em;margin-right:5px" onclick="copy('${link}')">📋 Copy Link</button>
+                <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(link)}" target="_blank"><button class="btn btn-gold" style="padding:4px 8px;font-size:0.75em">📱 QR</button></a>
             </td>
             <td>
-                <div>${a.email}</div>
-                <div style="color:#ccc;font-size:0.85em">${a.phone || ''}</div>
-            </td>
-            <td>
-                <div class="referral-link">${a.code}</div>
-                <div style="margin-top:5px">
-                    <button class="btn btn-blue" style="padding:5px 10px;font-size:0.8em" onclick="copyText('${link}')">📋 Copy Link</button>
-                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(link)}" target="_blank" style="margin-left:5px">
-                        <button class="btn btn-gold" style="padding:5px 10px;font-size:0.8em">📱 QR Code</button>
-                    </a>
-                </div>
-            </td>
-            <td>
-                <select onchange="updateStatus(${i}, this.value)" style="background:#333;color:#fff;border:1px solid #FFD700;padding:5px;border-radius:5px">
+                <select onchange="updateStatus(${i},this.value)" style="background:#333;color:${statusColor};border:1px solid #FFD700;padding:6px;border-radius:5px;font-weight:bold">
                     <option value="active" ${a.status==='active'?'selected':''}>✅ Active</option>
                     <option value="pending" ${a.status==='pending'?'selected':''}>⏳ Pending</option>
                     <option value="inactive" ${a.status==='inactive'?'selected':''}>❌ Inactive</option>
                 </select>
             </td>
-            <td style="text-align:center">
-                <strong style="color:#FFD700;font-size:1.3em">${refs}</strong>
-                <div style="color:#ccc;font-size:0.8em">orders</div>
-            </td>
+            <td style="text-align:center"><strong style="color:#FFD700;font-size:1.4em">${refs}</strong><br><span style="color:#ccc;font-size:0.8em">orders</span></td>
             <td>
-                <button class="btn btn-gold" style="padding:5px 10px;font-size:0.8em;margin-bottom:5px" onclick="sendWelcomeEmail('${a.name}','${a.email}','${a.code}')">📧 Email</button>
-                <button class="btn btn-red" style="padding:5px 10px;font-size:0.8em" onclick="removeAmbassador(${i})">🗑️ Remove</button>
+                <button class="btn btn-gold" style="padding:5px 10px;font-size:0.8em;margin-bottom:4px;display:block;width:100%" onclick="emailAmb('${a.name}','${a.email}','${a.code}')">📧 Send Welcome</button>
+                <button class="btn btn-red" style="padding:5px 10px;font-size:0.8em;display:block;width:100%" onclick="removeAmb(${i})">🗑️ Remove</button>
             </td>
         </tr>`;
     });
+    html += '</tbody></table>';
+    document.getElementById('ambList').innerHTML = html;
+}
 
+// ── RENDER APPLICATIONS ────────────────────────────────────
+function renderApplications(){
+    const el = document.getElementById('appList');
+    if(!sheetApplications.length){
+        el.innerHTML = '<div style="color:#ccc;padding:20px">✅ No pending applications. New applications will appear here automatically when someone submits the ambassador form.</div>';
+        return;
+    }
+    let html = '<table><thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Phone</th><th>Instagram</th><th>Code</th><th>Style</th><th>Action</th></tr></thead><tbody>';
+    sheetApplications.forEach(r => {
+        const alreadyAdded = ambassadors.find(a => a.email === r.email);
+        const code = r.ambassador_code || r.code || genCodeFromName(r.name||'');
+        html += `<tr>
+            <td>${r.date||''}</td>
+            <td><strong>${r.name||''}</strong></td>
+            <td>${r.email||''}</td>
+            <td>${r.phone||''}</td>
+            <td>${r.instagram||''}</td>
+            <td><span class="ref-link">${code}</span></td>
+            <td>${r.grillz_style||r['grillz-style']||''}</td>
+            <td>${alreadyAdded 
+                ? '<span class="badge badge-active">✅ Added</span>'
+                : `<button class="btn btn-green" onclick="approve('${r.name}','${r.email}','${r.phone}','${r.instagram}','${code}')">✅ Approve</button>`
+            }</td>
+        </tr>`;
+    });
     html += '</tbody></table>';
     el.innerHTML = html;
 }
 
-function renderCommissions(){
-    const el = document.getElementById('commissionsList');
-    if(!ambassadors.length){
-        el.innerHTML = '<div class="success-msg">No ambassadors yet.</div>';
+// ── RENDER ORDERS ──────────────────────────────────────────
+function renderOrders(){
+    const el = document.getElementById('orderList');
+    if(!sheetOrders.length){
+        el.innerHTML = '<div style="color:#ccc;padding:20px">No orders yet. Orders will appear here automatically when someone submits the mold form.</div>';
         return;
     }
-
-    let html = `<table>
-        <thead><tr>
-            <th>Ambassador</th><th>Code</th><th>Tier</th><th>Rate</th><th>Referrals</th><th>Est. Commission</th>
-        </tr></thead><tbody>`;
-
-    ambassadors.forEach(a => {
-        const refs = allSubmissions.filter(s => s.data?.ambassadorCode === a.code).length;
-        const tier = refs >= 11 ? 'Gold' : refs >= 6 ? 'Silver' : 'Bronze';
-        const rate = refs >= 11 ? 20 : refs >= 6 ? 15 : 10;
-        const tierColor = refs >= 11 ? '#FFD700' : refs >= 6 ? '#C0C0C0' : '#CD7F32';
-
+    let html = '<table><thead><tr><th>Date</th><th>Customer</th><th>Teeth</th><th>Material</th><th>Budget</th><th>Payment</th><th>Ambassador</th></tr></thead><tbody>';
+    sheetOrders.forEach(r => {
+        const ambCode = r.ambassador_code || '';
         html += `<tr>
-            <td><strong>${a.name}</strong></td>
-            <td><span class="referral-link">${a.code}</span></td>
-            <td><span style="color:${tierColor};font-weight:bold">${tier}</span></td>
-            <td>${rate}%</td>
-            <td>${refs}</td>
-            <td style="color:#4CAF50">Track manually per order</td>
+            <td>${r.date||''}</td>
+            <td><strong>${r.customer_name||r.name||''}</strong><br><span style="color:#ccc;font-size:0.85em">${r.email||''}</span></td>
+            <td>${r.selected_teeth||r.teeth||''}</td>
+            <td>${r.material||r.materialtype||''}</td>
+            <td>${r.budget||''}</td>
+            <td>${r.payment_method||r.paymentmethod||''}</td>
+            <td>${ambCode ? `<span class="badge badge-active">${ambCode}</span>` : '<span style="color:#666">—</span>'}</td>
         </tr>`;
     });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
 
+// ── RENDER COMMISSIONS ─────────────────────────────────────
+function renderCommissions(){
+    const el = document.getElementById('commList');
+    if(!ambassadors.length){ el.innerHTML = '<div style="color:#ccc;padding:20px">No ambassadors yet.</div>'; return; }
+    let html = '<table><thead><tr><th>Ambassador</th><th>Code</th><th>Referrals</th><th>Tier</th><th>Rate</th></tr></thead><tbody>';
+    ambassadors.forEach(a => {
+        const refs = sheetOrders.filter(o => o.ambassador_code === a.code).length;
+        const tier = refs>=11?'🥇 Gold':refs>=6?'🥈 Silver':'🥉 Bronze';
+        const rate = refs>=11?'20%':refs>=6?'15%':'10%';
+        html += `<tr>
+            <td><strong>${a.name}</strong></td>
+            <td><span class="ref-link">${a.code}</span></td>
+            <td style="text-align:center;font-size:1.3em;font-weight:bold;color:#FFD700">${refs}</td>
+            <td>${tier}</td>
+            <td style="color:#4CAF50;font-weight:bold">${rate}</td>
+        </tr>`;
+    });
     html += '</tbody></table>';
     el.innerHTML = html;
 }
 
 // ── AMBASSADOR ACTIONS ─────────────────────────────────────
-function approveAmbassador(name, email, phone, instagram, code){
-    ambassadors.push({name, email, phone, instagram, code, status:'active', dateAdded: new Date().toISOString().split('T')[0], referrals:0});
-    saveAmbassadors();
+function approve(name,email,phone,instagram,code){
+    ambassadors.push({name,email,phone,instagram,code,status:'active',dateAdded:new Date().toISOString().split('T')[0]});
+    saveAmbs();
     renderAmbassadors();
-    renderApplications(allSubmissions.filter(s => s.data?.ambassadorName || s.data?.grillz_style));
-    alert(`✅ ${name} approved as ambassador!\nCode: ${code}\n\nClick 📧 Email to send them their welcome email.`);
+    renderApplications();
+    renderCommissions();
+    alert(`✅ ${name} approved!\nCode: ${code}\n\nClick "📧 Send Welcome" to email them their referral link.`);
 }
 
-function toggleAddAmbassador(){
-    document.getElementById('addAmbassadorForm').classList.toggle('show');
-}
-
-function generateCode(){
-    const name = document.getElementById('newName').value.trim();
-    if(!name){alert('Enter a name first');return;}
-    document.getElementById('newCode').value = generateCodeFromName(name);
-}
-
-function generateCodeFromName(name){
-    const parts = name.trim().split(' ');
-    const first = parts[0].replace(/[^a-zA-Z]/g,'').toUpperCase();
-    const last = parts.length > 1 ? parts[parts.length-1][0].toUpperCase() : '';
-    return first + last + Math.floor(Math.random()*90+10);
-}
-
-function addAmbassador(){
-    const name = document.getElementById('newName').value.trim();
-    const email = document.getElementById('newEmail').value.trim();
-    if(!name||!email){alert('Name and email are required');return;}
-    const code = document.getElementById('newCode').value.trim() || generateCodeFromName(name);
-    ambassadors.push({
-        name, email,
-        phone: document.getElementById('newPhone').value.trim(),
-        instagram: document.getElementById('newInstagram').value.trim(),
-        code,
-        status: document.getElementById('newStatus').value,
-        dateAdded: new Date().toISOString().split('T')[0],
-        referrals: 0
-    });
-    saveAmbassadors();
+function addAmb(){
+    const name=document.getElementById('aName').value.trim();
+    const email=document.getElementById('aEmail').value.trim();
+    if(!name||!email){alert('Name and email required');return;}
+    const code=document.getElementById('aCode').value.trim()||genCodeFromName(name);
+    ambassadors.push({name,email,phone:document.getElementById('aPhone').value.trim(),instagram:document.getElementById('aInsta').value.trim(),code,status:document.getElementById('aStatus').value,dateAdded:new Date().toISOString().split('T')[0]});
+    saveAmbs();
     renderAmbassadors();
-    toggleAddAmbassador();
-    document.getElementById('newName').value='';
-    document.getElementById('newEmail').value='';
-    document.getElementById('newPhone').value='';
-    document.getElementById('newInstagram').value='';
-    document.getElementById('newCode').value='';
+    document.getElementById('addAmbForm').classList.remove('show');
+    ['aName','aEmail','aPhone','aInsta','aCode'].forEach(id=>document.getElementById(id).value='');
     alert(`✅ ${name} added! Code: ${code}`);
 }
 
-function updateStatus(index, status){
-    ambassadors[index].status = status;
-    saveAmbassadors();
-    renderAmbassadors();
+function genCode(){ 
+    const name=document.getElementById('aName').value.trim();
+    if(!name){alert('Enter a name first');return;}
+    document.getElementById('aCode').value=genCodeFromName(name);
 }
 
-function removeAmbassador(index){
-    if(confirm(`Remove ${ambassadors[index].name}?`)){
-        ambassadors.splice(index,1);
-        saveAmbassadors();
-        renderAmbassadors();
-    }
+function genCodeFromName(name){
+    const p=name.trim().split(' ');
+    const f=p[0].replace(/[^a-zA-Z]/g,'').toUpperCase();
+    const l=p.length>1?p[p.length-1][0].toUpperCase():'';
+    return f+l+Math.floor(Math.random()*90+10);
 }
 
-function saveAmbassadors(){
-    localStorage.setItem('mrsprinkle_ambassadors', JSON.stringify(ambassadors));
+function updateStatus(i,status){ ambassadors[i].status=status; saveAmbs(); renderAmbassadors(); }
+
+function removeAmb(i){
+    if(confirm(`Remove ${ambassadors[i].name}?`)){ ambassadors.splice(i,1); saveAmbs(); renderAmbassadors(); renderCommissions(); }
 }
 
-function sendWelcomeEmail(name, email, code){
-    const link = `https://mrsprinklereno.com/mold-form.html?ref=${code}`;
-    const subject = `Welcome to Mr. Sprinkle Ambassador Program! 🎉`;
-    const body = `Hey ${name}!\n\nWelcome to the Mr. Sprinkle Ambassador Program! 🔥\n\nYour Ambassador Code: ${code}\nYour Referral Link: ${link}\n\nShare your link and earn:\n• Bronze (1-5 referrals): 10% commission\n• Silver (6-10 referrals): 15% commission\n• Gold (11+ referrals): 20% commission\n\nYou also get 50% OFF your own custom grillz!\n\nQuestions? Text (530) 214-0676\n\n- Mr. Sprinkle 👑`;
-    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+function saveAmbs(){ localStorage.setItem('mrsprinkle_v2_ambassadors',JSON.stringify(ambassadors)); }
+
+function emailAmb(name,email,code){
+    const link=`https://mrsprinklereno.com/mold-form.html?ref=${code}`;
+    const sub=`Welcome to Mr. Sprinkle Ambassador Program! 🎉`;
+    const body=`Hey ${name}!\n\nWelcome to the Mr. Sprinkle Ambassador Program! 🔥\n\nYour Ambassador Code: ${code}\nYour Referral Link: ${link}\n\nShare your link and earn:\n• Bronze (1-5 referrals): 10% commission\n• Silver (6-10 referrals): 15% commission\n• Gold (11+ referrals): 20% commission\n\nYou also get 50% OFF your own custom grillz!\n\nQuestions? Text (530) 214-0676\n\n- Mr. Sprinkle 👑`;
+    window.open(`mailto:${email}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`);
 }
 
-function copyText(text){
-    navigator.clipboard.writeText(text).then(()=>alert('Copied to clipboard!')).catch(()=>{
-        const ta=document.createElement('textarea');
-        ta.value=text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        alert('Copied!');
+function copy(text){
+    navigator.clipboard.writeText(text).then(()=>alert('Copied!')).catch(()=>{
+        const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);alert('Copied!');
     });
 }
 
 // ── TABS ───────────────────────────────────────────────────
-function showTab(name){
+function showTab(name,el){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     document.getElementById('tab-'+name).classList.add('active');
-    event.target.classList.add('active');
+    el.classList.add('active');
 }
 
 // ── INIT ───────────────────────────────────────────────────
-if(apiKey){
-    document.getElementById('apiStatus') && (document.getElementById('apiStatus').textContent = '✅ API key found');
-}
-loadAllData();
-setInterval(loadAllData, 5*60*1000); // auto-refresh every 5 minutes
+loadAll();
+setInterval(loadAll, 3*60*1000); // refresh every 3 minutes
 </script>
 </body>
 </html>

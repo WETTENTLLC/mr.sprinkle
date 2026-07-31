@@ -405,41 +405,65 @@
     </div>
     
     <script>
-        document.getElementById('ambassadorForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Track form submission
-            console.log('Ambassador application submitted');
-            
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'ambassador_application', {
-                    'event_category': 'Ambassador Program',
-                    'event_label': 'Form Submission'
-                });
+        const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/24223124/462mezx/';
+
+        // Generate ambassador code from name
+        document.getElementById('ambassadorName').addEventListener('input', function(){
+            const name = this.value.trim();
+            if(name.length > 0){
+                const parts = name.split(' ');
+                const first = parts[0].toLowerCase().replace(/[^a-z]/g,'');
+                const last = parts.length > 1 ? parts[parts.length-1][0].toLowerCase() : '';
+                const num = Math.floor(Math.random()*90+10);
+                const code = (first+last+num).toUpperCase();
+                document.getElementById('ambassadorCode').textContent = code;
+                document.getElementById('hiddenAmbassadorCode').value = code;
+                document.getElementById('fullName').value = name;
+                document.getElementById('generatedCode').style.display = 'block';
+            } else {
+                document.getElementById('generatedCode').style.display = 'none';
             }
-            
-            // Submit form data to Formspree
+        });
+
+        document.getElementById('ambassadorForm').addEventListener('submit', async function(e){
+            e.preventDefault();
             const formData = new FormData(this);
-            fetch('https://formspree.io/f/myzpanyg', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = 'ambassador-new.html';
-                } else {
-                    response.json().then(data => {
-                        alert('Application received! We\'ll review and contact you within 48 hours.\n\nYour ambassador code: ' + document.getElementById('ambassadorCode').textContent);
-                        window.location.href = 'index.html';
-                    });
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Application received! We\'ll review and contact you within 48 hours.\n\nYour ambassador code: ' + document.getElementById('ambassadorCode').textContent);
-                window.location.href = 'index.html';
-            });
+
+            // Build payload for Zapier
+            const payload = {
+                form_type: 'ambassador_application',
+                date: new Date().toISOString(),
+                name: formData.get('fullName') || formData.get('ambassadorName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                instagram: formData.get('instagram'),
+                ambassador_code: formData.get('ambassador_code'),
+                grillz_style: formData.get('grillz-style'),
+                location: formData.get('location'),
+                availability: formData.get('availability'),
+                status: 'pending'
+            };
+
+            try {
+                // Send to Formspree (email notification)
+                await fetch('https://formspree.io/f/myzpanyg', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'Accept': 'application/json'}
+                });
+
+                // Send to Zapier (Google Sheets)
+                await fetch(ZAPIER_WEBHOOK, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                window.location.href = 'ambassador-new.html';
+            } catch(err){
+                console.error(err);
+                window.location.href = 'ambassador-new.html';
+            }
         });
     </script>
 </body>
