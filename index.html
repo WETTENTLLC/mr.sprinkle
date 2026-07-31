@@ -197,43 +197,58 @@
             <div class="container">
                 <h2>Our Specialties</h2>
                 <div class="services-grid">
-                    <div class="service-card">
+                    <a href="mold-form.html" style="text-decoration:none;color:inherit">
+                    <div class="service-card" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 10px 30px rgba(255,215,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div class="service-image">
                             <img src="assets/gold nails images/grillz.jpg" alt="Custom Gold Grillz">
                         </div>
                         <h3>Custom Gold Grillz</h3>
                         <p>14k & 18k Dental Gold • VS+ Diamonds • Silver • Opal • Moissanite & More • Nickel-Free Alloys</p>
                         <span class="turnaround">2-4 days gold • 4-10 days gems • Rush available</span>
+                        <p style="color:#FFD700;font-weight:bold;margin-top:10px">Book Now →</p>
                     </div>
-                    <div class="service-card featured">
+                    </a>
+                    <a href="mold-form.html" style="text-decoration:none;color:inherit">
+                    <div class="service-card featured" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 10px 30px rgba(255,215,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div class="service-image">
                             <img src="assets/gold nails images/rock_band_portrait.png" alt="Luxury Gold Press-On Nails">
                         </div>
                         <h3>Gold Press-On Nails "Hand Jewelry"</h3>
                         <p>24K Gold Plated • Reusable Design • Custom Logos</p>
                         <span class="turnaround">2-4 hours • Same day available</span>
+                        <p style="color:#FFD700;font-weight:bold;margin-top:10px">Book Now →</p>
                     </div>
-                    <div class="service-card">
+                    </a>
+                    <a href="mold-form.html" style="text-decoration:none;color:inherit">
+                    <div class="service-card" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 10px 30px rgba(255,215,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <h3>Tooth Gems & Mobile Service</h3>
                         <p>Medical-grade adhesive gems • $20-$50 travel fee • Pop-up Grill Stations</p>
                         <span class="turnaround">Mold Mondays weekly events</span>
+                        <p style="color:#FFD700;font-weight:bold;margin-top:10px">Book Now →</p>
                     </div>
-                    <div class="service-card">
+                    </a>
+                    <a href="pricing.html#wett-shades" style="text-decoration:none;color:inherit">
+                    <div class="service-card" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 10px 30px rgba(255,215,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div class="service-image">
-                            <img src="assets/wett-shades.png" alt="Wett Shades">
+                            <img src="assets/wett-shades.png" alt="Wett Shades" style="width:100%;height:200px;object-fit:contain;background:#111;padding:10px">
                         </div>
                         <h3>Wett Shades</h3>
                         <p>Custom luxury eyewear • Exclusive designs • Limited drops</p>
-                        <span class="turnaround">Contact for availability</span>
+                        <span class="turnaround">$65 each • One of one</span>
+                        <p style="color:#FFD700;font-weight:bold;margin-top:10px">Order Now →</p>
                     </div>
-                    <div class="service-card">
+                    </a>
+                    <a href="pricing.html#atm-clips" style="text-decoration:none;color:inherit">
+                    <div class="service-card" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 10px 30px rgba(255,215,0,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div class="service-image">
-                            <img src="assets/atm-clips.jpeg" alt="ATM Clips">
+                            <img src="assets/atm-clips.jpeg" alt="ATM Clips" style="width:100%;height:200px;object-fit:contain;background:#111;padding:10px">
                         </div>
                         <h3>ATM Clips</h3>
-                        <p>Custom money clips • Gold & silver finishes • Personalized designs</p>
-                        <span class="turnaround">Contact for availability</span>
+                        <p>Custom money clips • Standard or personalized • Up to 10 letters</p>
+                        <span class="turnaround">$10 standard • $15 custom</span>
+                        <p style="color:#FFD700;font-weight:bold;margin-top:10px">Order Now →</p>
                     </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -504,8 +519,26 @@
         </div>
     </footer>
     
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center">
+        <img id="lightboxImg" style="max-width:90%;max-height:90vh;border-radius:10px;border:3px solid #FFD700;object-fit:contain">
+        <p style="position:absolute;bottom:30px;color:#FFD700;font-size:1rem">Click anywhere to close</p>
+    </div>
+
     <!-- Lead Capture & Analytics Script -->
     <script>
+        // Lightbox for service images
+        document.querySelectorAll('#services .service-card img').forEach(img=>{
+            img.style.cursor='zoom-in';
+            img.addEventListener('click',function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                const lb=document.getElementById('lightbox');
+                document.getElementById('lightboxImg').src=this.src;
+                lb.style.display='flex';
+            });
+        });
+
         // Lead Form Handler
         document.getElementById('leadForm').addEventListener('submit', function(e) {
             e.preventDefault();
