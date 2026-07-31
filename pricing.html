@@ -36,7 +36,7 @@
         .rush{background:rgba(255,69,0,0.1);border:2px solid #ff4500;border-radius:15px;padding:25px;text-align:center}
         .rush h3{color:#ff4500;margin-bottom:10px;font-size:1.3rem}
         .product-card{background:rgba(255,215,0,0.07);border:2px solid #FFD700;border-radius:15px;overflow:hidden}
-        .product-card img{width:100%;height:200px;object-fit:cover}
+        .product-card img{width:100%;height:220px;object-fit:contain;background:#111;padding:10px}
         .product-card .info{padding:20px}
         .product-card h3{color:#FFD700;margin-bottom:10px}
         @media(max-width:768px){body{padding-top:130px}h1{font-size:1.8rem}.grid{grid-template-columns:1fr}}
@@ -57,20 +57,79 @@
         <div class="section">
             <div class="section-title">🕶️ WETT Products</div>
             <div class="grid">
+
+                <!-- WETT SHADES -->
                 <div class="product-card">
                     <img src="assets/wett-shades.png" alt="WETT Shades">
                     <div class="info">
-                        <h3>WETT Shades</h3>
-                        <div class="row"><span>Per Pair</span><span>$65</span></div>
+                        <h3>WETT Shades — $65</h3>
+                        <p style="color:#ccc;font-size:0.9em;margin-bottom:15px">One of one. Each pair is handcrafted. Choose your frame color below.</p>
+                        <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Frame Color:</label>
+                        <select id="shadesColor" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px">
+                            <option value="">— Select a color —</option>
+                            <option value="Red">Red</option>
+                            <option value="Dark Blue">Dark Blue</option>
+                            <option value="Light Blue">Light Blue</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Pink">Pink</option>
+                            <option value="Clear">Clear</option>
+                        </select>
+                        <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Delivery:</label>
+                        <select id="shadesDelivery" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px">
+                            <option value="pickup">Local Pickup / Drop-off (Free)</option>
+                            <option value="ship">Ship to Me (+shipping fee)</option>
+                        </select>
+                        <button onclick="orderShades()" style="width:100%;padding:14px;background:#FFD700;color:#000;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer">🕶️ Order Now — $65</button>
                     </div>
                 </div>
+
+                <!-- ATM CLIPS -->
                 <div class="product-card">
                     <img src="assets/atm-clips.jpeg" alt="ATM Clips">
                     <div class="info">
                         <h3>ATM Clips</h3>
-                        <div class="row"><span>Standard</span><span>$10</span></div>
-                        <div class="row"><span>Custom (names, words, colors)</span><span>$15</span></div>
+                        <p style="color:#ccc;font-size:0.9em;margin-bottom:15px">One of one. Custom blended colors using your base color as the main.</p>
+                        <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Type:</label>
+                        <select id="clipType" onchange="toggleCustomClip()" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px">
+                            <option value="standard">Standard — $10</option>
+                            <option value="custom">Custom (name/word/color) — $15</option>
+                        </select>
+                        <div id="customClipFields" style="display:none">
+                            <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Custom Text (max 10 letters):</label>
+                            <input type="text" id="clipText" maxlength="10" placeholder="e.g. SPRINKLE" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px;text-transform:uppercase">
+                            <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Base Color:</label>
+                            <select id="clipColor" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px">
+                                <option value="">— Select base color —</option>
+                                <option value="Black">Black</option>
+                                <option value="White">White</option>
+                                <option value="Red">Red</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Green">Green</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Purple">Purple</option>
+                                <option value="Orange">Orange</option>
+                            </select>
+                        </div>
+                        <label style="color:#FFD700;font-weight:bold;display:block;margin-bottom:6px">Delivery:</label>
+                        <select id="clipDelivery" style="width:100%;padding:10px;background:#222;border:2px solid #FFD700;border-radius:8px;color:#fff;font-size:1rem;margin-bottom:15px">
+                            <option value="pickup">Local Pickup / Drop-off (Free)</option>
+                            <option value="ship">Ship to Me (+shipping fee)</option>
+                        </select>
+                        <button id="clipOrderBtn" onclick="orderClip()" style="width:100%;padding:14px;background:#FFD700;color:#000;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer">📎 Order Now — $10</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── MOLD KIT DELIVERY ──────────────────── -->
+        <div class="section">
+            <div class="section-title">📦 Mold Kit Delivery — $40</div>
+            <div class="product-card" style="max-width:600px">
+                <div class="info">
+                    <p style="color:#ccc;margin-bottom:15px;line-height:1.8">Can't make it in person? No problem. We ship a professional mold kit straight to your door. Take your own impression at home and mail it back — we handle the rest.</p>
+                    <div class="row"><span>Mold Kit (shipped to you)</span><span>$40</span></div>
+                    <p style="color:#999;font-size:0.85em;margin:10px 0 20px">Includes: impression tray, putty, instructions, return envelope. Perfect for out-of-city or out-of-state customers.</p>
+                    <a href="mold-form.html?moldkit=true" style="display:block;text-align:center;padding:14px;background:#FFD700;color:#000;border-radius:8px;font-size:1.1rem;font-weight:bold;text-decoration:none">📦 Order Mold Kit — $40</a>
                 </div>
             </div>
         </div>
@@ -214,5 +273,37 @@
             <a href="gift-card.html" style="background:#000;color:#FFD700;padding:14px 40px;font-size:1.1em;border-radius:8px;display:inline-block;text-decoration:none;font-weight:bold">🎉 BUY A GIFT CARD NOW 🎉</a>
         </div>
     </div>
+    <script>
+    function toggleCustomClip(){
+        const isCustom = document.getElementById('clipType').value === 'custom';
+        document.getElementById('customClipFields').style.display = isCustom ? 'block' : 'none';
+        document.getElementById('clipOrderBtn').textContent = isCustom ? '📎 Order Now — $15' : '📎 Order Now — $10';
+    }
+
+    function orderShades(){
+        const color = document.getElementById('shadesColor').value;
+        const delivery = document.getElementById('shadesDelivery').value;
+        if(!color){ alert('Please select a frame color.'); return; }
+        const deliveryNote = delivery === 'ship' ? ' (shipping fee applies)' : ' (local pickup/drop-off)';
+        const body = `Hi! I'd like to order WETT Shades.%0A%0AFrame Color: ${color}%0ADelivery: ${delivery === 'ship' ? 'Ship to me' : 'Local pickup/drop-off'}%0APrice: $65${deliveryNote}%0A%0APlease let me know next steps!`;
+        window.open(`https://mail.google.com/mail/?view=cm&to=mrsprinklereno@gmail.com&su=${encodeURIComponent('WETT Shades Order - ' + color)}&body=${body}`);
+    }
+
+    function orderClip(){
+        const type = document.getElementById('clipType').value;
+        const delivery = document.getElementById('clipDelivery').value;
+        const deliveryNote = delivery === 'ship' ? 'Ship to me (shipping fee applies)' : 'Local pickup/drop-off';
+        let details = `Type: ${type === 'custom' ? 'Custom' : 'Standard'}\nPrice: ${type === 'custom' ? '$15' : '$10'}\nDelivery: ${deliveryNote}`;
+        if(type === 'custom'){
+            const text = document.getElementById('clipText').value.trim().toUpperCase();
+            const color = document.getElementById('clipColor').value;
+            if(!text){ alert('Please enter your custom text (up to 10 letters).'); return; }
+            if(!color){ alert('Please select a base color.'); return; }
+            details += `\nCustom Text: ${text}\nBase Color: ${color}`;
+        }
+        const body = encodeURIComponent(`Hi! I'd like to order an ATM Clip.\n\n${details}\n\nPlease let me know next steps!`);
+        window.open(`https://mail.google.com/mail/?view=cm&to=mrsprinklereno@gmail.com&su=${encodeURIComponent('ATM Clip Order')}&body=${body}`);
+    }
+    </script>
 </body>
 </html>

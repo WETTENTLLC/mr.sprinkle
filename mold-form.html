@@ -377,7 +377,14 @@
         <div class="container">
             <h1>Buy/Book Now</h1>
 
-            <!-- Gift Card Promotion -->
+            <!-- Mold Kit Delivery Option -->
+            <div style="background:rgba(255,215,0,0.08);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:30px;text-align:center">
+                <h2 style="margin-bottom:10px">📦 Can't Come In Person?</h2>
+                <p style="color:#ccc;margin-bottom:15px">We ship a professional mold kit to your door for <strong style="color:#FFD700">$40</strong>. Take your impression at home and mail it back — we handle the rest. Perfect for out-of-city or out-of-state customers.</p>
+                <div id="moldKitBanner" style="display:none;background:linear-gradient(45deg,#4CAF50,#45a049);padding:12px;border-radius:8px;margin-bottom:15px;font-weight:bold">✅ Mold Kit Delivery Selected — $40 will be added to your order</div>
+                <button type="button" id="moldKitBtn" onclick="toggleMoldKit()" style="background:#FFD700;color:#000;padding:12px 30px;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer">📦 Add Mold Kit Delivery (+$40)</button>
+                <input type="hidden" id="moldKitDelivery" name="moldKitDelivery" value="no">
+            </div>
             <div style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);padding:30px 20px;border-radius:15px;margin-bottom:30px;text-align:center;box-shadow:0 0 20px rgba(255,215,0,0.4)">
                 <h2 style="color:#000;font-size:1.8rem;margin-bottom:10px">🎁 SKIP THE BOOKING? BUY A GIFT CARD! 🎁</h2>
                 <p style="color:#000;font-size:1em;margin-bottom:15px"><strong>Give the gift of luxe! Recipients get 10% OFF their custom grillz order</strong></p>
@@ -521,6 +528,18 @@
                     <div class="form-group">
                         <label for="design">Additional Design Preferences:</label>
                         <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
+                    </div>
+
+                    <div id="deliveryAddressFields" style="display:none;background:rgba(255,215,0,0.08);border:2px solid #FFD700;border-radius:10px;padding:1.5rem;margin:2rem 0">
+                        <h3 style="color:#FFD700;margin-bottom:1rem">📦 Mold Kit Delivery Address</h3>
+                        <div class="form-group">
+                            <label for="deliveryAddress">Street Address:</label>
+                            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Main St">
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveryCity">City, State, ZIP:</label>
+                            <input type="text" id="deliveryCity" name="deliveryCity" placeholder="Reno, NV 89501">
+                        </div>
                     </div>
 
                     <div class="form-group" style="background: rgba(76,175,80,0.1); border: 2px solid #4caf50; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
@@ -694,12 +713,30 @@
             }
         });
         
+        // Mold kit toggle
+        function toggleMoldKit(){
+            const active = document.getElementById('moldKitDelivery').value === 'yes';
+            document.getElementById('moldKitDelivery').value = active ? 'no' : 'yes';
+            document.getElementById('moldKitBanner').style.display = active ? 'none' : 'block';
+            document.getElementById('moldKitBtn').textContent = active ? '📦 Add Mold Kit Delivery (+$40)' : '❌ Remove Mold Kit Delivery';
+            document.getElementById('deliveryAddressFields').style.display = active ? 'none' : 'block';
+            // make address required when kit selected
+            document.getElementById('deliveryAddress').required = !active;
+            document.getElementById('deliveryCity').required = !active;
+        }
+
+        // Auto-select mold kit if URL param present
+        if(new URLSearchParams(window.location.search).get('moldkit') === 'true') toggleMoldKit();
+
         // Promo code validation
         document.getElementById('promoCode').addEventListener('input',function(){
             const code=this.value.toUpperCase();
             const status=document.getElementById('promoStatus');
-            if(code==='TAXTIME50'){
+            if(code==='SPRINKLED26'){
                 status.textContent='✓ Valid! $50 credit applied (orders $300+)';
+                status.style.color='#4caf50';
+            }else if(code==='BIRTHDAY20'){
+                status.textContent='✓ Valid! 20% OFF applied';
                 status.style.color='#4caf50';
             }else if(code.length>0){
                 status.textContent='Invalid code';
