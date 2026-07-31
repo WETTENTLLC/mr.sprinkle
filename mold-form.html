@@ -670,9 +670,10 @@
                     headers: {'Accept': 'application/json'}
                 });
 
-                // Send to Zapier (Google Sheets)
-                await fetch('https://hooks.zapier.com/hooks/catch/24223124/462mezx/', {
+                // Send to Google Sheets
+                await fetch('https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec', {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(payload)
                 });

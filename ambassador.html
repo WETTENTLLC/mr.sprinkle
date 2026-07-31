@@ -405,7 +405,7 @@
     </div>
     
     <script>
-        const ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/24223124/462mezx/';
+        const GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec';
 
         // Generate ambassador code from name
         document.getElementById('ambassadorName').addEventListener('input', function(){
@@ -452,9 +452,10 @@
                     headers: {'Accept': 'application/json'}
                 });
 
-                // Send to Zapier (Google Sheets)
-                await fetch(ZAPIER_WEBHOOK, {
+                // Send to Google Sheets
+                await fetch(GOOGLE_SCRIPT, {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(payload)
                 });
