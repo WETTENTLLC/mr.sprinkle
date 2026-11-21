@@ -358,16 +358,7 @@
             margin: 2rem 0;
             border-left: 4px solid #FFD700;
         }
-        .chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;background:#FFD700;border-radius:50%;border:none;font-size:30px;cursor:pointer;box-shadow:0 4px 12px rgba(255,215,0,0.4);z-index:1000}
-        .chat-box{position:fixed;bottom:90px;right:20px;width:350px;height:500px;background:#1a1a1a;border:2px solid #FFD700;border-radius:15px;display:none;flex-direction:column;z-index:1000}
-        .chat-header{background:#FFD700;color:#000;padding:15px;border-radius:13px 13px 0 0;font-weight:bold}
-        .chat-messages{flex:1;overflow-y:auto;padding:15px;color:#fff}
-        .chat-input{display:flex;padding:10px;border-top:1px solid #FFD700}
-        .chat-input input{flex:1;padding:10px;background:#2a2a2a;border:1px solid #FFD700;border-radius:5px;color:#fff}
-        .chat-input button{background:#FFD700;border:none;padding:10px 15px;margin-left:5px;border-radius:5px;cursor:pointer;font-weight:bold}
-        .msg{margin:10px 0;padding:10px;border-radius:8px}
-        .user{background:#FFD700;color:#000;margin-left:20px}
-        .bot{background:#2a2a2a;margin-right:20px}
+        .chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:#FFD700;color:#000;border-radius:50%;border:none;font-size:30px;text-decoration:none;box-shadow:0 4px 12px rgba(255,215,0,0.4);z-index:1000}
     </style>
 </head>
 <body>
@@ -910,52 +901,6 @@
 
     </script>
 
-    <button class="chat-btn" onclick="document.getElementById('chatBox').style.display=document.getElementById('chatBox').style.display==='flex'?'none':'flex'">💬</button>
-    <div id="chatBox" class="chat-box">
-        <div class="chat-header">Need Help? Ask Me!</div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input">
-            <input id="chatInput" placeholder="Ask about pricing, materials, etc..." onkeypress="if(event.key==='Enter')sendMsg()">
-            <button onclick="sendMsg()">Send</button>
-        </div>
-    </div>
-
-    <script>
-    const API_KEY='YOUR_GROK_API_KEY_HERE'; // REPLACE WITH YOUR KEY - DO NOT COMMIT TO GITHUB
-    const msgs=[];
-    async function sendMsg(){
-        const input=document.getElementById('chatInput');
-        const txt=input.value.trim();
-        if(!txt)return;
-        addMsg(txt,'user');
-        input.value='';
-        msgs.push({role:'user',content:txt});
-        try{
-            const res=await fetch('https://api.x.ai/v1/chat/completions',{
-                method:'POST',
-                headers:{'Content-Type':'application/json','Authorization':`Bearer ${API_KEY}`},
-                body:JSON.stringify({
-                    model:'grok-beta',
-                    messages:[{role:'system',content:'You are the Mr. Sprinkle appointment and quote-request assistant. Use only published prices shown on the pricing page; never invent prices, totals, payment methods, production times, availability, discounts, or appointment hours. Silver grillz: $100/$600/$1,200 for 1/6/12 teeth; 10K gold: $240/$1,440/$2,880; 14K gold: $300/$1,800/$3,600; 14K dental gold: $320/$1,920/$3,840. Exact 6- and 12-tooth set definitions are pending confirmation. 18K gold, white gold, platinum, custom jewelry, tooth gems, and gold press-on nails require a custom quote. Custom cut and finish prices depend on the design and must not be automatically multiplied. Diamond prices are material-only per stone; setting and design labor require a custom quote pending invoice review. Standard shipping is $60; rush shipping is $150, next-day to/from the main office, with a minimum 4-day completion expectation subject to eligibility and capacity confirmation. In-person appointments are by appointment only, 10:00 AM–6:00 PM, at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501. Mobile mold service is separate and is not another physical location. Form submissions request an appointment or quote; they do not confirm a booking or order. For unresolved questions, ask the customer to text (530) 214-0676.'},...msgs],
-                    temperature:0.7
-                })
-            });
-            const data=await res.json();
-            const reply=data.choices[0].message.content;
-            msgs.push({role:'assistant',content:reply});
-            addMsg(reply,'bot');
-        }catch(e){
-            addMsg('Sorry, I\'m having trouble. Text (530) 214-0676 for immediate help!','bot');
-        }
-    }
-    function addMsg(txt,type){
-        const div=document.createElement('div');
-        div.className=`msg ${type}`;
-        div.textContent=txt;
-        document.getElementById('chatMessages').appendChild(div);
-        div.scrollIntoView({behavior:'smooth'});
-    }
-    </script>
+    <a class="chat-btn" href="sms:+15302140676" aria-label="Text Mr. Sprinkle with a question" title="Text Mr. Sprinkle">💬</a>
     <script src="assets/site-header.js"></script>
 </body>
-</html>

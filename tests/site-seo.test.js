@@ -257,3 +257,14 @@ test("robots.txt advises crawlers to avoid internal and data endpoints without b
   }
   assert.match(robots, /Sitemap: https:\/\/mrsprinklereno\.com\/sitemap\.xml/);
 });
+
+
+test("customer pages do not expose model-provider API keys or call model APIs from the browser", () => {
+  for (const page of ["index.html", "pricing.html", "mold-form.html", "blog.html", "gold-teeth-reno.html"]) {
+    const html = read(page);
+    assert.doesNotMatch(html, /api\.x\.ai\/v1\/chat\/completions|YOUR_GROK_API_KEY|YOUR_API_KEY_HERE/i, page + " has no browser model API key/call");
+  }
+  for (const page of ["mold-form.html", "blog.html"]) {
+    assert.match(read(page), /href="sms:\+15302140676"/i, page + " retains direct customer contact");
+  }
+});
