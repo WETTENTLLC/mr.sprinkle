@@ -140,7 +140,7 @@
     window.skipIntro = closeIntro;
     window.MrSprinkleIntro = Object.freeze({
         close: closeIntro,
-        enterQuietly: function () { enterQuietly(null); },
+        enterQuietly: function (button) { enterQuietly(button || null); },
         playAndEnter: enterWithSound
     });
 
@@ -215,17 +215,8 @@
                     return; // Let the normal navigation to the music page continue.
                 }
 
-                if (target.closest("#introPlay")) {
-                    event.preventDefault();
-                    enterWithSound();
-                    return;
-                }
-
-                const skipButton = target.closest("[data-intro-skip]");
-                if (skipButton) {
-                    event.preventDefault();
-                    enterQuietly(skipButton);
-                }
+                // Explicit intro buttons call window.mrSprinkleIntroAction directly.
+                // This delegated listener only handles the track purchase link above.
             }, true);
 
             // Clicking the empty cinematic background is also a quiet-entry path.
