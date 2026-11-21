@@ -1,19 +1,17 @@
 /*
- * The site's featured track. To change the song, edit ONLY this file:
- *  1. Put the new MP3 (and cover image) in assets/.
- *  2. Update src, cover, title, artist, explicit, and price below.
- *  3. Create a new PayPal hosted button for the new song and paste its ID in paypalButtonId.
- * The homepage intro, the header music player, and intro-music.html all read from here.
+ * The site's featured track. The intro, header player and music page read from here.
+ * Media is hosted on the WETT media CDN; PayPal remains on the existing hosted button
+ * until the merchant item is updated separately.
  */
 window.MrSprinkleTrack = Object.freeze({
-    title: "Damn",
-    artist: "Mr. Sprinkle Intro Music",
+    title: "Damn (Remix)",
+    artist: "Wett Girls feat. Dru Down",
     label: "WETT Entertainment LLC",
-    src: "assets/Damn.mp3",
-    cover: "assets/Damn Cover.png",
+    src: "https://d2ol7oe51mr4n9.cloudfront.net/user_30zhnNWOXaygqeYTbhEO5mnIHNL/cdc87077-fc76-427c-8488-b5fefe48aacc.mp3",
+    cover: "https://d2ol7oe51mr4n9.cloudfront.net/user_30zhnNWOXaygqeYTbhEO5mnIHNL/3f9bd576-4658-4166-be31-58474e32f309.png",
     explicit: true,
     price: "$1.00",
     buyUrl: "intro-music.html",
     paypalButtonId: "PYSZ68LTCB2VW",
-    copyrightYear: 2025
+    copyrightYear: 2026
 });
