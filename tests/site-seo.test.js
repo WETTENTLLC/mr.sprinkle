@@ -196,3 +196,15 @@ test("inline JSON-LD on the key search pages is valid JSON", () => {
     for (const block of blocks) assert.doesNotThrow(() => JSON.parse(block[1]), page + " JSON-LD parses");
   }
 });
+
+
+test("archived 2025 giveaway page cannot accept payments or new entries", () => {
+  const archive = read("tax-time-promo.html");
+  assert.match(archive, /promotion has ended/i);
+  assert.match(archive, /entries are closed/i);
+  assert.match(archive, /retained for reference only/i);
+  assert.doesNotMatch(archive, /paypal\.com\/cgi-bin\/webscr/i);
+  assert.doesNotMatch(archive, /id=["']entryForm["']|id=["']freeEntryForm["']/i);
+  assert.doesNotMatch(archive, /Buy \$10 Pass|Submit Free Entry/i);
+  assert.doesNotMatch(archive, /const ENTRIES_FILE|Entry Submitted!/i);
+});
