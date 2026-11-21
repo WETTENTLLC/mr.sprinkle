@@ -133,3 +133,16 @@ li.ms-sound-item { display: flex; align-items: center; }
     .ms-intro, .ms-intro__content { transition: none; animation: none; }
     .ms-sound.is-playing .ms-eq i { animation: none; height: 8px; }
 }
+
+
+/* Reliable intro hit-testing: the video/veil must never cover the controls. */
+#videoIntro.ms-intro { isolation: isolate; }
+#videoIntro .ms-intro__video { z-index: 0; pointer-events: none; }
+#videoIntro .ms-intro__veil { z-index: 1; pointer-events: none; }
+#videoIntro .ms-intro__content { z-index: 2; pointer-events: auto; }
+#videoIntro .ms-intro__actions { position: relative; z-index: 3; pointer-events: auto; }
+#videoIntro .ms-btn,
+#videoIntro .ms-intro__skip { position: relative; z-index: 4; pointer-events: auto; touch-action: manipulation; }
+#videoIntro .ms-track { z-index: 2; }
+#videoIntro .ms-btn:disabled { opacity: .78; cursor: wait; }
+.ms-intro__status { min-height: 1.25em; margin: 12px 0 0; color: var(--ms-platinum); font: 500 .78rem/1.5 Arial, sans-serif; }
