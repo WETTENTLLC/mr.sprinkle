@@ -54,7 +54,8 @@ test("homepage and area hub clearly target Reno and nearby Northern Nevada", () 
   for (const place of ["Reno", "Sparks", "Spanish Springs", "Sun Valley", "Carson City", "Fernley", "Truckee"]) {
     assert.match(areas, new RegExp(place.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), place);
   }
-  assert.match(areas, /only in-person appointment venue/i);
+  assert.match(areas, /Envy Kutz — Braids &amp; Locs/i);
+  assert.match(areas, /Appointments are by appointment only/i);
   assert.match(areas, /confirmed individually/i);
 });
 
