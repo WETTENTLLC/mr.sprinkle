@@ -233,3 +233,27 @@ test("blog uses page-level collection and breadcrumb structured data", () => {
   assert.ok(graph["@graph"].some((item) => item["@type"] === "CollectionPage"));
   assert.ok(graph["@graph"].some((item) => item["@type"] === "BreadcrumbList"));
 });
+
+test("Jekyll production output excludes public admin tools, backend source, and operational data", () => {
+  const config = read("_config.yml");
+  for (const pattern of [
+    '"*.php"', '"**/*.php"', '"*.sql"', '"**/*.sql"',
+    '"*.md"', '"**/*.md"', '"*.bat"', '"*.pdf"', '"*.zip"',
+    '"admin-dashboard.html"', '"ai-sales-coach-24-7-final.html"',
+    '"site-check.html"', '"test-script.html"', '"entries.json"',
+    '"live-prospects.json"', '"scripts/"', '"tests/"',
+    '"google-apps-script.js"', '"entry-tracking-setup.js"'
+  ]) assert.ok(config.includes(`- ${pattern}`), `production exclusion: ${pattern}`);
+  for (const publicPage of ["index.html", "pricing.html", "mold-form.html", "gold-teeth-reno.html", "service-areas.html", "blog.html"]) {
+    assert.doesNotMatch(config, new RegExp(`- ["']${publicPage.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}['"]`));
+  }
+});
+
+test("robots.txt advises crawlers to avoid internal and data endpoints without blocking public discovery", () => {
+  const robots = read("robots.txt");
+  assert.match(robots, /User-agent: \*\s+Allow: \/[\s\S]*Disallow: \/admin-dashboard\.html/);
+  for (const path of ["/ai-sales-coach-24-7-final.html", "/site-check.html", "/test-script.html", "/entries.json", "/live-prospects.json", "/*.php$", "/*.sql$"]) {
+    assert.ok(robots.includes(`Disallow: ${path}`), `crawler disallow: ${path}`);
+  }
+  assert.match(robots, /Sitemap: https:\/\/mrsprinklereno\.com\/sitemap\.xml/);
+});
