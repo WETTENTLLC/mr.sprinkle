@@ -1,5 +1,7 @@
 # Ambassador System - Complete Testing & Deployment Guide
 
+> **Legacy document:** The deployment and validation claims below are historical. The current portal uses the PHP backend, not browser-side ambassador storage. Do not use this guide to commit, push, or deploy. Ambassador portal access is still code-only and is not suitable for confidential account information until a secure login/recovery flow is approved and implemented.
+
 ## ✅ Status Update
 All code changes have been pushed to GitHub and are ready for production deployment.
 
@@ -41,20 +43,20 @@ This script will:
    - Confirm `ambassadors` table exists
    - Display database schema
 
-2. **✓ Add/Update Natalia Chacon**
-   - Code: `NATALIA09`
-   - Email: `nataliachacon0904@gmail.com`
-   - Phone: `775-250-9356`
+2. **✓ Add/Update sample ambassador**
+   - Code: `<ambassador-code>`
+   - Email: `ambassador@example.com`
+   - Phone: `(555) 010-0000`
    - Status: `active`
 
 3. **✓ Test Backend Authentication**
-   - Query database for NATALIA09
+   - Query database for <ambassador-code>
    - Verify ambassador record retrieval
    - Test API response format
 
 4. **✓ List All Ambassadors**
    - Shows complete ambassador database
-   - Verifies Natalia is properly added
+   - Verifies sample ambassador is properly added
 
 ---
 
@@ -63,14 +65,14 @@ This script will:
 Once tests pass, test the actual login:
 
 1. Visit: https://mrsprinklereno.com/ambassador-portal.html
-2. Enter Code: `NATALIA09`
+2. Enter Code: `<ambassador-code>`
 3. Click Login
 
 **Expected Results:**
 ```
 ✓ Dashboard loads
-✓ Shows "Welcome, Natalia Chacon!"
-✓ Displays referral link with NATALIA09
+✓ Shows "Welcome, sample ambassador!"
+✓ Displays referral link with <ambassador-code>
 ✓ Shows commission structure
 ✓ Displays stats (may be 0 initially)
 ✓ Shows QR code and share options
@@ -83,7 +85,7 @@ Once tests pass, test the actual login:
 If portal login fails, test the API directly:
 
 ```
-https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code=NATALIA09
+https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code=<ambassador-code>
 ```
 
 **Expected Response (JSON):**
@@ -91,10 +93,10 @@ https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code
 {
   "success": true,
   "data": {
-    "ambassador_code": "NATALIA09",
-    "name": "Natalia Chacon",
-    "email": "nataliachacon0904@gmail.com",
-    "phone": "775-250-9356",
+    "ambassador_code": "<ambassador-code>",
+    "name": "sample ambassador",
+    "email": "ambassador@example.com",
+    "phone": "(555) 010-0000",
     "status": "active",
     "total_referrals": 0,
     "paid_commission": 0,
@@ -117,13 +119,13 @@ https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code
 
 ---
 
-## ✨ Natalia's Login Flow
+## ✨ the ambassador's Login Flow
 
 ```
-1. Natalia visits https://mrsprinklereno.com/ambassador-portal.html
-2. Enters code: NATALIA09
+1. sample ambassador visits https://mrsprinklereno.com/ambassador-portal.html
+2. Enters code: <ambassador-code>
 3. Portal sends fetch request to ambassador-backend.php
-4. Backend queries database for NATALIA09
+4. Backend queries database for <ambassador-code>
 5. Database returns ambassador record
 6. Portal displays dashboard with her info
 7. She can see referral link and commission stats
@@ -135,10 +137,10 @@ https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code
 
 ### Issue: "Invalid ambassador code" error
 **Solution:**
-1. Verify setup test script shows Natalia in database
+1. Verify setup test script shows sample ambassador in database
 2. Check that portal.html was updated (git pull successful)
 3. Verify ambassador-backend.php exists on server
-4. Check database has NATALIA09 record
+4. Check database has <ambassador-code> record
 
 ### Issue: Database connection fails in setup test
 **Solution:**
@@ -149,9 +151,9 @@ https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code
 
 ### Issue: API returns "not found"
 **Solution:**
-1. Run setup test to add Natalia
-2. Verify email is `nataliachacon0904@gmail.com` (not 0903)
-3. Verify code is exactly `NATALIA09`
+1. Run setup test to add sample ambassador
+2. Verify email is `ambassador@example.com` (not 0903)
+3. Verify code is exactly `<ambassador-code>`
 
 ---
 
@@ -161,7 +163,7 @@ The setup test verifies:
 - ✓ MySQL connection working
 - ✓ `mr_sprinkle_db` database exists
 - ✓ `ambassadors` table has correct schema
-- ✓ Natalia record exists with correct email
+- ✓ sample ambassador record exists with correct email
 - ✓ Backend can query and return ambassador data
 
 ---
@@ -172,9 +174,9 @@ System is ready when:
 - [ ] `git pull origin master` completes successfully
 - [ ] https://mrsprinklereno.com/ambassador-system-setup-test.php runs without errors
 - [ ] Test script shows "Database Connected Successfully"
-- [ ] Test script shows Natalia Chacon in ambassador list
+- [ ] Test script shows sample ambassador in ambassador list
 - [ ] https://mrsprinklereno.com/ambassador-portal.html loads
-- [ ] Natalia can login with code NATALIA09
+- [ ] sample ambassador can login with code <ambassador-code>
 - [ ] Dashboard displays her information
 - [ ] API endpoint returns JSON with ambassador data
 
@@ -193,7 +195,7 @@ If any step fails:
 
 ## 🎉 Once Complete
 
-Natalia is fully set up and can:
+sample ambassador is fully set up and can:
 - ✓ Access her ambassador dashboard
 - ✓ Get unique referral link with code
 - ✓ Track referrals and earnings

@@ -8,9 +8,7 @@
  */
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+require_once __DIR__ . '/database-connection.php';
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -19,32 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 try {
-    // ============================================
-    // CONFIGURATION - UPDATE THESE VARIABLES
-    // ============================================
-    
-    // Database credentials
-    $DB_HOST = 'localhost';      // Your database host
-    $DB_USER = 'root';           // Your database user
-    $DB_PASS = '';               // Your database password
-    $DB_NAME = 'mr_sprinkle_db'; // Your database name
-    
-    // ============================================
-    // DATABASE CONNECTION
-    // ============================================
-    
-    $pdo = new PDO(
-        "mysql:host=$DB_HOST;dbname=$DB_NAME",
-        $DB_USER,
-        $DB_PASS,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
+    $pdo = mrSprinkleDatabase();
     
     // ============================================
     // ROUTE HANDLING
     // ============================================
     
     $endpoint = $_GET['endpoint'] ?? $_POST['endpoint'] ?? null;
+
+    if (in_array($endpoint, ['all-ambassadors', 'add-ambassador', 'update-ambassador', 'delete-ambassador', 'test'], true)) {
+        mrSprinkleRequireAdminApiToken();
+    }
     
     switch ($endpoint) {
         case 'ambassador-stats':
@@ -84,11 +67,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug' => [
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ]
+        'message' => 'The ambassador service is temporarily unavailable.'
     ]);
 }
 
@@ -98,7 +77,7 @@ try {
 
 /**
  * Get ambassador stats by code
- * GET /ambassador-backend.php?endpoint=ambassador-stats&code=NATALIA09
+ * GET /ambassador-backend-standalone.php?endpoint=ambassador-stats&code=<ambassador-code>
  */
 function handleAmbassadorStats($pdo) {
     $code = $_GET['code'] ?? null;
@@ -112,17 +91,12 @@ function handleAmbassadorStats($pdo) {
     try {
         $stmt = $pdo->prepare("
             SELECT 
-                id,
                 ambassador_code,
                 name,
-                email,
-                phone,
                 status,
                 total_referrals,
                 paid_commission,
-                pending_commission,
-                created_at,
-                last_referral_date
+                pending_commission
             FROM ambassadors
             WHERE ambassador_code = ?
             LIMIT 1
@@ -146,7 +120,8 @@ function handleAmbassadorStats($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to load ambassador stats.']);
     }
 }
 
@@ -182,7 +157,8 @@ function handleAllAmbassadors($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to add ambassador.']);
     }
 }
 
@@ -234,7 +210,8 @@ function handleAddAmbassador($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to update ambassador.']);
     }
 }
 
@@ -297,7 +274,8 @@ function handleUpdateAmbassador($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to delete ambassador.']);
     }
 }
 
@@ -328,7 +306,8 @@ function handleDeleteAmbassador($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to delete ambassador.']);
     }
 }
 
@@ -357,7 +336,8 @@ function handleTest($pdo) {
         
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to test the ambassador service.']);
     }
 }
 ?>

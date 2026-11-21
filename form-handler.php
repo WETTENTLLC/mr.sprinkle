@@ -1,9 +1,9 @@
 <?php
+require_once __DIR__ . '/database-connection.php';
+
 // Minimal Form Handler for Existing Forms
 function processAmbassadorBooking($formData) {
-    // Database connection
-    $pdo = new PDO("mysql:host=localhost;dbname=mr_sprinkle_db", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = mrSprinkleDatabase();
     
     $ambassadorCode = $formData['ambassador_code'] ?? '';
     $customerName = $formData['customer_name'] ?? $formData['name'] ?? '';

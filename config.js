@@ -10,7 +10,6 @@ const CONFIG = {
     BACKEND_URL: 'https://mrsprinklereno.com/ambassador-backend.php',
     
     PORTAL_URL: 'https://mrsprinklereno.com/ambassador-portal.html',
-    AMBASSADOR_CODE: 'NATALIA09',
     ADMIN_EMAIL: 'mrsprinklereno@gmail.com'
 };
 

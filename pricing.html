@@ -3,9 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing - Mr. Sprinkle x WETT</title>
+    <title>Custom Grillz Pricing &amp; Quote-Based Services | Mr. Sprinkle</title>
+    <meta name="description" content="View Mr. Sprinkle's published custom grillz, stone, and WETT accessory prices. Design-dependent work, tooth gems, and gold press-on nails require a custom quote.">
+    <link rel="canonical" href="https://mrsprinklereno.com/pricing.html">
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
+    <script src="assets/pricing-catalog.js"></script>
+    <script src="assets/grill-estimate.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mrsprinklereno.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Pricing", "item": "https://mrsprinklereno.com/pricing.html" }
+          ]
+        },
+        {
+          "@type": "OfferCatalog",
+          "name": "Published custom grillz pricing",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Silver grillz — 1 tooth" }, "price": "100", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Silver grillz — 6-tooth tier" }, "price": "600", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Silver grillz — 12-tooth tier" }, "price": "1200", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "10K gold grillz — 1 tooth" }, "price": "240", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "10K gold grillz — 6-tooth tier" }, "price": "1440", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "10K gold grillz — 12-tooth tier" }, "price": "2880", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K gold grillz — 1 tooth" }, "price": "300", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K gold grillz — 6-tooth tier" }, "price": "1800", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K gold grillz — 12-tooth tier" }, "price": "3600", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K dental gold grillz — 1 tooth" }, "price": "320", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K dental gold grillz — 6-tooth tier" }, "price": "1920", "priceCurrency": "USD" },
+            { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "14K dental gold grillz — 12-tooth tier" }, "price": "3840", "priceCurrency": "USD" }
+          ]
+        }
+      ]
+    }
+    </script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:#000;color:#fff;font-family:Arial,sans-serif;padding-top:110px}
@@ -40,6 +76,36 @@
         .product-card .info{padding:20px}
         .product-card h3{color:#FFD700;margin-bottom:10px}
         @media(max-width:768px){body{padding-top:130px}h1{font-size:1.8rem}.grid{grid-template-columns:1fr}}
+        .configurator{background:#111;border:1px solid #b99a5b;border-radius:16px;padding:24px}
+        .configurator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+        .configurator label{display:block;color:#d9c18a;font-weight:bold;margin:0 0 6px}
+        .configurator select,.configurator input{width:100%;padding:11px;background:#1d1d1d;color:#fff;border:1px solid #71664e;border-radius:6px}
+        .configurator fieldset{border:1px solid #514a3b;border-radius:8px;padding:14px;margin:18px 0}
+        .configurator fieldset label{display:flex;align-items:center;gap:8px;margin:8px 0;color:#ddd;font-weight:normal}
+        .configurator fieldset input{width:auto}
+        .tooth-selection-details{margin:0 0 18px;border:1px solid #514a3b;border-radius:8px;background:#141414}
+        .tooth-selection-details summary{padding:14px;color:#e3c782;font-weight:bold;cursor:pointer}
+        .tooth-selection-details[open] summary{border-bottom:1px solid #514a3b}
+        .tooth-picker{margin:0 14px 14px!important;width:calc(100% - 28px);min-width:0}
+        .jaw-picker{margin:10px 0 18px;overflow-x:auto}
+        .tooth-choices{display:grid;grid-template-columns:repeat(16,minmax(30px,1fr));gap:7px;min-width:590px;width:100%}
+        .tooth-choice{min-height:44px;background:#d9d4c8;color:#171614;border:1px solid #8a8068;border-radius:5px;font-weight:bold;cursor:pointer}
+        .tooth-choice[aria-pressed="true"]{background:#d2b56f;color:#090909;border-color:#f0d892;box-shadow:0 0 0 2px rgba(210,181,111,.25)}
+        .tooth-choice:focus-visible,.clear-teeth:focus-visible{outline:2px solid #f0d892;outline-offset:2px}
+        .clear-teeth{background:transparent;color:#e3c782;border:1px solid #71664e;border-radius:4px;padding:8px 12px;cursor:pointer}
+        .design-preview{background:#161614;border:1px solid #514a3b;padding:14px;border-radius:8px;margin:14px 0}
+        .design-preview h3{margin:0 0 8px}
+        .preview-meta{width:100%;color:#d8d1c2;margin-bottom:4px}
+        .preview-tooth{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:40px;padding:0 4px;background:#d2b56f;color:#090909;border:1px solid #f0d892;border-radius:6px 6px 12px 12px;font-size:.8rem;font-weight:bold}
+        .estimate{background:#191919;border-left:3px solid #b99a5b;padding:16px;margin-top:18px}
+        .estimate strong{color:#e3c782}
+        .quote-required{color:#f1d899}
+        .estimate-lines{list-style:none;margin:0 0 12px;padding:0}
+        .estimate-lines li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #333}
+        .estimate-lines li span:last-child{white-space:nowrap;color:#e3c782}
+        .stone-count-hint{display:block;color:#bbb;font-size:.88rem;line-height:1.5;margin-top:7px}
+        .quick-coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}
+        .quick-coverage input:disabled{opacity:.7;cursor:not-allowed}
     </style>
 </head>
 <body>
@@ -50,8 +116,137 @@
     </header>
 
     <div class="container">
-        <h1>💎 WETT x Mr. Sprinkle Master Price List</h1>
-        <p style="text-align:center;color:#999;margin-bottom:40px">Call/Text (530) 214-0676 &nbsp;•&nbsp; @Mr.sprinkle_reno &nbsp;•&nbsp; mrsprinklereno.com</p>
+        <h1>Custom Grillz Pricing</h1>
+        <p style="text-align:center;color:#bbb;margin-bottom:16px">Approved published prices are listed below. Custom designs and quote-only services are never assigned an unapproved price.</p>
+        <p style="text-align:center;color:#bbb;margin-bottom:40px">Text (530) 214-0676 &nbsp;•&nbsp; Appointment only at Envy Kutz — Braids &amp; Locs, 275 E 4th St, Reno, NV 89501</p>
+
+        <div class="section" id="configurator">
+            <div class="section-title">Sprinkle Studio — Grillz Estimate</div>
+            <p class="note" style="margin-bottom:18px">Choose any combination of upper and lower teeth. This estimator uses published prices only; it is not checkout or an order confirmation. Appointment and rush availability are confirmed by the team.</p>
+            <div class="configurator">
+                <fieldset>
+                    <legend>Quick coverage estimate</legend>
+                    <p class="note" style="margin:0 0 12px">Enter an approximate number of teeth for each jaw. Open the optional selector below only if you want to mark exact teeth.</p>
+                    <div class="quick-coverage">
+                        <div>
+                            <label for="estimateUpperCount">Approximate upper teeth</label>
+                            <input id="estimateUpperCount" type="number" min="0" max="16" step="1" value="0">
+                        </div>
+                        <div>
+                            <label for="estimateLowerCount">Approximate lower teeth</label>
+                            <input id="estimateLowerCount" type="number" min="0" max="16" step="1" value="0">
+                        </div>
+                    </div>
+                </fieldset>
+                <details class="tooth-selection-details" id="exactToothSelection">
+                    <summary id="exactToothSummary">Choose exact teeth (optional)</summary>
+                    <fieldset class="tooth-picker">
+                        <legend>Select individual teeth</legend>
+                    <div class="jaw-picker">
+                        <h3>Upper jaw</h3>
+                        <div id="upperTeeth" class="tooth-choices" aria-label="Select upper teeth"></div>
+                    </div>
+                    <div class="jaw-picker">
+                        <h3>Lower jaw</h3>
+                        <div id="lowerTeeth" class="tooth-choices" aria-label="Select lower teeth"></div>
+                    </div>
+                    <button id="clearTeeth" type="button" class="clear-teeth">Clear exact selection</button>
+                    </fieldset>
+                </details>
+                <div class="design-preview">
+                    <h3>Design preview</h3>
+                    <div id="designPreview" class="preview-teeth" aria-live="polite">No teeth selected</div>
+                </div>
+                <div class="configurator-grid">
+                    <div>
+                        <label for="estimateDesign">Design</label>
+                        <select id="estimateDesign">
+                            <option value="grillz">Standard grillz set</option>
+                            <option value="fangs">Fangs set</option>
+                            <option value="gapFiller">Gap filler</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="estimateMetal">Metal</label>
+                        <select id="estimateMetal">
+                            <option value="silver">Silver</option>
+                            <option value="gold10k">10K Gold</option>
+                            <option value="gold14k">14K Gold</option>
+                            <option value="dentalGold14k">14K Dental Gold</option>
+                            <option value="quote">18K / White Gold / Platinum — quote</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="estimateFinish">Finish</label>
+                        <select id="estimateFinish">
+                            <option value="standard">Standard finish</option>
+                            <option value="custom">Custom finish — quote required</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="estimateShipping">Grillz shipping</label>
+                        <select id="estimateShipping">
+                            <option value="standard">Standard FedEx shipping — $60</option>
+                            <option value="rush">Rush shipping — $150 instead of $60 (eligibility confirmed by the team)</option>
+                        </select>
+                    </div>
+                    <div id="fangExtensionField" hidden>
+                        <label for="estimateFangExtension">Fang extension</label>
+                        <select id="estimateFangExtension">
+                            <option value="">None</option>
+                            <option value="medium">Medium (+2mm) — +$20</option>
+                            <option value="long">Long (+4mm) — +$35</option>
+                            <option value="curved">Curved design — +$45</option>
+                            <option value="xl">XL fangs (8mm+) — +$60</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="estimateStones">Stone selection</label>
+                        <select id="estimateStones">
+                            <option value="none">No stones</option>
+                            <option value="natural">Natural diamond</option>
+                            <option value="labGrownDiamond">Lab-grown diamond</option>
+                            <option value="vvsMoissanite">VVS Moissanite</option>
+                            <option value="cubicZirconia">Cubic Zirconia</option>
+                        </select>
+                    </div>
+                    <div id="estimateClarityField" hidden>
+                        <label for="estimateClarity">Natural diamond clarity</label>
+                        <select id="estimateClarity">
+                            <option value="commercial">Commercial</option>
+                            <option value="si">SI</option>
+                            <option value="vs">VS</option>
+                            <option value="vvs">VVS</option>
+                        </select>
+                    </div>
+                    <div id="estimateStoneSizeField" hidden>
+                        <label for="estimateStoneSize">Stone size</label>
+                        <select id="estimateStoneSize">
+                            <option value="1.3">1.3mm</option>
+                            <option value="1.5">1.5mm</option>
+                            <option value="2.0">2.0mm</option>
+                            <option value="3.0">3.0mm</option>
+                        </select>
+                    </div>
+                    <div id="estimateStoneCountField">
+                        <label for="estimateStoneCount">Approximate number of stones</label>
+                        <input id="estimateStoneCount" type="number" min="0" max="100" step="1" value="0" aria-describedby="stoneCountHint">
+                        <span id="stoneCountHint" class="stone-count-hint" aria-live="polite">Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.</span>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>Design details</legend>
+                    <label><input type="checkbox" class="estimateCustomCut" value="diamondDust"> Diamond / Dust cut — +$30 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="centerSplit"> Center / Split line — +$20 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="openFace"> Open face / Window cut — +$40 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut — +$30 per set</label>
+                </fieldset>
+                <p class="note">Cuts are charged once per set: an upper piece and a lower piece are two sets. Custom finishes are quoted per design.</p>
+                <div id="estimateResult" class="estimate" aria-live="polite"></div>
+                <p class="note">Standard fulfillment estimate: production generally 2–7 business days, plus approximately 2–3 days shipping to the main office and 2–3 days back to the customer. The customer-facing expectation is at least approximately two weeks. Simple, undecorated designs may take approximately 2 days in production; this is not a guaranteed delivery time. Rush shipping is next-day to and from the main office with production priority and a minimum 4-day completion expectation; eligibility and capacity must be confirmed. Estimates are not guarantees.</p>
+                <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Request an appointment or custom quote</a>
+            </div>
+        </div>
 
         <div class="section" id="wett-shades">
             <div class="section-title">🕶️ WETT Products</div>
@@ -120,6 +315,32 @@
             </div>
         </div>
 
+        <div class="section" id="quote-only">
+            <div class="section-title">Custom Quote Required</div>
+            <p class="note">These services do not have owner-approved fixed prices. Request a personalized quote before placing an order.</p>
+            <div class="grid">
+                <div class="card"><h3>Custom Materials</h3><p>18K gold, white gold, and platinum are quote-based.</p></div>
+                <div class="card"><h3>Custom Work</h3><p>Custom jewelry is priced individually based on the design.</p></div>
+                <div class="card"><h3>Personalized Services</h3><p>Tooth gems and gold press-on nails are quote-based.</p></div>
+            </div>
+
+            <div class="section" id="shipping">
+                <div class="section-title">Grillz Shipping &amp; Fulfillment</div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Standard Shipping — $60</h3>
+                        <p>FedEx standard delivery. Shipping to the main office and back to the customer is included as one itemized $60 charge in the configurator estimate.</p>
+                        <p class="note">Production and carrier estimates are approximate and are not a guaranteed completion date.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rush Shipping — $150</h3>
+                        <p>Replaces the $60 standard shipping charge. Next-day shipping to and from the main office with rush orders prioritized in production. Minimum completion expectation is 4 days.</p>
+                        <p class="note">Eligibility and production capacity must be confirmed before an order is accepted.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ── MOLD KIT DELIVERY ──────────────────── -->
         <div class="section">
             <div class="section-title">📦 Mold Kit Delivery — $40</div>
@@ -136,6 +357,7 @@
         <!-- ── SINGLE TOOTH ACCENTS ───────────────── -->
         <div class="section">
             <div class="section-title">🦷 Single Tooth Accents</div>
+            <p class="note" style="margin-bottom:15px;text-align:center">Priced per tooth, for any number of teeth. The 6- and 12-tooth prices are the per-tooth price times the count.</p>
             <div class="grid">
                 <div class="card silver">
                     <h3>Silver <span class="badge" style="background:#C0C0C0">Most Popular</span></h3>
@@ -207,7 +429,7 @@
         <!-- ── STONE PRICING ──────────────────────── -->
         <div class="section">
             <div class="section-title">💎 Stone Selection Pricing</div>
-            <p class="note" style="margin-bottom:20px">Pricing is per stone. Add to any gold or silver cap.</p>
+            <p class="note" style="margin-bottom:20px">Prices are per stone. Setting labor is included in published pricing.</p>
 
             <h3 style="color:#FFD700;margin-bottom:12px">Natural Diamonds</h3>
             <div style="overflow-x:auto;margin-bottom:30px">
@@ -215,10 +437,10 @@
                     <thead>
                         <tr>
                             <th>Clarity</th>
-                            <th>1.3pt (1.3mm)</th>
-                            <th>1.5pt (1.5mm)</th>
-                            <th>2.0pt (2.0mm)</th>
-                            <th>3.0pt (3.0mm)</th>
+                            <th>1.3mm</th>
+                            <th>1.5mm</th>
+                            <th>2.0mm</th>
+                            <th>3.0mm</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -236,10 +458,10 @@
                     <thead>
                         <tr>
                             <th>Stone</th>
-                            <th>1.3pt (1.3mm)</th>
-                            <th>1.5pt (1.5mm)</th>
-                            <th>2.0pt (2.0mm)</th>
-                            <th>3.0pt (3.0mm)</th>
+                            <th>1.3mm</th>
+                            <th>1.5mm</th>
+                            <th>2.0mm</th>
+                            <th>3.0mm</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -253,14 +475,14 @@
 
         <!-- ── RUSH & CTA ──────────────────────────── -->
         <div class="rush">
-            <h3>⚡ Rush Delivery — $150 Flat Fee</h3>
-            <p style="color:#ccc">Save 4+ days on your order. Available on all grillz.</p>
+            <h3>⚡ Rush Shipping — $150</h3>
+            <p style="color:#ccc">Next-day shipping to and from the main office; rush production is prioritized. Minimum completion expectation: 4 days. Eligibility must be confirmed.</p>
         </div>
 
         <div class="cta-box" style="margin-top:40px">
             <h2 style="margin-bottom:10px">Ready to get Sprinkled?</h2>
-            <p style="color:#ccc">All prices include professional mold and fitting. 18K, White Gold, and Platinum available — text for custom quote.</p>
-            <a href="mold-form.html" class="cta-btn">📋 Book Your Appointment</a>
+            <p style="color:#ccc">18K gold, white gold, platinum, custom jewelry, tooth gems, and gold press-on nails are quote-based. Appointment times are confirmed by the team.</p>
+            <a href="mold-form.html" class="cta-btn">Book an Appointment</a>
             &nbsp;
             <a href="sms:+15302140676" class="cta-btn" style="background:#1E90FF;color:#fff;margin-top:10px">📱 Text (530) 214-0676</a>
         </div>
@@ -268,7 +490,7 @@
         <!-- Gift Card -->
         <div style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);padding:40px 20px;border-radius:20px;margin:40px 0;text-align:center">
             <h2 style="color:#000;font-size:2rem;margin-bottom:15px">🎁 LUXURY GIFT CARDS 🎁</h2>
-            <p style="color:#000;margin-bottom:20px"><strong>Give the gift of luxury! Recipients get 10% OFF their order</strong><br>$100 – $1,500 • Easy digital delivery</p>
+            <p style="color:#000;margin-bottom:20px"><strong>Give the gift of luxury.</strong><br>$100 – $1,500</p>
             <a href="gift-card.html" style="background:#000;color:#FFD700;padding:14px 40px;font-size:1.1em;border-radius:8px;display:inline-block;text-decoration:none;font-weight:bold">🎉 BUY A GIFT CARD NOW 🎉</a>
         </div>
     </div>
@@ -317,6 +539,175 @@
         const body = encodeURIComponent(`Hi! I'd like to order an ATM Clip.\n\n${details}\n\nPlease let me know next steps!`);
         window.open(`https://mail.google.com/mail/?view=cm&to=mrsprinklereno@gmail.com&su=${encodeURIComponent('ATM Clip Order')}&body=${body}`);
     }
+    </script>
+    <script>
+    (() => {
+        const catalog = window.MrSprinklePricing;
+        const design = document.getElementById('estimateDesign');
+        const metal = document.getElementById('estimateMetal');
+        const stones = document.getElementById('estimateStones');
+        const result = document.getElementById('estimateResult');
+        const quoteLink = document.getElementById('estimateQuoteLink');
+        const designPreview = document.getElementById('designPreview');
+        const upperCountInput = document.getElementById('estimateUpperCount');
+        const lowerCountInput = document.getElementById('estimateLowerCount');
+        const exactToothSummary = document.getElementById('exactToothSummary');
+        const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+        const toothGroups = [
+            { jaw: 'upper', label: 'Upper right', teeth: ['18', '17', '16', '15', '14', '13', '12', '11'] },
+            { jaw: 'upper', label: 'Upper left', teeth: ['21', '22', '23', '24', '25', '26', '27', '28'] },
+            { jaw: 'lower', label: 'Lower right', teeth: ['48', '47', '46', '45', '44', '43', '42', '41'] },
+            { jaw: 'lower', label: 'Lower left', teeth: ['31', '32', '33', '34', '35', '36', '37', '38'] }
+        ];
+
+        toothGroups.forEach((group) => {
+            const container = document.getElementById(group.jaw === 'upper' ? 'upperTeeth' : 'lowerTeeth');
+            group.teeth.forEach((number) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'tooth-choice';
+                button.dataset.tooth = number;
+                button.dataset.jaw = group.jaw;
+                button.setAttribute('aria-pressed', 'false');
+                button.setAttribute('aria-label', `${group.label} tooth ${number}`);
+                button.textContent = number;
+                button.addEventListener('click', () => {
+                    button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') !== 'true');
+                    updateEstimate();
+                });
+                container.appendChild(button);
+            });
+        });
+
+        function selectedTeeth() {
+            return Array.from(document.querySelectorAll('.tooth-choice[aria-pressed="true"]'));
+        }
+
+        function renderDesignPreview(chosenTeeth, upperCount, lowerCount) {
+            designPreview.replaceChildren();
+            const details = document.createElement('span');
+            details.className = 'preview-meta';
+            details.textContent = `${metal.options[metal.selectedIndex].text} · ${design.options[design.selectedIndex].text} · ${stones.options[stones.selectedIndex].text}`;
+            designPreview.appendChild(details);
+
+            if (!chosenTeeth.length) {
+                const empty = document.createElement('span');
+                empty.className = 'preview-meta';
+                empty.textContent = upperCount || lowerCount
+                    ? `Approximate coverage: ${upperCount} upper, ${lowerCount} lower`
+                    : 'No teeth selected; enter a rough count or choose exact teeth';
+                designPreview.appendChild(empty);
+                return;
+            }
+
+            chosenTeeth.forEach((tooth) => {
+                const previewTooth = document.createElement('span');
+                previewTooth.className = 'preview-tooth';
+                previewTooth.textContent = tooth.dataset.tooth;
+                previewTooth.setAttribute('aria-label', `${tooth.dataset.jaw} tooth ${tooth.dataset.tooth} selected`);
+                designPreview.appendChild(previewTooth);
+            });
+        }
+
+        function readConfig() {
+            const chosenTeeth = selectedTeeth();
+            return {
+                design: design.value,
+                metal: metal.value,
+                teeth: chosenTeeth.map((tooth) => tooth.dataset.tooth),
+                upperCount: upperCountInput.value,
+                lowerCount: lowerCountInput.value,
+                finish: document.getElementById('estimateFinish').value,
+                shipping: document.getElementById('estimateShipping').value,
+                extension: document.getElementById('estimateFangExtension').value,
+                stones: stones.value,
+                clarity: document.getElementById('estimateClarity').value,
+                size: document.getElementById('estimateStoneSize').value,
+                stoneCount: document.getElementById('estimateStoneCount').value,
+                cuts: Array.from(document.querySelectorAll('.estimateCustomCut:checked'), (cut) => cut.value)
+            };
+        }
+
+        function updateEstimate() {
+            const chosenTeeth = selectedTeeth();
+            const hasExactSelection = chosenTeeth.length > 0;
+            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
+            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
+            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
+            upperCountInput.disabled = hasExactSelection;
+            lowerCountInput.disabled = hasExactSelection;
+
+            const est = window.MrSprinkleEstimate.calculate(readConfig());
+            const c = est.config;
+            if (hasExactSelection) {
+                upperCountInput.value = String(c.upperCount);
+                lowerCountInput.value = String(c.lowerCount);
+                exactToothSummary.textContent = `Exact teeth selected (${c.teeth.length}); edit selection below`;
+            } else {
+                exactToothSummary.textContent = 'Choose exact teeth (optional)';
+            }
+            renderDesignPreview(chosenTeeth, c.upperCount, c.lowerCount);
+            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
+                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
+                : `Estimate uses ${Number.isInteger(c.stoneCount) ? c.stoneCount : '—'} stones. Setting labor is included in published pricing.`;
+
+            result.replaceChildren();
+            if (!est.ok) {
+                result.textContent = est.error;
+                quoteLink.href = 'mold-form.html?quote=configurator';
+                return;
+            }
+            const list = document.createElement('ul');
+            list.className = 'estimate-lines';
+            est.lines.forEach((line) => {
+                const li = document.createElement('li');
+                const label = document.createElement('span');
+                label.textContent = line.label;
+                const amount = document.createElement('span');
+                amount.textContent = currency.format(line.amount);
+                li.append(label, amount);
+                list.appendChild(li);
+            });
+            result.appendChild(list);
+            const totalLine = document.createElement('p');
+            const strong = document.createElement('strong');
+            if (est.status === 'estimate') {
+                strong.textContent = `Estimated total: ${currency.format(est.total)}`;
+                totalLine.appendChild(strong);
+            } else {
+                strong.className = 'quote-required';
+                strong.textContent = 'Custom quote required — contact Mr. Sprinkle for your personalized price.';
+                totalLine.append(`Known published-price subtotal: ${currency.format(est.knownSubtotal)}. `, strong);
+                const why = document.createElement('span');
+                why.className = 'note';
+                why.textContent = ` Reason: ${est.quoteReasons.join('; ')}.`;
+                totalLine.appendChild(why);
+            }
+            result.appendChild(totalLine);
+            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach((text) => {
+                const note = document.createElement('p');
+                note.className = 'note';
+                note.textContent = text;
+                result.appendChild(note);
+            });
+            quoteLink.href = `mold-form.html?${new URLSearchParams(window.MrSprinkleEstimate.toParams(c)).toString()}`;
+        }
+
+        document.querySelectorAll('#configurator select, #configurator input').forEach((input) => {
+            input.addEventListener('change', updateEstimate);
+            input.addEventListener('input', updateEstimate);
+        });
+        document.getElementById('clearTeeth').addEventListener('click', () => {
+            const hadExactSelection = selectedTeeth().length > 0;
+            document.querySelectorAll('.tooth-choice').forEach((tooth) => tooth.setAttribute('aria-pressed', 'false'));
+            if (hadExactSelection) {
+                upperCountInput.value = '0';
+                lowerCountInput.value = '0';
+            }
+            updateEstimate();
+        });
+        updateEstimate();
+    })();
     </script>
 </body>
 </html>

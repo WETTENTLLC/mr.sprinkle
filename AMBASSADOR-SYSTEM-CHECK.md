@@ -1,5 +1,7 @@
 # Ambassador System - Full System Check ✅
 
+> **Legacy document:** Browser `localStorage` and seeded credentials described below are not the current implementation. The current portal reads from the PHP backend. Do not restore client-side ambassador records or passwords. Access remains code-only and must not be treated as secure authentication.
+
 ## System Architecture
 
 ### Data Storage: localStorage
@@ -238,7 +240,7 @@
 - [x] Display ambassador summary
 
 ### Ambassador Portal Tests
-- [x] Login with valid code (MIKE456, NANII86, REVLONPH96, NATURALL90)
+- [x] Login with valid code (<ambassador-code>, <ambassador-code>, <ambassador-code>, <ambassador-code>)
 - [x] Login fails with invalid code
 - [x] Display correct ambassador name
 - [x] Show total earnings
@@ -270,10 +272,10 @@
 
 ## Current Active Ambassadors
 
-1. **MIKE** - Code: `MIKE456`
-2. **Nanii** - Code: `NANII86`
-3. **REVLON PHILLIPS** - Code: `REVLONPH96`
-4. **Natural Lee Dope** - Code: `NATURALL90`
+1. **MIKE** - Code: `<ambassador-code>`
+2. **sample ambassador** - Code: `<ambassador-code>`
+3. **sample ambassador** - Code: `<ambassador-code>`
+4. **sample ambassador** - Code: `<ambassador-code>`
 
 ---
 

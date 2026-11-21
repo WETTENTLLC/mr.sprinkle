@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Primary SEO Meta Tags -->
-    <title>Custom Gold Grillz Mold Form - Mr. Sprinkle Reno | Book Your Appointment</title>
-    <meta name="description" content="Book your custom gold grillz mold appointment with Mr. Sprinkle. Interactive tooth selection, material options, and instant quote. Serving Reno, Nevada since 2002.">
+    <title>Book an Appointment or Request a Custom Quote | Mr. Sprinkle</title>
+    <meta name="description" content="Request an appointment or custom quote from Mr. Sprinkle. In-person appointments are by appointment only at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501.">
     <meta name="keywords" content="gold grillz mold form, custom grillz appointment Reno, dental mold booking Nevada, gold teeth consultation, Mr Sprinkle booking">
     <meta name="robots" content="index, follow">
     
@@ -16,13 +16,13 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mrsprinklereno.com/mold-form.html">
     <meta property="og:title" content="Book Your Custom Gold Grillz Mold - Mr. Sprinkle Reno">
-    <meta property="og:description" content="Interactive mold form for custom gold grillz. Select your teeth, choose materials, and book your appointment with Reno's #1 grillz expert.">
+    <meta property="og:description" content="Request an appointment or custom quote. The sole physical appointment location is Envy Kutz — Braids & Locs in downtown Reno.">
     <meta property="og:image" content="https://mrsprinklereno.com/assets/trans.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Book Your Custom Gold Grillz Mold - Mr. Sprinkle">
-    <meta property="twitter:description" content="Interactive booking form for custom gold grillz in Reno, Nevada.">
+    <meta property="twitter:description" content="Request an appointment or custom quote with Mr. Sprinkle in downtown Reno.">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/trans.png">
@@ -164,6 +164,8 @@
             color: #333;
             font-size: 10px;
             margin: 1px;
+            padding: 0;
+            font-family: inherit;
         }
         
         .tooth-legend {
@@ -278,6 +280,10 @@
             border-color: #FFD700;
             color: #000;
         }
+        .tooth:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 2px;
+        }
 
         .jaw-label {
             grid-column: 1 / -1;
@@ -364,8 +370,8 @@
 <body>
     <div class="nav-bar" style="background: rgba(26, 26, 26, 0.9); padding: 15px 0; margin-bottom: 20px; border-radius: 10px; text-align: center; position: fixed; top: 60px; left: 0; right: 0; z-index: 999;">
         <a href="index.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">🏠 Home</a>
-        <a href="mold-form.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">📋 Buy/Book Now</a>
-        <a href="ambassador.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">✨ Ambassador</a>
+        <a href="pricing.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">Pricing</a>
+        <a href="mold-form.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">Book Appointment</a>
     </div>
     <header>
         <div class="container">
@@ -375,40 +381,42 @@
 
     <main>
         <div class="container">
-            <h1>Buy/Book Now</h1>
+            <h1>Book an Appointment or Request a Quote</h1>
+            <div class="instructions">
+                <h2>Appointment-only location</h2>
+                <p><strong>Envy Kutz — Braids &amp; Locs</strong><br>275 E 4th St, Reno, NV 89501<br>Above Davidson's Distillery · Downtown Reno, Nevada</p>
+                <p>In-person appointments are available 10:00 AM–6:00 PM and are required. Requests are not confirmed until the team contacts you. Mobile mold service is separate and may be scheduled outside regular hours, subject to confirmation.</p>
+                <p>Rescheduling and cancellation instructions will be provided with your confirmed appointment.</p>
+            </div>
 
             <!-- Mold Kit Delivery Option -->
             <div style="background:rgba(255,215,0,0.08);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:30px;text-align:center">
                 <h2 style="margin-bottom:10px">📦 Can't Come In Person?</h2>
-                <p style="color:#ccc;margin-bottom:15px">We ship a professional mold kit to your door for <strong style="color:#FFD700">$40</strong>. Take your impression at home and mail it back — we handle the rest. Perfect for out-of-city or out-of-state customers.</p>
+                <p style="color:#ccc;margin-bottom:15px">A shipped mold kit is listed at <strong style="color:#FFD700">$40</strong>. Contact us to confirm shipping details before placing an order.</p>
                 <div id="moldKitBanner" style="display:none;background:linear-gradient(45deg,#4CAF50,#45a049);padding:12px;border-radius:8px;margin-bottom:15px;font-weight:bold">✅ Mold Kit Delivery Selected — $40 will be added to your order</div>
                 <button type="button" id="moldKitBtn" onclick="toggleMoldKit()" style="background:#FFD700;color:#000;padding:12px 30px;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer">📦 Add Mold Kit Delivery (+$40)</button>
                 <input type="hidden" id="moldKitDelivery" name="moldKitDelivery" value="no">
             </div>
             <div style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);padding:30px 20px;border-radius:15px;margin-bottom:30px;text-align:center;box-shadow:0 0 20px rgba(255,215,0,0.4)">
                 <h2 style="color:#000;font-size:1.8rem;margin-bottom:10px">🎁 SKIP THE BOOKING? BUY A GIFT CARD! 🎁</h2>
-                <p style="color:#000;font-size:1em;margin-bottom:15px"><strong>Give the gift of luxe! Recipients get 10% OFF their custom grillz order</strong></p>
+                <p style="color:#000;font-size:1em;margin-bottom:15px"><strong>Give the gift of luxe.</strong></p>
                 <a href="gift-card.html" style="background:#000;color:#FFD700;padding:12px 30px;font-size:1em;border-radius:8px;display:inline-block;text-decoration:none;font-weight:bold">🎉 BUY A GIFT CARD 🎉</a>
-            </div>
-            
-            <div id="discountBanner" class="discount-banner" style="display: none; background: linear-gradient(45deg, #4CAF50, #45a049); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; color: white;">
-                🎉 Ambassador Discount Applied - 5% Off Your Service!
             </div>
             
             <div class="instructions">
                 <h2>Instructions</h2>
-                <p>Click on the teeth below to select which teeth you want gold work done on. Selected teeth will turn gold.</p>
+                <p>For a grillz appointment request, click the teeth you are interested in. Tooth selection helps start the conversation and does not determine the final design or price.</p>
             </div>
             
             <div class="tooth-legend">
                 <h3 style="color: #FFD700; margin-bottom: 10px;">🦷 Tooth Guide</h3>
                 <div class="legend-grid">
                     <div class="legend-item"><strong>Upper Jaw (Top):</strong></div>
-                    <div class="legend-item">15-11: Right side (molars to front)</div>
-                    <div class="legend-item">21-25: Left side (front to molars)</div>
+                    <div class="legend-item">18-11: Right side (molars to front)</div>
+                    <div class="legend-item">21-28: Left side (front to molars)</div>
                     <div class="legend-item"><strong>Lower Jaw (Bottom):</strong></div>
-                    <div class="legend-item">45-41: Right side (molars to front)</div>
-                    <div class="legend-item">31-35: Left side (front to molars)</div>
+                    <div class="legend-item">48-41: Right side (molars to front)</div>
+                    <div class="legend-item">31-38: Left side (front to molars)</div>
                 </div>
                 <p style="margin-top: 10px; font-size: 0.9em; color: #FFD700;">💡 <strong>Tip:</strong> Front teeth (11, 21, 41, 31) are most visible when you smile!</p>
             </div>
@@ -418,31 +426,43 @@
                 
                 <div class="tooth-diagram">
                     <div class="jaw-label">Upper Jaw</div>
-                    <div class="jaw-row upper-jaw">
-                        <div class="tooth" data-tooth="15">15</div>
-                        <div class="tooth" data-tooth="14">14</div>
-                        <div class="tooth" data-tooth="13">13</div>
-                        <div class="tooth" data-tooth="12">12</div>
-                        <div class="tooth" data-tooth="11">11</div>
-                        <div class="tooth" data-tooth="21">21</div>
-                        <div class="tooth" data-tooth="22">22</div>
-                        <div class="tooth" data-tooth="23">23</div>
-                        <div class="tooth" data-tooth="24">24</div>
-                        <div class="tooth" data-tooth="25">25</div>
+                    <div class="jaw-row upper-jaw" aria-label="Upper jaw teeth">
+                        <button class="tooth" type="button" data-tooth="18" aria-pressed="false" aria-label="Upper right tooth 18">18</button>
+                        <button class="tooth" type="button" data-tooth="17" aria-pressed="false" aria-label="Upper right tooth 17">17</button>
+                        <button class="tooth" type="button" data-tooth="16" aria-pressed="false" aria-label="Upper right tooth 16">16</button>
+                        <button class="tooth" type="button" data-tooth="15" aria-pressed="false" aria-label="Upper right tooth 15">15</button>
+                        <button class="tooth" type="button" data-tooth="14" aria-pressed="false" aria-label="Upper right tooth 14">14</button>
+                        <button class="tooth" type="button" data-tooth="13" aria-pressed="false" aria-label="Upper right tooth 13">13</button>
+                        <button class="tooth" type="button" data-tooth="12" aria-pressed="false" aria-label="Upper right tooth 12">12</button>
+                        <button class="tooth" type="button" data-tooth="11" aria-pressed="false" aria-label="Upper right tooth 11">11</button>
+                        <button class="tooth" type="button" data-tooth="21" aria-pressed="false" aria-label="Upper left tooth 21">21</button>
+                        <button class="tooth" type="button" data-tooth="22" aria-pressed="false" aria-label="Upper left tooth 22">22</button>
+                        <button class="tooth" type="button" data-tooth="23" aria-pressed="false" aria-label="Upper left tooth 23">23</button>
+                        <button class="tooth" type="button" data-tooth="24" aria-pressed="false" aria-label="Upper left tooth 24">24</button>
+                        <button class="tooth" type="button" data-tooth="25" aria-pressed="false" aria-label="Upper left tooth 25">25</button>
+                        <button class="tooth" type="button" data-tooth="26" aria-pressed="false" aria-label="Upper left tooth 26">26</button>
+                        <button class="tooth" type="button" data-tooth="27" aria-pressed="false" aria-label="Upper left tooth 27">27</button>
+                        <button class="tooth" type="button" data-tooth="28" aria-pressed="false" aria-label="Upper left tooth 28">28</button>
                     </div>
                     
                     <div class="jaw-label">Lower Jaw</div>
-                    <div class="jaw-row lower-jaw">
-                        <div class="tooth" data-tooth="45">45</div>
-                        <div class="tooth" data-tooth="44">44</div>
-                        <div class="tooth" data-tooth="43">43</div>
-                        <div class="tooth" data-tooth="42">42</div>
-                        <div class="tooth" data-tooth="41">41</div>
-                        <div class="tooth" data-tooth="31">31</div>
-                        <div class="tooth" data-tooth="32">32</div>
-                        <div class="tooth" data-tooth="33">33</div>
-                        <div class="tooth" data-tooth="34">34</div>
-                        <div class="tooth" data-tooth="35">35</div>
+                    <div class="jaw-row lower-jaw" aria-label="Lower jaw teeth">
+                        <button class="tooth" type="button" data-tooth="48" aria-pressed="false" aria-label="Lower right tooth 48">48</button>
+                        <button class="tooth" type="button" data-tooth="47" aria-pressed="false" aria-label="Lower right tooth 47">47</button>
+                        <button class="tooth" type="button" data-tooth="46" aria-pressed="false" aria-label="Lower right tooth 46">46</button>
+                        <button class="tooth" type="button" data-tooth="45" aria-pressed="false" aria-label="Lower right tooth 45">45</button>
+                        <button class="tooth" type="button" data-tooth="44" aria-pressed="false" aria-label="Lower right tooth 44">44</button>
+                        <button class="tooth" type="button" data-tooth="43" aria-pressed="false" aria-label="Lower right tooth 43">43</button>
+                        <button class="tooth" type="button" data-tooth="42" aria-pressed="false" aria-label="Lower right tooth 42">42</button>
+                        <button class="tooth" type="button" data-tooth="41" aria-pressed="false" aria-label="Lower right tooth 41">41</button>
+                        <button class="tooth" type="button" data-tooth="31" aria-pressed="false" aria-label="Lower left tooth 31">31</button>
+                        <button class="tooth" type="button" data-tooth="32" aria-pressed="false" aria-label="Lower left tooth 32">32</button>
+                        <button class="tooth" type="button" data-tooth="33" aria-pressed="false" aria-label="Lower left tooth 33">33</button>
+                        <button class="tooth" type="button" data-tooth="34" aria-pressed="false" aria-label="Lower left tooth 34">34</button>
+                        <button class="tooth" type="button" data-tooth="35" aria-pressed="false" aria-label="Lower left tooth 35">35</button>
+                        <button class="tooth" type="button" data-tooth="36" aria-pressed="false" aria-label="Lower left tooth 36">36</button>
+                        <button class="tooth" type="button" data-tooth="37" aria-pressed="false" aria-label="Lower left tooth 37">37</button>
+                        <button class="tooth" type="button" data-tooth="38" aria-pressed="false" aria-label="Lower left tooth 38">38</button>
                     </div>
                 </div>
 
@@ -468,22 +488,53 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="materialType">Material Type:</label>
-                        <select id="materialType" name="materialType" required>
-                            <option value="">Select Material</option>
-                            <option value="10k-gold">10K Gold</option>
-                            <option value="14k-gold">14K Gold</option>
-                            <option value="18k-gold">18K Gold</option>
-                            <option value="24k-gold">24K Gold</option>
-                            <option value="white-gold">White Gold</option>
-                            <option value="platinum">Platinum</option>
-                            <option value="silver">Silver</option>
+                        <label for="serviceType">What are you interested in?</label>
+                        <select id="serviceType" name="serviceType" required>
+                            <option value="grillz">Custom grillz</option>
+                            <option value="gold-press-on-nails">Gold press-on nails — quote-based</option>
+                            <option value="mobile-mold-service">Mobile mold service inquiry</option>
+                            <option value="custom-jewelry">Custom jewelry — quote-based</option>
+                            <option value="wett-accessories">WETT accessories</option>
+                            <option value="tooth-gems">Tooth gems — quote-based</option>
                         </select>
                     </div>
 
                     <div class="form-group">
+                        <label for="appointmentMode">Appointment type:</label>
+                        <select id="appointmentMode" name="appointmentMode" required>
+                            <option value="in-person">In person at Envy Kutz — Braids &amp; Locs, Reno</option>
+                            <option value="mobile">Mobile mold service inquiry</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="materialType">Material preference (custom materials require a quote):</label>
+                        <select id="materialType" name="materialType">
+                            <option value="">Select Material</option>
+                            <option value="silver">Silver</option>
+                            <option value="10k-gold">10K Gold</option>
+                            <option value="14k-gold">14K Gold</option>
+                            <option value="14k-dental-gold">14K Dental Gold</option>
+                            <option value="18k-gold-quote">18K Gold — custom quote</option>
+                            <option value="white-gold-quote">White Gold — custom quote</option>
+                            <option value="platinum-quote">Platinum — custom quote</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">Preferred appointment date (request only):</label>
+                        <input type="date" id="appointmentDate" name="appointmentDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferredTime">Preferred appointment time (not a confirmed slot):</label>
+                        <input type="time" id="preferredTime" name="preferredTime" min="10:00" max="18:00">
+                        <small id="timePreferenceNote">In-person requests must be within regular hours, 10:00 AM–6:00 PM.</small>
+                    </div>
+
+                    <div class="form-group">
                         <label for="budget">Budget Range:</label>
-                        <select id="budget" name="budget" required>
+                        <select id="budget" name="budget">
                             <option value="">Select Budget Range</option>
                             <option value="under-500">Under $500</option>
                             <option value="500-1000">$500 - $1,000</option>
@@ -542,34 +593,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="background: rgba(76,175,80,0.1); border: 2px solid #4caf50; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
-                        <h3 style="color:#4caf50;margin-bottom:1rem">Promo Code</h3>
-                        <label for="promoCode">Have a promo code?</label>
-                        <input type="text" id="promoCode" name="promoCode" placeholder="Enter code (e.g. TAXTIME50)" style="text-transform:uppercase">
-                        <p id="promoStatus" style="margin-top:10px;font-size:0.9em"></p>
-                    </div>
-
                     <div class="form-group" style="background: rgba(255,69,0,0.1); border: 2px solid #ff4500; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
                         <h3 style="color: #ff4500; margin-bottom: 1rem;">⚡ Rush Delivery</h3>
-                        <label for="rushDelivery">Do you want rush delivery? (Save 4+ days for $150)</label>
-                        <select id="rushDelivery" name="rushDelivery" required>
+                        <label for="rushDelivery">Rush delivery interest ($150; eligibility and turnaround must be confirmed):</label>
+                        <select id="rushDelivery" name="rushDelivery">
                             <option value="no">No - Standard Delivery</option>
-                            <option value="yes">Yes - Rush Delivery (+$150)</option>
+                            <option value="yes">Yes — ask me about rush delivery (+$150)</option>
                         </select>
                     </div>
 
-                    <div class="form-group" style="background: rgba(15,160,234,0.1); border: 2px solid #0FA0EA; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
-                        <h3 style="color: #0FA0EA; margin-bottom: 1rem;">💳 Payment Method</h3>
-                        <label for="paymentMethod">How would you like to pay?</label>
-                        <select id="paymentMethod" name="paymentMethod" required style="margin-bottom: 1rem;">
-                            <option value="">Select Payment Method</option>
-                            <option value="cash-in-person">Cash (In Person)</option>
-                            <option value="zelle">Zelle</option>
-                            <option value="venmo">Venmo</option>
-                            <option value="cashapp">Cash App</option>
-                            <option value="paypal">PayPal (+ transaction fee)</option>
-                        </select>
-                        <p style="color: #ccc; font-size: 0.9rem; margin-top: 0.5rem;">⚠️ Note: Online payment methods include a small transaction fee to cover processing costs.</p>
+                    <div class="instructions">
+                        <h2>Deposit information</h2>
+                        <p>Deposits are required for orders. A typical deposit is approximately 50%, but the amount varies by order. The exact amount and whether shipping is included will be confirmed after quote approval and before payment.</p>
+                        <p>Owner-stated policy: deposits are final and nonrefundable unless Mr. Sprinkle is at fault or negligent. Final customer-facing wording is pending legal review. This request form does not collect payment.</p>
                     </div>
 
                     <div class="form-group" style="background: rgba(255, 0, 0, 0.1); border: 2px solid #ff4444; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
@@ -581,25 +617,36 @@
                             <li>I understand all health risks and care requirements</li>
                             <li>I will consult with a dental professional before wearing grillz</li>
                             <li>I purchase and wear grillz at my own risk</li>
-                            <li>All custom grillz sales are final (no returns/exchanges)</li>
                         </ul>
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="healthAcknowledgment" name="healthAcknowledgment" required style="width: auto; margin: 0;">
+                            <input type="checkbox" id="healthAcknowledgment" name="healthAcknowledgment" style="width: auto; margin: 0;">
                             <span style="color: #ff4444; font-weight: bold;">I acknowledge and agree to all health risks and policies</span>
                         </label>
                     </div>
 
+                    <div id="estimateBox" class="instructions" hidden>
+                        <h2>Your Grill Maker estimate</h2>
+                        <div id="estimateBoxBody" aria-live="polite"></div>
+                        <p style="font-size:.9rem;color:#bbb">Recalculated here from published prices, and sent with your request exactly as shown. Changing your teeth, material, or rush choice above updates it. This is an estimate, not a payment or order confirmation.</p>
+                    </div>
+                    <input type="hidden" id="estimateSummary" name="estimateSummary">
+                    <input type="hidden" id="estimateTotal" name="estimateTotal">
+                    <input type="hidden" id="estimateStatus" name="estimateStatus">
+                    <input type="hidden" id="pricingVersion" name="pricingVersion">
+                    <input type="hidden" id="configuratorOptions" name="configuratorOptions">
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
-                    <input type="hidden" id="ambassadorCode" name="ambassadorCode">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
-                    <button type="submit" class="submit-btn">Submit Mold Request</button>
+                    <p id="formStatus" role="status" aria-live="polite"></p>
+                    <button type="submit" class="submit-btn">Send Appointment / Quote Request</button>
                 </form>
             </div>
         </div>
     </main>
 
     <script src="form-to-admin.js"></script>
+    <script src="assets/pricing-catalog.js"></script>
+    <script src="assets/grill-estimate.js"></script>
     <script>
         let selectedTeeth = [];
 
@@ -610,9 +657,11 @@
                 
                 if (this.classList.contains('selected')) {
                     this.classList.remove('selected');
+                    this.setAttribute('aria-pressed', 'false');
                     selectedTeeth = selectedTeeth.filter(t => t !== toothNumber);
                 } else {
                     this.classList.add('selected');
+                    this.setAttribute('aria-pressed', 'true');
                     selectedTeeth.push(toothNumber);
                 }
                 
@@ -631,36 +680,136 @@
                 display.textContent = selectedTeeth.sort((a, b) => a - b).join(', ');
                 hiddenInput.value = selectedTeeth.join(',');
             }
+            if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
         }
 
-        // Check for ambassador referral on page load
         const urlParams = new URLSearchParams(window.location.search);
-        const ambassadorCode = urlParams.get('ref');
-        
-        if (ambassadorCode) {
-            // Show discount banner
-            document.getElementById('discountBanner').style.display = 'block';
-            // Store ambassador code
-            document.getElementById('ambassadorCode').value = ambassadorCode;
-            // Store in localStorage for future visits
-            localStorage.setItem('ambassadorCode', ambassadorCode);
-        } else {
-            // Check if we have a stored ambassador code
-            const storedCode = localStorage.getItem('ambassadorCode');
-            if (storedCode) {
-                document.getElementById('discountBanner').style.display = 'block';
-                document.getElementById('ambassadorCode').value = storedCode;
+        const validToothNumbers = new Set(Array.from(document.querySelectorAll('.tooth'), tooth => tooth.dataset.tooth));
+        const requestedTeeth = (urlParams.get('teeth') || '')
+            .split(',')
+            .map(tooth => tooth.trim())
+            .filter(tooth => validToothNumbers.has(tooth));
+        requestedTeeth.forEach(toothNumber => {
+            const tooth = document.querySelector(`.tooth[data-tooth="${toothNumber}"]`);
+            if (tooth && !selectedTeeth.includes(toothNumber)) {
+                tooth.classList.add('selected');
+                tooth.setAttribute('aria-pressed', 'true');
+                selectedTeeth.push(toothNumber);
             }
+        });
+        updateSelectedTeethDisplay();
+        const quoteService = urlParams.get('quote');
+        const quoteServiceTypes = {
+            'tooth-gems': 'tooth-gems',
+            'custom-jewelry': 'custom-jewelry'
+        };
+        if (quoteServiceTypes[quoteService]) {
+            document.getElementById('serviceType').value = quoteServiceTypes[quoteService];
         }
+        if (quoteService === 'configurator' && window.MrSprinkleEstimate) {
+            const E = window.MrSprinkleEstimate;
+            const metalToForm = { silver: 'silver', gold10k: '10k-gold', gold14k: '14k-gold', dentalGold14k: '14k-dental-gold', quote: '18k-gold-quote' };
+            const formToMetal = { 'silver': 'silver', '10k-gold': 'gold10k', '14k-gold': 'gold14k', '14k-dental-gold': 'dentalGold14k', '18k-gold-quote': 'quote', 'white-gold-quote': 'quote', 'platinum-quote': 'quote' };
+            const incoming = E.normalize(Object.fromEntries(urlParams));
+            document.getElementById('serviceType').value = 'grillz';
+            document.getElementById('materialType').value = metalToForm[incoming.metal] || '';
+            if (incoming.shipping === 'rush') document.getElementById('rushDelivery').value = 'yes';
+            const estimateBox = document.getElementById('estimateBox');
+            const estimateBody = document.getElementById('estimateBoxBody');
+            const setHidden = (id, value) => { document.getElementById(id).value = value; };
+
+            window.updateGrillEstimate = function () {
+                if (document.getElementById('serviceType').value !== 'grillz') {
+                    estimateBox.hidden = true;
+                    ['estimateSummary', 'estimateTotal', 'estimateStatus', 'pricingVersion', 'configuratorOptions'].forEach((id) => setHidden(id, ''));
+                    return;
+                }
+                const current = Object.assign({}, incoming, {
+                    metal: formToMetal[document.getElementById('materialType').value] || incoming.metal,
+                    shipping: document.getElementById('rushDelivery').value === 'yes' ? 'rush' : 'standard',
+                    teeth: selectedTeeth.slice()
+                });
+                if (!current.teeth.length && incoming.teeth.length) { current.upperCount = 0; current.lowerCount = 0; }
+                const est = E.calculate(current);
+                estimateBox.hidden = false;
+                estimateBody.replaceChildren();
+                const c = est.config;
+                const opts = `Design: ${E.labels.DESIGNS[c.design]}; Metal: ${E.labels.METALS[c.metal]}; Teeth: ${c.teeth.length ? c.teeth.join(', ') : `approx. ${c.upperCount} upper, ${c.lowerCount} lower`}; Finish: ${c.finish}; Shipping: ${c.shipping}` +
+                    (c.design === 'fangs' ? `; Fang extension: ${c.extension ? E.labels.EXTENSIONS[c.extension] : 'none'}` : '') +
+                    `; Stones: ${E.labels.STONES[c.stones]}` + (c.stones !== 'none' ? ` (${c.stones === 'natural' ? E.labels.CLARITY[c.clarity] + ', ' : ''}${c.size}mm, ${c.stoneCount})` : (c.stoneCount > 0 ? ` (about ${c.stoneCount} planned)` : '')) +
+                    `; Cuts: ${c.cuts.length ? c.cuts.join(', ') : 'none'}`;
+                setHidden('configuratorOptions', opts);
+                setHidden('pricingVersion', est.version);
+                if (!est.ok) {
+                    estimateBody.textContent = est.error;
+                    setHidden('estimateSummary', `Estimate not available: ${est.error}`);
+                    setHidden('estimateTotal', '');
+                    setHidden('estimateStatus', 'incomplete');
+                    return;
+                }
+                const list = document.createElement('ul');
+                list.style.cssText = 'list-style:none;padding:0;margin:0 0 10px';
+                est.lines.forEach((line) => {
+                    const li = document.createElement('li');
+                    li.style.cssText = 'display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #333';
+                    const l = document.createElement('span'); l.textContent = line.label;
+                    const r = document.createElement('span'); r.textContent = E.money(line.amount); r.style.whiteSpace = 'nowrap';
+                    li.append(l, r); list.appendChild(li);
+                });
+                estimateBody.appendChild(list);
+                const total = document.createElement('p');
+                const strong = document.createElement('strong');
+                strong.style.color = '#FFD700';
+                strong.textContent = est.status === 'estimate'
+                    ? `Estimated total: ${E.money(est.total)}`
+                    : `Known subtotal ${E.money(est.knownSubtotal)} — custom quote required (${est.quoteReasons.join('; ')})`;
+                total.appendChild(strong);
+                estimateBody.appendChild(total);
+                est.notes.forEach((n) => { const p = document.createElement('p'); p.style.cssText = 'font-size:.9rem;color:#bbb'; p.textContent = n; estimateBody.appendChild(p); });
+                setHidden('estimateSummary', E.summaryText(est));
+                setHidden('estimateTotal', est.total === null ? 'custom quote required' : E.money(est.total));
+                setHidden('estimateStatus', est.status === 'estimate' ? 'estimate' : 'custom quote required');
+            };
+            ['materialType', 'rushDelivery', 'serviceType'].forEach((id) => document.getElementById(id).addEventListener('change', window.updateGrillEstimate));
+            window.updateGrillEstimate();
+        }
+        const appointmentDate = document.getElementById('appointmentDate');
+        const today = new Date();
+        today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+        appointmentDate.min = today.toISOString().slice(0, 10);
+        const appointmentMode = document.getElementById('appointmentMode');
+        const preferredTime = document.getElementById('preferredTime');
+        const timePreferenceNote = document.getElementById('timePreferenceNote');
+        function updateAppointmentHours() {
+            const isMobile = appointmentMode.value === 'mobile';
+            preferredTime.min = isMobile ? '' : '10:00';
+            preferredTime.max = isMobile ? '' : '18:00';
+            timePreferenceNote.textContent = isMobile
+                ? 'Mobile service may be scheduled outside regular hours, subject to confirmation.'
+                : 'In-person requests must be within regular hours, 10:00 AM–6:00 PM.';
+        }
+        appointmentMode.addEventListener('change', updateAppointmentHours);
+        document.getElementById('serviceType').addEventListener('change', function() {
+            if (this.value === 'mobile-mold-service') {
+                appointmentMode.value = 'mobile';
+                updateAppointmentHours();
+            }
+        });
 
         // Form submission
         document.getElementById('moldForm').addEventListener('submit', async function(e) {
-            if (selectedTeeth.length === 0) {
+            const isGrillzRequest = document.getElementById('serviceType').value === 'grillz';
+            if (isGrillzRequest && !document.getElementById('materialType').value) {
+                e.preventDefault();
+                alert('Please select a material preference for your grillz request.');
+                return;
+            }
+            if (isGrillzRequest && selectedTeeth.length === 0) {
                 e.preventDefault();
                 alert('Please select at least one tooth for gold work.');
                 return;
             }
-            if (!document.getElementById('healthAcknowledgment').checked) {
+            if (isGrillzRequest && !document.getElementById('healthAcknowledgment').checked) {
                 e.preventDefault();
                 alert('You must acknowledge the health risks and safety policies before submitting.');
                 return;
@@ -668,6 +817,7 @@
             e.preventDefault();
 
             document.getElementById('selectedTeeth').value = selectedTeeth.sort((a,b)=>a-b).join(', ');
+            if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
 
             const formData = new FormData(this);
             // attach file if provided
@@ -679,24 +829,33 @@
                 customer_name: formData.get('customerName'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
+                service_type: formData.get('serviceType'),
+                appointment_mode: formData.get('appointmentMode'),
+                preferred_appointment_date: formData.get('appointmentDate'),
+                preferred_appointment_time: formData.get('preferredTime'),
                 selected_teeth: formData.get('selectedTeeth'),
                 material: formData.get('materialType'),
                 budget: formData.get('budget'),
-                payment_method: formData.get('paymentMethod'),
                 rush_delivery: formData.get('rushDelivery'),
-                ambassador_code: formData.get('ambassadorCode') || '',
-                promo_code: formData.get('promoCode') || '',
                 design: formData.get('design') || '',
-                image_description: formData.get('imageDescription') || ''
+                image_description: formData.get('imageDescription') || '',
+                configurator_options: formData.get('configuratorOptions') || '',
+                estimate_summary: formData.get('estimateSummary') || '',
+                estimate_total: formData.get('estimateTotal') || '',
+                estimate_status: formData.get('estimateStatus') || '',
+                pricing_version: formData.get('pricingVersion') || ''
             };
 
             try {
                 // Send to Formspree (email notification)
-                await fetch('https://formspree.io/f/myzpanyg', {
+                const formResponse = await fetch('https://formspree.io/f/myzpanyg', {
                     method: 'POST',
                     body: formData,
                     headers: {'Accept': 'application/json'}
                 });
+                if (!formResponse.ok) {
+                    throw new Error(`Appointment request submission failed (${formResponse.status}).`);
+                }
 
                 // Send to Google Sheets
                 await fetch('https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec', {
@@ -709,7 +868,8 @@
                 window.location.href = 'thank-you.html';
             } catch(err) {
                 console.error(err);
-                window.location.href = 'thank-you.html';
+                document.getElementById('formStatus').textContent =
+                    'We could not submit your request. Please try again or text (530) 214-0676.';
             }
         });
         
@@ -728,23 +888,6 @@
         // Auto-select mold kit if URL param present
         if(new URLSearchParams(window.location.search).get('moldkit') === 'true') toggleMoldKit();
 
-        // Promo code validation
-        document.getElementById('promoCode').addEventListener('input',function(){
-            const code=this.value.toUpperCase();
-            const status=document.getElementById('promoStatus');
-            if(code==='SPRINKLED26'){
-                status.textContent='✓ Valid! $50 credit applied (orders $300+)';
-                status.style.color='#4caf50';
-            }else if(code==='BIRTHDAY20'){
-                status.textContent='✓ Valid! 20% OFF applied';
-                status.style.color='#4caf50';
-            }else if(code.length>0){
-                status.textContent='Invalid code';
-                status.style.color='#ff4444';
-            }else{
-                status.textContent='';
-            }
-        });
     </script>
 
     <button class="chat-btn" onclick="document.getElementById('chatBox').style.display=document.getElementById('chatBox').style.display==='flex'?'none':'flex'">💬</button>
@@ -773,7 +916,7 @@
                 headers:{'Content-Type':'application/json','Authorization':`Bearer ${API_KEY}`},
                 body:JSON.stringify({
                     model:'grok-beta',
-                    messages:[{role:'system',content:'You are Mr. Sprinkle\'s booking assistant. Help customers choose materials (10K-24K gold, silver, platinum), understand pricing ($200-400/tooth for gold), select teeth, and complete the form. Be friendly, answer questions about diamonds, rush delivery, and payment methods. Encourage them to complete the booking form.'},...msgs],
+                    messages:[{role:'system',content:'You are the Mr. Sprinkle appointment and quote-request assistant. Use only published prices shown on the pricing page; never invent prices, totals, payment methods, production times, availability, discounts, or appointment hours. Silver grillz: $100/$600/$1,200 for 1/6/12 teeth; 10K gold: $240/$1,440/$2,880; 14K gold: $300/$1,800/$3,600; 14K dental gold: $320/$1,920/$3,840. Exact 6- and 12-tooth set definitions are pending confirmation. 18K gold, white gold, platinum, custom jewelry, tooth gems, and gold press-on nails require a custom quote. Custom cut and finish prices depend on the design and must not be automatically multiplied. Diamond prices are material-only per stone; setting and design labor require a custom quote pending invoice review. Standard shipping is $60; rush shipping is $150, next-day to/from the main office, with a minimum 4-day completion expectation subject to eligibility and capacity confirmation. In-person appointments are by appointment only, 10:00 AM–6:00 PM, at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501. Mobile mold service is separate and is not another physical location. Form submissions request an appointment or quote; they do not confirm a booking or order. For unresolved questions, ask the customer to text (530) 214-0676.'},...msgs],
                     temperature:0.7
                 })
             });

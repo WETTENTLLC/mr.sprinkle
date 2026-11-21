@@ -1,5 +1,7 @@
 <?php
 // Test email sending
+require_once __DIR__ . '/database-connection.php';
+mrSprinkleRequireAdminApiToken();
 require_once 'gmail-smtp.php';
 
 $test_email = 'mrsprinklereno@gmail.com'; // Send to yourself for testing
@@ -21,7 +23,7 @@ $headers .= "From: Mr. Sprinkle <mrsprinklereno@gmail.com>\r\n";
 if (mail($test_email, $subject, $message, $headers)) {
     echo "Test email sent successfully!";
 } else {
+    http_response_code(500);
     echo "Failed to send test email.";
-    echo "<br>Error: " . error_get_last()['message'];
 }
 ?>

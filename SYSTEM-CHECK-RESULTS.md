@@ -1,4 +1,6 @@
 # 🔍 FULL SYSTEM CHECK - Ambassador Program
+
+> **Legacy report:** The `localStorage`, seeded-ambassador, and deployment statements below are not current. The portal now reads from the PHP backend, and this report is not evidence that the site was pushed or deployed. Do not restore client-side ambassador records or passwords. Access remains code-only and is not secure authentication.
 **Date**: January 17, 2025  
 **Status**: ✅ READY TO PUSH
 
@@ -13,10 +15,10 @@
 - **Backup**: Export function available in admin dashboard
 
 ### Current Active Ambassadors (4 Total)
-1. ✅ MIKE - `MIKE456`
-2. ✅ Nanii - `NANII86`
-3. ✅ REVLON PHILLIPS - `REVLONPH96`
-4. ✅ Natural Lee Dope - `NATURALL90`
+1. ✅ MIKE - `<ambassador-code>`
+2. ✅ sample ambassador - `<ambassador-code>`
+3. ✅ sample ambassador - `<ambassador-code>`
+4. ✅ sample ambassador - `<ambassador-code>`
 
 ---
 
@@ -243,7 +245,7 @@ const ambassador = ambassadors.find(a => a.code.toUpperCase() === code);
 ## ✅ TESTING CHECKLIST
 
 ### Admin Dashboard Tests
-- [x] Add new ambassador (Natural Lee Dope - NATURALL90)
+- [x] Add new ambassador (sample ambassador - <ambassador-code>)
 - [x] Generate ambassador code
 - [x] View ambassador list (4 ambassadors)
 - [x] Copy ambassador code
@@ -255,10 +257,10 @@ const ambassador = ambassadors.find(a => a.code.toUpperCase() === code);
 - [x] Display ambassador summary
 
 ### Ambassador Portal Tests
-- [x] Login with MIKE456 ✅
-- [x] Login with NANII86 ✅
-- [x] Login with REVLONPH96 ✅
-- [x] Login with NATURALL90 ✅
+- [x] Login with <ambassador-code> ✅
+- [x] Login with <ambassador-code> ✅
+- [x] Login with <ambassador-code> ✅
+- [x] Login with <ambassador-code> ✅
 - [x] Login with invalid code (shows error) ✅
 - [x] Display correct name
 - [x] Show earnings ($0.00 for new ambassadors)

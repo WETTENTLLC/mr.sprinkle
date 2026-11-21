@@ -242,18 +242,14 @@
 <body>
     <?php
     session_start();
-    
-    // Database connection
-    $host = 'localhost';
-    $dbname = 'mr_sprinkle_db';
-    $username = 'root';
-    $password = '';
+    require_once __DIR__ . '/database-connection.php';
     
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch(PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
+        $pdo = mrSprinkleDatabase();
+    } catch(Exception $e) {
+        error_log('Ambassador dashboard database connection failed: ' . $e->getMessage());
+        http_response_code(503);
+        die("The ambassador dashboard is temporarily unavailable.");
     }
     
     // Handle login

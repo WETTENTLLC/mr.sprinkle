@@ -1,26 +1,54 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true,
+    'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'samesite' => 'Strict',
+]);
 session_start();
+require_once __DIR__ . '/database-connection.php';
 
-// Simple admin authentication
-$admin_password = 'mrsprinkle2024';
+$adminPassword = getenv('MR_SPRINKLE_ADMIN_PASSWORD');
+if (!$adminPassword) {
+    throw new RuntimeException('Configure MR_SPRINKLE_ADMIN_PASSWORD on the server.');
+}
 
-if ($_POST['password'] ?? false) {
-    if ($_POST['password'] === $admin_password) {
-        $_SESSION['admin_logged_in'] = true;
-    } else {
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrfToken = $_SESSION['csrf_token'];
+$csrfValid = true;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $submittedToken = $_POST['csrf_token'] ?? '';
+    if (!is_string($submittedToken) || !hash_equals($csrfToken, $submittedToken)) {
+        $csrfValid = false;
+        http_response_code(403);
+        $error = 'Your session expired. Refresh the page and try again.';
+    } elseif (isset($_POST['logout'])) {
+        $_SESSION = [];
+        session_destroy();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    } elseif (isset($_POST['password'])) {
+        if (is_string($_POST['password']) && hash_equals($adminPassword, $_POST['password'])) {
+            session_regenerate_id(true);
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            header('Location: ' . $_SERVER['PHP_SELF']);
+            exit;
+        }
         $error = 'Invalid password';
     }
 }
 
-if ($_GET['logout'] ?? false) {
-    session_destroy();
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
+$csrfToken = $_SESSION['csrf_token'];
+try {
+    $pdo = mrSprinkleDatabase();
+} catch (Exception $e) {
+    error_log('Business admin database connection failed: ' . $e->getMessage());
+    http_response_code(503);
+    exit('The business admin portal is temporarily unavailable.');
 }
-
-// Database connection
-$pdo = new PDO("mysql:host=localhost;dbname=mr_sprinkle_db", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Include Gmail SMTP
 require_once 'simple-gmail.php';
@@ -65,8 +93,7 @@ function sendWelcomeEmail($email, $name, $code) {
         
         <h3>Mold Locations:</h3>
         <ul>
-            <li><strong>Jack of All Fades:</strong> 5000 Smithridge Dr Suite C-7, Reno NV 89502 (Mondays)</li>
-            <li><strong>Global Goods Shop:</strong> 1155 W 4th St Suite 119, Reno, NV 89503</li>
+            <li><strong>Appointment location:</strong> Envy Kutz — Braids &amp; Locs, 275 E 4th St, Reno, NV 89501 (appointment only, 10:00 AM–6:00 PM)</li>
         </ul>
         
         <p>Questions? Contact us at mrsprinklereno@gmail.com or (530) 214-0676</p>
@@ -79,7 +106,7 @@ function sendWelcomeEmail($email, $name, $code) {
 }
 
 // Handle actions
-if ($_SESSION['admin_logged_in'] ?? false) {
+if (($_SESSION['admin_logged_in'] ?? false) && $csrfValid) {
     if ($_POST['action'] ?? false) {
         switch ($_POST['action']) {
             case 'add_ambassador':
@@ -118,8 +145,7 @@ Congratulations! You're now an official Mr. Sprinkle Ambassador!
 • BONUS: $10 for every 5th referral each month!
 
 📍 MOLD LOCATIONS:
-• Jack of All Fades: 5000 Smithridge Dr Suite C-7, Reno NV 89502 (Mondays)
-• Global Goods Shop: 1155 W 4th St Suite 119, Reno, NV 89503
+• Appointment location: Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501 (appointment only, 10:00 AM–6:00 PM)
 
 💎 SERVICES & PRICING:
 • Single Tooth Fully Iced: $180
@@ -192,13 +218,14 @@ Mr. Sprinkle - Custom Grillz Since 2002
             </div>
             
             <form method="POST" class="card login-form">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                 <div class="form-group">
                     <label for="password">Admin Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
                 
                 <?php if (isset($error)): ?>
-                    <div style="color: #f44336; text-align: center; margin-bottom: 20px;"><?= $error ?></div>
+                    <div style="color: #f44336; text-align: center; margin-bottom: 20px;"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
                 <?php endif; ?>
                 
                 <button type="submit" class="btn" style="width: 100%;">Login</button>
@@ -210,13 +237,16 @@ Mr. Sprinkle - Custom Grillz Since 2002
                 <div class="logo">Mr. Sprinkle</div>
                 <div style="color: #ccc; font-size: 1.2em;">Business Admin Portal</div>
                 <div style="margin-top: 10px;">
-                    <a href="?logout=1" style="color: #FFD700; text-decoration: none;">Logout</a>
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" name="logout" value="1" style="color: #FFD700; text-decoration: none; background: none; border: 0; cursor: pointer;">Logout</button>
+                    </form>
                 </div>
             </div>
             
             <?php if (isset($success)): ?>
                 <div style="background: #4CAF50; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-                    <?= $success ?>
+                    <?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?>
                 </div>
             <?php endif; ?>
             
@@ -225,6 +255,7 @@ Mr. Sprinkle - Custom Grillz Since 2002
                 <div class="card">
                     <h3 style="color: #FFD700; margin-bottom: 20px;">Add New Ambassador</h3>
                     <form method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                         <input type="hidden" name="action" value="add_ambassador">
                         <div class="form-group">
                             <label>Ambassador Code</label>
@@ -319,6 +350,7 @@ Mr. Sprinkle - Custom Grillz Since 2002
                                 <td><?= date('M j, Y', strtotime($commission['created_at'])) ?></td>
                                 <td>
                                     <form method="POST" style="display: inline;">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                                         <input type="hidden" name="action" value="pay_commission">
                                         <input type="hidden" name="referral_id" value="<?= $commission['id'] ?>">
                                         <button type="submit" class="btn" style="padding: 6px 12px; font-size: 0.9em;">Mark Paid</button>
@@ -373,6 +405,7 @@ Mr. Sprinkle - Custom Grillz Since 2002
                                 </td>
                                 <td>
                                     <form method="POST" style="display: inline;" onsubmit="return confirm('Delete this ambassador?')">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                                         <input type="hidden" name="action" value="delete_ambassador">
                                         <input type="hidden" name="ambassador_code" value="<?= $ambassador['ambassador_code'] ?>">
                                         <button type="submit" class="btn" style="background: #f44336; padding: 6px 12px; font-size: 0.9em;">Delete</button>

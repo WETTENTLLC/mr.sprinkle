@@ -1,8 +1,9 @@
 <?php
+require_once __DIR__ . '/database-connection.php';
+
 // Tiered Ambassador System - Updated Commission Structure
 function processAmbassadorBooking($formData) {
-    $pdo = new PDO("mysql:host=localhost;dbname=mr_sprinkle_db", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = mrSprinkleDatabase();
     
     $ambassadorCode = $formData['ambassador_code'] ?? '';
     $customerName = $formData['customer_name'] ?? $formData['name'] ?? '';

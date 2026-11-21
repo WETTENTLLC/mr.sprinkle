@@ -1,0 +1,135 @@
+/* Homepage intro + site music player — V2 obsidian / champagne system */
+:root {
+    --ms-obsidian: #080808;
+    --ms-panel: rgba(17, 17, 16, 0.82);
+    --ms-champagne: #c9b276;
+    --ms-champagne-hi: #e0c989;
+    --ms-line: rgba(201, 175, 115, 0.38);
+    --ms-platinum: #dedbd4;
+    --ms-muted: #aaa69d;
+}
+
+html.ms-intro-open, html.ms-intro-open body { overflow: hidden; }
+
+/* ---------- Intro ---------- */
+.ms-intro {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ms-obsidian); color: var(--ms-platinum);
+    opacity: 1; transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.ms-intro[hidden] { display: none; }
+.ms-intro.is-leaving { opacity: 0; visibility: hidden; }
+.ms-intro__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ms-intro__veil {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+        radial-gradient(ellipse at center, rgba(8, 8, 8, 0.15) 0%, rgba(8, 8, 8, 0.55) 60%, rgba(8, 8, 8, 0.92) 100%),
+        linear-gradient(180deg, rgba(8, 8, 8, 0.55) 0%, transparent 30%, transparent 62%, rgba(8, 8, 8, 0.9) 100%);
+}
+#videoIntro.ms-intro { align-items: flex-end; }
+.ms-intro__content {
+    position: relative; text-align: center; padding: 0 22px 34px; max-width: 640px;
+    animation: ms-rise 1.1s ease 0.6s both;
+}
+.ms-intro__logo { height: 84px; width: auto; margin: 0 auto 18px; display: block; }
+.ms-intro__eyebrow {
+    color: var(--ms-champagne-hi); letter-spacing: 0.24em; text-transform: uppercase; font: 500 0.74rem/1.6 "Segoe UI", Arial, sans-serif; margin: 0 0 18px;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
+}
+.ms-intro__title {
+    font-family: Georgia, "Times New Roman", serif; font-weight: 500; color: var(--ms-champagne-hi);
+    font-size: clamp(2.2rem, 6vw, 4.2rem); line-height: 1.05; letter-spacing: 0.015em; margin: 0 0 28px;
+}
+.ms-intro__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.ms-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0.9rem 1.4rem; border-radius: 2px; cursor: pointer;
+    font: 600 0.82rem/1 "Segoe UI", Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.ms-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.ms-btn--primary { background: var(--ms-champagne); color: #090909; border: 1px solid var(--ms-champagne); }
+.ms-btn--primary:hover { background: var(--ms-champagne-hi); border-color: var(--ms-champagne-hi); }
+.ms-btn--ghost { background: rgba(8, 8, 8, 0.35); color: var(--ms-champagne-hi); border: 1px solid #887449; }
+.ms-btn--ghost:hover { border-color: var(--ms-champagne-hi); }
+.ms-btn:focus-visible, .ms-sound__btn:focus-visible, .ms-sound__buy:focus-visible, .ms-track a:focus-visible {
+    outline: 2px solid var(--ms-champagne-hi); outline-offset: 3px;
+}
+
+/* Now-playing card on the intro */
+.ms-track {
+    position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 12px;
+    background: var(--ms-panel); border: 1px solid var(--ms-line); border-radius: 2px; padding: 10px 14px 10px 10px;
+    backdrop-filter: blur(8px); max-width: calc(100% - 48px);
+}
+.ms-track__cover { width: 48px; height: 48px; object-fit: cover; border: 1px solid var(--ms-line); flex-shrink: 0; }
+.ms-track__meta { min-width: 0; }
+.ms-track__kicker { color: var(--ms-muted); font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.ms-track__title { color: var(--ms-platinum); font-family: Georgia, serif; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+.ms-track a {
+    color: var(--ms-champagne-hi); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
+    border-bottom: 1px solid rgba(224, 201, 137, 0.45); white-space: nowrap;
+}
+.ms-track a:hover { border-bottom-color: var(--ms-champagne-hi); }
+.ms-explicit {
+    display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 2px;
+    background: var(--ms-platinum); color: #090909; font: 700 10px/1 Arial, sans-serif; text-decoration: none; flex-shrink: 0;
+}
+.ms-intro__skip {
+    position: absolute; right: 24px; bottom: 30px; background: none; border: 0; cursor: pointer;
+    color: var(--ms-platinum); font: 500 0.78rem/1 "Segoe UI", Arial, sans-serif; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 10px 4px; border-bottom: 1px solid rgba(222, 219, 212, 0.35);
+}
+.ms-intro__skip:hover { color: var(--ms-champagne-hi); border-bottom-color: var(--ms-champagne-hi); }
+.ms-intro__skip:focus-visible { outline: 2px solid var(--ms-champagne-hi); outline-offset: 3px; }
+
+/* ---------- Header music player ---------- */
+.ms-sound {
+    display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+    border: 1px solid var(--ms-line); border-radius: 2px; padding: 5px 6px 5px 5px; background: rgba(17, 17, 16, 0.7);
+}
+.ms-sound__btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--ms-champagne); background: transparent;
+    color: var(--ms-champagne-hi); display: grid; place-items: center; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+}
+.ms-sound__btn:hover, .ms-sound__btn[aria-pressed="true"] { background: var(--ms-champagne); color: #090909; }
+.ms-sound__btn svg { width: 12px; height: 12px; fill: currentColor; }
+.ms-sound__btn .ms-icon-pause, .ms-sound__btn[aria-pressed="true"] .ms-icon-play { display: none; }
+.ms-sound__btn[aria-pressed="true"] .ms-icon-pause { display: block; }
+.ms-sound__meta { display: flex; align-items: center; gap: 7px; color: var(--ms-platinum); font-size: 0.8rem; letter-spacing: 0.06em; white-space: nowrap; }
+.ms-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; width: 14px; }
+.ms-eq i { display: block; width: 2px; height: 3px; background: var(--ms-champagne); }
+.ms-sound.is-playing .ms-eq i { animation: ms-eq 0.9s ease-in-out infinite; }
+.ms-sound.is-playing .ms-eq i:nth-child(2) { animation-delay: 0.2s; }
+.ms-sound.is-playing .ms-eq i:nth-child(3) { animation-delay: 0.4s; }
+.ms-sound__buy {
+    color: #090909; background: var(--ms-champagne); text-decoration: none; border-radius: 2px;
+    font: 700 0.7rem/1 "Segoe UI", Arial, sans-serif; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 9px; white-space: nowrap;
+}
+.ms-sound__buy:hover { background: var(--ms-champagne-hi); }
+
+@keyframes ms-eq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+@keyframes ms-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 768px) {
+    .ms-sound { padding: 3px 4px 3px 3px; gap: 7px; }
+    .ms-sound__btn { width: 30px; height: 30px; }
+    .ms-sound__meta { font-size: 0.72rem; }
+}
+li.ms-sound-item { display: flex; align-items: center; }
+@media (max-width: 1100px) {
+    .ms-intro__content { padding-bottom: 170px; }
+    .ms-track { left: 50%; right: auto; transform: translateX(-50%); bottom: 70px; width: calc(100% - 32px); max-width: 420px; }
+    .ms-intro__skip { right: 0; left: 0; margin: 0 auto; width: max-content; bottom: 22px; }
+}
+@media (max-width: 600px) {
+    .ms-intro__actions .ms-btn { width: 100%; max-width: 300px; }
+}
+@media (max-width: 420px) {
+    .ms-sound .ms-eq, .ms-sound__meta > span[data-track="title"] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ms-intro, .ms-intro__content { transition: none; animation: none; }
+    .ms-sound.is-playing .ms-eq i { animation: none; height: 8px; }
+}
