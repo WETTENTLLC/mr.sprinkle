@@ -3,6 +3,22 @@
 
 User-agent: *
 Allow: /
+# These exclusions are crawler guidance only; access control is enforced by
+# the production build exclusions and must be enforced by the admin backend.
+Disallow: /admin-dashboard.html
+Disallow: /ai-sales-coach-24-7-final.html
+Disallow: /site-check.html
+Disallow: /test-script.html
+Disallow: /ambassador-portal.html
+Disallow: /original_index.html
+Disallow: /squarespace-ambassador-system.html
+Disallow: /squarespace-booking-form.html
+Disallow: /entries.json
+Disallow: /live-prospects.json
+Disallow: /scripts/
+Disallow: /tests/
+Disallow: /*.php$
+Disallow: /*.sql$
 
 # AI Crawlers
 # Allow ChatGPT search discovery and preserve current GPTBot policy.
