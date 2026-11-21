@@ -268,3 +268,23 @@ test("customer pages do not expose model-provider API keys or call model APIs fr
     assert.match(read(page), /href="sms:\+15302140676"/i, page + " retains direct customer contact");
   }
 });
+
+
+test("grill designer renders a dental-arch diagram without changing the estimate engine", () => {
+  const html = read("pricing.html");
+  const preview = read("assets/grill-preview.js");
+  assert.match(html, /assets\/grill-preview\.js/);
+  assert.match(html, /MrSprinkleGrillPreview\.render\(designPreview, config\)/);
+  assert.match(preview, /viewBox: "0 0 800 370"/);
+  assert.match(preview, /UPPER ARCH/);
+  assert.match(preview, /LOWER ARCH/);
+  assert.match(preview, /aria-label/);
+  assert.match(preview, /metal\.start/);
+  assert.match(preview, /selected\.has\(tooth\)/);
+  assert.match(preview, /No exact tooth positions have been chosen/);
+  assert.match(preview, /exact stone positions are not captured/);
+  assert.match(preview, /not dental CAD or a manufacturing model/);
+  assert.doesNotMatch(html, /preview-tooth/);
+  // Price logic is kept in the dedicated estimate file; preview code only reads its normalized configuration.
+  assert.doesNotMatch(preview, /calculate\(|catalog\.grillz|knownSubtotal/);
+});

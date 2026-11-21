@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/site-header.css">
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
+    <script src="assets/grill-preview.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -98,8 +99,10 @@
         .clear-teeth{background:transparent;color:#e3c782;border:1px solid #71664e;border-radius:4px;padding:8px 12px;cursor:pointer}
         .design-preview{background:#161614;border:1px solid #514a3b;padding:14px;border-radius:8px;margin:14px 0}
         .design-preview h3{margin:0 0 8px}
-        .preview-meta{width:100%;color:#d8d1c2;margin-bottom:4px}
-        .preview-tooth{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:40px;padding:0 4px;background:#d2b56f;color:#090909;border:1px solid #f0d892;border-radius:6px 6px 12px 12px;font-size:.8rem;font-weight:bold}
+        .preview-meta{display:block;width:100%;color:#d8d1c2;margin:0 0 8px;font-size:.9rem}
+        .preview-arch{display:block;width:100%;height:auto;max-height:390px;background:radial-gradient(ellipse at center,rgba(255,255,255,.035),transparent 72%);border:1px solid rgba(185,154,91,.25);border-radius:10px}
+        .preview-note{color:#b9b2a4;font-size:.82rem;line-height:1.5;margin:10px 2px 0}
+        @media(max-width:520px){.design-preview{padding:9px}.preview-meta{font-size:.8rem}.preview-arch{max-height:none}.preview-note{font-size:.78rem}}
         .estimate{background:#191919;border-left:3px solid #b99a5b;padding:16px;margin-top:18px}
         .estimate strong{color:#e3c782}
         .quote-required{color:#f1d899}
@@ -603,30 +606,12 @@
             return Array.from(document.querySelectorAll('.tooth-choice[aria-pressed="true"]'));
         }
 
-        function renderDesignPreview(chosenTeeth, upperCount, lowerCount) {
-            designPreview.replaceChildren();
-            const details = document.createElement('span');
-            details.className = 'preview-meta';
-            details.textContent = `${metal.options[metal.selectedIndex].text} · ${design.options[design.selectedIndex].text} · ${stones.options[stones.selectedIndex].text}`;
-            designPreview.appendChild(details);
-
-            if (!chosenTeeth.length) {
-                const empty = document.createElement('span');
-                empty.className = 'preview-meta';
-                empty.textContent = upperCount || lowerCount
-                    ? `Approximate coverage: ${upperCount} upper, ${lowerCount} lower`
-                    : 'No teeth selected; enter a rough count or choose exact teeth';
-                designPreview.appendChild(empty);
+        function renderDesignPreview(config) {
+            if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
+                window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
             }
-
-            chosenTeeth.forEach((tooth) => {
-                const previewTooth = document.createElement('span');
-                previewTooth.className = 'preview-tooth';
-                previewTooth.textContent = tooth.dataset.tooth;
-                previewTooth.setAttribute('aria-label', `${tooth.dataset.jaw} tooth ${tooth.dataset.tooth} selected`);
-                designPreview.appendChild(previewTooth);
-            });
+            designPreview.textContent = 'The design diagram could not load. Your selected teeth and estimate are still available below.';
         }
 
         function readConfig() {
@@ -666,7 +651,7 @@
             } else {
                 exactToothSummary.textContent = 'Choose exact teeth (optional)';
             }
-            renderDesignPreview(chosenTeeth, c.upperCount, c.lowerCount);
+            renderDesignPreview(c);
             document.getElementById('stoneCountHint').textContent = stones.value === 'none'
                 ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
                 : `Estimate uses ${Number.isInteger(c.stoneCount) ? c.stoneCount : '—'} stones. Setting labor is included in published pricing.`;
