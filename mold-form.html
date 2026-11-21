@@ -624,6 +624,16 @@
                         </label>
                     </div>
 
+                    <div id="estimateBox" class="instructions" hidden>
+                        <h2>Your Grill Maker estimate</h2>
+                        <div id="estimateBoxBody" aria-live="polite"></div>
+                        <p style="font-size:.9rem;color:#bbb">Recalculated here from published prices, and sent with your request exactly as shown. Changing your teeth, material, or rush choice above updates it. This is an estimate, not a payment or order confirmation.</p>
+                    </div>
+                    <input type="hidden" id="estimateSummary" name="estimateSummary">
+                    <input type="hidden" id="estimateTotal" name="estimateTotal">
+                    <input type="hidden" id="estimateStatus" name="estimateStatus">
+                    <input type="hidden" id="pricingVersion" name="pricingVersion">
+                    <input type="hidden" id="configuratorOptions" name="configuratorOptions">
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
@@ -635,6 +645,8 @@
     </main>
 
     <script src="form-to-admin.js"></script>
+    <script src="assets/pricing-catalog.js"></script>
+    <script src="assets/grill-estimate.js"></script>
     <script>
         let selectedTeeth = [];
 
@@ -668,6 +680,7 @@
                 display.textContent = selectedTeeth.sort((a, b) => a - b).join(', ');
                 hiddenInput.value = selectedTeeth.join(',');
             }
+            if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -693,34 +706,72 @@
         if (quoteServiceTypes[quoteService]) {
             document.getElementById('serviceType').value = quoteServiceTypes[quoteService];
         }
-        if (quoteService === 'configurator') {
-            const metalOptions = {
-                silver: 'silver',
-                gold10k: '10k-gold',
-                gold14k: '14k-gold',
-                dentalGold14k: '14k-dental-gold'
+        if (quoteService === 'configurator' && window.MrSprinkleEstimate) {
+            const E = window.MrSprinkleEstimate;
+            const metalToForm = { silver: 'silver', gold10k: '10k-gold', gold14k: '14k-gold', dentalGold14k: '14k-dental-gold', quote: '18k-gold-quote' };
+            const formToMetal = { 'silver': 'silver', '10k-gold': 'gold10k', '14k-gold': 'gold14k', '14k-dental-gold': 'dentalGold14k', '18k-gold-quote': 'quote', 'white-gold-quote': 'quote', 'platinum-quote': 'quote' };
+            const incoming = E.normalize(Object.fromEntries(urlParams));
+            document.getElementById('serviceType').value = 'grillz';
+            document.getElementById('materialType').value = metalToForm[incoming.metal] || '';
+            if (incoming.shipping === 'rush') document.getElementById('rushDelivery').value = 'yes';
+            const estimateBox = document.getElementById('estimateBox');
+            const estimateBody = document.getElementById('estimateBoxBody');
+            const setHidden = (id, value) => { document.getElementById(id).value = value; };
+
+            window.updateGrillEstimate = function () {
+                if (document.getElementById('serviceType').value !== 'grillz') {
+                    estimateBox.hidden = true;
+                    ['estimateSummary', 'estimateTotal', 'estimateStatus', 'pricingVersion', 'configuratorOptions'].forEach((id) => setHidden(id, ''));
+                    return;
+                }
+                const current = Object.assign({}, incoming, {
+                    metal: formToMetal[document.getElementById('materialType').value] || incoming.metal,
+                    shipping: document.getElementById('rushDelivery').value === 'yes' ? 'rush' : 'standard',
+                    teeth: selectedTeeth.slice()
+                });
+                if (!current.teeth.length && incoming.teeth.length) { current.upperCount = 0; current.lowerCount = 0; }
+                const est = E.calculate(current);
+                estimateBox.hidden = false;
+                estimateBody.replaceChildren();
+                const c = est.config;
+                const opts = `Design: ${E.labels.DESIGNS[c.design]}; Metal: ${E.labels.METALS[c.metal]}; Teeth: ${c.teeth.length ? c.teeth.join(', ') : `approx. ${c.upperCount} upper, ${c.lowerCount} lower`}; Finish: ${c.finish}; Shipping: ${c.shipping}` +
+                    (c.design === 'fangs' ? `; Fang extension: ${c.extension ? E.labels.EXTENSIONS[c.extension] : 'none'}` : '') +
+                    `; Stones: ${E.labels.STONES[c.stones]}` + (c.stones !== 'none' ? ` (${c.stones === 'natural' ? E.labels.CLARITY[c.clarity] + ', ' : ''}${c.size}mm, ${c.stoneCount})` : (c.stoneCount > 0 ? ` (about ${c.stoneCount} planned)` : '')) +
+                    `; Cuts: ${c.cuts.length ? c.cuts.join(', ') : 'none'}`;
+                setHidden('configuratorOptions', opts);
+                setHidden('pricingVersion', est.version);
+                if (!est.ok) {
+                    estimateBody.textContent = est.error;
+                    setHidden('estimateSummary', `Estimate not available: ${est.error}`);
+                    setHidden('estimateTotal', '');
+                    setHidden('estimateStatus', 'incomplete');
+                    return;
+                }
+                const list = document.createElement('ul');
+                list.style.cssText = 'list-style:none;padding:0;margin:0 0 10px';
+                est.lines.forEach((line) => {
+                    const li = document.createElement('li');
+                    li.style.cssText = 'display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #333';
+                    const l = document.createElement('span'); l.textContent = line.label;
+                    const r = document.createElement('span'); r.textContent = E.money(line.amount); r.style.whiteSpace = 'nowrap';
+                    li.append(l, r); list.appendChild(li);
+                });
+                estimateBody.appendChild(list);
+                const total = document.createElement('p');
+                const strong = document.createElement('strong');
+                strong.style.color = '#FFD700';
+                strong.textContent = est.status === 'estimate'
+                    ? `Estimated total: ${E.money(est.total)}`
+                    : `Known subtotal ${E.money(est.knownSubtotal)} — custom quote required (${est.quoteReasons.join('; ')})`;
+                total.appendChild(strong);
+                estimateBody.appendChild(total);
+                est.notes.forEach((n) => { const p = document.createElement('p'); p.style.cssText = 'font-size:.9rem;color:#bbb'; p.textContent = n; estimateBody.appendChild(p); });
+                setHidden('estimateSummary', E.summaryText(est));
+                setHidden('estimateTotal', est.total === null ? 'custom quote required' : E.money(est.total));
+                setHidden('estimateStatus', est.status === 'estimate' ? 'estimate' : 'custom quote required');
             };
-            const requestedMetal = urlParams.get('metal');
-            if (metalOptions[requestedMetal]) {
-                document.getElementById('materialType').value = metalOptions[requestedMetal];
-            } else if (requestedMetal === 'quote') {
-                document.getElementById('materialType').value = '18k-gold-quote';
-            }
-            const requestedUpperCount = Number(urlParams.get('upperCount'));
-            const requestedLowerCount = Number(urlParams.get('lowerCount'));
-            const requestedStoneCount = Number(urlParams.get('stoneCount'));
-            const hasValidRoughCounts = Number.isInteger(requestedUpperCount) && requestedUpperCount >= 0 && requestedUpperCount <= 16
-                && Number.isInteger(requestedLowerCount) && requestedLowerCount >= 0 && requestedLowerCount <= 16;
-            const coverageDetails = selectedTeeth.length
-                ? `${selectedTeeth.length} exact teeth (${selectedTeeth.join(', ')})`
-                : hasValidRoughCounts
-                    ? `approximately ${requestedUpperCount} upper and ${requestedLowerCount} lower teeth`
-                    : 'tooth coverage not specified';
-            const stoneDetails = Number.isInteger(requestedStoneCount) && requestedStoneCount > 0 && requestedStoneCount <= 100
-                ? `approx. ${requestedStoneCount} stones`
-                : 'stone quantity not specified';
-            document.getElementById('design').value =
-                `Configurator request: ${urlParams.get('design') || 'grillz'}; ${coverageDetails}; ${urlParams.get('coverage') || 'coverage not selected'}; stone type: ${urlParams.get('stones') || 'none'}; ${stoneDetails}.`;
+            ['materialType', 'rushDelivery', 'serviceType'].forEach((id) => document.getElementById(id).addEventListener('change', window.updateGrillEstimate));
+            window.updateGrillEstimate();
         }
         const appointmentDate = document.getElementById('appointmentDate');
         const today = new Date();
@@ -766,6 +817,7 @@
             e.preventDefault();
 
             document.getElementById('selectedTeeth').value = selectedTeeth.sort((a,b)=>a-b).join(', ');
+            if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
 
             const formData = new FormData(this);
             // attach file if provided
@@ -786,7 +838,12 @@
                 budget: formData.get('budget'),
                 rush_delivery: formData.get('rushDelivery'),
                 design: formData.get('design') || '',
-                image_description: formData.get('imageDescription') || ''
+                image_description: formData.get('imageDescription') || '',
+                configurator_options: formData.get('configuratorOptions') || '',
+                estimate_summary: formData.get('estimateSummary') || '',
+                estimate_total: formData.get('estimateTotal') || '',
+                estimate_status: formData.get('estimateStatus') || '',
+                pricing_version: formData.get('pricingVersion') || ''
             };
 
             try {

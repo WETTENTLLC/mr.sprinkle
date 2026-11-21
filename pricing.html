@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <script src="assets/pricing-catalog.js"></script>
+    <script src="assets/grill-estimate.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -99,6 +100,9 @@
         .estimate{background:#191919;border-left:3px solid #b99a5b;padding:16px;margin-top:18px}
         .estimate strong{color:#e3c782}
         .quote-required{color:#f1d899}
+        .estimate-lines{list-style:none;margin:0 0 12px;padding:0}
+        .estimate-lines li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #333}
+        .estimate-lines li span:last-child{white-space:nowrap;color:#e3c782}
         .stone-count-hint{display:block;color:#bbb;font-size:.88rem;line-height:1.5;margin-top:7px}
         .quick-coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}
         .quick-coverage input:disabled{opacity:.7;cursor:not-allowed}
@@ -182,8 +186,8 @@
                     <div>
                         <label for="estimateShipping">Grillz shipping</label>
                         <select id="estimateShipping">
-                            <option value="standard">Standard shipping — $60</option>
-                            <option value="rush">Rush shipping — $150 (eligibility confirmed separately)</option>
+                            <option value="standard">Standard FedEx shipping — $60</option>
+                            <option value="rush">Rush shipping — $150 instead of $60 (eligibility confirmed by the team)</option>
                         </select>
                     </div>
                     <div id="fangExtensionField" hidden>
@@ -227,17 +231,17 @@
                     <div id="estimateStoneCountField">
                         <label for="estimateStoneCount">Approximate number of stones</label>
                         <input id="estimateStoneCount" type="number" min="0" max="100" step="1" value="0" aria-describedby="stoneCountHint">
-                        <span id="stoneCountHint" class="stone-count-hint" aria-live="polite">Enter a rough stone count, even before choosing a stone type. Setting labor is quoted separately.</span>
+                        <span id="stoneCountHint" class="stone-count-hint" aria-live="polite">Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.</span>
                     </div>
                 </div>
                 <fieldset>
                     <legend>Design details</legend>
-                    <label><input type="checkbox" class="estimateCustomCut" value="diamondDust"> Diamond / Dust cut</label>
-                    <label><input type="checkbox" class="estimateCustomCut" value="centerSplit"> Center / Split line</label>
-                    <label><input type="checkbox" class="estimateCustomCut" value="openFace"> Open face / Window cut</label>
-                    <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="diamondDust"> Diamond / Dust cut — +$30 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="centerSplit"> Center / Split line — +$20 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="openFace"> Open face / Window cut — +$40 per set</label>
+                    <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut — +$30 per set</label>
                 </fieldset>
-                <p class="note">Custom cut and finish prices depend on the design. Published add-on amounts are reference prices only and are not automatically multiplied by teeth or pieces.</p>
+                <p class="note">Cuts are charged once per set: an upper piece and a lower piece are two sets. Custom finishes are quoted per design.</p>
                 <div id="estimateResult" class="estimate" aria-live="polite"></div>
                 <p class="note">Standard fulfillment estimate: production generally 2–7 business days, plus approximately 2–3 days shipping to the main office and 2–3 days back to the customer. The customer-facing expectation is at least approximately two weeks. Simple, undecorated designs may take approximately 2 days in production; this is not a guaranteed delivery time. Rush shipping is next-day to and from the main office with production priority and a minimum 4-day completion expectation; eligibility and capacity must be confirmed. Estimates are not guarantees.</p>
                 <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Request an appointment or custom quote</a>
@@ -330,7 +334,7 @@
                     </div>
                     <div class="card">
                         <h3>Rush Shipping — $150</h3>
-                        <p>Next-day shipping to and from the main office with rush orders prioritized in production. Minimum completion expectation is 4 days.</p>
+                        <p>Replaces the $60 standard shipping charge. Next-day shipping to and from the main office with rush orders prioritized in production. Minimum completion expectation is 4 days.</p>
                         <p class="note">Eligibility and production capacity must be confirmed before an order is accepted.</p>
                     </div>
                 </div>
@@ -353,6 +357,7 @@
         <!-- ── SINGLE TOOTH ACCENTS ───────────────── -->
         <div class="section">
             <div class="section-title">🦷 Single Tooth Accents</div>
+            <p class="note" style="margin-bottom:15px;text-align:center">Priced per tooth, for any number of teeth. The 6- and 12-tooth prices are the per-tooth price times the count.</p>
             <div class="grid">
                 <div class="card silver">
                     <h3>Silver <span class="badge" style="background:#C0C0C0">Most Popular</span></h3>
@@ -412,19 +417,19 @@
         <!-- ── CUSTOM CUTS ─────────────────────────── -->
         <div class="section">
             <div class="section-title">✂️ Custom Cuts &amp; Finishes</div>
-            <p class="note" style="margin-bottom:15px">Reference add-on prices only. Final charges depend on the design and require confirmation; they are not automatically multiplied per tooth or piece.</p>
+            <p class="note" style="margin-bottom:15px">Charged once per set (each upper or lower piece), not per tooth.</p>
             <div class="card" style="max-width:500px">
-                <div class="row"><span>Diamond Cut / Dust Cut</span><span>+$15</span></div>
-                <div class="row"><span>Center Cut / Split Line</span><span>+$10</span></div>
-                <div class="row"><span>Open Face / Window Cut</span><span>+$20</span></div>
-                <div class="row"><span>Deep Cut / Bar Cut</span><span>+$15</span></div>
+                <div class="row"><span>Diamond Cut / Dust Cut</span><span>+$30 per set</span></div>
+                <div class="row"><span>Center Cut / Split Line</span><span>+$20 per set</span></div>
+                <div class="row"><span>Open Face / Window Cut</span><span>+$40 per set</span></div>
+                <div class="row"><span>Deep Cut / Bar Cut</span><span>+$30 per set</span></div>
             </div>
         </div>
 
         <!-- ── STONE PRICING ──────────────────────── -->
         <div class="section">
             <div class="section-title">💎 Stone Selection Pricing</div>
-            <p class="note" style="margin-bottom:20px">Published stone prices are material-only per stone and do not include setting labor. Setting and additional design labor require a custom quote; rates are pending historical invoice review.</p>
+            <p class="note" style="margin-bottom:20px">Prices are per stone. Setting labor is included in published pricing.</p>
 
             <h3 style="color:#FFD700;margin-bottom:12px">Natural Diamonds</h3>
             <div style="overflow-x:auto;margin-bottom:30px">
@@ -604,168 +609,88 @@
             });
         }
 
-        function updateEstimate() {
-            const selectedDesign = design.value;
-            const selectedMetal = metal.value;
-            const selectedStones = stones.value;
+        function readConfig() {
             const chosenTeeth = selectedTeeth();
-            const toothNumbers = chosenTeeth.map((tooth) => tooth.dataset.tooth);
-            const hasExactSelection = chosenTeeth.length > 0;
-            const upperCount = hasExactSelection
-                ? chosenTeeth.filter((tooth) => tooth.dataset.jaw === 'upper').length
-                : Number(upperCountInput.value);
-            const lowerCount = hasExactSelection
-                ? chosenTeeth.filter((tooth) => tooth.dataset.jaw === 'lower').length
-                : Number(lowerCountInput.value);
-            const toothCount = upperCount + lowerCount;
-            const shippingMode = document.getElementById('estimateShipping').value;
-            const shippingCharge = shippingMode === 'rush'
-                ? catalog.products.rushDelivery
-                : catalog.products.standardGrillzShipping;
-            const finish = document.getElementById('estimateFinish').value;
-            const quoteReasons = [];
-            let total = 0;
-            let basePrice;
-            let stoneSubtotal = 0;
-            let fangExtensionPrice = 0;
-            let hasUnpricedStoneLabor = false;
+            return {
+                design: design.value,
+                metal: metal.value,
+                teeth: chosenTeeth.map((tooth) => tooth.dataset.tooth),
+                upperCount: upperCountInput.value,
+                lowerCount: lowerCountInput.value,
+                finish: document.getElementById('estimateFinish').value,
+                shipping: document.getElementById('estimateShipping').value,
+                extension: document.getElementById('estimateFangExtension').value,
+                stones: stones.value,
+                clarity: document.getElementById('estimateClarity').value,
+                size: document.getElementById('estimateStoneSize').value,
+                stoneCount: document.getElementById('estimateStoneCount').value,
+                cuts: Array.from(document.querySelectorAll('.estimateCustomCut:checked'), (cut) => cut.value)
+            };
+        }
 
-            document.getElementById('fangExtensionField').hidden = selectedDesign !== 'fangs';
-            document.getElementById('estimateClarityField').hidden = selectedStones !== 'natural';
-            document.getElementById('estimateStoneSizeField').hidden = selectedStones === 'none';
+        function updateEstimate() {
+            const chosenTeeth = selectedTeeth();
+            const hasExactSelection = chosenTeeth.length > 0;
+            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
+            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
+            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
             upperCountInput.disabled = hasExactSelection;
             lowerCountInput.disabled = hasExactSelection;
+
+            const est = window.MrSprinkleEstimate.calculate(readConfig());
+            const c = est.config;
             if (hasExactSelection) {
-                upperCountInput.value = String(upperCount);
-                lowerCountInput.value = String(lowerCount);
-                exactToothSummary.textContent = `Exact teeth selected (${toothCount}); edit selection below`;
+                upperCountInput.value = String(c.upperCount);
+                lowerCountInput.value = String(c.lowerCount);
+                exactToothSummary.textContent = `Exact teeth selected (${c.teeth.length}); edit selection below`;
             } else {
                 exactToothSummary.textContent = 'Choose exact teeth (optional)';
             }
-            renderDesignPreview(chosenTeeth, upperCount, lowerCount);
+            renderDesignPreview(chosenTeeth, c.upperCount, c.lowerCount);
+            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
+                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
+                : `Estimate uses ${Number.isInteger(c.stoneCount) ? c.stoneCount : '—'} stones. Setting labor is included in published pricing.`;
 
-            const stoneCount = Number(document.getElementById('estimateStoneCount').value);
-            const validStoneCount = Number.isInteger(stoneCount)
-                && stoneCount >= (selectedStones === 'none' ? 0 : 1)
-                && stoneCount <= 100;
-            const stoneCountHint = document.getElementById('stoneCountHint');
-            stoneCountHint.textContent = validStoneCount
-                ? selectedStones === 'none'
-                    ? `Planning about ${stoneCount} stones. Choose a stone type and size to estimate material cost; setting labor is quoted separately.`
-                    : `Material estimate uses ${stoneCount} stones. Setting labor is quoted separately.`
-                : selectedStones === 'none'
-                    ? 'Enter a whole number from 0 to 100.'
-                    : 'Enter a whole number from 1 to 100 to estimate stone material.';
-
-            if (!Number.isInteger(upperCount) || upperCount < 0 || upperCount > 16
-                || !Number.isInteger(lowerCount) || lowerCount < 0 || lowerCount > 16) {
-                result.textContent = 'Enter a whole number from 0 to 16 for each jaw, or select exact teeth.';
+            result.replaceChildren();
+            if (!est.ok) {
+                result.textContent = est.error;
                 quoteLink.href = 'mold-form.html?quote=configurator';
                 return;
             }
-
-            if (selectedDesign === 'grillz' && toothCount === 0) {
-                result.textContent = 'Enter an approximate tooth count for either jaw, or choose exact teeth below, to see an estimate.';
-                quoteLink.href = 'mold-form.html?quote=configurator';
-                return;
-            }
-
-            if (selectedMetal === 'quote') {
-                quoteReasons.push('18K gold, white gold, and platinum are quote-based');
-            } else if (selectedDesign === 'grillz') {
-                const toothPricing = catalog.grillz[selectedMetal]?.teeth;
-                basePrice = toothPricing?.[toothCount];
-                if (typeof basePrice === 'number') total += basePrice;
-                else quoteReasons.push(`the ${toothCount}-tooth selection does not have an approved published set price`);
-            } else {
-                basePrice = catalog.specialPieces[selectedMetal]?.[selectedDesign];
-                if (typeof basePrice === 'number') total += basePrice;
-                else quoteReasons.push('this material and design combination is not in the published catalog');
-            }
-
-            if (selectedDesign === 'fangs') {
-                const extension = document.getElementById('estimateFangExtension').value;
-                if (extension) {
-                    fangExtensionPrice = catalog.fangExtensions[extension];
-                    total += fangExtensionPrice;
-                }
-            }
-
-            if (selectedStones !== 'none') {
-                if (!validStoneCount) {
-                    result.textContent = 'Enter an approximate stone count from 1 to 100.';
-                    quoteLink.href = 'mold-form.html?quote=configurator';
-                    return;
-                }
-                const clarity = document.getElementById('estimateClarity').value;
-                const size = document.getElementById('estimateStoneSize').value;
-                const priceTable = selectedStones === 'natural'
-                    ? catalog.naturalDiamonds[clarity]
-                    : catalog.alternativeStones[selectedStones];
-                stoneSubtotal = priceTable[size] * stoneCount;
-                total += stoneSubtotal;
-                hasUnpricedStoneLabor = true;
-            }
-
-            const selectedCuts = Array.from(document.querySelectorAll('.estimateCustomCut:checked'));
-            if (selectedCuts.length) {
-                quoteReasons.push('custom cut and finish charges depend on the design');
-            }
-            if (finish === 'custom') {
-                quoteReasons.push('custom finish pricing depends on the design');
-            }
-            if (shippingMode === 'rush') {
-                quoteReasons.push('rush shipping eligibility and production capacity must be confirmed');
-            }
-            total += shippingCharge;
-
-            const coverageLabel = upperCount > 0 && lowerCount > 0
-                ? 'Upper and lower'
-                : upperCount > 0 || lowerCount > 0
-                    ? (upperCount > 0 ? 'Upper' : 'Lower')
-                    : 'Not selected';
-            const lines = [];
-            if (typeof basePrice === 'number') {
-                const priceLabel = selectedDesign === 'grillz'
-                    ? `${toothCount}-tooth selection (${upperCount} upper, ${lowerCount} lower)`
-                    : selectedDesign === 'fangs' ? 'fangs set' : 'gap filler';
-                lines.push(`Published ${priceLabel}: ${currency.format(basePrice)}`);
-            }
-            if (fangExtensionPrice) lines.push(`Published fang extension add-on: ${currency.format(fangExtensionPrice)}`);
-            if (selectedStones === 'none' && stoneCount > 0 && validStoneCount) {
-                lines.push(`Approximate stone quantity: ${stoneCount} (choose a stone type to estimate material cost)`);
-            }
-            if (stoneSubtotal) lines.push(`Stone material (${stoneCount} at published per-stone price): ${currency.format(stoneSubtotal)}`);
-            lines.push(`${shippingMode === 'rush' ? 'Rush' : 'Standard'} shipping: ${currency.format(shippingCharge)}`);
-            lines.push(`Selected coverage: ${coverageLabel}`);
-            if (hasUnpricedStoneLabor) lines.push('<span class="note">Stone-setting labor: custom quote required; it is not included in the material total.</span>');
-            if (selectedCuts.length || finish === 'custom') lines.push('<span class="note">Additional design labor and custom upgrades require a design-specific quote.</span>');
-            if (quoteReasons.length || hasUnpricedStoneLabor) {
-                if (typeof basePrice === 'number') {
-                    lines.push(`<strong>Known published-cost subtotal (includes shipping): ${currency.format(total)}</strong>`);
-                } else if (selectedDesign === 'grillz' && toothCount > 0) {
-                    lines.push(`<span class="note">Published pricing is available for 1, 6, or 12 teeth; this ${toothCount}-tooth selection needs a custom quote. Shipping shown is ${currency.format(shippingCharge)}.</span>`);
-                }
-                lines.push(`<strong class="quote-required">Custom quote required — contact Mr. Sprinkle for your personalized price.</strong>`);
-                if (quoteReasons.length) lines.push(`<span class="note">${quoteReasons.join('; ')}.</span>`);
-            } else {
-                lines.push(`<strong>Published catalog estimate including shipping: ${currency.format(total)}</strong>`);
-            }
-            lines.push('<span class="note">Published grillz pricing applies to the listed 1-, 6-, and 12-tooth counts. Other tooth counts require a custom quote. This is not checkout or an order confirmation.</span>');
-            result.innerHTML = lines.join('<br>');
-            const quoteDetails = new URLSearchParams({
-                quote: 'configurator',
-                design: selectedDesign,
-                metal: selectedMetal,
-                count: String(toothCount),
-                coverage: coverageLabel,
-                stones: selectedStones,
-                stoneCount: String(validStoneCount ? stoneCount : 0),
-                upperCount: String(upperCount),
-                lowerCount: String(lowerCount),
-                teeth: toothNumbers.join(',')
+            const list = document.createElement('ul');
+            list.className = 'estimate-lines';
+            est.lines.forEach((line) => {
+                const li = document.createElement('li');
+                const label = document.createElement('span');
+                label.textContent = line.label;
+                const amount = document.createElement('span');
+                amount.textContent = currency.format(line.amount);
+                li.append(label, amount);
+                list.appendChild(li);
             });
-            quoteLink.href = `mold-form.html?${quoteDetails.toString()}`;
+            result.appendChild(list);
+            const totalLine = document.createElement('p');
+            const strong = document.createElement('strong');
+            if (est.status === 'estimate') {
+                strong.textContent = `Estimated total: ${currency.format(est.total)}`;
+                totalLine.appendChild(strong);
+            } else {
+                strong.className = 'quote-required';
+                strong.textContent = 'Custom quote required — contact Mr. Sprinkle for your personalized price.';
+                totalLine.append(`Known published-price subtotal: ${currency.format(est.knownSubtotal)}. `, strong);
+                const why = document.createElement('span');
+                why.className = 'note';
+                why.textContent = ` Reason: ${est.quoteReasons.join('; ')}.`;
+                totalLine.appendChild(why);
+            }
+            result.appendChild(totalLine);
+            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach((text) => {
+                const note = document.createElement('p');
+                note.className = 'note';
+                note.textContent = text;
+                result.appendChild(note);
+            });
+            quoteLink.href = `mold-form.html?${new URLSearchParams(window.MrSprinkleEstimate.toParams(c)).toString()}`;
         }
 
         document.querySelectorAll('#configurator select, #configurator input').forEach((input) => {

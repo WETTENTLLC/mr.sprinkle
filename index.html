@@ -89,30 +89,34 @@
     <link rel="preload" href="assets/trans.png" as="image">
     
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/sound.css">
 </head>
 <body>
-    <!-- Intro media is retained for existing assets but does not interrupt the shopping experience. -->
-    <div id="videoIntro" style="display:none">
-        <video id="introVideo" muted preload="none" style="width: 100%; height: 100%; object-fit: cover;">
+    <!-- Homepage intro. Song details: assets/site-track.js. Behaviour: assets/sound.js -->
+    <div id="videoIntro" class="ms-intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+        <video id="introVideo" class="ms-intro__video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
             <source src="assets/intro.mp4" type="video/mp4">
         </video>
-        <audio id="introAudio" loop style="display:none">
-            <source src="assets/Damn.mp3" type="audio/mpeg">
-        </audio>
-        <div id="clickPrompt" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;animation:pulse 2s infinite">
-            <div style="background:rgba(0,0,0,0.8);padding:30px 50px;border-radius:15px;border:3px solid #FFD700">
-                <p style="color:#FFD700;font-size:2em;font-weight:bold;margin:0">CLICK TO PLAY MUSIC</p>
-                <p style="color:#fff;font-size:1.2em;margin-top:10px">🎵 Tap Anywhere</p>
+        <div class="ms-intro__veil"></div>
+        <div class="ms-intro__content">
+            <h2 id="introTitle" class="ms-intro__eyebrow">Mr. Sprinkle · Custom Grillz · Jewelry · WETT</h2>
+            <div class="ms-intro__actions">
+                <button id="introPlay" type="button" class="ms-btn ms-btn--primary">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+                    <span data-label>Play with sound</span>
+                </button>
+                <button type="button" class="ms-btn ms-btn--ghost" data-intro-skip data-intro-mute>Enter quietly</button>
             </div>
         </div>
-        <style>
-            @keyframes pulse{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:0.7;transform:translate(-50%,-50%) scale(1.05)}}
-        </style>
-        <div style="position: absolute; bottom: 30px; right: 30px; color: #FFD700; font-size: 14px; cursor: pointer;" onclick="skipIntro()">Skip Intro →</div>
-        <div style="position: absolute; bottom: 30px; left: 30px;">
-            <a href="intro-music.html" style="color:#FFD700;font-size:12px;text-decoration:none;background:rgba(0,0,0,0.7);padding:8px 15px;border-radius:5px;border:1px solid #FFD700">🎵 Buy This Track - $1</a>
-            <div style="background:#ff0000;color:#fff;padding:3px 8px;border-radius:3px;font-size:10px;font-weight:bold;margin-top:5px;text-align:center">PARENTAL ADVISORY</div>
+        <div class="ms-track">
+            <img class="ms-track__cover" data-track="cover" src="assets/Damn%20Cover.png" alt="Damn cover art">
+            <div class="ms-track__meta">
+                <div class="ms-track__kicker">Featured track</div>
+                <div class="ms-track__title"><span data-track="title">Damn</span><abbr class="ms-explicit" data-track="explicit" title="Explicit content">E</abbr></div>
+            </div>
+            <a data-track="buy" data-price-text="Buy · {price}" href="intro-music.html">Buy · $1</a>
         </div>
+        <button type="button" class="ms-intro__skip" data-intro-skip>Skip intro</button>
     </div>
     <header>
         <div class="container">
@@ -127,12 +131,22 @@
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a class="nav-cta" href="mold-form.html">Book Appointment</a></li>
+                    <li class="ms-sound-item">
+                <div id="siteSound" class="ms-sound" role="group" aria-label="Featured track">
+                    <button id="musicToggle" type="button" class="ms-sound__btn" aria-pressed="false" aria-label="Play Damn">
+                        <svg class="ms-icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+                        <svg class="ms-icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
+                    </button>
+                    <span class="ms-sound__meta"><span class="ms-eq" aria-hidden="true"><i></i><i></i><i></i></span><span data-track="title">Damn</span><abbr class="ms-explicit" data-track="explicit" title="Explicit content">E</abbr></span>
+                    <a class="ms-sound__buy" data-track="buy" data-price-text="Buy {price}" href="intro-music.html">Buy $1</a>
+                </div>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <audio id="bgMusic" loop style="display:none">
+    <audio id="siteAudio" loop preload="none">
         <source src="assets/Damn.mp3" type="audio/mpeg">
     </audio>
 
@@ -597,62 +611,8 @@
         }
     </script>
     
-    <!-- Video Intro Control -->
-    <script>
-        const bgMusic=document.getElementById('bgMusic');
-        const musicToggle=document.getElementById('musicToggle');
-        let isPlaying=false;
-        
-        function toggleMusic(){
-            if(isPlaying){
-                bgMusic.pause();
-                musicToggle.textContent='▶️';
-                isPlaying=false;
-            }else{
-                bgMusic.play();
-                musicToggle.textContent='⏸️';
-                isPlaying=true;
-            }
-        }
-        
-        function skipIntro() {
-            document.getElementById('videoIntro').style.display = 'none';
-            document.getElementById('introAudio').pause();
-            sessionStorage.setItem('introSeen', 'true');
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const video = document.getElementById('introVideo');
-            const audio = document.getElementById('introAudio');
-            const intro = document.getElementById('videoIntro');
-            
-            // Skip intro if already seen this session
-            if (sessionStorage.getItem('introSeen')) {
-                intro.style.display = 'none';
-                return;
-            }
-            
-            // Enable sound after user interaction
-            intro.addEventListener('click', function() {
-                video.muted = true;
-                audio.play().catch(e=>console.log('Audio play failed:',e));
-                document.getElementById('clickPrompt').style.display='none';
-            }, { once: true });
-            
-            // Auto-hide intro after 30 seconds
-            setTimeout(function(){
-                intro.style.opacity = '0';
-                intro.style.transition = 'opacity 1s';
-                setTimeout(() => {
-                    intro.style.display = 'none';
-                    audio.pause();
-                    sessionStorage.setItem('introSeen', 'true');
-                }, 1000);
-            },30000);
-        });
-    </script>
-    
+    <script src="assets/site-track.js"></script>
+    <script src="assets/sound.js"></script>
 
-    
 </body>
 </html>

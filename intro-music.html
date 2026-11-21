@@ -5,56 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Damn - Mr. Sprinkle Intro Music | WETT Entertainment LLC</title>
     <meta name="description" content="Buy the official Mr. Sprinkle intro track 'Damn' for $1. Produced by WETT Entertainment LLC. Instant download.">
+    <link rel="canonical" href="https://mrsprinklereno.com/intro-music.html">
     <link rel="icon" type="image/png" href="assets/trans.png">
+    <!-- Song details live in assets/site-track.js -->
+    <script src="assets/site-track.js"></script>
     <style>
+        :root{--obsidian:#080808;--panel:#111110;--champagne:#c9b276;--champagne-hi:#e0c989;--line:rgba(201,175,115,.38);--platinum:#dedbd4;--muted:#aaa69d}
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:#000;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-        .music-card{background:linear-gradient(135deg,#1a1a1a,#2a2a2a);max-width:500px;width:100%;border:3px solid #FFD700;border-radius:20px;padding:40px;text-align:center;box-shadow:0 10px 40px rgba(255,215,0,0.3)}
-        .cover-art{width:100%;max-width:300px;height:300px;margin:0 auto 30px;border-radius:15px;overflow:hidden;border:2px solid #FFD700;box-shadow:0 5px 20px rgba(0,0,0,0.5)}
-        .cover-art img{width:100%;height:100%;object-fit:cover}
-        h1{color:#FFD700;font-size:2.5em;margin-bottom:10px}
-        .artist{color:#ccc;font-size:1.2em;margin-bottom:30px}
-        audio{width:100%;margin:20px 0;border-radius:10px}
-        .price{font-size:3em;color:#FFD700;font-weight:bold;margin:20px 0}
-        .buy-btn{background:#FFD700;color:#000;padding:20px 50px;border:none;border-radius:10px;font-size:1.5em;font-weight:bold;cursor:pointer;width:100%;transition:all 0.3s;margin-top:20px}
-        .buy-btn:hover{background:#4caf50;transform:scale(1.05)}
-        .legal{font-size:0.8em;color:#888;margin-top:30px;line-height:1.6}
-        .back-link{display:inline-block;margin-top:20px;color:#FFD700;text-decoration:none;font-size:0.9em}
-        .back-link:hover{text-decoration:underline}
+        body{background:radial-gradient(ellipse at 70% 15%,rgba(181,147,75,.14),transparent 40%),var(--obsidian);color:var(--platinum);font-family:"Segoe UI",Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 18px}
+        .music-card{width:100%;max-width:880px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+        .cover-art{background:#0c0c0b;border-right:1px solid var(--line);min-height:100%}
+        .cover-art img{width:100%;height:100%;min-height:360px;object-fit:cover;display:block}
+        .details{padding:40px 36px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+        .eyebrow{color:var(--champagne);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;margin-bottom:12px}
+        h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;color:var(--champagne-hi);font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.02;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+        .explicit{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:2px;background:var(--platinum);color:#090909;font:700 13px/1 Arial,sans-serif;text-decoration:none}
+        .artist{color:var(--muted);font-size:1rem;margin:10px 0 4px}
+        .advisory{color:var(--muted);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:22px}
+        audio{width:100%;margin:6px 0 22px;color-scheme:dark}
+        .price-row{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:18px;margin-bottom:16px}
+        .price-row span{color:var(--muted);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+        .price{font-family:Georgia,serif;font-size:2.2rem;color:var(--champagne-hi)}
+        #paypal-buy{min-height:48px}
+        .paypal-fallback{color:var(--muted);font-size:.85rem}
+        .legal{font-size:.78rem;color:#86827a;margin-top:24px;line-height:1.7}
+        .legal strong{color:var(--muted)}
+        .legal a{color:var(--champagne-hi)}
+        .back-link{display:inline-block;margin-top:18px;color:var(--champagne-hi);text-decoration:none;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid rgba(224,201,137,.45);align-self:flex-start;padding-bottom:3px}
+        .back-link:hover{border-bottom-color:var(--champagne-hi)}
+        a:focus-visible{outline:2px solid var(--champagne-hi);outline-offset:3px}
+        @media (max-width:720px){
+            .music-card{grid-template-columns:1fr;max-width:460px}
+            .cover-art{border-right:0;border-bottom:1px solid var(--line);aspect-ratio:1/1;min-height:0}
+            .cover-art img{min-height:0}
+            .details{padding:28px 22px}
+        }
     </style>
 </head>
 <body>
-    <div class="music-card">
+    <main class="music-card">
         <div class="cover-art">
-            <img src="assets/Damn Cover.png" alt="Damn Single Cover Art">
+            <img data-track="cover" src="assets/Damn Cover.png" alt="Damn Single Cover Art">
         </div>
-        
-        <h1>Damn</h1>
-        <p class="artist">Mr. Sprinkle Intro Music</p>
-        <div style="background:#ff0000;color:#fff;padding:5px 15px;border-radius:5px;font-size:11px;font-weight:bold;display:inline-block;margin-bottom:20px">PARENTAL ADVISORY - EXPLICIT CONTENT</div>
-        
-        <audio controls>
-            <source src="assets/Damn.mp3" type="audio/mpeg">
-            Your browser does not support audio playback.
-        </audio>
-        
-        <div class="price">$1.00</div>
-        
-        <script src="https://www.paypal.com/sdk/js?client-id=BAAfAnARJvnWyZzSspOOoGomdyWRzOdtsJaamNyHjX4Gg2JoQkWIjncZJoYR93_ih01NRExRXdCwx_QHVI&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
-        <div id="paypal-container-PYSZ68LTCB2VW"></div>
-        <script>
-        paypal.HostedButtons({
-            hostedButtonId: "PYSZ68LTCB2VW",
-        }).render("#paypal-container-PYSZ68LTCB2VW")
-        </script>
-        
-        <div class="legal">
-            <p><strong>© 2025 WETT Entertainment LLC</strong></p>
-            <p>All rights reserved. This track is protected by copyright law.</p>
-            <p>For licensing inquiries: info@mrsprinklereno.com</p>
+        <div class="details">
+            <p class="eyebrow">Featured track · Mr. Sprinkle</p>
+            <h1><span data-track="title">Damn</span><abbr class="explicit" data-track="explicit" title="Explicit content">E</abbr></h1>
+            <p class="artist" data-track="artist">Mr. Sprinkle Intro Music</p>
+            <p class="advisory" data-track="explicit">Parental advisory · Explicit content</p>
+
+            <audio controls preload="metadata">
+                <source data-track="src" src="assets/Damn.mp3" type="audio/mpeg">
+                Your browser does not support audio playback.
+            </audio>
+
+            <div class="price-row"><span>Price</span><div class="price" data-track="price">$1.00</div></div>
+
+            <script src="https://www.paypal.com/sdk/js?client-id=BAAfAnARJvnWyZzSspOOoGomdyWRzOdtsJaamNyHjX4Gg2JoQkWIjncZJoYR93_ih01NRExRXdCwx_QHVI&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
+            <div id="paypal-buy"></div>
+
+            <div class="legal">
+                <p><strong>© <span data-track="copyrightYear">2025</span> <span data-track="label">WETT Entertainment LLC</span></strong></p>
+                <p>All rights reserved. This track is protected by copyright law.</p>
+                <p>For licensing inquiries: <a href="mailto:info@mrsprinklereno.com">info@mrsprinklereno.com</a></p>
+            </div>
+
+            <a href="index.html" class="back-link">← Back to Mr. Sprinkle</a>
         </div>
-        
-        <a href="index.html" class="back-link">← Back to Mr. Sprinkle</a>
-    </div>
+    </main>
+    <script>
+    (function () {
+        var t = window.MrSprinkleTrack || {};
+        document.querySelectorAll('[data-track]').forEach(function (el) {
+            var k = el.getAttribute('data-track');
+            if (k === 'cover' && t.cover) { el.src = t.cover; el.alt = t.title + ' cover art'; }
+            else if (k === 'src' && t.src) { if (el.getAttribute('src') !== t.src) { el.src = t.src; el.parentNode.load(); } }
+            else if (k === 'explicit') { el.hidden = !t.explicit; }
+            else if (t[k] !== undefined) { el.textContent = t[k]; }
+        });
+        if (t.title) document.title = t.title + ' - Mr. Sprinkle Intro Music | WETT Entertainment LLC';
+        var box = document.getElementById('paypal-buy');
+        try {
+            paypal.HostedButtons({ hostedButtonId: t.paypalButtonId || 'PYSZ68LTCB2VW' }).render('#paypal-buy');
+        } catch (e) {
+            box.innerHTML = '<p class="paypal-fallback">Checkout could not load. Please refresh the page and try again.</p>';
+        }
+    })();
+    </script>
 </body>
 </html>

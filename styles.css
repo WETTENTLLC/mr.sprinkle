@@ -340,6 +340,13 @@ h3 {
     margin-bottom: 1rem;
 }
 
+/* Grid children may shrink below their content width; long option text no longer widens the page. */
+.form-row > * {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
 .form-row input,
 .form-row select,
 textarea {
