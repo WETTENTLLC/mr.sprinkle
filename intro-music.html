@@ -41,8 +41,23 @@
             .details{padding:28px 22px}
         }
     </style>
+    <link rel="stylesheet" href="assets/site-header.css">
 </head>
-<body>
+<body class="ms-page-has-header">
+<header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home"><img src="assets/trans.png" alt="Mr. Sprinkle"></a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li><li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li><li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li><li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
     <main class="music-card">
         <div class="cover-art">
             <img data-track="cover" src="assets/Damn Cover.png" alt="Damn Single Cover Art">
@@ -91,5 +106,6 @@
         }
     })();
     </script>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>
