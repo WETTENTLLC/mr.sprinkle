@@ -208,3 +208,28 @@ test("archived 2025 giveaway page cannot accept payments or new entries", () => 
   assert.doesNotMatch(archive, /Buy \$10 Pass|Submit Free Entry/i);
   assert.doesNotMatch(archive, /const ENTRIES_FILE|Entry Submitted!/i);
 });
+
+test("blog content reflects the current grillz catalog and individual tooth-selection workflow", () => {
+  const blog = read("blog.html");
+  assert.match(blog, /per tooth/i);
+  assert.match(blog, /select the exact upper and\s*\/or lower teeth/i);
+  assert.match(blog, /not fixed tooth layouts/i);
+  assert.match(blog, /\$100 \/ \$600 \/ \$1,200/);
+  assert.match(blog, /\$240 \/ \$1,440 \/ \$2,880/);
+  assert.match(blog, /\$300 \/ \$1,800 \/ \$3,600/);
+  assert.match(blog, /\$320 \/ \$1,920 \/ \$3,840/);
+  assert.match(blog, /Stone-setting labor is included/i);
+  assert.doesNotMatch(blog, /Trends for 2025|January 2025|40-50% cost savings|opal inlays|\+\$150-\$300 per stone/i);
+  assert.doesNotMatch(blog, /conflict-free certified|VS\+ clarity|medical-grade|tarnish-free|safe to eat, drink, or smoke/i);
+  assert.doesNotMatch(blog, /gold-teeth-seattle\.html|gold-teeth-bay-area\.html/);
+  assert.match(blog, /id="copyrightYear"/);
+});
+
+test("blog uses page-level collection and breadcrumb structured data", () => {
+  const html = read("blog.html");
+  const blocks = [...html.matchAll(/<script\b(?=[^>]*type=["']application\/ld\+json["'])[^>]*>([\s\S]*?)<\/script>/gi)];
+  assert.equal(blocks.length, 1);
+  const graph = JSON.parse(blocks[0][1]);
+  assert.ok(graph["@graph"].some((item) => item["@type"] === "CollectionPage"));
+  assert.ok(graph["@graph"].some((item) => item["@type"] === "BreadcrumbList"));
+});
