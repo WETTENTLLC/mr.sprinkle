@@ -22,12 +22,24 @@
 
     const store = {
         get(key) {
-            try { return window.sessionStorage.getItem(key); }
+            try {
+                const sessionValue = window.sessionStorage.getItem(key);
+                if (sessionValue) return sessionValue;
+            } catch (error) {
+                // Fall through to local storage if session storage is restricted.
+            }
+            try { return window.localStorage.getItem(key); }
             catch (error) { return null; }
         },
         set(key, value) {
-            try { window.sessionStorage.setItem(key, value); }
-            catch (error) { /* Privacy settings may disable session storage. */ }
+            try {
+                window.sessionStorage.setItem(key, value);
+                return;
+            } catch (error) {
+                // Fall back only when session storage is unavailable.
+            }
+            try { window.localStorage.setItem(key, value); }
+            catch (error) { /* Both storage APIs may be disabled by privacy settings. */ }
         }
     };
 
