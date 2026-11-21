@@ -1,0 +1,8 @@
+# Staging runtime data (database, uploads, notification outbox) never committed
+var/
+# Environment files never committed (only the .example template is tracked)
+.env
+.env.*
+!.env.staging.example
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,50 @@
+{
+  "pricing_version": "v0-draft-2026-11-20",
+  "currency": "USD",
+  "owner_verified": false,
+  "source_note": "Transcribed from the brief (section 9) and checked against master pricing.html and V2 assets/pricing-catalog.js. Every figure matches those files. NOT approved for customer-facing use until the owner verifies each section.",
+  "materials_per_tooth": {
+    "silver": {"label": "Silver", "price": 100, "status": "published_on_site"},
+    "gold10k": {"label": "10K Gold", "price": 240, "status": "published_on_site"},
+    "gold14k": {"label": "14K Gold", "price": 300, "status": "published_on_site"},
+    "dentalGold14k": {"label": "14K Dental Gold", "price": 320, "status": "published_on_site"},
+    "gold18k": {"label": "18K Gold", "price": null, "status": "quote_required"},
+    "gold24k": {"label": "24K Gold", "price": null, "status": "quote_required"},
+    "whiteGold": {"label": "White Gold", "price": null, "status": "quote_required"},
+    "platinum": {"label": "Platinum", "price": null, "status": "quote_required"}
+  },
+  "material_reference_totals": {
+    "silver": {"6": 600, "12": 1200},
+    "gold10k": {"6": 1440, "12": 2880},
+    "gold14k": {"6": 1800, "12": 3600},
+    "dentalGold14k": {"6": 1920, "12": 3840}
+  },
+  "stones_per_stone_material_only": {
+    "sizes_mm": ["1.3", "1.5", "2.0", "3.0"],
+    "naturalDiamond_commercial": {"1.3": 6, "1.5": 8, "2.0": 14, "3.0": 46},
+    "naturalDiamond_si": {"1.3": 7, "1.5": 9, "2.0": 18, "3.0": 58},
+    "naturalDiamond_vs": {"1.3": 8, "1.5": 12, "2.0": 23, "3.0": 74},
+    "naturalDiamond_vvs": {"1.3": 10, "1.5": 14, "2.0": 28, "3.0": 91},
+    "labGrownDiamond": {"1.3": 3.30, "1.5": 4.00, "2.0": 6.30, "3.0": 18.70},
+    "vvsMoissanite": {"1.3": 2.50, "1.5": 2.80, "2.0": 3.70, "3.0": 7.60},
+    "cz": {"1.3": 5, "1.5": 5, "2.0": 6, "3.0": 8},
+    "coloredCz": {"1.3": 5, "1.5": 5, "2.0": 6, "3.0": 8},
+    "quote_required": ["rubies", "sapphires", "emeralds", "customStones"],
+    "note": "Stone-only prices. Setting labor is NOT included. Unlisted sizes/grades are quote-required."
+  },
+  "setting_labor": {"status": "pending_jeweler_quote", "rules": [], "display_text": "Setting labor pending jeweler quote"},
+  "custom_cuts": {
+    "status": "unverified_do_not_auto_charge",
+    "unit": "UNKNOWN — per tooth or per piece needs owner decision",
+    "diamondDust": 15, "centerSplit": 10, "openFace": 20, "deepBar": 15,
+    "customDesign": null
+  },
+  "shipping_and_rush": {
+    "status": "unverified_do_not_auto_charge",
+    "standardShipping": 60,
+    "rushService": 150,
+    "rushShipping": 150,
+    "localPickup": null,
+    "note": "Separate line items. Whether shipping applies to in-person Envy Kutz appointments is an open owner decision."
+  }
+}

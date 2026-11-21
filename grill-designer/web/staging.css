@@ -1,0 +1,33 @@
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#FFD700;--gold-2:#FFA500;--ink:#fff;--muted:#bdbdbd;--bg:#0b0b0b;--card:#151515;--line:#2a2a2a;--ok:#5fd38a;--bad:#ff6b6b;--warn:#ffcc66}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#000 0%,#1a1a1a 100%);color:var(--ink);line-height:1.55;min-height:100vh;font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.staging-bar{background:var(--warn);color:#000;font-weight:700;text-align:center;padding:10px 16px;font-size:.9rem}
+header{padding:40px 20px 24px}
+.eyebrow{color:var(--gold);letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;font-weight:700}
+h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:6px 0 10px;color:var(--gold)}
+.lede{color:var(--muted);max-width:68ch}
+main{display:grid;gap:18px;padding-bottom:32px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+h2{font-size:1.15rem;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+h3{font-size:1rem;color:var(--gold);margin:18px 0 8px}
+.muted{color:var(--muted)}.small{font-size:.85rem;padding-bottom:28px}
+.pill{font-size:.72rem;padding:3px 9px;border-radius:999px;border:1px solid currentColor;font-weight:700}
+.pill.warn{color:var(--warn)}.pill.ok{color:var(--ok)}.pill.bad{color:var(--bad)}
+.checks{list-style:none;display:grid;gap:8px;margin-top:10px}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#0f0f0f;border-radius:8px;border:1px solid var(--line)}
+.mark{flex:0 0 auto;font-weight:700;min-width:44px}
+.mark.ok{color:var(--ok)}.mark.bad{color:var(--bad)}
+.kv{display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:6px 16px}
+.kv dt{color:var(--muted)}.kv dd{overflow-wrap:anywhere}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--gold);font-weight:700;background:#101010}
+td.num,th.num{text-align:right}
+tr:last-child td{border-bottom:0}
+.state.loading{color:var(--muted)}
+.state.error{color:var(--bad)}
+.note{margin-top:8px;color:var(--warn);font-size:.9rem}
+@media (max-width:480px){.card{padding:16px}.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.checks li>span:last-child{min-width:0;overflow-wrap:anywhere}

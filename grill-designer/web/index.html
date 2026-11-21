@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>STAGING · Gold Grill Designer 2.0 · Milestone 1 Baseline</title>
+<link rel="stylesheet" href="./staging.css">
+<script>window.__API_BASE__ = '__PORT_8800__';</script>
+</head>
+<body>
+<div class="staging-bar" role="status">STAGING ONLY. This is not mrsprinklereno.com. It sends no emails or notifications and takes no payments.</div>
+<header class="wrap">
+  <p class="eyebrow">Mr. Sprinkle · Gold Grill Designer 2.0</p>
+  <h1>Milestone 1: technical baseline</h1>
+  <p class="lede">For owner review before tooth-designer work begins. This page shows the isolated staging environment, the staging database, and the draft pricing catalog that is waiting for your approval.</p>
+</header>
+<main class="wrap">
+  <section class="card" aria-labelledby="h-env">
+    <h2 id="h-env">Staging environment</h2>
+    <div id="health" class="state loading">Checking the staging server…</div>
+  </section>
+  <section class="card" aria-labelledby="h-iso">
+    <h2 id="h-iso">Isolation checks</h2>
+    <p class="muted">These checks run live on the staging server. If any check fails, the server refuses to start.</p>
+    <ul id="iso" class="checks"><li class="state loading">Running checks…</li></ul>
+  </section>
+  <section class="card" aria-labelledby="h-price">
+    <h2 id="h-price">Draft pricing catalog <span class="pill warn">Not owner-verified</span></h2>
+    <p class="muted">Every price below comes from the brief and matches the current pricing page. None of these prices will reach customers until you approve them.</p>
+    <div id="pricing" class="state loading">Loading catalog…</div>
+  </section>
+</main>
+<footer class="wrap muted small">Branch feature/gold-grill-designer-2 · local only, not pushed · no production deployment authorized</footer>
+<script src="./staging.js"></script>
+</body>
+</html>
