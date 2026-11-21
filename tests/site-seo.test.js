@@ -56,19 +56,19 @@ test("intro controls remain clickable and enter on the first Play click", () => 
 test("intro dismissal persists for returning visitors and across Home navigation", () => {
   const js = read("assets/sound.js");
   const html = read("index.html");
-  const storeBlock = js.match(/const store = \{[\\s\\S]*?\\n    \};/);
+  const storeBlock = js.match(/const store = \{[\s\S]*?\n    \};/);
   assert.ok(storeBlock, "intro storage helper exists");
   const storeText = storeBlock[0];
   assert.ok(
     storeText.indexOf("window.localStorage.getItem") < storeText.indexOf("window.sessionStorage.getItem"),
     "persistent storage is checked before session storage"
   );
-  assert.match(storeText, /window\\.localStorage\\.setItem\\(key, value\\)/);
-  assert.match(storeText, /window\\.sessionStorage\\.setItem\\(key, value\\)/);
-  assert.match(js, /if \\(store\\.get\\("introSeen"\\)\\)/);
-  assert.match(js, /event\\.key === "introSeen" && event\\.newValue === "true"/);
+  assert.match(storeText, /window\.localStorage\.setItem\(key, value\)/);
+  assert.match(storeText, /window\.sessionStorage\.setItem\(key, value\)/);
+  assert.match(js, /if \(store\.get\("introSeen"\)\)/);
+  assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /assets\\/sound\\.js\\?v=20261121-first-visit/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-first-visit/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {
