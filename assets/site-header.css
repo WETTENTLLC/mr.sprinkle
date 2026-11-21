@@ -67,3 +67,4 @@ header.ms-site-header {
 @media (prefers-reduced-motion: reduce) {
   .ms-site-header *, .ms-site-header *::before, .ms-site-header *::after { transition: none !important; }
 }
+.ms-page-has-header{padding-top:112px!important}
