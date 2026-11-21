@@ -72,4 +72,6 @@ def test_catalog_matches_published_site_prices():
     s = cat["stones_per_stone_material_only"]
     assert s["naturalDiamond_vvs"] == {"1.3": 10, "1.5": 14, "2.0": 28, "3.0": 91}
     assert s["vvsMoissanite"]["3.0"] == 7.60
-    assert cat["setting_labor"]["status"] == "pending_jeweler_quote"
+    assert cat["setting_labor"]["status"] == "included_in_price"
+    assert cat["custom_cuts"]["unit"] == "per_set" and cat["custom_cuts"]["diamondDust"] == 30
+    assert cat["shipping_and_rush"]["standardShipping"] == 60
