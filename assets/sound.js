@@ -22,23 +22,35 @@
 
     const store = {
         get(key) {
+            // Persistent storage wins: dismissing the intro is a first-visit event,
+            // not a per-tab event. This keeps Home navigation and later visits clean.
+            try {
+                const localValue = window.localStorage.getItem(key);
+                if (localValue) return localValue;
+            } catch (error) {
+                // Continue to session storage when persistent storage is restricted.
+            }
+
+            // Migrate the old session-only flag into persistent storage so returning
+            // visitors who already dismissed the intro do not see it again.
             try {
                 const sessionValue = window.sessionStorage.getItem(key);
-                if (sessionValue) return sessionValue;
+                if (sessionValue) {
+                    try { window.localStorage.setItem(key, sessionValue); }
+                    catch (error) { /* Keep the session value when local storage is blocked. */ }
+                    return sessionValue;
+                }
             } catch (error) {
-                // Fall through to local storage if session storage is restricted.
+                // Both storage APIs may be restricted by browser privacy settings.
             }
-            try { return window.localStorage.getItem(key); }
-            catch (error) { return null; }
+            return null;
         },
         set(key, value) {
-            try {
-                window.sessionStorage.setItem(key, value);
-                return;
-            } catch (error) {
-                // Fall back only when session storage is unavailable.
-            }
+            // Write to both stores. localStorage survives navigation, tabs and
+            // future browser sessions; sessionStorage remains a fallback.
             try { window.localStorage.setItem(key, value); }
+            catch (error) { /* Fall back to session storage below. */ }
+            try { window.sessionStorage.setItem(key, value); }
             catch (error) { /* Both storage APIs may be disabled by privacy settings. */ }
         }
     };
@@ -175,8 +187,12 @@
     });
 
     if (intro) {
-        const forceIntro = new URLSearchParams(window.location.search).get("intro") === "1";
-        if (store.get("introSeen") && !forceIntro) {
+        // Keep other already-open tabs in sync when one tab completes the intro.
+        window.addEventListener("storage", function (event) {
+            if (event.key === "introSeen" && event.newValue === "true") closeIntro();
+        });
+
+        if (store.get("introSeen")) {
             intro.hidden = true;
             document.documentElement.classList.remove("ms-intro-open");
             if (video) {
