@@ -55,7 +55,16 @@
 
     function play() {
         if (!audio) return Promise.resolve(false);
-        return audio.play().then(() => true).catch(() => { setPlayingUI(false); return false; });
+        try {
+            // Call play() directly from the user's click gesture so mobile browsers
+            // can authorize audio playback. Normalize both modern and legacy returns.
+            return Promise.resolve(audio.play())
+                .then(() => true)
+                .catch(() => { setPlayingUI(false); return false; });
+        } catch (error) {
+            setPlayingUI(false);
+            return Promise.resolve(false);
+        }
     }
 
     if (audio) {
@@ -97,8 +106,19 @@
             if (reduceMotion && video) video.pause();
             if (playBtn) {
                 playBtn.addEventListener("click", () => {
-                    if (playBtn.dataset.state === "playing") { closeIntro(); return; }
-                    play();
+                    if (playBtn.disabled) return;
+                    playBtn.disabled = true;
+                    playBtn.setAttribute("aria-busy", "true");
+
+                    // One clear action: try to start the track, then enter either way.
+                    // A browser audio restriction must never trap a visitor on the intro.
+                    play().then((started) => {
+                        if (!started) {
+                            const status = document.getElementById("introStatus");
+                            if (status) status.textContent = "Sound could not start. You can turn it on after entering.";
+                        }
+                        closeIntro();
+                    }).catch(() => closeIntro());
                 });
                 setTimeout(() => playBtn.focus({ preventScroll: true }), 50);
             }
