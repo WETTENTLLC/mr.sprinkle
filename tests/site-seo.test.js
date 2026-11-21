@@ -139,3 +139,60 @@ test("published pages do not reintroduce unsupported gold safety guarantees", ()
 test("booking form continues to use the existing approved Formspree endpoint", () => {
   assert.match(read("mold-form.html"), /https:\/\/formspree\.io\/f\/myzpanyg/);
 });
+
+
+test("primary indexable pages have unique titles, descriptions, and canonical URLs", () => {
+  const pages = [
+    "index.html", "pricing.html", "mold-form.html", "gold-teeth-reno.html",
+    "service-areas.html", "gold-teeth-tahoe.html", "blog.html",
+    "gift-card.html", "safety-policy.html"
+  ];
+  const titles = new Map();
+  for (const page of pages) {
+    const html = read(page);
+    const title = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim();
+    const description = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1];
+    const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
+    assert.ok(title, page + " title");
+    assert.ok(description && description.length >= 70, page + " useful meta description");
+    assert.ok(canonical, page + " canonical URL");
+    assert.equal(canonical, "https://mrsprinklereno.com/" + (page === "index.html" ? "" : page), page + " canonical target");
+    assert.ok(!titles.has(title), page + " title must be unique (also used by " + titles.get(title) + ")");
+    titles.set(title, page);
+  }
+});
+
+test("thank-you, partner intake, and expired 2025 promotion pages are excluded from indexing", () => {
+  for (const page of ["thank-you.html", "partner-signup.html", "tax-time-promo.html"]) {
+    assert.match(read(page), /<meta\s+name=["']robots["']\s+content=["']noindex,?\s*(?:nofollow|follow)["']/i, page + " noindex policy");
+  }
+  const sitemap = read("sitemap.xml");
+  for (const page of ["thank-you.html", "partner-signup.html", "tax-time-promo.html", "gold-teeth-seattle.html", "gold-teeth-bay-area.html"]) {
+    assert.equal(sitemap.includes(page), false, page + " excluded from sitemap");
+  }
+});
+
+test("sitemap contains only canonical customer-facing URLs without duplicates", () => {
+  const sitemap = read("sitemap.xml");
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  assert.ok(urls.length >= 8);
+  assert.equal(new Set(urls).size, urls.length, "sitemap URLs are unique");
+  for (const url of urls) {
+    assert.match(url, /^https:\/\/mrsprinklereno\.com\//);
+    const page = url.endsWith("/") ? "index.html" : url.split("/").pop();
+    const html = read(page);
+    const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+    assert.equal(canonical, url, page + " canonical equals sitemap URL");
+    assert.doesNotMatch(html, /<meta\s+name=["']robots["']\s+content=["']noindex/i, page + " must be indexable");
+  }
+});
+
+test("inline JSON-LD on the key search pages is valid JSON", () => {
+  const pages = ["index.html", "pricing.html", "gold-teeth-reno.html", "service-areas.html", "gold-teeth-tahoe.html"];
+  for (const page of pages) {
+    const html = read(page);
+    const blocks = [...html.matchAll(/<script\b(?=[^>]*type=["']application\/ld\+json["'])[^>]*>([\s\S]*?)<\/script>/gi)];
+    assert.ok(blocks.length > 0, page + " has structured data");
+    for (const block of blocks) assert.doesNotThrow(() => JSON.parse(block[1]), page + " JSON-LD parses");
+  }
+});

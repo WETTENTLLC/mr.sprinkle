@@ -1,23 +1,30 @@
-name: Grill Estimate Tests
+name: Grill Estimate and SEO Tests
 
 on:
   push:
     branches:
-      - feature/grill-maker-pricing-location
+      - master
   pull_request:
     branches:
       - master
     paths:
+      - "*.html"
       - "assets/**"
       - "tests/**"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "schema.json"
+      - "ai-context.json"
+      - ".github/MR-SPRINKLE-SEO-AIO-GEO-STANDARD.md"
       - ".github/workflows/grill-estimate-tests.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  grill-estimate:
-    name: Verify grill pricing and estimate calculations
+  site-regression:
+    name: Verify grill pricing, SEO metadata, and discoverability
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -28,5 +35,5 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Run grill estimate tests
-        run: node --test tests/
+      - name: Run site regression tests
+        run: node --test tests/grill-estimate.test.js tests/site-seo.test.js
