@@ -36,7 +36,7 @@ header.ms-site-header {
 }
 .ms-site-header .ms-primary-nav a.ms-nav-cta:hover,
 .ms-site-header .ms-primary-nav a.ms-nav-cta:focus-visible { color: #080808; background: #e0c989; border-color: #e0c989; }
-.ms-site-header .ms-header-music { display: flex; justify-content: flex-end; margin-top: 7px; }
+.ms-site-header .ms-header-music { display: flex; justify-content: flex-end; align-items: center; flex: 0 0 auto; margin-top: 0; margin-left: 12px; }
 .ms-site-header .ms-menu-toggle {
   display: none; width: 44px; height: 42px; border: 1px solid rgba(201,178,118,.55);
   border-radius: 3px; padding: 9px; background: transparent; color: #e0c989;
