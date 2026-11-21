@@ -74,7 +74,6 @@
         "WETT Accessories",
         "Tooth Gems (quote-based)"
       ],
-      "foundingDate": "2002",
       "sameAs": [
         "https://instagram.com/mr.sprinkle_reno"
       ]
@@ -542,11 +541,11 @@
                 const emailBody = `Hello Mr. Sprinkle,\n\nNew quote request:\n\nName: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nLocation: ${data.location}\nService: ${data.service}\nPreferred Contact: ${data['contact-method']}\n\nMessage:\n${data.message}\n\nPlease respond as soon as possible.\n\nThank you!`;
                 
                 window.open(`mailto:info@mrsprinklereno.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`, '_blank');
-                alert('✅ Your quote request email is being sent! We\'ll respond within 24 hours.');
+                alert('✅ Your quote request email is being sent! We\'ll get back to you as soon as we can.');
             } else {
                 // Default to SMS
                 window.open(`sms:+15302140676?body=${encodeURIComponent(message)}`, '_blank');
-                alert('✅ Your quote request is being sent! We\'ll contact you within minutes.');
+                alert('✅ Your quote request is being sent! We\'ll get back to you as soon as we can.');
             }
             
             // Reset form

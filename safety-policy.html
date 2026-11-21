@@ -38,8 +38,10 @@
             position: absolute;
             left: 0;
         }
+        .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .compliance-table {
             width: 100%;
+            min-width: 420px;
             border-collapse: collapse;
             margin: 1rem 0;
         }
@@ -131,7 +133,7 @@
                         <p>Due to the personal and hygienic nature of custom grillz, <strong>all custom orders are final sale - no returns, exchanges, or refunds.</strong></p>
                     </div>
 
-                    <table class="compliance-table">
+                    <div class="table-scroll" role="region" aria-label="Compliance table" tabindex="0"><table class="compliance-table">
                         <thead>
                             <tr>
                                 <th>Item Type</th>
@@ -160,7 +162,7 @@
                                 <td>Unopened items only</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
 
                     <h4>📋 Adjustment Policy</h4>
                     <ul class="safety-list">
