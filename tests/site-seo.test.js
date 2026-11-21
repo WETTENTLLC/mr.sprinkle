@@ -68,7 +68,7 @@ test("intro dismissal persists for returning visitors and across Home navigation
   assert.match(js, /if \(store\.get\("introSeen"\)\)/);
   assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-first-visit/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-recovery/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {
@@ -287,4 +287,18 @@ test("grill designer renders a dental-arch diagram without changing the estimate
   assert.doesNotMatch(html, /preview-tooth/);
   // Price logic is kept in the dedicated estimate file; preview code only reads its normalized configuration.
   assert.doesNotMatch(preview, /calculate\(|catalog\.grillz|knownSubtotal/);
+});
+
+
+test("intro buttons call a direct entry action and the fallback works without the music controller", () => {
+  const html = read("index.html");
+  assert.match(html, /window\.mrSprinkleIntroAction = function \(action, button\)/);
+  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('play', this\);"/);
+  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('quiet', this\);"/);
+  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('skip', this\);"/);
+  assert.match(html, /window\.localStorage\.setItem\("introSeen", "true"\)/);
+  assert.match(html, /intro\.hidden = true/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-recovery/);
+  assert.match(html, /assets\/sound\.css\?v=20261121-intro-controls-recovery/);
+  assert.doesNotMatch(read("assets/sound.js"), /target\.closest\("#introPlay"\)/);
 });

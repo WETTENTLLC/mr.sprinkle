@@ -357,11 +357,49 @@
     <link rel="preload" href="assets/trans.png" as="image">
     
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="assets/sound.css?v=20261120-intro-hotfix">
+    <link rel="stylesheet" href="assets/sound.css?v=20261121-intro-controls-recovery">
     <link rel="stylesheet" href="assets/site-header.css">
     <link rel="stylesheet" href="assets/local-search.css">
 </head>
 <body>
+    <script>
+    // The entry controls must work even when the external music controller is blocked or stale.
+    window.mrSprinkleIntroAction = function (action, button) {
+        var intro = document.getElementById("videoIntro");
+        var audio = document.getElementById("siteAudio");
+        var video = document.getElementById("introVideo");
+        if (!intro || intro.hidden) return false;
+
+        // Prefer the full controller, but do not make entering the site depend on it.
+        var controller = window.MrSprinkleIntro;
+        if (controller) {
+            if (action === "play") controller.playAndEnter();
+            else if (action === "quiet") controller.enterQuietly(button);
+            else controller.close();
+            return false;
+        }
+
+        if (action === "play" && audio) {
+            try {
+                var playback = audio.play();
+                if (playback && typeof playback.catch === "function") playback.catch(function () {});
+            } catch (error) { /* Audio is optional; site entry is not. */ }
+        } else if (action === "quiet" && audio) {
+            audio.pause();
+        }
+
+        try { window.localStorage.setItem("introSeen", "true"); } catch (error) {}
+        try { window.sessionStorage.setItem("introSeen", "true"); } catch (error) {}
+        document.documentElement.classList.remove("ms-intro-open");
+        intro.classList.add("is-leaving");
+        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.setTimeout(function () {
+            intro.hidden = true;
+            if (video) { video.pause(); video.removeAttribute("autoplay"); }
+        }, reduceMotion ? 0 : 450);
+        return false;
+    };
+    </script>
     <!-- Homepage intro. Song details: assets/site-track.js. Behaviour: assets/sound.js -->
     <div id="videoIntro" class="ms-intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
         <video id="introVideo" class="ms-intro__video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
@@ -371,11 +409,11 @@
         <div class="ms-intro__content">
             <h2 id="introTitle" class="ms-intro__eyebrow">Mr. Sprinkle · Custom Grillz · Jewelry · WETT</h2>
             <div class="ms-intro__actions">
-                <button id="introPlay" type="button" class="ms-btn ms-btn--primary">
+                <button id="introPlay" type="button" class="ms-btn ms-btn--primary" onclick="return window.mrSprinkleIntroAction('play', this);" aria-label="Play featured music and enter site">
                     <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
                     <span data-label>Play with sound</span>
                 </button>
-                <button type="button" class="ms-btn ms-btn--ghost" data-intro-skip data-intro-mute>Enter quietly</button>
+                <button type="button" class="ms-btn ms-btn--ghost" data-intro-skip data-intro-mute onclick="return window.mrSprinkleIntroAction('quiet', this);" aria-label="Enter site quietly">Enter quietly</button>
             </div>
             <p id="introStatus" class="ms-intro__status" aria-live="polite" role="status"></p>
         </div>
@@ -387,7 +425,7 @@
             </div>
             <a data-track="buy" data-price-text="Buy · {price}" href="intro-music.html">Buy · $1</a>
         </div>
-        <button type="button" class="ms-intro__skip" data-intro-skip>Skip intro</button>
+        <button type="button" class="ms-intro__skip" data-intro-skip onclick="return window.mrSprinkleIntroAction('skip', this);" aria-label="Skip intro and enter site">Skip intro</button>
     </div>
     <header class="ms-site-header">
   <div class="ms-header-inner">
@@ -910,7 +948,7 @@
     </script>
     
     <script src="assets/site-track.js?v=20261121-damn-remix"></script>
-    <script src="assets/sound.js?v=20261121-first-visit"></script>
+    <script src="assets/sound.js?v=20261121-intro-controls-recovery"></script>
 
     <script src="assets/site-header.js"></script>
 </body>
