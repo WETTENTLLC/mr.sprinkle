@@ -2,22 +2,12 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Mr. Sprinkle",
-  "description": "Custom grillz, jewelry, and urban luxury accessories. In-person appointments are available only at Envy Kutz — Braids & Locs in downtown Reno, Nevada.",
+  "description": "Custom grillz, jewelry, and WETT accessories by Mr. Sprinkle. The only in-person appointment venue is Envy Kutz — Braids & Locs in downtown Reno, Nevada; service inquiries from nearby Northern Nevada communities are considered individually.",
   "url": "https://mrsprinklereno.com",
   "logo": "https://mrsprinklereno.com/assets/trans.png",
   "image": "https://mrsprinklereno.com/assets/trans.png",
   "telephone": "+1-530-214-0676",
-  "address": {
-    "@type": "PostalAddress",
-    "name": "Envy Kutz — Braids & Locs",
-    "streetAddress": "275 E 4th St",
-    "addressLocality": "Reno",
-    "addressRegion": "NV",
-    "postalCode": "89501",
-    "addressCountry": "US",
-    "description": "Above Davidson's Distillery; downtown Reno, Nevada."
-  },
-  "appointmentPolicy": "Appointment only, 10:00 AM to 6:00 PM. Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501, is the sole physical appointment location. Mobile mold service may be scheduled outside regular hours subject to confirmation.",
+  "appointmentPolicy": "Appointment only, 10:00 AM to 6:00 PM. In-person appointments are at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501. Requests are not confirmed until the team contacts the customer. Mobile mold service is separate and subject to location, schedule, and team confirmation.",
   "services": [
     "Custom grillz",
     "Gold press-on nails (quote-based)",
@@ -28,10 +18,26 @@
   ],
   "publishedPricing": {
     "grillz": {
-      "silver": { "1 tooth": 100, "6 teeth": 600, "12 teeth": 1200 },
-      "10K gold": { "1 tooth": 240, "6 teeth": 1440, "12 teeth": 2880 },
-      "14K gold": { "1 tooth": 300, "6 teeth": 1800, "12 teeth": 3600 },
-      "14K dental gold": { "1 tooth": 320, "6 teeth": 1920, "12 teeth": 3840 }
+      "silver": {
+        "1 tooth": 100,
+        "6 teeth": 600,
+        "12 teeth": 1200
+      },
+      "10K gold": {
+        "1 tooth": 240,
+        "6 teeth": 1440,
+        "12 teeth": 2880
+      },
+      "14K gold": {
+        "1 tooth": 300,
+        "6 teeth": 1800,
+        "12 teeth": 3600
+      },
+      "14K dental gold": {
+        "1 tooth": 320,
+        "6 teeth": 1920,
+        "12 teeth": 3840
+      }
     },
     "fangs": {
       "silver": 180,
@@ -48,21 +54,50 @@
       "XL fangs (8mm+)": 60
     },
     "naturalDiamondsPerStone": {
-      "commercial": { "1.3mm": 6, "1.5mm": 8, "2.0mm": 14, "3.0mm": 46 },
-      "SI": { "1.3mm": 7, "1.5mm": 9, "2.0mm": 18, "3.0mm": 58 },
-      "VS": { "1.3mm": 8, "1.5mm": 12, "2.0mm": 23, "3.0mm": 74 },
-      "VVS": { "1.3mm": 10, "1.5mm": 14, "2.0mm": 28, "3.0mm": 91 }
+      "commercial": {
+        "1.3mm": 6,
+        "1.5mm": 8,
+        "2.0mm": 14,
+        "3.0mm": 46
+      },
+      "SI": {
+        "1.3mm": 7,
+        "1.5mm": 9,
+        "2.0mm": 18,
+        "3.0mm": 58
+      },
+      "VS": {
+        "1.3mm": 8,
+        "1.5mm": 12,
+        "2.0mm": 23,
+        "3.0mm": 74
+      },
+      "VVS": {
+        "1.3mm": 10,
+        "1.5mm": 14,
+        "2.0mm": 28,
+        "3.0mm": 91
+      }
     },
     "alternativeStonesPerStone": {
-      "lab-grown diamond": { "1.3mm": 3.3, "1.5mm": 4, "2.0mm": 6.3, "3.0mm": 18.7 },
-      "VVS moissanite": { "1.3mm": 2.5, "1.5mm": 2.8, "2.0mm": 3.7, "3.0mm": 7.6 },
-      "cubic zirconia": { "1.3mm": 5, "1.5mm": 5, "2.0mm": 6, "3.0mm": 8 }
-    },
-    "customCutsReferenceAddOns": {
-      "diamond/dust cut": 15,
-      "center/split line": 10,
-      "open face/window cut": 20,
-      "deep/bar cut": 15
+      "lab-grown diamond": {
+        "1.3mm": 3.3,
+        "1.5mm": 4,
+        "2.0mm": 6.3,
+        "3.0mm": 18.7
+      },
+      "VVS moissanite": {
+        "1.3mm": 2.5,
+        "1.5mm": 2.8,
+        "2.0mm": 3.7,
+        "3.0mm": 7.6
+      },
+      "cubic zirconia": {
+        "1.3mm": 5,
+        "1.5mm": 5,
+        "2.0mm": 6,
+        "3.0mm": 8
+      }
     },
     "other": {
       "rush delivery": 150,
@@ -70,7 +105,16 @@
       "WETT Shades": 65,
       "standard ATM Clip": 10,
       "custom ATM Clip": 15,
-      "gift cards": { "minimum": 100, "maximum": 1500 }
+      "gift cards": {
+        "minimum": 100,
+        "maximum": 1500
+      }
+    },
+    "customCutsPerSet": {
+      "diamond/dust cut": 30,
+      "center/split line": 20,
+      "open face/window cut": 40,
+      "deep/bar cut": 30
     }
   },
   "quoteBased": [
@@ -115,27 +159,28 @@
     },
     {
       "question": "Are diamond prices the finished price for diamond grillz?",
-      "answer": "No. Published diamond prices are material prices per stone only. Stone-setting and additional design labor are quoted separately until labor pricing is approved."
+      "answer": "The published estimator uses the selected stone type, clarity, size, and count. Stone-setting labor is included in the published pricing. Custom finishes and designs outside the catalog still require a quote."
     },
     {
       "question": "Are custom cuts charged per tooth?",
-      "answer": "No universal per-tooth charge is assumed. Published custom-cut amounts are reference prices; final charges depend on the design and may require a custom quote."
+      "answer": "No. Custom cuts are charged per set: Diamond/Dust $30, Center/Split $20, Open Face/Window $40, and Deep/Bar $30. An upper piece and a lower piece are separate sets; a single special piece counts as one set."
     },
     {
       "question": "Can customers from Tahoe, the Bay Area, or Seattle book a local office?",
-      "answer": "No. Envy Kutz — Braids & Locs in Reno is the only physical appointment location. Contact Mr. Sprinkle to confirm service and shipping availability for a particular request."
+      "answer": "No. The only in-person appointment venue is Envy Kutz — Braids & Locs in Reno, Nevada. Customers in nearby Northern Nevada communities may request availability; mobile mold and shipping arrangements must be confirmed individually. There are no Mr. Sprinkle offices in Tahoe, the Bay Area, or Seattle."
     }
   ],
   "pricingNotes": [
-    "Custom cut and finish charges depend on the design and are not automatically multiplied by tooth or piece count.",
-    "Diamond prices are material costs per stone and do not include setting labor. Stone-setting and additional design labor require custom quotations pending invoice review.",
-    "Rush delivery is $150, uses next-day shipping to and from the main office, and receives production priority. Minimum completion expectation is 4 days; eligibility and capacity must be confirmed.",
-    "The exact teeth included in published 6-tooth and 12-tooth sets have not been confirmed.",
-    "Never present a quote-based service with an invented fixed price."
+    "Grillz are priced per tooth using the current published catalog.",
+    "Custom cuts are charged per set: Diamond/Dust $30, Center/Split $20, Open Face/Window $40, Deep/Bar $30. An upper piece and a lower piece are separate sets.",
+    "Stone-setting labor is included in the published pricing.",
+    "Custom finishes and designs outside the published catalog require a custom quote.",
+    "Rush shipping is $150 and replaces standard $60 shipping; rush eligibility and capacity must be confirmed.",
+    "The exact teeth included in published 6-tooth and 12-tooth tiers should be confirmed with the customer before the order is accepted.",
+    "Never present quote-based materials or services with an invented fixed price."
   ],
   "unconfirmedBusinessRules": [
     "Definitions of the published 6-tooth and 12-tooth sets",
-    "Actual diamond-setting and additional design labor rates pending historical invoice review",
     "Deposit calculation rules by order type and whether deposits include shipping",
     "Rush production cutoff and eligibility",
     "Whether the approximate two-week standard fulfillment estimate includes all production and shipping stages",
@@ -147,5 +192,45 @@
     "18K gold quote process",
     "Gold press-on nail styles and quote request process",
     "Tooth gem designs and inquiry process"
-  ]
+  ],
+  "appointmentVenue": {
+    "name": "Envy Kutz — Braids & Locs",
+    "streetAddress": "275 E 4th St",
+    "addressLocality": "Reno",
+    "addressRegion": "NV",
+    "postalCode": "89501",
+    "addressCountry": "US",
+    "description": "Partner venue used for confirmed, appointment-only in-person bookings. It is not represented as a separate Mr. Sprinkle storefront or walk-in location."
+  },
+  "serviceAreas": {
+    "primaryMarket": [
+      "Reno, NV",
+      "Sparks, NV",
+      "Spanish Springs, NV",
+      "Sun Valley, NV",
+      "Verdi, NV",
+      "Cold Springs, NV",
+      "Lemmon Valley, NV",
+      "Stead, NV",
+      "Washoe Valley, NV"
+    ],
+    "nearbyRequestMarkets": [
+      "Carson City, NV",
+      "Dayton, NV",
+      "Fernley, NV",
+      "Incline Village, NV",
+      "Minden, NV",
+      "Gardnerville, NV",
+      "Truckee, CA",
+      "North Lake Tahoe, NV/CA"
+    ],
+    "availabilityPolicy": "Customers in the greater Reno–Sparks area and nearby Northern Nevada communities may submit an inquiry. Service, mobile mold appointments, fitting arrangements, and shipping to a specific destination are confirmed individually before payment. Do not imply guaranteed mobile coverage or a physical office outside the Reno appointment venue."
+  },
+  "pricingRules": {
+    "grillzPricing": "per tooth, using the published per-tooth catalog",
+    "customCuts": "charged per set: an upper grillz piece and a lower grillz piece are separate sets; a single special piece is one set",
+    "stoneSettingLabor": "included in published pricing",
+    "rushShipping": "$150 and replaces the $60 standard shipping charge",
+    "quoteOnly": "18K gold, white gold, platinum, custom finishes, and other non-catalog designs require a custom quote"
+  }
 }
