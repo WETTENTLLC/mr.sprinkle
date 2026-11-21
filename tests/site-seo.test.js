@@ -39,11 +39,17 @@ test("intro controls remain clickable and enter on the first Play click", () => 
   assert.match(html, /id="introPlay"/);
   assert.match(html, /Enter quietly/);
   assert.match(html, /id="introStatus"/);
-  assert.match(js, /play\(\)\.then\(\(started\) =>/);
-  assert.match(js, /if \(!started\)[\s\S]*?closeIntro\(\)/);
-  assert.match(css, /Reliable intro hit-testing/);
+  assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
+  assert.match(js, /document\.addEventListener\("click"[\s\S]*?true\)/);
+  assert.match(js, /target\.closest\('a\[data-track="buy"\]'\)[\s\S]*?markIntroSeen\(\)/);
+  assert.match(js, /function markIntroSeen\(\)/);
+  assert.doesNotMatch(js, /play\(\)\.then/);
+  assert.match(css, /Intro interaction hotfix/);
+  assert.match(css, /#videoIntro \.ms-intro__content[\s\S]*?z-index:\s*20/);
+  assert.match(css, /#videoIntro \.ms-track[\s\S]*?z-index:\s*5/);
   assert.match(css, /pointer-events: none/);
-  assert.match(css, /z-index: 4/);
+  assert.match(html, /assets\/sound\.js\?v=/);
+  assert.match(html, /assets\/sound\.css\?v=/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {

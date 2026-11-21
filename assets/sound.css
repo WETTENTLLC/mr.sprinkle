@@ -146,3 +146,39 @@ li.ms-sound-item { display: flex; align-items: center; }
 #videoIntro .ms-track { z-index: 2; }
 #videoIntro .ms-btn:disabled { opacity: .78; cursor: wait; }
 .ms-intro__status { min-height: 1.25em; margin: 12px 0 0; color: var(--ms-platinum); font: 500 .78rem/1.5 Arial, sans-serif; }
+
+
+/* Intro interaction hotfix: keep the action controls above the later track card. */
+#videoIntro.ms-intro { isolation: isolate; }
+#videoIntro .ms-intro__video { z-index: 0; pointer-events: none; }
+#videoIntro .ms-intro__veil { z-index: 1; pointer-events: none; }
+#videoIntro .ms-track {
+    position: absolute;
+    z-index: 5;
+    pointer-events: auto;
+}
+#videoIntro .ms-intro__content {
+    position: relative;
+    z-index: 20;
+    pointer-events: auto;
+}
+#videoIntro .ms-intro__actions {
+    position: relative;
+    z-index: 21;
+    pointer-events: auto;
+}
+#videoIntro .ms-intro__actions .ms-btn {
+    position: relative;
+    z-index: 22;
+    pointer-events: auto;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+#videoIntro .ms-intro__skip {
+    z-index: 30;
+    pointer-events: auto;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+#videoIntro .ms-track a { position: relative; z-index: 6; pointer-events: auto; }
+#videoIntro .ms-btn:disabled { opacity: 1; cursor: pointer; }
