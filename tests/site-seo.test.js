@@ -94,8 +94,8 @@ test("sitemap focuses on customer-facing Nevada pages", () => {
 
 test("OAI search discovery is allowed and current GPTBot policy is preserved", () => {
   const robots = read("robots.txt");
-  assert.match(robots, /User-agent: OAI-SearchBot\s+Allow: \/s/);
-  assert.match(robots, /User-agent: GPTBot\s+Allow: \/s/);
+  assert.match(robots, /User-agent: OAI-SearchBot\s+Allow: \//s);
+  assert.match(robots, /User-agent: GPTBot\s+Allow: \//s);
   assert.match(robots, /Sitemap: https:\/\/mrsprinklereno\.com\/sitemap\.xml/);
 });
 
