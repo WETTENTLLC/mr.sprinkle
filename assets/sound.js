@@ -1,143 +1,248 @@
 /*
- * Homepage intro and site music player.
- * One <audio id="siteAudio"> element is shared by the intro and the header player,
- * so music started in the intro keeps playing after the visitor enters the site.
- * Track details come from assets/site-track.js.
+ * Mr. Sprinkle intro and site music controller.
+ * Intro dismissal is deliberately independent of media playback success:
+ * visitors must always be able to enter, even if autoplay or the audio asset fails.
  */
 (function () {
     "use strict";
+
     const track = window.MrSprinkleTrack || {};
     const audio = document.getElementById("siteAudio");
     const intro = document.getElementById("videoIntro");
     const video = document.getElementById("introVideo");
     const playBtn = document.getElementById("introPlay");
-    const skipBtns = Array.from(document.querySelectorAll("[data-intro-skip]"));
     const headerBtn = document.getElementById("musicToggle");
     const headerPlayer = document.getElementById("siteSound");
-    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const status = document.getElementById("introStatus");
+    const reduceMotion = window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const INTRO_MS = 30000;
     let introTimer = null;
+    let closing = false;
 
     const store = {
-        get(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } },
-        set(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+        get(key) {
+            try { return window.sessionStorage.getItem(key); }
+            catch (error) { return null; }
+        },
+        set(key, value) {
+            try { window.sessionStorage.setItem(key, value); }
+            catch (error) { /* Privacy settings may disable session storage. */ }
+        }
     };
 
-    // Fill in track details everywhere they appear.
-    if (audio && track.src) {
-        const source = audio.querySelector("source");
-        if (source && source.getAttribute("src") !== track.src) { source.setAttribute("src", track.src); audio.load(); }
+    function markIntroSeen() {
+        // Save synchronously before navigation (especially the Buy Track link).
+        store.set("introSeen", "true");
     }
-    document.querySelectorAll("[data-track]").forEach((el) => {
-        const key = el.getAttribute("data-track");
-        if (key === "cover" && track.cover) { el.setAttribute("src", track.cover); el.setAttribute("alt", `${track.title} cover art`); }
-        else if (key === "buy" && track.buyUrl) {
-            el.setAttribute("href", track.buyUrl);
-            el.setAttribute("aria-label", `Buy ${track.title} for ${track.price}`);
-            if (el.hasAttribute("data-price-text")) el.textContent = el.getAttribute("data-price-text").replace("{price}", (track.price || "").replace(".00", ""));
-        }
-        else if (key === "explicit") el.hidden = !track.explicit;
-        else if (track[key] !== undefined) el.textContent = track[key];
-    });
 
     function setPlayingUI(playing) {
         if (headerBtn) {
             headerBtn.setAttribute("aria-pressed", String(playing));
-            headerBtn.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${track.title || "music"}`);
+            headerBtn.setAttribute("aria-label",
+                (playing ? "Pause " : "Play ") + (track.title || "music"));
         }
         if (headerPlayer) headerPlayer.classList.toggle("is-playing", playing);
         if (playBtn) {
-            const label = playBtn.querySelector("[data-label]");
-            if (label) label.textContent = playing ? "Enter the site" : "Play with sound";
             playBtn.dataset.state = playing ? "playing" : "idle";
+            const label = playBtn.querySelector("[data-label]");
+            if (label) label.textContent = playing ? "Music playing — enter site" : "Play with sound";
         }
     }
 
-    function play() {
-        if (!audio) return Promise.resolve(false);
+    function startAudioFromGesture() {
+        if (!audio) return false;
         try {
-            // Call play() directly from the user's click gesture so mobile browsers
-            // can authorize audio playback. Normalize both modern and legacy returns.
-            return Promise.resolve(audio.play())
-                .then(() => true)
-                .catch(() => { setPlayingUI(false); return false; });
+            // Invoke play() immediately inside the user's click event. Never wait for
+            // its promise before dismissing the intro.
+            const result = audio.play();
+            if (result && typeof result.catch === "function") {
+                result.catch(function () {
+                    setPlayingUI(false);
+                    if (status) status.textContent =
+                        "Sound could not start. You can turn it on after entering.";
+                });
+            }
+            return true;
         } catch (error) {
             setPlayingUI(false);
-            return Promise.resolve(false);
+            if (status) status.textContent =
+                "Sound could not start. You can turn it on after entering.";
+            return false;
         }
     }
 
+    function closeIntro() {
+        if (!intro || intro.hidden || closing) return;
+        closing = true;
+        markIntroSeen();
+        clearTimeout(introTimer);
+        intro.classList.add("is-leaving");
+        document.documentElement.classList.remove("ms-intro-open");
+
+        const finish = function () {
+            intro.hidden = true;
+            if (video) {
+                video.pause();
+                video.removeAttribute("autoplay");
+            }
+            closing = false;
+        };
+        if (reduceMotion) finish();
+        else window.setTimeout(finish, 450);
+
+        const target = headerBtn || document.querySelector("main a, main button");
+        if (target && document.activeElement && intro.contains(document.activeElement)) {
+            window.setTimeout(function () {
+                try { target.focus({ preventScroll: true }); }
+                catch (error) { target.focus(); }
+            }, 0);
+        }
+    }
+
+    function enterWithSound() {
+        startAudioFromGesture();
+        closeIntro();
+    }
+
+    function enterQuietly(button) {
+        if (button && button.hasAttribute("data-intro-mute") && audio) {
+            audio.pause();
+        }
+        closeIntro();
+    }
+
+    // Expose safe entry points for inline fallbacks and testing.
+    window.skipIntro = closeIntro;
+    window.MrSprinkleIntro = Object.freeze({
+        close: closeIntro,
+        enterQuietly: function () { enterQuietly(null); },
+        playAndEnter: enterWithSound
+    });
+
     if (audio) {
-        audio.addEventListener("play", () => setPlayingUI(true));
-        audio.addEventListener("pause", () => setPlayingUI(false));
-        audio.addEventListener("ended", () => setPlayingUI(false));
+        audio.addEventListener("play", function () { setPlayingUI(true); });
+        audio.addEventListener("pause", function () { setPlayingUI(false); });
+        audio.addEventListener("ended", function () { setPlayingUI(false); });
     }
 
     if (headerBtn) {
-        headerBtn.addEventListener("click", () => {
+        headerBtn.addEventListener("click", function () {
             if (!audio) return;
-            if (audio.paused) play(); else audio.pause();
+            if (audio.paused) startAudioFromGesture();
+            else audio.pause();
         });
     }
 
-    // ---------- Intro ----------
-    function closeIntro() {
-        if (!intro || intro.hidden) return;
-        clearTimeout(introTimer);
-        store.set("introSeen", "true");
-        intro.classList.add("is-leaving");
-        document.documentElement.classList.remove("ms-intro-open");
-        const finish = () => {
-            intro.hidden = true;
-            if (video) video.pause();
-        };
-        if (reduceMotion) finish(); else setTimeout(finish, 800);
-        const target = headerBtn || document.querySelector("main a, main button");
-        if (target && document.activeElement && intro.contains(document.activeElement)) target.focus({ preventScroll: true });
+    // Keep track details and purchase URLs synchronized from one source.
+    if (audio && track.src) {
+        const source = audio.querySelector("source");
+        if (source && source.getAttribute("src") !== track.src) {
+            source.setAttribute("src", track.src);
+            audio.load();
+        }
     }
-    window.skipIntro = closeIntro; // kept for any existing inline references
+    document.querySelectorAll("[data-track]").forEach(function (element) {
+        const key = element.getAttribute("data-track");
+        if (key === "cover" && track.cover) {
+            element.setAttribute("src", track.cover);
+            element.setAttribute("alt", (track.title || "Featured") + " cover art");
+        } else if (key === "buy" && track.buyUrl) {
+            element.setAttribute("href", track.buyUrl);
+            element.setAttribute("aria-label", "Buy " + (track.title || "featured track") +
+                " for " + (track.price || ""));
+            if (element.hasAttribute("data-price-text")) {
+                element.textContent = element.getAttribute("data-price-text")
+                    .replace("{price}", (track.price || "").replace(".00", ""));
+            }
+        } else if (key === "explicit") {
+            element.hidden = !track.explicit;
+        } else if (track[key] !== undefined) {
+            element.textContent = track[key];
+        }
+    });
 
     if (intro) {
-        if (store.get("introSeen")) {
+        const forceIntro = new URLSearchParams(window.location.search).get("intro") === "1";
+        if (store.get("introSeen") && !forceIntro) {
             intro.hidden = true;
-            if (video) { video.removeAttribute("autoplay"); video.pause(); }
+            document.documentElement.classList.remove("ms-intro-open");
+            if (video) {
+                video.removeAttribute("autoplay");
+                video.pause();
+            }
         } else {
             document.documentElement.classList.add("ms-intro-open");
             if (reduceMotion && video) video.pause();
-            if (playBtn) {
-                playBtn.addEventListener("click", () => {
-                    if (playBtn.disabled) return;
-                    playBtn.disabled = true;
-                    playBtn.setAttribute("aria-busy", "true");
 
-                    // One clear action: try to start the track, then enter either way.
-                    // A browser audio restriction must never trap a visitor on the intro.
-                    play().then((started) => {
-                        if (!started) {
-                            const status = document.getElementById("introStatus");
-                            if (status) status.textContent = "Sound could not start. You can turn it on after entering.";
-                        }
-                        closeIntro();
-                    }).catch(() => closeIntro());
-                });
-                setTimeout(() => playBtn.focus({ preventScroll: true }), 50);
-            }
-            skipBtns.forEach((b) => b.addEventListener("click", () => {
-                if (b.hasAttribute("data-intro-mute") && audio) audio.pause();
-                closeIntro();
-            }));
-            intro.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") { e.preventDefault(); closeIntro(); return; }
-                if (e.key !== "Tab") return;
-                const f = Array.from(intro.querySelectorAll("button, a[href]")).filter((el) => el.offsetParent !== null);
-                if (!f.length) return;
-                const first = f[0], last = f[f.length - 1];
-                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            // One delegated capture handler works for mouse, touchscreen and keyboard
+            // activation, and saves the visit before the browser follows a link.
+            document.addEventListener("click", function (event) {
+                const target = event.target instanceof Element ? event.target : null;
+                if (!target) return;
+
+                const buyLink = target.closest('a[data-track="buy"]');
+                if (buyLink && !intro.hidden) {
+                    markIntroSeen();
+                    return; // Let the normal navigation to the music page continue.
+                }
+
+                if (target.closest("#introPlay")) {
+                    event.preventDefault();
+                    enterWithSound();
+                    return;
+                }
+
+                const skipButton = target.closest("[data-intro-skip]");
+                if (skipButton) {
+                    event.preventDefault();
+                    enterQuietly(skipButton);
+                }
+            }, true);
+
+            // Clicking the empty cinematic background is also a quiet-entry path.
+            intro.addEventListener("click", function (event) {
+                if (event.target === intro || event.target === video ||
+                    (event.target instanceof Element && event.target.classList.contains("ms-intro__veil"))) {
+                    enterQuietly(null);
+                }
             });
-            // Same as before: the intro closes on its own after 30 seconds.
-            introTimer = setTimeout(closeIntro, INTRO_MS);
+
+            intro.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    event.preventDefault();
+                    closeIntro();
+                    return;
+                }
+                if (event.key !== "Tab") return;
+                const focusable = Array.from(
+                    intro.querySelectorAll("button, a[href]")
+                ).filter(function (element) {
+                    return !element.disabled && element.offsetParent !== null;
+                });
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            });
+
+            if (playBtn) {
+                window.setTimeout(function () {
+                    try { playBtn.focus({ preventScroll: true }); }
+                    catch (error) { playBtn.focus(); }
+                }, 50);
+            }
+
+            // Existing timed fallback remains; it can never trap a visitor.
+            introTimer = window.setTimeout(closeIntro, INTRO_MS);
         }
     }
+
     setPlayingUI(false);
 })();
