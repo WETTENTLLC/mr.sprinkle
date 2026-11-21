@@ -4,6 +4,12 @@
 User-agent: *
 Allow: /
 
+# AI Crawlers
+# Allow ChatGPT search discovery and preserve current GPTBot policy.
+User-agent: OAI-SearchBot
+Allow: /
+
+# GPTBot is separate from search discovery; this file currently allows it.
 # AI Crawlers - Explicitly Welcome
 User-agent: GPTBot
 Allow: /
@@ -39,4 +45,5 @@ Allow: /
 Sitemap: https://mrsprinklereno.com/sitemap.xml
 
 # Business information and approved published pricing: /ai-context.json
+# Local service-area coverage: /service-areas.html
 # In-person appointments are available only at Envy Kutz — Braids & Locs, Reno, Nevada.

@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Grillz Pricing &amp; Quote-Based Services | Mr. Sprinkle</title>
-    <meta name="description" content="View Mr. Sprinkle's published custom grillz, stone, and WETT accessory prices. Design-dependent work, tooth gems, and gold press-on nails require a custom quote.">
+    <title>Custom Grillz Pricing &amp; Designer | Reno, NV | Mr. Sprinkle</title>
+    <meta name="description" content="Explore Mr. Sprinkle's published grillz prices and interactive tooth designer in Reno, Sparks, and nearby Northern Nevada. Compare metals, stones, custom cuts, and request a personal quote.">
     <link rel="canonical" href="https://mrsprinklereno.com/pricing.html">
+    <meta name="geo.region" content="US-NV">
+    <meta name="geo.placename" content="Reno">
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/site-header.css">
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
     <script type="application/ld+json">
@@ -109,11 +112,28 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div style="color:#FFD700;font-size:2rem;font-weight:bold;text-align:center">Mr. Sprinkle</div>
-        </div>
-    </header>
+    <header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home">
+      <img src="assets/trans.png" alt="Mr. Sprinkle">
+    </a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+      
+    </nav>
+  </div>
+</header>
 
     <div class="container">
         <h1>Custom Grillz Pricing</h1>
@@ -709,5 +729,6 @@
         updateEstimate();
     })();
     </script>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>

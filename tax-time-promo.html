@@ -14,6 +14,7 @@
     <meta property="og:image" content="https://mrsprinklereno.com/assets/trans.png">
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/site-header.css">
     <style>
         body{background:#000;color:#fff;font-family:Arial,sans-serif;padding-top:80px}
         .container{max-width:1200px;margin:0 auto;padding:20px}
@@ -49,19 +50,28 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo"><img src="assets/trans.png" alt="Mr. Sprinkle Logo"></div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="mold-form.html">Book Now</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home">
+      <img src="assets/trans.png" alt="Mr. Sprinkle">
+    </a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+      
+    </nav>
+  </div>
+</header>
 
     <main>
         <div class="container">
@@ -244,5 +254,6 @@
         setTimeout(loadEntries,2000);
     });
     </script>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>

@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Primary SEO Meta Tags -->
     <title>Book an Appointment or Request a Custom Quote | Mr. Sprinkle</title>
-    <meta name="description" content="Request an appointment or custom quote from Mr. Sprinkle. In-person appointments are by appointment only at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501.">
+    <meta name="description" content="Request a custom grillz appointment or quote in Reno, Nevada. Customers in Sparks and nearby Northern Nevada communities may inquire; mobile mold and shipping availability are confirmed individually.">
     <meta name="keywords" content="gold grillz mold form, custom grillz appointment Reno, dental mold booking Nevada, gold teeth consultation, Mr Sprinkle booking">
     <meta name="robots" content="index, follow">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://mrsprinklereno.com/mold-form.html">
+    <meta name="geo.region" content="US-NV">
+    <meta name="geo.placename" content="Reno">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -27,6 +29,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/site-header.css">
     <style>
         * {
             margin: 0;
@@ -373,11 +376,28 @@
         <a href="pricing.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">Pricing</a>
         <a href="mold-form.html" style="color: #FFD700; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s;">Book Appointment</a>
     </div>
-    <header>
-        <div class="container">
-            <div class="logo">Mr. Sprinkle</div>
-        </div>
-    </header>
+    <header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home">
+      <img src="assets/trans.png" alt="Mr. Sprinkle">
+    </a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+      
+    </nav>
+  </div>
+</header>
 
     <main>
         <div class="container">
@@ -936,5 +956,6 @@
         div.scrollIntoView({behavior:'smooth'});
     }
     </script>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>

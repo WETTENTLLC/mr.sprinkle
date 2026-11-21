@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Grillz Pricing for Bay Area Customers | Mr. Sprinkle</title>
+    <meta name="robots" content="noindex, follow">
     <meta name="description" content="Explore approved custom grillz prices and design guidance for Bay Area customers. Mr. Sprinkle's only in-person appointment location is Envy Kutz — Braids & Locs in Reno.">
     <link rel="canonical" href="https://mrsprinklereno.com/gold-teeth-bay-area.html">
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/site-header.css">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -19,24 +21,35 @@
     </script>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo"><img src="assets/trans.png" alt="Mr. Sprinkle Logo"></div>
-            <nav><ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="index.html#gallery">Gallery</a></li>
-                <li><a href="mold-form.html">Book Appointment</a></li>
-            </ul></nav>
-        </div>
-    </header>
+    <header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home">
+      <img src="assets/trans.png" alt="Mr. Sprinkle">
+    </a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+      
+    </nav>
+  </div>
+</header>
     <main>
         <section>
             <div class="container" style="max-width:1000px">
                 <h1>Custom Grillz for Bay Area Customers</h1>
                 <p>Review published grillz pricing and design information for customers researching custom grillz in the San Francisco Bay Area, including Oakland, San Francisco, and San Jose. This regional guide is not a Bay Area office or appointment location.</p>
                 <h2>Custom Grillz Pricing and Design Guidance</h2>
-                <p>Use the published tiers below as the approved base prices for the listed metals and set sizes. Individual upper and lower teeth can be selected in the configurator. Custom cuts and finishes depend on the design, while diamond setting and additional design labor remain quote-based.</p>
+                <p>Use the published tiers below as the approved base prices for the listed metals and set sizes. Individual upper and lower teeth can be selected in the configurator. Published custom cuts are $30, $20, $40, and $30 per set, depending on the selected cut. Stone-setting labor is included in published pricing. Custom finishes and designs outside the catalog require a quote.</p>
                 <div class="contact-card">
                     <h3>Shipping and Production Estimates</h3>
                     <p>Approved standard shipping is $60 by FedEx. Production generally takes 2–7 business days; transit is approximately 2–3 days to the main office and approximately 2–3 days back to the customer. Plan for around two weeks or longer overall; this is a qualified estimate, not a guaranteed date. Confirm Bay Area shipping coverage, capacity, and timing before ordering.</p>
@@ -58,7 +71,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p>Exact 6-tooth and 12-tooth set definitions are being confirmed. Custom cuts and finishes depend on the design. Tooth gems, gold press-on nails, custom jewelry, 18K gold, white gold, and platinum require a custom quote. Stone prices are material-only per stone; setting and design labor require a custom quote pending historical invoice review.</p>
+                <p>Exact 6-tooth and 12-tooth set definitions are being confirmed. Custom cuts and finishes depend on the design. Tooth gems, gold press-on nails, custom jewelry, 18K gold, white gold, and platinum require a custom quote. Stone prices are calculated by stone type, clarity, size, and count in the estimator; stone-setting labor is included in published pricing.</p>
                 <h2>Bay Area Customer Questions</h2>
                 <h3>Does Mr. Sprinkle have a Bay Area studio?</h3>
                 <p>No. The only physical appointment location is Envy Kutz — Braids &amp; Locs in Reno, Nevada. All in-person appointments are by appointment only at that location.</p>
@@ -83,5 +96,6 @@
     }
     </script>
     <footer><div class="container">    <p>Appointments only at Envy Kutz — Braids &amp; Locs, 275 E 4th St, Reno, NV 89501.</p><p><a href="tel:+15302140676">(530) 214-0676</a></p></div></footer>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>

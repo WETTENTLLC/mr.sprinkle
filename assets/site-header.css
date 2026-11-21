@@ -1,0 +1,70 @@
+/* Shared Mr. Sprinkle customer-site header: matching obsidian / champagne home styling */
+header.ms-site-header {
+  position: fixed; inset: 0 0 auto; z-index: 1000; width: 100%;
+  padding: 0; background: rgba(5, 5, 5, .96);
+  border-bottom: 1px solid rgba(201, 178, 118, .48);
+  box-shadow: 0 8px 28px rgba(0,0,0,.28);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.ms-site-header .ms-header-inner {
+  position: relative; width: min(100%, 1360px); min-height: 88px; margin: 0 auto;
+  padding: 8px clamp(14px, 2.3vw, 32px); display: flex; align-items: center;
+  justify-content: space-between; gap: clamp(12px, 1.5vw, 24px);
+}
+.ms-site-header .ms-site-brand { display: inline-flex; align-items: center; flex: 0 0 auto; text-decoration: none; }
+.ms-site-header .ms-site-brand img {
+  display: block; width: auto; height: 70px; max-width: 190px; object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(201,178,118,.25));
+}
+.ms-site-header .ms-primary-nav { display: flex; flex: 1 1 auto; justify-content: flex-end; align-items: center; min-width: 0; }
+.ms-site-header .ms-primary-nav ul {
+  display: flex; align-items: center; justify-content: flex-end; flex-wrap: nowrap;
+  gap: clamp(8px, 1.15vw, 18px); list-style: none; margin: 0; padding: 0;
+}
+.ms-site-header .ms-primary-nav li { display: flex; align-items: center; margin: 0; padding: 0; }
+.ms-site-header .ms-primary-nav a {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #e8e5de; background: transparent; border: 0; border-radius: 3px;
+  padding: 10px 7px; text-decoration: none; font: 600 .82rem/1.2 Arial, sans-serif;
+  letter-spacing: .035em; white-space: nowrap; transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+.ms-site-header .ms-primary-nav a:hover,
+.ms-site-header .ms-primary-nav a:focus-visible { color: #e0c989; outline: none; }
+.ms-site-header .ms-primary-nav a.ms-nav-cta {
+  color: #080808; background: #c9b276; border: 1px solid #c9b276;
+  padding: 12px 16px; font-weight: 800; letter-spacing: .045em;
+}
+.ms-site-header .ms-primary-nav a.ms-nav-cta:hover,
+.ms-site-header .ms-primary-nav a.ms-nav-cta:focus-visible { color: #080808; background: #e0c989; border-color: #e0c989; }
+.ms-site-header .ms-header-music { display: flex; justify-content: flex-end; align-items: center; flex: 0 0 auto; margin-top: 0; margin-left: 12px; }
+.ms-site-header .ms-menu-toggle {
+  display: none; width: 44px; height: 42px; border: 1px solid rgba(201,178,118,.55);
+  border-radius: 3px; padding: 9px; background: transparent; color: #e0c989;
+  cursor: pointer; align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+}
+.ms-site-header .ms-menu-toggle span { display: block; width: 21px; height: 2px; background: currentColor; border-radius: 2px; }
+.ms-site-header .ms-menu-toggle:focus-visible { outline: 2px solid #e0c989; outline-offset: 3px; }
+@media (max-width: 1080px) {
+  .ms-site-header .ms-header-inner { min-height: 78px; }
+  .ms-site-header .ms-site-brand img { height: 62px; max-width: 160px; }
+  .ms-site-header .ms-menu-toggle { display: inline-flex; flex: 0 0 auto; }
+  .ms-site-header .ms-primary-nav {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 1001;
+    padding: 12px 18px 20px; background: rgba(5,5,5,.985);
+    border-bottom: 1px solid rgba(201,178,118,.48); box-shadow: 0 14px 22px rgba(0,0,0,.35);
+  }
+  .ms-site-header .ms-primary-nav[data-open="true"] { display: block; }
+  .ms-site-header .ms-primary-nav ul { flex-direction: column; align-items: stretch; gap: 3px; }
+  .ms-site-header .ms-primary-nav li { display: block; width: 100%; }
+  .ms-site-header .ms-primary-nav a { width: 100%; justify-content: flex-start; padding: 13px 12px; font-size: .94rem; }
+  .ms-site-header .ms-primary-nav a.ms-nav-cta { justify-content: center; margin-top: 5px; }
+  .ms-site-header .ms-header-music { justify-content: flex-start; margin: 12px 0 0 5px; }
+}
+@media (max-width: 420px) {
+  .ms-site-header .ms-header-inner { min-height: 72px; padding-inline: 12px; }
+  .ms-site-header .ms-site-brand img { height: 56px; max-width: 145px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-site-header *, .ms-site-header *::before, .ms-site-header *::after { transition: none !important; }
+}
+.ms-page-has-header{padding-top:112px!important}
