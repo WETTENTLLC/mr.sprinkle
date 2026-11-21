@@ -7,70 +7,80 @@
       "name": "Mr. Sprinkle",
       "url": "https://mrsprinklereno.com",
       "logo": "https://mrsprinklereno.com/assets/trans.png",
-      "telephone": "+1-530-214-0676",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-530-214-0676",
-        "contactType": "customer service"
-      }
-    },
-    {
-      "@type": "LocalBusiness",
-      "@id": "https://mrsprinklereno.com/#appointment-location",
-      "name": "Mr. Sprinkle",
       "image": "https://mrsprinklereno.com/assets/trans.png",
       "telephone": "+1-530-214-0676",
-      "address": {
-        "@type": "PostalAddress",
-        "name": "Envy Kutz — Braids & Locs",
-        "streetAddress": "275 E 4th St",
-        "addressLocality": "Reno",
-        "addressRegion": "NV",
-        "postalCode": "89501",
-        "addressCountry": "US"
-      },
-      "description": "In-person appointments by appointment only, 10:00 AM to 6:00 PM, at Envy Kutz — Braids & Locs, above Davidson's Distillery in downtown Reno, Nevada.",
-      "parentOrganization": {
-        "@id": "https://mrsprinklereno.com/#organization"
-      }
-    },
-    {
-      "@type": "Service",
-      "@id": "https://mrsprinklereno.com/#mobile-mold-service",
-      "name": "Mobile mold service",
-      "provider": {
-        "@id": "https://mrsprinklereno.com/#organization"
-      },
-      "description": "A separate mobile mold service offering that may be scheduled outside regular appointment hours, subject to confirmation; it is not a physical business location."
-    },
-    {
-      "@type": "OfferCatalog",
-      "@id": "https://mrsprinklereno.com/#published-grillz-prices",
-      "name": "Published grillz prices",
-      "itemListElement": [
+      "description": "Custom grillz, jewelry, and WETT accessories by appointment in Reno, Nevada. Nearby Northern Nevada inquiries are considered individually; service availability is confirmed before payment.",
+      "sameAs": [
+        "https://instagram.com/mr.sprinkle_reno"
+      ],
+      "areaServed": [
         {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Product", "name": "Silver grillz — 1 tooth" },
-          "price": "100",
-          "priceCurrency": "USD"
+          "@type": "Place",
+          "name": "Reno, Nevada"
         },
         {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Product", "name": "10K gold grillz — 1 tooth" },
-          "price": "240",
-          "priceCurrency": "USD"
+          "@type": "Place",
+          "name": "Sparks, Nevada"
         },
         {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Product", "name": "14K gold grillz — 1 tooth" },
-          "price": "300",
-          "priceCurrency": "USD"
+          "@type": "Place",
+          "name": "Spanish Springs, Nevada"
         },
         {
-          "@type": "Offer",
-          "itemOffered": { "@type": "Product", "name": "14K dental gold grillz — 1 tooth" },
-          "price": "320",
-          "priceCurrency": "USD"
+          "@type": "Place",
+          "name": "Sun Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Verdi, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Cold Springs, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Lemmon Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Stead, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Washoe Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Carson City, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Dayton, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Fernley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Incline Village, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Minden, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Gardnerville, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Truckee, California"
+        },
+        {
+          "@type": "Place",
+          "name": "North Lake Tahoe, Nevada and California"
         }
       ]
     },
@@ -82,6 +92,213 @@
       "publisher": {
         "@id": "https://mrsprinklereno.com/#organization"
       }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://mrsprinklereno.com/#custom-grillz-service",
+      "name": "Custom grillz design and appointment requests",
+      "serviceType": "Custom grillz and gold teeth design",
+      "provider": {
+        "@id": "https://mrsprinklereno.com/#organization"
+      },
+      "areaServed": [
+        {
+          "@type": "Place",
+          "name": "Reno, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Sparks, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Spanish Springs, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Sun Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Verdi, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Cold Springs, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Lemmon Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Stead, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Washoe Valley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Carson City, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Dayton, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Fernley, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Incline Village, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Minden, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Gardnerville, Nevada"
+        },
+        {
+          "@type": "Place",
+          "name": "Truckee, California"
+        },
+        {
+          "@type": "Place",
+          "name": "North Lake Tahoe, Nevada and California"
+        }
+      ],
+      "description": "Customers in Reno, Sparks, and nearby Northern Nevada communities may submit inquiries. Mobile mold, fitting, and shipping availability are confirmed individually. The only in-person appointment venue is a partner venue in downtown Reno."
+    },
+    {
+      "@type": "OfferCatalog",
+      "@id": "https://mrsprinklereno.com/#published-grillz-prices",
+      "name": "Published custom grillz prices",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "name": "Silver grillz — 1 tooth",
+          "price": "100",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Silver grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Silver grillz — 6 teeth",
+          "price": "600",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Silver grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Silver grillz — 12 teeth",
+          "price": "1200",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Silver grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "10K gold grillz — 1 tooth",
+          "price": "240",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "10K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "10K gold grillz — 6 teeth",
+          "price": "1440",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "10K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "10K gold grillz — 12 teeth",
+          "price": "2880",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "10K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K gold grillz — 1 tooth",
+          "price": "300",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K gold grillz — 6 teeth",
+          "price": "1800",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K gold grillz — 12 teeth",
+          "price": "3600",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K dental gold grillz — 1 tooth",
+          "price": "320",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K dental gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K dental gold grillz — 6 teeth",
+          "price": "1920",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K dental gold grillz"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "14K dental gold grillz — 12 teeth",
+          "price": "3840",
+          "priceCurrency": "USD",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "14K dental gold grillz"
+          }
+        }
+      ]
     }
   ]
 }
