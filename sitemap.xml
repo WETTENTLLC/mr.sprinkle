@@ -1,75 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <!-- Homepage - Highest Priority -->
+
   <url>
     <loc>https://mrsprinklereno.com/</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Pricing Page - Critical for AI -->
+
   <url>
     <loc>https://mrsprinklereno.com/pricing.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Booking/Mold Form - High Priority -->
+
   <url>
     <loc>https://mrsprinklereno.com/mold-form.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Ambassador Program -->
+
   <url>
     <loc>https://mrsprinklereno.com/ambassador.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <!-- Ambassador Portal -->
+
   <url>
     <loc>https://mrsprinklereno.com/ambassador-portal.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
-  
-  <!-- Partner Signup -->
+
   <url>
     <loc>https://mrsprinklereno.com/partner-signup.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <!-- AI Context - For AI Engines -->
+
   <url>
     <loc>https://mrsprinklereno.com/ai-context.json</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Location-Specific SEO Pages -->
+
   <url>
     <loc>https://mrsprinklereno.com/gold-teeth-reno.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
+
+  <url>
+    <loc>https://mrsprinklereno.com/gold-teeth-bay-area.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <url>
     <loc>https://mrsprinklereno.com/gold-teeth-tahoe.html</loc>
-    <lastmod>2025-01-17</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.6</priority>
   </url>
-  
+
+  <url>
+    <loc>https://mrsprinklereno.com/gold-teeth-seattle.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://mrsprinklereno.com/blog.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

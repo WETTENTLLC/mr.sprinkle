@@ -94,7 +94,7 @@
                         <div><button class="copy-btn" onclick="downloadLogo('trans')">Download Logo</button></div>
                     </div>
                     <div style="text-align: center;">
-                        <img src="assets/logo-gold.png" style="width: 120px; height: auto; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                        <img src="assets/trans.png" alt="Mr. Sprinkle official logo" style="width: 120px; height: auto; background: #333; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
                         <div><button class="copy-btn" onclick="downloadLogo('gold')">Download Gold Logo</button></div>
                     </div>
                 </div>
@@ -123,15 +123,15 @@
                     </details>
                     <details style="margin-bottom: 10px;">
                         <summary style="cursor: pointer; color: #FFD700; font-weight: bold; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 5px;">How long does it take?</summary>
-                        <p style="padding: 10px; color: #ccc;">Standard orders take 2-3 weeks. Rush delivery ($150 extra) saves 4+ days. We'll keep you updated throughout the process!</p>
+                        <p style="padding: 10px; color: #ccc;">Rush delivery is listed at $150, but turnaround time and eligibility must be confirmed for each order.</p>
                     </details>
                     <details style="margin-bottom: 10px;">
                         <summary style="cursor: pointer; color: #FFD700; font-weight: bold; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 5px;">Where do I get my mold done?</summary>
-                        <p style="padding: 10px; color: #ccc;">Jack of All Fades (Mondays) or Global Goods Shop (Saturdays). Text (530) 214-0676 to schedule your appointment.</p>
+                        <p style="padding: 10px; color: #ccc;">Appointments are by appointment only, 10:00 AM–6:00 PM, at Envy Kutz — Braids & Locs, 275 E 4th St, Reno, NV 89501, above Davidson's Distillery. Mobile mold service is separate and may be scheduled outside regular hours subject to confirmation.</p>
                     </details>
                     <details style="margin-bottom: 10px;">
                         <summary style="cursor: pointer; color: #FFD700; font-weight: bold; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 5px;">What payment methods do you accept?</summary>
-                        <p style="padding: 10px; color: #ccc;">Cash, Zelle, Venmo, CashApp, and PayPal. Online payments have small transaction fees.</p>
+                        <p style="padding: 10px; color: #ccc;">Payment methods and deposit requirements have not been confirmed. Contact Mr. Sprinkle before promising or collecting payment.</p>
                     </details>
                     <details style="margin-bottom: 10px;">
                         <summary style="cursor: pointer; color: #FFD700; font-weight: bold; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 5px;">Do grillz tarnish?</summary>
@@ -139,7 +139,7 @@
                     </details>
                     <details>
                         <summary style="cursor: pointer; color: #FFD700; font-weight: bold; padding: 10px; background: rgba(255,215,0,0.1); border-radius: 5px;">How much do grillz cost?</summary>
-                        <p style="padding: 10px; color: #ccc;">Prices vary by material and design. Silver starts at $80/tooth, 10K gold at $200/tooth, 14K dental gold at $310/tooth. Check our pricing page for full details!</p>
+                        <p style="padding: 10px; color: #ccc;">Published single-tooth prices: Silver $100; 10K gold $240; 14K gold $300; 14K dental gold $320. Check the pricing page for all published tiers and quote-based services.</p>
                     </details>
                 </div>
             </div>
@@ -188,32 +188,6 @@
     <script>
         let currentAmbassador = null;
         
-        // Initialize with existing ambassadors if localStorage is empty
-        function initializeSampleData() {
-            let ambassadors = JSON.parse(localStorage.getItem('ambassadors') || '[]');
-            
-            // If empty, add initial ambassadors
-            if (ambassadors.length === 0) {
-                ambassadors = [
-                    {id: 1, name: 'MIKE', email: 'mike@email.com', phone: '(555) 111-2222', code: 'MIKE456', status: 'active', dateAdded: '2025-01-19', totalReferrals: 1, totalEarnings: 0},
-                    {id: 1765995386792, name: 'Nanii', email: 'daniidlrv00@gmail.com', phone: '', code: 'NANII86', password: 'NANII86', status: 'active', dateAdded: '2025-12-17', totalReferrals: 0, totalEarnings: 0},
-                    {id: 1765995578570, name: 'REVLON PHILLIPS', email: 'rlifestylebusiness@gmail.com', phone: '7755649760', code: 'REVLONPH96', password: 'REVLONPH96', status: 'active', dateAdded: '2025-12-17', totalReferrals: 0, totalEarnings: 0},
-                    {id: 1737158400000, name: 'Natural Lee Dope', email: 'naturalleedope@gmail.com', phone: '', code: 'NATURALL90', password: 'NATURALL90', status: 'active', dateAdded: '2025-01-17', totalReferrals: 0, totalEarnings: 0}
-                ];
-                localStorage.setItem('ambassadors', JSON.stringify(ambassadors));
-                console.log('Initialized with default ambassadors');
-            }
-            
-            console.log('Current ambassadors in localStorage:', ambassadors);
-            return ambassadors;
-        }
-        
-        function refreshAmbassadors() {
-            const ambassadors = initializeSampleData();
-            alert(`Ambassador list loaded! ${ambassadors.length} ambassadors available.`);
-            console.log('Available ambassadors:', ambassadors.map(a => `${a.name} (${a.code})`));
-        }
-
         function login() {
             const code = document.getElementById('ambassadorCode').value.trim().toUpperCase();
             if (!code) {
@@ -221,38 +195,31 @@
                 return;
             }
 
-            // Validate against the database via backend
-            const backendUrl = CONFIG.BACKEND_URL + '?endpoint=ambassador-stats&code=' + encodeURIComponent(code);
-            console.log('Fetching from:', backendUrl);
-            
-            fetch(backendUrl)
+            fetch(CONFIG.BACKEND_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: new URLSearchParams({ endpoint: 'ambassador-stats', code })
+            })
                 .then(response => {
-                    console.log('Response status:', response.status);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Backend response:', data);
                     if (data.success && data.data) {
                         // Found in database
                         currentAmbassador = {
                             name: data.data.name,
                             code: data.data.ambassador_code,
-                            email: data.data.email,
-                            phone: data.data.phone,
                             totalReferrals: data.data.total_referrals || 0,
                             totalEarnings: data.data.paid_commission || 0,
                             pendingEarnings: data.data.pending_commission || 0
                         };
-                        console.log('Authenticated via database:', currentAmbassador);
                         showDashboard();
                     } else {
                         // Not found in database
                         alert('Invalid ambassador code. Please check your code and try again. If you believe this is an error, contact: (530) 214-0676');
-                        console.log('Backend message:', data.message);
                     }
                 })
                 .catch(error => {
-                    console.error('Backend lookup error:', error);
                     alert('Unable to connect to the ambassador system. Please check your internet connection and try again.');
                 });
         }
@@ -261,10 +228,8 @@
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
             
-            // Update dashboard with ambassador data
             document.getElementById('ambassadorName').textContent = currentAmbassador.name;
             
-            // Use data from backend if available, otherwise fall back to localStorage data
             let totalReferrals = currentAmbassador.totalReferrals || 0;
             let totalEarnings = currentAmbassador.totalEarnings || 0;
             
@@ -340,7 +305,7 @@
         function downloadLogo(type) {
             const logoUrls = {
                 trans: 'assets/trans.png',
-                gold: 'assets/logo-gold.png'
+                gold: 'assets/trans.png'
             };
             
             const link = document.createElement('a');

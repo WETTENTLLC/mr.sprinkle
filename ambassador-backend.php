@@ -1,9 +1,7 @@
 <?php
 // Ambassador Backend - Mr. Sprinkle
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+require_once __DIR__ . '/database-connection.php';
 
 class AmbassadorBackend {
     private $db;
@@ -13,16 +11,12 @@ class AmbassadorBackend {
     }
     
     private function connectDB() {
-        $host = 'localhost';
-        $dbname = 'mr_sprinkle_db';
-        $username = 'root';
-        $password = '';
-        
         try {
-            $this->db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
-            die(json_encode(['success' => false, 'message' => 'Database connection failed']));
+            $this->db = mrSprinkleDatabase();
+        } catch (Exception $e) {
+            error_log('Ambassador backend database connection failed: ' . $e->getMessage());
+            http_response_code(503);
+            die(json_encode(['success' => false, 'message' => 'The ambassador service is temporarily unavailable.']));
         }
     }
     
@@ -169,14 +163,14 @@ class AmbassadorBackend {
     }
     
     public function getAmbassadorStats() {
-        $ambassadorCode = $_GET['code'] ?? '';
+        $ambassadorCode = $_POST['code'] ?? $_GET['code'] ?? '';
         if (!$ambassadorCode) {
             echo json_encode(['success' => false, 'message' => 'Ambassador code required']);
             return;
         }
         
         $stmt = $this->db->prepare("
-            SELECT a.*, 
+            SELECT a.ambassador_code, a.name, a.status,
                    COUNT(ar.id) as total_referrals,
                    SUM(CASE WHEN ar.status = 'paid' THEN ar.commission_amount ELSE 0 END) as paid_commission,
                    SUM(CASE WHEN ar.status = 'pending' THEN ar.commission_amount ELSE 0 END) as pending_commission
@@ -199,7 +193,7 @@ class AmbassadorBackend {
 // Route requests
 $backend = new AmbassadorBackend();
 $request = $_SERVER['REQUEST_URI'];
-$endpoint = $_GET['endpoint'] ?? '';
+$endpoint = $_GET['endpoint'] ?? $_POST['endpoint'] ?? '';
 
 if (strpos($request, 'track-visit') !== false || $endpoint === 'track-visit') {
     $backend->trackVisit();

@@ -6,6 +6,13 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 
 function sendWelcomeEmail($email, $name, $code) {
+    $smtpUser = getenv('MR_SPRINKLE_SMTP_USER');
+    $smtpPassword = getenv('MR_SPRINKLE_SMTP_PASSWORD');
+    if (!$smtpUser || !$smtpPassword) {
+        error_log('Mr. Sprinkle SMTP is not configured in the server environment.');
+        return false;
+    }
+
     $mail = new PHPMailer(true);
 
     try {
@@ -13,13 +20,13 @@ function sendWelcomeEmail($email, $name, $code) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'mrsprinklereno@gmail.com';
-        $mail->Password   = 'ezym bvgj gsoa npse';
+        $mail->Username   = $smtpUser;
+        $mail->Password   = $smtpPassword;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom('mrsprinklereno@gmail.com', 'Mr. Sprinkle');
+        $mail->setFrom($smtpUser, 'Mr. Sprinkle');
         $mail->addAddress($email, $name);
 
         // Content

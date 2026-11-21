@@ -18,7 +18,7 @@ GitHub Pages (Static)
 PHP Hosting (Backend)
 ├── ambassador-backend-standalone.php ✓ (Handles all DB queries)
 ├── Database (MySQL)
-└── Natalia & other ambassadors
+└── sample ambassador & other ambassadors
 ```
 
 ---
@@ -52,9 +52,9 @@ Choose a cheap PHP hosting provider with MySQL:
 3. Create new database:
    - Name: `mr_sprinkle_db`
    - Username: `sprinkle_user`
-   - Password: (create strong password)
+   - Password: create a unique strong password and store it only in the hosting environment settings
    - Click "Create Database"
-4. Click "Manage Privileges" → Check all boxes → Save
+4. Grant only the database and table privileges required by the deployed PHP features. Do not grant global or schema-management privileges.
 
 ### Option B: Using MySQL Command Line
 
@@ -64,10 +64,11 @@ mysql -u root -p
 
 ```sql
 CREATE DATABASE mr_sprinkle_db;
-CREATE USER 'sprinkle_user'@'localhost' IDENTIFIED BY 'YourPassword123!';
-GRANT ALL PRIVILEGES ON mr_sprinkle_db.* TO 'sprinkle_user'@'localhost';
+CREATE USER 'sprinkle_user'@'localhost' IDENTIFIED BY '<set-a-unique-secret>';
 FLUSH PRIVILEGES;
 ```
+
+Apply only the reviewed table/column grants in [SERVER-SECURITY-SETUP.md](./SERVER-SECURITY-SETUP.md). See it for all required server environment variables and least-privilege guidance.
 
 ### Option C: Import Database Schema
 
@@ -96,47 +97,18 @@ CREATE TABLE ambassadors (
 
 ### Update config.js
 
-Change your backend URL in `config.js`:
+The ambassador portal uses the same-origin `ambassador-backend.php` endpoint configured in `config.js`. Do not add a database password, admin password, API token, or ambassador code to this browser-side file. The standalone backend is for secured maintenance/diagnostic access and is not the portal's public data endpoint.
 
 ```javascript
 const CONFIG = {
-    // UPDATE THIS with your PHP hosting URL
-    BACKEND_URL: 'https://your-domain.com/ambassador-backend-standalone.php',
-    // OR if using subdomain:
-    // BACKEND_URL: 'https://api.your-domain.com/ambassador-backend-standalone.php',
+    BACKEND_URL: 'https://mrsprinklereno.com/ambassador-backend.php',
     
     PORTAL_URL: 'https://mrsprinklereno.com/ambassador-portal.html',
-    AMBASSADOR_CODE: 'NATALIA09',
     ADMIN_EMAIL: 'mrsprinklereno@gmail.com'
 };
 ```
 
-**Examples:**
-- `https://backend.example.com/ambassador-backend-standalone.php`
-- `https://example.com/api/ambassador-backend-standalone.php`
-- `https://your-hosting.net/public_html/ambassador-backend-standalone.php`
-
-### Update ambassador-backend-standalone.php
-
-Edit the database credentials at the top of the file:
-
-```php
-// ============================================
-// CONFIGURATION - UPDATE THESE VARIABLES
-// ============================================
-
-// Database credentials
-$DB_HOST = 'localhost';      // Your database host (usually localhost)
-$DB_USER = 'sprinkle_user';  // Your database username
-$DB_PASS = 'YourPassword123!'; // Your database password
-$DB_NAME = 'mr_sprinkle_db'; // Your database name
-```
-
-**Where to find these:**
-- `DB_HOST`: Usually `localhost` (ask hosting provider if unsure)
-- `DB_USER`: You created this in STEP 2
-- `DB_PASS`: The password you set in STEP 2
-- `DB_NAME`: Should be `mr_sprinkle_db`
+Set database, admin, API-token, and SMTP credentials in the hosting provider's environment settings. The PHP connection code intentionally rejects the MySQL `root` account.
 
 ---
 
@@ -171,21 +143,9 @@ git clone https://github.com/WETTENTLLC/mr.sprinkle.git
 
 ---
 
-## STEP 5: Set Up Natalia in the Database
+## STEP 5: Manage Ambassador Records
 
-### Using phpMyAdmin (Easiest)
-
-1. Log into cPanel
-2. Click "phpMyAdmin"
-3. Select `mr_sprinkle_db` → `ambassadors` table
-4. Click "Insert"
-5. Fill in:
-   - `ambassador_code`: `NATALIA09`
-   - `name`: `Natalia Chacon`
-   - `email`: `nataliachacon0904@gmail.com`
-   - `phone`: `775-250-9356`
-   - `status`: `active`
-6. Click "Go"
+Add, update, and remove ambassador records through the authenticated business admin portal. Do not copy real ambassador contact details or access codes into browser-side configuration, scripts, or public documentation.
 
 ### Using SQL Query
 
@@ -193,20 +153,21 @@ git clone https://github.com/WETTENTLLC/mr.sprinkle.git
 INSERT INTO ambassadors 
 (ambassador_code, name, email, phone, status, created_at)
 VALUES 
-('NATALIA09', 'Natalia Chacon', 'nataliachacon0904@gmail.com', '775-250-9356', 'active', NOW());
+('<ambassador-code>', '<name>', '<email>', '<phone>', 'active', NOW());
 ```
 
 ### Using the API (After uploading backend)
 
 ```bash
 curl -X POST https://your-domain.com/ambassador-backend-standalone.php \
+  -H "Authorization: Bearer $MR_SPRINKLE_ADMIN_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "endpoint": "add-ambassador",
-    "code": "NATALIA09",
-    "name": "Natalia Chacon",
-    "email": "nataliachacon0904@gmail.com",
-    "phone": "775-250-9356",
+    "code": "<ambassador-code>",
+    "name": "<name>",
+    "email": "<email>",
+    "phone": "<phone>",
     "status": "active"
   }'
 ```
@@ -217,9 +178,10 @@ curl -X POST https://your-domain.com/ambassador-backend-standalone.php \
 
 ### Test 1: Test Database Connection
 
-Visit (replace with your domain):
+Request this diagnostic endpoint with the server-side API token (replace the domain):
 ```
-https://your-domain.com/ambassador-backend-standalone.php?endpoint=test
+curl -H "Authorization: Bearer $MR_SPRINKLE_ADMIN_API_TOKEN" \
+  https://your-domain.com/ambassador-backend-standalone.php?endpoint=test
 ```
 
 **Expected Response:**
@@ -236,7 +198,7 @@ https://your-domain.com/ambassador-backend-standalone.php?endpoint=test
 
 Visit:
 ```
-https://your-domain.com/ambassador-backend-standalone.php?endpoint=ambassador-stats&code=NATALIA09
+https://mrsprinklereno.com/ambassador-backend.php?endpoint=ambassador-stats&code=<ambassador-code>
 ```
 
 **Expected Response:**
@@ -244,11 +206,12 @@ https://your-domain.com/ambassador-backend-standalone.php?endpoint=ambassador-st
 {
   "success": true,
   "data": {
-    "ambassador_code": "NATALIA09",
-    "name": "Natalia Chacon",
-    "email": "nataliachacon0904@gmail.com",
-    "phone": "775-250-9356",
+    "ambassador_code": "<ambassador-code>",
+    "name": "<ambassador-name>",
     "status": "active",
+    "total_referrals": 0,
+    "paid_commission": 0,
+    "pending_commission": 0,
     ...
   }
 }
@@ -257,9 +220,11 @@ https://your-domain.com/ambassador-backend-standalone.php?endpoint=ambassador-st
 ### Test 3: Portal Login
 
 1. Go to: `https://mrsprinklereno.com/ambassador-portal.html`
-2. Enter Code: `NATALIA09`
+2. Enter the ambassador code provided to that ambassador
 3. Click Login
-4. Should see dashboard with Natalia's info
+4. The dashboard should show the matching ambassador profile and stats
+
+The current portal lookup uses an ambassador code as its access check; it is not password-based authentication. Treat the code as sensitive and do not publish or reuse it as a password. A stronger account login requires an owner-approved credential and recovery workflow.
 
 ---
 
@@ -303,14 +268,11 @@ git push origin master
 **Solutions:**
 1. Run Test 2 above to verify backend works
 2. Check ambassador record exists in phpMyAdmin
-3. Make sure email is exactly `nataliachacon0904@gmail.com` (not 0903)
+3. Verify the record's contact information directly in the secured admin system.
 4. Check browser console for error messages
 
-### CORS Errors in Browser Console
-**Problem:** "Access to XMLHttpRequest blocked by CORS policy"
-**Solution:** Backend already includes CORS headers. If persists:
-1. Check backend file has: `header('Access-Control-Allow-Origin: *');`
-2. Verify backend URL in config.js is exact match
+### Cross-Origin Request Errors
+The portal and its backend are intended to be same-origin. Do not restore wildcard CORS headers. If hosting changes, configure and test a narrowly allowlisted origin rather than allowing every website.
 
 ---
 
@@ -318,14 +280,14 @@ git push origin master
 
 - [ ] PHP hosting account created
 - [ ] MySQL database created (`mr_sprinkle_db`)
-- [ ] Database user created (`sprinkle_user`)
+- [ ] Dedicated restricted database user created and configured in server environment settings
 - [ ] ambassadors table created with schema
 - [ ] `ambassador-backend-standalone.php` uploaded
-- [ ] Database credentials correct in backend file
+- [ ] Required environment variables configured server-side; no secrets stored in source
 - [ ] `config.js` updated with correct backend URL
-- [ ] Test endpoint returns success (Test 1)
-- [ ] Natalia found in database (Test 2)
-- [ ] Portal login works with NATALIA09 (Test 3)
+- [ ] Authorized diagnostic request succeeds and an unauthorized request receives HTTP 403
+- [ ] Ambassador stats endpoint returns only the fields needed by the portal
+- [ ] Portal code lookup works for an authorized test account
 - [ ] GitHub updated with new config.js
 
 ---
@@ -344,7 +306,6 @@ git push origin master
 - Low cost ($2-5/month)
 
 ✅ **Ambassador System**
-- Natalia can log in with NATALIA09
 - Portal connects to database
 - Referral tracking works
 - Commission calculations ready
@@ -367,4 +328,4 @@ If you need help:
 2. Follow STEP 1-5 setup
 3. Test everything (STEP 6)
 4. Update GitHub (STEP 7)
-5. Natalia can now log in!
+5. sample ambassador can now log in!

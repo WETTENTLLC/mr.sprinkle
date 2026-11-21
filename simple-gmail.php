@@ -1,7 +1,11 @@
 <?php
 function sendGmailEmail($to, $subject, $message) {
-    $from = 'mrsprinklereno@gmail.com';
-    $password = 'ezym bvgj gsoa npse';
+    $from = getenv('MR_SPRINKLE_SMTP_USER');
+    $password = getenv('MR_SPRINKLE_SMTP_PASSWORD');
+    if (!$from || !$password) {
+        error_log('Mr. Sprinkle email is not configured; set MR_SPRINKLE_SMTP_USER and MR_SPRINKLE_SMTP_PASSWORD.');
+        return false;
+    }
     
     // Simple email headers
     $headers = "MIME-Version: 1.0\r\n";
@@ -26,7 +30,10 @@ function sendGmailEmail($to, $subject, $message) {
     fgets($socket, 515);
     
     // Enable crypto
-    stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+    if (stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT) !== true) {
+        fclose($socket);
+        return false;
+    }
     
     fputs($socket, "EHLO localhost\r\n");
     fgets($socket, 515);
