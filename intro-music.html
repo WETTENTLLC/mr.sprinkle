@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damn - Mr. Sprinkle Intro Music | WETT Entertainment LLC</title>
-    <meta name="description" content="Buy the official Mr. Sprinkle intro track 'Damn' for $1. Produced by WETT Entertainment LLC. Instant download.">
+    <title>Damn (Remix) - Wett Girls feat. Dru Down | WETT Entertainment LLC</title>
+    <meta name="description" content="Listen to the official Damn (Remix) by Wett Girls featuring Dru Down, presented by WETT Entertainment LLC.">
     <link rel="canonical" href="https://mrsprinklereno.com/intro-music.html">
     <link rel="icon" type="image/png" href="assets/trans.png">
     <!-- Song details live in assets/site-track.js -->
-    <script src="assets/site-track.js"></script>
+    <script src="assets/site-track.js?v=20261121-damn-remix"></script>
     <style>
         :root{--obsidian:#080808;--panel:#111110;--champagne:#c9b276;--champagne-hi:#e0c989;--line:rgba(201,175,115,.38);--platinum:#dedbd4;--muted:#aaa69d}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -60,16 +60,16 @@
 </header>
     <main class="music-card">
         <div class="cover-art">
-            <img data-track="cover" src="assets/Damn Cover.png" alt="Damn Single Cover Art">
+            <img data-track="cover" src="https://d2ol7oe51mr4n9.cloudfront.net/user_30zhnNWOXaygqeYTbhEO5mnIHNL/3f9bd576-4658-4166-be31-58474e32f309.png" alt="Wett Girls – Damn (Remix) feat. Dru Down official single cover">
         </div>
         <div class="details">
-            <p class="eyebrow">Featured track · Mr. Sprinkle</p>
-            <h1><span data-track="title">Damn</span><abbr class="explicit" data-track="explicit" title="Explicit content">E</abbr></h1>
-            <p class="artist" data-track="artist">Mr. Sprinkle Intro Music</p>
+            <p class="eyebrow">Featured track · Wett Girls x Dru Down</p>
+            <h1><span data-track="title">Damn (Remix)</span><abbr class="explicit" data-track="explicit" title="Explicit content">E</abbr></h1>
+            <p class="artist" data-track="artist">Wett Girls feat. Dru Down</p>
             <p class="advisory" data-track="explicit">Parental advisory · Explicit content</p>
 
             <audio controls preload="metadata">
-                <source data-track="src" src="assets/Damn.mp3" type="audio/mpeg">
+                <source data-track="src" src="https://d2ol7oe51mr4n9.cloudfront.net/user_30zhnNWOXaygqeYTbhEO5mnIHNL/cdc87077-fc76-427c-8488-b5fefe48aacc.mp3" type="audio/mpeg">
                 Your browser does not support audio playback.
             </audio>
 
@@ -97,7 +97,7 @@
             else if (k === 'explicit') { el.hidden = !t.explicit; }
             else if (t[k] !== undefined) { el.textContent = t[k]; }
         });
-        if (t.title) document.title = t.title + ' - Mr. Sprinkle Intro Music | WETT Entertainment LLC';
+        if (t.title) document.title = t.title + ' - ' + (t.artist || 'WETT Entertainment LLC') + ' | WETT Entertainment LLC';
         var box = document.getElementById('paypal-buy');
         try {
             paypal.HostedButtons({ hostedButtonId: t.paypalButtonId || 'PYSZ68LTCB2VW' }).render('#paypal-buy');
