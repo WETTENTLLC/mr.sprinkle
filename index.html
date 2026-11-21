@@ -89,6 +89,7 @@
     
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/sound.css">
+    <link rel="stylesheet" href="assets/site-header.css">
 </head>
 <body>
     <!-- Homepage intro. Song details: assets/site-track.js. Behaviour: assets/sound.js -->
@@ -117,33 +118,37 @@
         </div>
         <button type="button" class="ms-intro__skip" data-intro-skip>Skip intro</button>
     </div>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <img src="assets/trans.png" alt="Mr. Sprinkle Logo">
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#services">Shop Grillz</a></li>
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="#gallery">Gallery</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a class="nav-cta" href="mold-form.html">Book Appointment</a></li>
-                    <li class="ms-sound-item">
-                <div id="siteSound" class="ms-sound" role="group" aria-label="Featured track">
-                    <button id="musicToggle" type="button" class="ms-sound__btn" aria-pressed="false" aria-label="Play Damn">
-                        <svg class="ms-icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
-                        <svg class="ms-icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
-                    </button>
-                    <span class="ms-sound__meta"><span class="ms-eq" aria-hidden="true"><i></i><i></i><i></i></span><span data-track="title">Damn</span><abbr class="ms-explicit" data-track="explicit" title="Explicit content">E</abbr></span>
-                    <a class="ms-sound__buy" data-track="buy" data-price-text="Buy {price}" href="intro-music.html">Buy $1</a>
-                </div>
-                    </li>
-                </ul>
-            </nav>
+    <header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home">
+      <img src="assets/trans.png" alt="Mr. Sprinkle">
+    </a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Pricing</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="service-areas.html">Service Areas</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+      <div class="ms-header-music">
+        <div id="siteSound" class="ms-sound" role="group" aria-label="Featured track">
+          <button id="musicToggle" type="button" class="ms-sound__btn" aria-pressed="false" aria-label="Play featured music">
+            <svg class="ms-icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+            <svg class="ms-icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
+          </button>
+          <span class="ms-sound__meta"><span class="ms-eq" aria-hidden="true"><i></i><i></i><i></i></span><span data-track="title">Damn</span><abbr class="ms-explicit" data-track="explicit" title="Explicit content">E</abbr></span>
+          <a class="ms-sound__buy" data-track="buy" data-price-text="Buy {price}" href="intro-music.html">Buy $1</a>
         </div>
-    </header>
+      </div>
+    </nav>
+  </div>
+</header>
 
     <audio id="siteAudio" loop preload="none">
         <source src="assets/Damn.mp3" type="audio/mpeg">
@@ -613,5 +618,6 @@
     <script src="assets/site-track.js"></script>
     <script src="assets/sound.js"></script>
 
+    <script src="assets/site-header.js"></script>
 </body>
 </html>
