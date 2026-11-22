@@ -32,7 +32,7 @@ test("shared navigation supports mobile open, close, and Escape", () => {
   assert.match(css, /max-width: 1080px/);
 });
 
-test("intro controls use external click handlers and survive inline-script restrictions", () => {
+test("intro actions are delegated in capture phase and work without inline handlers", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
   const css = read("assets/sound.css");
@@ -44,42 +44,43 @@ test("intro controls use external click handlers and survive inline-script restr
   assert.match(introMarkup, /data-intro-action="skip"/);
   assert.doesNotMatch(introMarkup, /onclick=/i);
   assert.doesNotMatch(html, /mrSprinkleIntroAction/);
-  assert.match(js, /function bindIntroActions\(\)/);
-  assert.match(js, /intro\.querySelectorAll\("\[data-intro-action\]"\)/);
-  assert.match(js, /button\.addEventListener\("click"/);
-  assert.match(js, /action === "play"\) enterWithSound\(\)/);
-  assert.match(js, /action === "quiet"\) enterQuietly\(button\)/);
-  assert.match(js, /action === "skip"\) closeIntro\(\)/);
+  assert.match(js, /document\.addEventListener\("click"[\s\S]*?target\.closest\("\[data-intro-action\]"\)[\s\S]*?event\.preventDefault\(\)[\s\S]*?action === "play"\)[\s\S]*?enterWithSound\(\)[\s\S]*?action === "quiet"\)[\s\S]*?enterQuietly\(actionButton\)[\s\S]*?action === "skip"\)[\s\S]*?closeIntro\(\)[\s\S]*?\}, true\)/);
+  assert.doesNotMatch(js, /function bindIntroActions/);
   assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
-  assert.match(js, /document\.addEventListener\("click"[\s\S]*?true\)/);
   assert.match(js, /target\.closest\('a\[data-track="buy"\]'\)[\s\S]*?markIntroSeen\(\)/);
-  assert.match(js, /function markIntroSeen\(\)/);
-  assert.doesNotMatch(js, /play\(\)\.then/);
   assert.match(css, /Intro interaction hotfix/);
   assert.match(css, /#videoIntro \.ms-intro__content[\s\S]*?z-index:\s*20/);
   assert.match(css, /#videoIntro \.ms-track[\s\S]*?z-index:\s*5/);
   assert.match(css, /pointer-events: none/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
   assert.match(html, /assets\/sound\.css\?v=/);
 });
 
 
-test("intro dismissal persists for returning visitors and across Home navigation", () => {
+test("intro dismissal persists across Home navigation and repeat visits", () => {
   const js = read("assets/sound.js");
   const html = read("index.html");
   const storeBlock = js.match(/const store = \{[\s\S]*?\n    \};/);
   assert.ok(storeBlock, "intro storage helper exists");
   const storeText = storeBlock[0];
   assert.ok(
-    storeText.indexOf("window.localStorage.getItem") < storeText.indexOf("window.sessionStorage.getItem"),
-    "persistent storage is checked before session storage"
+    storeText.indexOf("window.localStorage.getItem") < storeText.indexOf("readCookie(key)") &&
+    storeText.indexOf("readCookie(key)") < storeText.indexOf("window.sessionStorage.getItem"),
+    "persistent storage and cookie fallback are checked before session storage"
   );
+  assert.match(js, /function readCookie\(key\)/);
+  assert.match(js, /function writeCookie\(key, value\)/);
+  assert.match(js, /document\.cookie/);
+  assert.match(js, /Max-Age=31536000/);
   assert.match(storeText, /window\.localStorage\.setItem\(key, value\)/);
   assert.match(storeText, /window\.sessionStorage\.setItem\(key, value\)/);
   assert.match(js, /if \(store\.get\("introSeen"\)\)/);
   assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
+  assert.match(js, /function markIntroSeen\(\)/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
+  assert.match(html, /class="ms-site-brand" href="\/" aria-label="Mr\. Sprinkle home"/);
+  assert.match(html, /href="\/">Home<\/a>/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {

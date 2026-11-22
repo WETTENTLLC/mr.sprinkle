@@ -20,38 +20,65 @@
     let introTimer = null;
     let closing = false;
 
+    function readCookie(key) {
+        try {
+            const prefix = encodeURIComponent(key) + "=";
+            const entry = document.cookie.split(";").map(function (part) {
+                return part.trim();
+            }).find(function (part) { return part.indexOf(prefix) === 0; });
+            return entry ? decodeURIComponent(entry.slice(prefix.length)) : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function writeCookie(key, value) {
+        try {
+            const secure = window.location && window.location.protocol === "https:" ? "; Secure" : "";
+            const host = window.location && window.location.hostname || "";
+            const domain = /(^|\.)mrsprinklereno\.com$/i.test(host) ? "; Domain=.mrsprinklereno.com" : "";
+            document.cookie = encodeURIComponent(key) + "=" + encodeURIComponent(value) +
+                "; Max-Age=31536000; Path=/; SameSite=Lax" + secure + domain;
+        } catch (error) {
+            // Web storage remains the primary store when cookies are unavailable.
+        }
+    }
+
     const store = {
         get(key) {
-            // Persistent storage wins: dismissing the intro is a first-visit event,
-            // not a per-tab event. This keeps Home navigation and later visits clean.
+            // Persistent browser storage wins whenever it is available.
             try {
                 const localValue = window.localStorage.getItem(key);
                 if (localValue) return localValue;
             } catch (error) {
-                // Continue to session storage when persistent storage is restricted.
+                // Continue to the cookie and session fallbacks.
             }
 
-            // Migrate the old session-only flag into persistent storage so returning
-            // visitors who already dismissed the intro do not see it again.
+            // Cookie fallback also covers navigation between www and apex hosts.
+            const cookieValue = readCookie(key);
+            if (cookieValue) {
+                try { window.localStorage.setItem(key, cookieValue); } catch (error) { /* Cookie remains authoritative. */ }
+                try { window.sessionStorage.setItem(key, cookieValue); } catch (error) { /* Cookie remains authoritative. */ }
+                return cookieValue;
+            }
+
+            // Migrate the earlier session-only flag so existing visitors stay entered.
             try {
                 const sessionValue = window.sessionStorage.getItem(key);
                 if (sessionValue) {
-                    try { window.localStorage.setItem(key, sessionValue); }
-                    catch (error) { /* Keep the session value when local storage is blocked. */ }
+                    try { window.localStorage.setItem(key, sessionValue); } catch (error) { /* Cookie fallback below. */ }
+                    writeCookie(key, sessionValue);
                     return sessionValue;
                 }
             } catch (error) {
-                // Both storage APIs may be restricted by browser privacy settings.
+                // All browser storage APIs may be restricted by privacy settings.
             }
             return null;
         },
         set(key, value) {
-            // Write to both stores. localStorage survives navigation, tabs and
-            // future browser sessions; sessionStorage remains a fallback.
-            try { window.localStorage.setItem(key, value); }
-            catch (error) { /* Fall back to session storage below. */ }
-            try { window.sessionStorage.setItem(key, value); }
-            catch (error) { /* Both storage APIs may be disabled by privacy settings. */ }
+            try { window.localStorage.setItem(key, value); } catch (error) { /* Use fallbacks below. */ }
+            try { window.sessionStorage.setItem(key, value); } catch (error) { /* Use cookie fallback below. */ }
+            writeCookie(key, value);
         }
     };
 
@@ -136,21 +163,6 @@
         closeIntro();
     }
 
-    // Bind controls from this same-origin external file instead of inline onclick handlers.
-    function bindIntroActions() {
-        if (!intro) return;
-        intro.querySelectorAll("[data-intro-action]").forEach(function (button) {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                if (intro.hidden) return;
-                const action = button.getAttribute("data-intro-action");
-                if (action === "play") enterWithSound();
-                else if (action === "quiet") enterQuietly(button);
-                else if (action === "skip") closeIntro();
-            });
-        });
-    }
-
     // Expose safe entry points for integration and testing.
     window.skipIntro = closeIntro;
     window.MrSprinkleIntro = Object.freeze({
@@ -202,8 +214,6 @@
     });
 
     if (intro) {
-        bindIntroActions();
-
         // Keep other already-open tabs in sync when one tab completes the intro.
         window.addEventListener("storage", function (event) {
             if (event.key === "introSeen" && event.newValue === "true") closeIntro();
@@ -220,20 +230,28 @@
             document.documentElement.classList.add("ms-intro-open");
             if (reduceMotion && video) video.pause();
 
-            // One delegated capture handler works for mouse, touchscreen and keyboard
-            // activation, and saves the visit before the browser follows a link.
+            // A single capture-phase handler owns every intro action. It runs before
+            // target/bubble listeners, so no other page script can leave a visible
+            // control inert. The same handler also persists the visit before links navigate.
             document.addEventListener("click", function (event) {
                 const target = event.target instanceof Element ? event.target : null;
                 if (!target) return;
 
+                const actionButton = target.closest("[data-intro-action]");
+                if (actionButton && intro.contains(actionButton) && !intro.hidden) {
+                    event.preventDefault();
+                    const action = actionButton.getAttribute("data-intro-action");
+                    if (action === "play") enterWithSound();
+                    else if (action === "quiet") enterQuietly(actionButton);
+                    else if (action === "skip") closeIntro();
+                    return;
+                }
+
                 const buyLink = target.closest('a[data-track="buy"]');
-                if (buyLink && !intro.hidden) {
+                if (buyLink && intro.contains(buyLink) && !intro.hidden) {
                     markIntroSeen();
                     return; // Let the normal navigation to the music page continue.
                 }
-
-                // Explicit intro buttons call window.mrSprinkleIntroAction directly.
-                // This delegated listener only handles the track purchase link above.
             }, true);
 
             // Clicking the empty cinematic background is also a quiet-entry path.
