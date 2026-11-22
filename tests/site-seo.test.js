@@ -145,8 +145,14 @@ test("published pages do not reintroduce unsupported gold safety guarantees", ()
   assert.doesNotMatch(blog, /0% tarnish guarantee|tarnish-free|hypoallergenic formulations/);
 });
 
-test("booking form continues to use the existing approved Formspree endpoint", () => {
-  assert.match(read("mold-form.html"), /https:\/\/formspree\.io\/f\/myzpanyg/);
+test("booking form continues to use the existing approved Formspree endpoint and requires artwork references on custom requests", () => {
+  const form = read("mold-form.html");
+  assert.match(form, /https:\/\/formspree\.io\/f\/myzpanyg/);
+  assert.ok(form.includes('enctype="multipart/form-data"'));
+  assert.ok(form.includes('id="customArtworkNotice"'));
+  assert.ok(form.includes('referenceImageInput.required = true'));
+  assert.ok(form.includes('imageDescriptionInput.required = true'));
+  assert.ok(form.includes('custom_artwork_request:'));
 });
 
 
@@ -298,6 +304,94 @@ test("grill designer renders a dental-arch diagram without changing the estimate
   assert.doesNotMatch(preview, /calculate\(|catalog\.grillz|knownSubtotal/);
 });
 
+
+test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", () => {
+  const html = read("pricing.html");
+  const model = read("assets/grill-studio-3d.js");
+  const css = read("assets/grill-studio.css");
+  const stoneCss = read("assets/grill-stone-editor.css");
+  assert.match(html, /three@0\.187\.0\/build\/three\.module\.js/);
+  assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
+  assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
+  assert.match(html, /id="grill3DViewport"/);
+  assert.match(html, /Fixed front-facing view/);
+  assert.doesNotMatch(html, /data-grill-view=/);
+  assert.match(html, /data-metal-swatch="gold14k"/);
+  assert.match(html, /id="selectUpperTeeth"/);
+  assert.match(html, /id="selectLowerTeeth"/);
+  assert.doesNotMatch(html, /estimateUpperCount|estimateLowerCount/);
+  assert.match(html, /window\.MrSprinkleGrillSelectTooth/);
+  assert.match(model, /const UPPER = \["18","17","16","15","14","13","12","11","21","22","23","24","25","26","27","28"\]/);
+  assert.match(model, /const LOWER = \["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"\]/);
+  assert.match(model, /new THREE\.WebGLRenderer/);
+  assert.match(model, /new THREE\.MeshPhysicalMaterial/);
+  assert.doesNotMatch(model, /OrbitControls/);
+  assert.match(model, /function setFrontCamera/);
+  assert.match(model, /function createDentalCastBase/);
+  assert.match(model, /camera.position.set\(0\.42, -7\.4, 2\.30\)/);
+  assert.match(model, /const crownZ = isUpper \? 0\.70 : -0\.70/);
+  assert.match(html, /grill-3d-viewport--cast/);
+  assert.match(model, /function addDesignDetails/);
+  assert.match(model, /function crownFrontSurfaceY/);
+  assert.match(model, /new THREE\.CylinderGeometry\(fitDiameter \* 0\.53/);
+  assert.doesNotMatch(model, /surfaceRatio/);
+  assert.match(model, /const jawSign = item\.jaw === "upper" \? -1 : 1/);
+  assert.match(model, /function addEnamelOverlay/);
+  assert.match(css, /\.tooth-arch-picker/);
+  assert.match(css, /\.grill-3d-viewport/);
+  assert.match(stoneCss, /\.grill-3d-viewport--mouth/);
+  assert.match(css, /\.grill-metal-swatches/);
+});
+
+test("Sprinkle Studio renders one complete 16-tooth arch per jaw", () => {
+  const html = read("pricing.html");
+  const script = html.slice(html.indexOf("const toothGroups = ["), html.indexOf("const SVG_NS", html.indexOf("const toothGroups = [")));
+  assert.match(script, /label: 'Upper jaw', teeth: Stone\.upper\.slice\(\)/);
+  assert.match(script, /label: 'Lower jaw', teeth: Stone\.lower\.slice\(\)/);
+  assert.doesNotMatch(script, /Upper right|Upper left|Lower right|Lower left/);
+  assert.match(html, /data-tooth-kind/);
+  assert.match(html, /central-incisor/);
+  assert.match(html, /lateral-incisor/);
+  assert.match(html, /tooth-groove/);
+});
+
+test("customers can choose stone-bearing teeth and edit round or square per-tooth positions", () => {
+  const html = read("pricing.html");
+  const model = read("assets/grill-studio-3d.js");
+  const layout = read("assets/grill-stone-layout.js");
+  const css = read("assets/grill-stone-editor.css");
+  assert.match(html, /id="toothModeStones"/);
+  assert.match(html, /id="stoneTargetTeeth"/);
+  assert.match(html, /id="stoneEditToothChips"/);
+  assert.match(html, /function selectActiveStoneTooth/);
+  assert.match(html, /data-stone-shape="round"/);
+  assert.match(html, /data-stone-shape="square"/);
+  assert.match(html, /id="stonePlacementGrid"/);
+  assert.match(html, /data-stone-material="natural"/);
+  assert.match(html, /data-stone-material="cubicZirconia"/);
+  assert.match(html, /id="stoneColorPicker"/);
+  assert.match(html, /data-stone-color="#f3a8c8"/);
+  assert.match(html, /function handleStoneCellClick/);
+  assert.match(html, /className = 'stone-target-remove'/);
+  assert.match(html, /button\.addEventListener\('dragstart'/);
+  assert.match(html, /Stone\.serialize\(layoutState\)/);
+  assert.match(layout, /function createDefault\(targets, requestedCount, options\)/);
+  assert.match(layout, /function move\(/);
+  assert.match(layout, /function allowedCells\(size\)/);
+  assert.match(model, /placements\[item\.number\]/);
+  assert.match(model, /stoneProfiles\[item\.number\]/);
+  assert.match(model, /materialForStone\(stoneType, stoneColor\)/);
+  assert.match(model, /RoundedBoxGeometry/);
+  assert.match(css, /\.stone-placement-grid/);
+  assert.match(css, /\.stone-slot\[data-stone-shape="square"\]/);
+  assert.match(html, /id="enamelStudioHeading"/);
+  assert.match(html, /id="enamelTargetTeeth"/);
+  assert.match(html, /data-enamel-color="#f3a8c8"/);
+  assert.match(html, /id="customArtworkQuoteLink"/);
+  assert.match(html, /customHandoff\.set\('customArtwork', 'true'\)/);
+  assert.match(css, /\.grill-enamel-studio/);
+  assert.match(css, /\.custom-artwork-request/);
+});
 
 test("intro video remains playable and the native entry links bypass the overlay", () => {
   const html = read("index.html");

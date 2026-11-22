@@ -11,6 +11,17 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
+    <link rel="stylesheet" href="assets/grill-studio.css">
+    <link rel="stylesheet" href="assets/grill-stone-editor.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+      }
+    }
+    </script>
+    <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
     <script src="assets/grill-preview.js"></script>
@@ -146,40 +157,54 @@
         <div class="section" id="configurator">
             <div class="section-title">Sprinkle Studio — Grillz Estimate</div>
             <p class="note" style="margin-bottom:18px">Choose any combination of upper and lower teeth. This estimator uses published prices only; it is not checkout or an order confirmation. Appointment and rush availability are confirmed by the team.</p>
-            <div class="configurator">
-                <fieldset>
-                    <legend>Quick coverage estimate</legend>
-                    <p class="note" style="margin:0 0 12px">Enter an approximate number of teeth for each jaw. Open the optional selector below only if you want to mark exact teeth.</p>
-                    <div class="quick-coverage">
-                        <div>
-                            <label for="estimateUpperCount">Approximate upper teeth</label>
-                            <input id="estimateUpperCount" type="number" min="0" max="16" step="1" value="0">
+            <div class="configurator" id="grillMakerConfigurator">
+                <div class="grill-studio-workspace">
+                    <section class="grill-studio-panel" aria-labelledby="toothSelectionHeading">
+                        <div class="grill-studio-panel__eyebrow"><span>01</span> Tooth selection</div>
+                        <h3 id="toothSelectionHeading">Build your exact set</h3>
+                        <p class="grill-studio-panel__lead">Tap any tooth to select it. Mix upper and lower teeth freely — one tooth, a few teeth, a full arch, or any combination in between.</p>
+                        <div class="grill-arch-card">
+                            <div class="grill-arch-card__head"><span>Upper arch</span><span>FDI tooth numbers</span></div>
+                            <svg id="upperTeeth" class="tooth-arch-picker" viewBox="0 0 420 200" role="group" aria-label="Select any upper teeth"></svg>
                         </div>
-                        <div>
-                            <label for="estimateLowerCount">Approximate lower teeth</label>
-                            <input id="estimateLowerCount" type="number" min="0" max="16" step="1" value="0">
+                        <div class="grill-arch-card">
+                            <div class="grill-arch-card__head"><span>Lower arch</span><span>FDI tooth numbers</span></div>
+                            <svg id="lowerTeeth" class="tooth-arch-picker" viewBox="0 0 420 200" role="group" aria-label="Select any lower teeth"></svg>
                         </div>
-                    </div>
-                </fieldset>
-                <details class="tooth-selection-details" id="exactToothSelection">
-                    <summary id="exactToothSummary">Choose exact teeth (optional)</summary>
-                    <fieldset class="tooth-picker">
-                        <legend>Select individual teeth</legend>
-                    <div class="jaw-picker">
-                        <h3>Upper jaw</h3>
-                        <div id="upperTeeth" class="tooth-choices" aria-label="Select upper teeth"></div>
-                    </div>
-                    <div class="jaw-picker">
-                        <h3>Lower jaw</h3>
-                        <div id="lowerTeeth" class="tooth-choices" aria-label="Select lower teeth"></div>
-                    </div>
-                    <button id="clearTeeth" type="button" class="clear-teeth">Clear exact selection</button>
-                    </fieldset>
-                </details>
-                <div class="design-preview">
-                    <h3>Design preview</h3>
-                    <div id="designPreview" class="preview-teeth" aria-live="polite">No teeth selected</div>
+                        <div class="arch-selector-actions">
+                            <button id="selectUpperTeeth" type="button">Select all upper</button>
+                            <button id="selectLowerTeeth" type="button">Select all lower</button>
+                            <button id="clearTeeth" type="button">Clear selection</button>
+                        </div>
+                        <div class="arch-selector-actions tooth-mode-controls" role="group" aria-label="Tooth selection mode">
+                            <button id="toothModeGrill" type="button" aria-pressed="true">Select grill teeth</button>
+                            <button id="toothModeStones" type="button" aria-pressed="false">Choose teeth for stones</button>
+                        </div>
+                        <p id="toothModeHint" class="stone-editor-hint">Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.</p>
+                        <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
+                    </section>
+                    <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
+                        <div class="grill-studio-panel__eyebrow"><span>02</span> Live product mockup</div>
+                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Fixed front-facing view <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
+                        <h3 id="grillMockupHeading">Your custom dental model.</h3>
+                        <p class="grill-studio-panel__lead">A close-up open dental-model view keeps both arches separated so you can inspect each crown, place stones and preview enamel details directly on the selected teeth.</p>
+                        <div id="grill3DViewport" class="grill-3d-viewport grill-3d-viewport--mouth grill-3d-viewport--cast" aria-label="Close-up open dental articulator model with separate upper and lower tooth arches"></div>
+                        <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Loading the 3D dental cast. Your design diagram remains available as a fallback.</p>
+                        <p id="grill3DMaterialNote" class="grill-3d-material-note">The mockup is a design visualization. Final contours and fit are confirmed from your approved mold.</p>
+                        <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
+                    </section>
                 </div>
+                <div class="grill-materials">
+                    <div class="grill-materials__title"><strong>03 · Choose your metal appearance</strong><span>Live material preview</span></div>
+                    <div class="grill-metal-swatches" role="group" aria-label="Metal appearance">
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="silver" aria-pressed="true"><span class="grill-metal-swatch__chip"></span>Silver</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="gold10k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>10K Gold</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="gold14k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>14K Gold</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="dentalGold14k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>14K Dental Gold</button>
+                    </div>
+                    <p class="grill-quote-note">The swatches show finish appearance only. The estimate below always uses the published pricing catalog; quote-only materials remain quote-only.</p>
+                </div>
+                <div class="grill-config-controls"><div class="grill-studio-panel__eyebrow"><span>04</span> Fine-tune your design</div>
                 <div class="configurator-grid">
                     <div>
                         <label for="estimateDesign">Design</label>
@@ -224,7 +249,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="estimateStones">Stone selection</label>
+                        <label for="estimateStones">Default stone material</label>
                         <select id="estimateStones">
                             <option value="none">No stones</option>
                             <option value="natural">Natural diamond</option>
@@ -265,9 +290,128 @@
                     <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut — +$30 per set</label>
                 </fieldset>
                 <p class="note">Cuts are charged once per set: an upper piece and a lower piece are two sets. Custom finishes are quoted per design.</p>
-                <div id="estimateResult" class="estimate" aria-live="polite"></div>
+                <section class="grill-stone-studio" aria-labelledby="stoneStudioHeading">
+                    <div class="grill-studio-panel__eyebrow"><span>05</span> Precision stone placement</div>
+                    <h3 id="stoneStudioHeading">Place every stone exactly where you want it</h3>
+                    <p class="grill-studio-panel__lead">Choose the teeth that receive stones, then open a tooth's placement grid. Tap an empty guide to add a stone, tap a stone and then an empty guide to move it, or drag a stone to a new position. The count and estimate update with your layout.</p>
+
+                    <div class="stone-target-section">
+                        <div class="stone-target-heading"><strong>Teeth receiving stones</strong><span>Tap a tooth to edit it · use × to remove its stones</span></div>
+                        <div id="stoneTargetTeeth" class="stone-target-chips" aria-live="polite">
+                            <span class="stone-empty">Select grill teeth first.</span>
+                        </div>
+                    </div>
+
+                    <div class="stone-layout-toolbar">
+                        <div class="stone-shape-choice" role="group" aria-label="Stone setting shape">
+                            <span class="stone-toolbar-label">Setting layout</span>
+                            <button type="button" data-stone-shape="round" aria-pressed="true"><span class="shape-symbol shape-symbol--round"></span>Round</button>
+                            <button type="button" data-stone-shape="square" aria-pressed="false"><span class="shape-symbol shape-symbol--square"></span>Square</button>
+                        </div>
+                        <div class="stone-tooth-editor-select">
+                            <span class="stone-toolbar-label">Active tooth</span>
+                            <div id="stoneEditToothChips" class="stone-edit-tooth-chips" aria-live="polite">
+                                <span class="stone-empty">Choose a tooth above.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stone-tooth-profile">
+                        <div class="stone-tooth-profile__heading">Customize this tooth's stones</div>
+                        <div class="stone-profile-controls">
+                            <div>
+                                <span class="stone-profile-label">Stone material</span>
+                                <div id="stoneMaterialChoices" class="stone-material-choices" role="group" aria-label="Stone material for active tooth">
+                                    <button type="button" data-stone-material="natural" aria-pressed="true" disabled><span class="stone-material-icon">◆</span><span>Natural<br>diamond</span></button>
+                                    <button type="button" data-stone-material="labGrownDiamond" aria-pressed="false" disabled><span class="stone-material-icon">✧</span><span>Lab-grown<br>diamond</span></button>
+                                    <button type="button" data-stone-material="vvsMoissanite" aria-pressed="false" disabled><span class="stone-material-icon">✦</span><span>VVS<br>moissanite</span></button>
+                                    <button type="button" data-stone-material="cubicZirconia" aria-pressed="false" disabled><span class="stone-material-icon">◇</span><span>Cubic<br>zirconia</span></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="stoneColorPicker">Stone color</label>
+                                <div class="stone-color-row">
+                                    <input id="stoneColorPicker" type="color" value="#f4f8ff" disabled aria-label="Choose this tooth's stone color">
+                                    <span id="stoneColorLabel">Diamond white</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stone-color-swatches" role="group" aria-label="Stone color presets">
+                            <button type="button" data-stone-color="#f4f8ff" aria-label="Diamond white" title="Diamond white" style="--swatch:#f4f8ff" aria-pressed="true"></button>
+                            <button type="button" data-stone-color="#f3a8c8" aria-label="Pink" title="Pink" style="--swatch:#f3a8c8" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#6bbcf2" aria-label="Ice blue" title="Ice blue" style="--swatch:#6bbcf2" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#8c72dc" aria-label="Purple" title="Purple" style="--swatch:#8c72dc" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#dd5454" aria-label="Ruby red" title="Ruby red" style="--swatch:#dd5454" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#65bb86" aria-label="Emerald green" title="Emerald green" style="--swatch:#65bb86" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#e5bf70" aria-label="Champagne" title="Champagne" style="--swatch:#e5bf70" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#30343b" aria-label="Black" title="Black" style="--swatch:#30343b" aria-pressed="false"></button>
+                        </div>
+                        <p class="stone-profile-hint">Each tooth can have its own stone material and color. Color changes the appearance; the estimate uses the published material and size price.</p>
+                    </div>
+
+                    <div class="stone-editor-actions">
+                        <button id="toggleStoneEditor" type="button" disabled>Open placement grid</button>
+                        <button id="autoPlaceStones" type="button" disabled>Auto-place stones</button>
+                        <button id="removeSelectedStone" type="button" disabled>Remove selected stone</button>
+                    </div>
+
+                    <div id="stonePlacementEditor" class="stone-placement-editor" hidden>
+                        <div class="stone-placement-editor__head">
+                            <strong id="stoneGridTitle">Stone placement grid</strong>
+                            <span>5 × 5 crown surface</span>
+                        </div>
+                        <div id="stonePlacementGrid" class="stone-placement-grid" role="grid" aria-label="Individual stone placement positions"></div>
+                        <p id="stoneLayoutStatus" class="stone-layout-status" aria-live="polite">Choose a stone-bearing tooth to edit its positions.</p>
+                    </div>
+                    <p id="stoneCapacityNotice" class="stone-capacity-notice" role="status" aria-live="polite"></p>
+                </section>
+
+                <section class="grill-enamel-studio" aria-labelledby="enamelStudioHeading">
+                    <div class="grill-studio-panel__eyebrow"><span>06</span> Colored enamel finish</div>
+                    <h3 id="enamelStudioHeading">Add color with enamel</h3>
+                    <p class="grill-studio-panel__lead">Enamel is a colored finish applied to the surface of your grillz. It is different from a gemstone: enamel adds solid color to a tooth, while stones add individual gems. Choose a color for each tooth below to preview a simple enamel finish. Detailed patterns, pictures, lettering and logos are custom artwork and require an uploaded reference image and a written description for a quote.</p>
+
+                    <div class="enamel-target-heading"><strong>Choose teeth for enamel</strong><span>Only teeth selected for grillz can receive enamel</span></div>
+                    <div id="enamelTargetTeeth" class="enamel-target-teeth" aria-live="polite">
+                        <span class="stone-empty">Select grill teeth first.</span>
+                    </div>
+
+                    <div class="enamel-active-editor">
+                        <div class="enamel-active-editor__title">Enamel color for <strong id="enamelActiveToothLabel">No tooth selected</strong></div>
+                        <div class="enamel-color-swatches" role="group" aria-label="Enamel color presets">
+                            <button type="button" data-enamel-color="#f3a8c8" aria-label="Pink enamel" title="Pink" style="--enamel-swatch:#f3a8c8" disabled></button>
+                            <button type="button" data-enamel-color="#6bbcf2" aria-label="Ice blue enamel" title="Ice blue" style="--enamel-swatch:#6bbcf2" disabled></button>
+                            <button type="button" data-enamel-color="#8c72dc" aria-label="Purple enamel" title="Purple" style="--enamel-swatch:#8c72dc" disabled></button>
+                            <button type="button" data-enamel-color="#dd5454" aria-label="Ruby red enamel" title="Red" style="--enamel-swatch:#dd5454" disabled></button>
+                            <button type="button" data-enamel-color="#65bb86" aria-label="Emerald green enamel" title="Green" style="--enamel-swatch:#65bb86" disabled></button>
+                            <button type="button" data-enamel-color="#e5bf70" aria-label="Champagne enamel" title="Champagne" style="--enamel-swatch:#e5bf70" disabled></button>
+                            <button type="button" data-enamel-color="#30343b" aria-label="Black enamel" title="Black" style="--enamel-swatch:#30343b" disabled></button>
+                            <button type="button" data-enamel-color="#f4f8ff" aria-label="White enamel" title="White" style="--enamel-swatch:#f4f8ff" disabled></button>
+                        </div>
+                        <div class="enamel-custom-color">
+                            <label for="enamelCustomColor">Choose another enamel color</label>
+                            <input id="enamelCustomColor" type="color" value="#f3a8c8" disabled>
+                        </div>
+                        <p id="enamelStatus" class="stone-profile-hint" role="status" aria-live="polite">Choose a grill tooth above, then select its enamel color. Enamel work is quote-based.</p>
+                    </div>
+
+                    <div class="custom-artwork-request">
+                        <h4>Want a picture, pattern, character, lettering or logo?</h4>
+                        <p>Upload a clear inspiration image and tell us what you want, which teeth it belongs on, and any colors or details. Our team will review the artwork and provide a custom quote. Your selected teeth, metal, stone layout and enamel colors will be included with the request.</p>
+                        <a id="customArtworkQuoteLink" class="cta-btn cta-btn--outline" href="mold-form.html?quote=configurator&amp;customArtwork=true">Upload artwork &amp; request a custom quote</a>
+                    </div>
+                </section>
+
+                <div class="grill-estimate-shell">
+                    <div id="estimateResult" class="estimate" aria-live="polite"></div>
+                    <div class="grill-estimate-summary">
+                        <h3>Ready to take this design forward?</h3>
+                        <p>Your selected teeth, metal, stone placements, enamel colors and estimate or quote status will travel with your request. Mr. Sprinkle confirms final fit, alloy, production details, and appointment availability before accepting an order.</p>
+                        <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Continue with this design</a>
+                    </div>
+                </div>
                 <p class="note">Standard fulfillment estimate: production generally 2–7 business days, plus approximately 2–3 days shipping to the main office and 2–3 days back to the customer. The customer-facing expectation is at least approximately two weeks. Simple, undecorated designs may take approximately 2 days in production; this is not a guaranteed delivery time. Rush shipping is next-day to and from the main office with production priority and a minimum 4-day completion expectation; eligibility and capacity must be confirmed. Estimates are not guarantees.</p>
-                <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Request an appointment or custom quote</a>
+                </div>
             </div>
         </div>
 
@@ -565,48 +709,323 @@
     </script>
     <script>
     (() => {
-        const catalog = window.MrSprinklePricing;
+        const E = window.MrSprinkleEstimate;
+        const Stone = window.MrSprinkleStoneLayout;
+        if (!E || !Stone) {
+            console.error("Sprinkle Studio setup failed: pricing or stone layout engine is unavailable.");
+            return;
+        }
+
         const design = document.getElementById('estimateDesign');
         const metal = document.getElementById('estimateMetal');
         const stones = document.getElementById('estimateStones');
         const result = document.getElementById('estimateResult');
         const quoteLink = document.getElementById('estimateQuoteLink');
         const designPreview = document.getElementById('designPreview');
-        const upperCountInput = document.getElementById('estimateUpperCount');
-        const lowerCountInput = document.getElementById('estimateLowerCount');
         const exactToothSummary = document.getElementById('exactToothSummary');
+        const stoneCountInput = document.getElementById('estimateStoneCount');
+        const stoneTargetsHost = document.getElementById('stoneTargetTeeth');
+        const stoneEditToothChips = document.getElementById('stoneEditToothChips');
+        const stoneGrid = document.getElementById('stonePlacementGrid');
+        const stoneEditor = document.getElementById('stonePlacementEditor');
+        const stoneStatus = document.getElementById('stoneLayoutStatus');
+        const stoneCapacityNotice = document.getElementById('stoneCapacityNotice');
+        const enamelTargetHost = document.getElementById('enamelTargetTeeth');
+        const enamelActiveToothLabel = document.getElementById('enamelActiveToothLabel');
+        const enamelCustomColor = document.getElementById('enamelCustomColor');
+        const enamelStatus = document.getElementById('enamelStatus');
+        const customArtworkQuoteLink = document.getElementById('customArtworkQuoteLink');
+        const stoneGridTitle = document.getElementById('stoneGridTitle');
+        const stoneColorPicker = document.getElementById('stoneColorPicker');
+        const stoneColorLabel = document.getElementById('stoneColorLabel');
         const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
         const toothGroups = [
-            { jaw: 'upper', label: 'Upper right', teeth: ['18', '17', '16', '15', '14', '13', '12', '11'] },
-            { jaw: 'upper', label: 'Upper left', teeth: ['21', '22', '23', '24', '25', '26', '27', '28'] },
-            { jaw: 'lower', label: 'Lower right', teeth: ['48', '47', '46', '45', '44', '43', '42', '41'] },
-            { jaw: 'lower', label: 'Lower left', teeth: ['31', '32', '33', '34', '35', '36', '37', '38'] }
+            { jaw: 'upper', label: 'Upper jaw', teeth: Stone.upper.slice() },
+            { jaw: 'lower', label: 'Lower jaw', teeth: Stone.lower.slice() }
         ];
+        const upperSet = new Set(Stone.upper);
+        const lowerSet = new Set(Stone.lower);
+        let toothMode = 'grill';
+        let stoneTargets = [];
+        let stoneTargetsAuto = true;
+        let activeStoneTooth = '';
+        let stoneShape = 'round';
+        let stoneProfiles = {};
+        let enamelProfiles = {};
+        let activeEnamelTooth = '';
+        let layoutState = Stone.createDefault([], 0);
+        let moveSource = null;
+        let editorOpen = false;
+        let lastLayoutInputKey = '';
+        let lastSelectedSignature = '';
 
-        toothGroups.forEach((group) => {
-            const container = document.getElementById(group.jaw === 'upper' ? 'upperTeeth' : 'lowerTeeth');
-            group.teeth.forEach((number) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'tooth-choice';
-                button.dataset.tooth = number;
-                button.dataset.jaw = group.jaw;
-                button.setAttribute('aria-pressed', 'false');
-                button.setAttribute('aria-label', `${group.label} tooth ${number}`);
-                button.textContent = number;
-                button.addEventListener('click', () => {
-                    button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') !== 'true');
-                    updateEstimate();
-                });
-                container.appendChild(button);
-            });
-        });
-
-        function selectedTeeth() {
-            return Array.from(document.querySelectorAll('.tooth-choice[aria-pressed="true"]'));
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        function svgNode(tag, attrs, text) {
+            const element = document.createElementNS(SVG_NS, tag);
+            Object.entries(attrs || {}).forEach(([key, value]) => element.setAttribute(key, String(value)));
+            if (text !== undefined) element.textContent = text;
+            return element;
         }
 
+        function selectedTeeth() {
+            return Array.from(document.querySelectorAll('.arch-tooth[aria-pressed="true"]'));
+        }
+        function selectedNumbers() {
+            return selectedTeeth().map(tooth => tooth.dataset.tooth);
+        }
+        function selectedCountFromNumbers(teeth) {
+            return {
+                upper: teeth.filter(tooth => upperSet.has(tooth)).length,
+                lower: teeth.filter(tooth => lowerSet.has(tooth)).length
+            };
+        }
+        function defaultStoneColor() { return '#f4f8ff'; }
+        function ensureStoneProfile(number) {
+            const key = String(number);
+            if (!stoneProfiles[key]) {
+                stoneProfiles[key] = {
+                    type:stones.value !== 'none' ? stones.value : 'natural',
+                    clarity:document.getElementById('estimateClarity').value || 'commercial',
+                    color:defaultStoneColor(),
+                    shape:stoneShape,
+                    manual:false
+                };
+            }
+            return stoneProfiles[key];
+        }
+        function activeStoneProfile() {
+            return activeStoneTooth ? ensureStoneProfile(activeStoneTooth) : null;
+        }
+        function profileHasStoneType(profile) {
+            return Boolean(profile && (profile.manual || stones.value !== 'none'));
+        }
+        const stoneColorNames = {
+            '#f4f8ff':'Diamond white','#f3a8c8':'Pink','#6bbcf2':'Ice blue',
+            '#8c72dc':'Purple','#dd5454':'Ruby red','#65bb86':'Emerald green',
+            '#e5bf70':'Champagne','#30343b':'Black'
+        };
+        function renderStoneProfileControls() {
+            const profile = activeStoneProfile();
+            const disabled = !profile;
+            document.querySelectorAll('[data-stone-material]').forEach(button => {
+                button.disabled = disabled;
+                button.setAttribute('aria-pressed', String(Boolean(profile && button.dataset.stoneMaterial === profile.type)));
+            });
+            stoneColorPicker.disabled = disabled;
+            document.querySelectorAll('[data-stone-color]').forEach(button => {
+                button.disabled = disabled;
+                button.setAttribute('aria-pressed', String(Boolean(profile && button.dataset.stoneColor.toLowerCase() === profile.color.toLowerCase())));
+            });
+            if (!profile) {
+                stoneColorPicker.value = '#f4f8ff';
+                stoneColorLabel.textContent = 'Choose a stone tooth';
+            } else {
+                stoneColorPicker.value = profile.color || '#f4f8ff';
+                stoneColorLabel.textContent = stoneColorNames[(profile.color || '').toLowerCase()] || 'Custom color';
+                stoneShape = profile.shape || 'round';
+                document.querySelectorAll('[data-stone-shape]').forEach(button => {
+                    button.setAttribute('aria-pressed', String(button.dataset.stoneShape === stoneShape));
+                });
+            }
+        }
+
+        const enamelColorNames = {
+            '#f3a8c8':'Pink','#6bbcf2':'Ice blue','#8c72dc':'Purple',
+            '#dd5454':'Ruby red','#65bb86':'Emerald green','#e5bf70':'Champagne',
+            '#30343b':'Black','#f4f8ff':'White'
+        };
+        function renderEnamelControls() {
+            const selected = selectedNumbers();
+            enamelTargetHost.replaceChildren();
+            if (!selected.length) {
+                const empty = document.createElement('span');
+                empty.className = 'stone-empty';
+                empty.textContent = 'Select grill teeth first.';
+                enamelTargetHost.appendChild(empty);
+                activeEnamelTooth = '';
+            } else {
+                selected.forEach(number => {
+                    const profile = enamelProfiles[number];
+                    const item = document.createElement('div');
+                    item.className = 'enamel-target-item';
+                    const choose = document.createElement('button');
+                    choose.type = 'button';
+                    choose.className = 'enamel-target-chip' + (activeEnamelTooth === number ? ' is-active' : '');
+                    choose.textContent = (profile ? '✓ ' : '+ ') + 'Tooth ' + number;
+                    choose.setAttribute('aria-pressed', String(Boolean(profile)));
+                    choose.setAttribute('aria-label', profile ? 'Edit enamel color for tooth ' + number : 'Add enamel to tooth ' + number);
+                    choose.addEventListener('click', () => {
+                        if (!enamelProfiles[number]) enamelProfiles[number] = { color:'#f3a8c8', finish:'enamel', enabled:true };
+                        activeEnamelTooth = number;
+                        renderEnamelControls();
+                        updateEstimate({ preserveLayout:true });
+                    });
+                    item.appendChild(choose);
+                    if (profile) {
+                        const remove = document.createElement('button');
+                        remove.type = 'button';
+                        remove.className = 'enamel-target-remove';
+                        remove.textContent = '×';
+                        remove.setAttribute('aria-label', 'Remove enamel from tooth ' + number);
+                        remove.addEventListener('click', event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            delete enamelProfiles[number];
+                            if (activeEnamelTooth === number) activeEnamelTooth = '';
+                            renderEnamelControls();
+                            updateEstimate({ preserveLayout:true });
+                        });
+                        item.appendChild(remove);
+                    }
+                    enamelTargetHost.appendChild(item);
+                });
+                if (!selected.includes(activeEnamelTooth)) activeEnamelTooth = '';
+            }
+
+            const profile = activeEnamelTooth ? enamelProfiles[activeEnamelTooth] : null;
+            const disabled = !profile;
+            document.querySelectorAll('[data-enamel-color]').forEach(button => {
+                button.disabled = disabled;
+                button.setAttribute('aria-pressed', String(Boolean(profile && button.dataset.enamelColor.toLowerCase() === profile.color.toLowerCase())));
+            });
+            enamelCustomColor.disabled = disabled;
+            enamelCustomColor.value = profile ? profile.color : '#f3a8c8';
+            enamelActiveToothLabel.textContent = activeEnamelTooth || 'No tooth selected';
+            enamelStatus.textContent = profile
+                ? 'Tooth ' + activeEnamelTooth + ' · ' + (enamelColorNames[profile.color] || profile.color) + ' enamel. The preview is illustrative; enamel work is quoted individually.'
+                : 'Choose a grill tooth above, then select its enamel color. Enamel work is quote-based.';
+        }
+        function setActiveEnamelColor(color) {
+            if (!activeEnamelTooth || !enamelProfiles[activeEnamelTooth]) return;
+            if (!/^#[0-9a-f]{6}$/i.test(String(color || ''))) return;
+            enamelProfiles[activeEnamelTooth].color = color.toLowerCase();
+            renderEnamelControls();
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function currentLayoutKey() {
+            return stoneTargets.join(',') + '|' + String(stoneCountInput.value || '0') + '|' +
+                String(document.getElementById('estimateStoneSize').value || '1.3');
+        }
+        function rebuildLayout() {
+            const requested = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
+            layoutState = Stone.createDefault(stoneTargets, requested, { size:document.getElementById('estimateStoneSize').value });
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
+            renderStoneEditor();
+        }
+        function setStatus(message, isWarning) {
+            stoneStatus.textContent = message;
+            stoneStatus.classList.toggle('is-warning', !!isWarning);
+        }
+
+        function syncArchVisuals() {
+            const grillTeeth = new Set(selectedNumbers());
+            const targets = new Set(stoneTargets);
+            document.querySelectorAll('.arch-tooth').forEach(tooth => {
+                const number = tooth.dataset.tooth;
+                tooth.setAttribute('aria-pressed', String(grillTeeth.has(number)));
+                tooth.classList.toggle('stone-target', targets.has(number));
+                tooth.setAttribute('data-stone-target', String(targets.has(number)));
+            });
+        }
+
+        function updateMode() {
+            window.MrSprinkleGrillEditMode = toothMode;
+            document.getElementById('toothModeGrill').setAttribute('aria-pressed', String(toothMode === 'grill'));
+            document.getElementById('toothModeStones').setAttribute('aria-pressed', String(toothMode === 'stones'));
+            document.getElementById('toothModeHint').textContent = toothMode === 'grill'
+                ? 'Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.'
+                : 'Stone mode: choose which selected teeth receive stones. Each tooth can use its own material, color and setting shape. Click a tooth in the mouth preview to edit its exact stone positions.';
+        }
+
+        function buildArchPicker(group) {
+            const container = document.getElementById(group.jaw === 'upper' ? 'upperTeeth' : 'lowerTeeth');
+            container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide' }));
+            container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide-inner' }));
+            group.teeth.forEach((number,index) => {
+                const t = (index - 7.5) / 7.5;
+                const theta = t * 1.34;
+                const x = 210 + 148 * Math.sin(theta);
+                const y = 34 + 122 * Math.cos(theta);
+                const posteriorDistance = Math.min(index, 15-index);
+                const kind = posteriorDistance <= 2 ? 'molar' :
+                    posteriorDistance <= 4 ? 'premolar' :
+                    posteriorDistance === 5 ? 'canine' :
+                    posteriorDistance === 6 ? 'lateral-incisor' : 'central-incisor';
+                const dims = {
+                    molar:[31,27], premolar:[27,28], canine:[21,33],
+                    'lateral-incisor':[22,32], 'central-incisor':[25,34]
+                }[kind];
+                const w = dims[0], h = dims[1];
+                const tooth = svgNode('g', {
+                    class:'tooth-choice arch-tooth',
+                    transform:'translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(t*24).toFixed(1)+')',
+                    role:'button', tabindex:'0', 'aria-pressed':'false', 'data-stone-target':'false',
+                    'data-tooth-kind':kind,
+                    'aria-label':group.label+' '+kind.replace('-',' ')+' tooth '+number,
+                    'data-tooth':number, 'data-jaw':group.jaw
+                });
+                let path;
+                if (kind === 'canine') {
+                    path = 'M '+(-w*.38)+' '+(-h*.47)+' Q '+(-w*.52)+' '+(-h*.18)+' '+(-w*.39)+' '+(h*.24)+
+                        ' Q 0 '+(h*.72)+' '+(w*.39)+' '+(h*.24)+' Q '+(w*.52)+' '+(-h*.18)+' '+(w*.38)+' '+(-h*.47)+' Z';
+                } else if (kind === 'molar') {
+                    path = 'M '+(-w*.39)+' '+(-h*.43)+' Q '+(-w*.57)+' '+(-h*.31)+' '+(-w*.48)+' '+(h*.10)+
+                        ' L '+(-w*.39)+' '+(h*.35)+' Q '+(-w*.22)+' '+(h*.54)+' 0 '+(h*.42)+
+                        ' Q '+(w*.22)+' '+(h*.54)+' '+(w*.39)+' '+(h*.35)+' L '+(w*.48)+' '+(h*.10)+
+                        ' Q '+(w*.57)+' '+(-h*.31)+' '+(w*.39)+' '+(-h*.43)+' Q 0 '+(-h*.55)+' '+(-w*.39)+' '+(-h*.43)+' Z';
+                } else if (kind === 'premolar') {
+                    path = 'M '+(-w*.34)+' '+(-h*.45)+' Q '+(-w*.52)+' '+(-h*.24)+' '+(-w*.42)+' '+(h*.21)+
+                        ' Q '+(-w*.28)+' '+(h*.52)+' 0 '+(h*.42)+' Q '+(w*.28)+' '+(h*.52)+' '+(w*.42)+' '+(h*.21)+
+                        ' Q '+(w*.52)+' '+(-h*.24)+' '+(w*.34)+' '+(-h*.45)+' Q 0 '+(-h*.55)+' '+(-w*.34)+' '+(-h*.45)+' Z';
+                } else {
+                    path = 'M '+(-w*.40)+' '+(-h*.45)+' Q '+(-w*.50)+' '+(-h*.28)+' '+(-w*.46)+' '+(h*.15)+
+                        ' Q '+(-w*.42)+' '+(h*.49)+' 0 '+(h*.49)+' Q '+(w*.42)+' '+(h*.49)+' '+(w*.46)+' '+(h*.15)+
+                        ' Q '+(w*.50)+' '+(-h*.28)+' '+(w*.40)+' '+(-h*.45)+' Q 0 '+(-h*.54)+' '+(-w*.40)+' '+(-h*.45)+' Z';
+                }
+                tooth.appendChild(svgNode('path',{d:path,class:'tooth-crown'}));
+                tooth.appendChild(svgNode('path',{
+                    d:'M '+(-w*.20)+' '+(-h*.28)+' Q 0 '+(-h*.38)+' '+(w*.20)+' '+(-h*.28),
+                    class:'tooth-shine'
+                }));
+                if (kind === 'molar' || kind === 'premolar') {
+                    tooth.appendChild(svgNode('path',{
+                        d:kind === 'molar'
+                            ? 'M '+(-w*.22)+' '+(-h*.02)+' Q 0 '+(h*.08)+' '+(w*.22)+' '+(-h*.02)+' M 0 '+(-h*.18)+' L 0 '+(h*.23)
+                            : 'M 0 '+(-h*.20)+' L 0 '+(h*.24),
+                        class:'tooth-groove'
+                    }));
+                }
+                tooth.appendChild(svgNode('text',{x:0,y:2,class:'tooth-number','text-anchor':'middle','dominant-baseline':'middle'},number));
+                tooth.addEventListener('click', () => {
+                    if (toothMode === 'stones') {
+                        toggleStoneTarget(number);
+                        return;
+                    }
+                    tooth.setAttribute('aria-pressed', String(tooth.getAttribute('aria-pressed') !== 'true'));
+                    updateEstimate();
+                });
+                tooth.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        tooth.click();
+                    }
+                });
+                container.appendChild(tooth);
+            });
+        }
+        toothGroups.forEach(buildArchPicker);
+
         function renderDesignPreview(config) {
+            window.__MrSprinkleGrillConfig = config;
+            if (window.MrSprinkleGrill3D && typeof window.MrSprinkleGrill3D.update === 'function') {
+                window.MrSprinkleGrill3D.update(config);
+            } else {
+                window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config', { detail:config }));
+            }
             if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
                 window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
@@ -614,48 +1033,281 @@
             designPreview.textContent = 'The design diagram could not load. Your selected teeth and estimate are still available below.';
         }
 
+        function renderStoneTargets() {
+            const selected = selectedNumbers();
+            stoneTargetsHost.replaceChildren();
+            stoneEditToothChips.replaceChildren();
+
+            if (!selected.length) {
+                const empty = document.createElement('span');
+                empty.className = 'stone-empty';
+                empty.textContent = 'Select grill teeth first.';
+                stoneTargetsHost.appendChild(empty);
+                stoneEditToothChips.appendChild(empty.cloneNode(true));
+            } else {
+                selected.forEach(number => {
+                    const isTarget = stoneTargets.includes(number);
+                    const item = document.createElement('div');
+                    item.className = 'stone-target-item';
+
+                    const toothButton = document.createElement('button');
+                    toothButton.type = 'button';
+                    toothButton.className = 'stone-target-chip' + (isTarget && activeStoneTooth === number ? ' is-active' : '');
+                    toothButton.textContent = (isTarget ? '◆ ' : '+ ') + 'Tooth ' + number;
+                    toothButton.setAttribute('aria-pressed', String(isTarget));
+                    toothButton.setAttribute('aria-label', isTarget
+                        ? 'Edit stone settings for tooth ' + number
+                        : 'Add stones to tooth ' + number);
+                    toothButton.addEventListener('click', () => {
+                        if (!stoneTargets.includes(number)) toggleStoneTarget(number);
+                        else selectActiveStoneTooth(number);
+                    });
+                    item.appendChild(toothButton);
+
+                    if (isTarget) {
+                        const remove = document.createElement('button');
+                        remove.type = 'button';
+                        remove.className = 'stone-target-remove';
+                        remove.textContent = '×';
+                        remove.setAttribute('aria-label', 'Remove stones from tooth ' + number);
+                        remove.addEventListener('click', event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            toggleStoneTarget(number);
+                        });
+                        item.appendChild(remove);
+                    }
+                    stoneTargetsHost.appendChild(item);
+                });
+            }
+
+            if (!stoneTargets.length) {
+                const empty = document.createElement('span');
+                empty.className = 'stone-empty';
+                empty.textContent = 'Choose a tooth above to assign stones.';
+                stoneEditToothChips.appendChild(empty);
+            } else {
+                stoneTargets.forEach(number => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'stone-edit-tooth-chip' + (activeStoneTooth === number ? ' is-active' : '');
+                    button.textContent = number;
+                    button.setAttribute('aria-pressed', String(activeStoneTooth === number));
+                    button.setAttribute('aria-label', 'Edit stone placement on tooth ' + number);
+                    button.addEventListener('click', () => selectActiveStoneTooth(number));
+                    stoneEditToothChips.appendChild(button);
+                });
+            }
+
+            document.getElementById('toggleStoneEditor').disabled = !stoneTargets.length;
+            document.getElementById('autoPlaceStones').disabled = !stoneTargets.length;
+            document.getElementById('removeSelectedStone').disabled = !moveSource;
+            stoneTargets.forEach(ensureStoneProfile);
+            renderStoneProfileControls();
+            syncArchVisuals();
+        }
+
+        function selectActiveStoneTooth(number) {
+            const key = String(number);
+            if (!stoneTargets.includes(key)) {
+                toggleStoneTarget(key);
+                return;
+            }
+            activeStoneTooth = key;
+            editorOpen = true;
+            document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
+            renderStoneTargets();
+            renderStoneProfileControls();
+            renderStoneEditor();
+            setStatus('Editing tooth ' + key + '. Its material, color, shape and stone positions are independent of the other teeth.', false);
+        }
+
+        function toggleStoneTarget(number) {
+            if (!selectedNumbers().includes(String(number))) {
+                setStatus('Select tooth ' + number + ' as a grill tooth first. Stone layouts can only be placed on selected grill teeth.', true);
+                return;
+            }
+            stoneTargetsAuto = false;
+            if (stoneTargets.includes(String(number))) {
+                stoneTargets = stoneTargets.filter(tooth => tooth !== String(number));
+                delete stoneProfiles[String(number)];
+                if (moveSource && moveSource.tooth === String(number)) moveSource = null;
+                if (activeStoneTooth === String(number)) activeStoneTooth = stoneTargets[0] || '';
+            } else {
+                stoneTargets = stoneTargets.concat(String(number));
+                activeStoneTooth = String(number);
+                editorOpen = true;
+                ensureStoneProfile(String(number));
+            }
+            rebuildLayout();
+            renderStoneTargets();
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function renderStoneEditor() {
+            stoneEditor.hidden = !editorOpen;
+            if (!editorOpen || !activeStoneTooth) {
+                stoneGrid.replaceChildren();
+                return;
+            }
+            stoneGrid.replaceChildren();
+            stoneGridTitle.textContent = 'Tooth ' + activeStoneTooth + ' · individual stone positions';
+            const activeProfile = activeStoneProfile();
+            const activeShape = activeProfile && activeProfile.shape ? activeProfile.shape : stoneShape;
+            const occupied = new Set((layoutState.placements[activeStoneTooth] || []).map(Number));
+            const allowedCells = new Set(Stone.allowedCells(layoutState.stoneSize));
+            for (let cell = 0; cell < 25; cell++) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'stone-slot';
+                button.dataset.cell = String(cell);
+                button.dataset.stoneShape = activeShape;
+                button.dataset.stoneSize = layoutState.stoneSize;
+                button.setAttribute('role', 'gridcell');
+                button.setAttribute('aria-pressed', String(occupied.has(cell)));
+                const enabledCell = allowedCells.has(cell);
+                button.disabled = !enabledCell;
+                if (!enabledCell) button.classList.add('is-disabled');
+                button.setAttribute('aria-label', 'Tooth ' + activeStoneTooth + ', position ' + (cell + 1) +
+                    (occupied.has(cell) ? ', stone placed' : enabledCell ? ', empty position' : ', not available for this stone size'));
+                button.draggable = occupied.has(cell);
+                if (occupied.has(cell)) {
+                    button.classList.add('is-occupied');
+                    const gem = document.createElement('span');
+                    gem.className = 'stone-slot__gem';
+                    gem.setAttribute('aria-hidden', 'true');
+                    button.appendChild(gem);
+                }
+                if (moveSource && moveSource.tooth === activeStoneTooth && moveSource.cell === cell) button.classList.add('is-moving');
+
+                button.addEventListener('click', () => handleStoneCellClick(cell, occupied.has(cell)));
+                button.addEventListener('dragstart', event => {
+                    if (!occupied.has(cell)) { event.preventDefault(); return; }
+                    moveSource = { tooth:activeStoneTooth, cell };
+                    if (event.dataTransfer) {
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('text/plain', String(cell));
+                    }
+                    button.classList.add('is-moving');
+                    setStatus('Stone selected. Drop it on an empty guide, or tap an empty guide to move it.', false);
+                    document.getElementById('removeSelectedStone').disabled = false;
+                });
+                button.addEventListener('dragover', event => event.preventDefault());
+                button.addEventListener('drop', event => {
+                    event.preventDefault();
+                    if (moveSource) moveStoneToCell(activeStoneTooth, cell);
+                });
+                stoneGrid.appendChild(button);
+            }
+            const placedOnTooth = (layoutState.placements[activeStoneTooth] || []).length;
+            const totalPlaced = layoutState.placedCount;
+            document.getElementById('removeSelectedStone').disabled = !moveSource;
+            const materialLabel = activeProfile && activeProfile.type ? activeProfile.type : 'choose material';
+            const placementInstruction = moveSource
+                ? ' Stone selected from tooth ' + moveSource.tooth + ' — choose an empty guide here to move it across teeth.'
+                : ' Tap an empty guide to add a stone, or select a gem and switch teeth to move it across the smile.';
+            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. ' + materialLabel + ' · ' + layoutState.stoneSize + ' mm guides.' + placementInstruction, false);
+        }
+
+        function handleStoneCellClick(cell, occupied) {
+            if (!activeStoneTooth) return;
+            if (moveSource) {
+                if (occupied && moveSource.cell !== cell) {
+                    moveSource = { tooth:activeStoneTooth, cell };
+                    renderStoneEditor();
+                    return;
+                }
+                if (!occupied) {
+                    moveStoneToCell(activeStoneTooth, cell);
+                    return;
+                }
+                if (moveSource.cell === cell) {
+                    moveSource = null;
+                    renderStoneEditor();
+                    return;
+                }
+            }
+            if (occupied) {
+                moveSource = { tooth:activeStoneTooth, cell };
+                renderStoneEditor();
+                setStatus('Stone selected. Tap or drag it to an empty guide to reposition it.', false);
+                return;
+            }
+            if (!profileHasStoneType(activeStoneProfile())) {
+                setStatus('Choose a stone material for tooth ' + activeStoneTooth + ' before adding stones.', true);
+                return;
+            }
+            layoutState = Stone.add(layoutState, activeStoneTooth, cell, layoutState.requestedCount);
+            stoneCountInput.value = String(layoutState.placedCount);
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function moveStoneToCell(tooth, destinationCell) {
+            if (!moveSource) return;
+            layoutState = Stone.move(layoutState, moveSource.tooth, moveSource.cell, tooth, destinationCell);
+            moveSource = null;
+            lastLayoutInputKey = currentLayoutKey();
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function removeSelectedStone() {
+            if (!moveSource) return;
+            layoutState = Stone.remove(layoutState, moveSource.tooth, moveSource.cell);
+            stoneCountInput.value = String(layoutState.placedCount);
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function renderStoneCapacity() {
+            const requested = Math.max(0, Math.floor(Number(stoneCountInput.value) || 0));
+            const capacity = stoneTargets.length * (layoutState.capacityPerTooth || Stone.capacityPerTooth);
+            const placed = layoutState.placedCount;
+            const anyStoneType = stones.value !== 'none' || stoneTargets.some(number => profileHasStoneType(ensureStoneProfile(number)));
+            if (!requested || !anyStoneType) {
+                stoneCapacityNotice.textContent = 'Choose which teeth receive stones, then assign a material and color to each tooth. The estimate will follow your exact layout.';
+                stoneCapacityNotice.classList.remove('is-warning');
+                return;
+            }
+            if (layoutState.unplacedCount > 0) {
+                stoneCapacityNotice.textContent = requested + ' stones requested, but the current ' + stoneTargets.length + ' target tooth/tooth surfaces hold ' + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
+                stoneCapacityNotice.classList.add('is-warning');
+            } else {
+                stoneCapacityNotice.textContent = requested + ' stones placed across ' + stoneTargets.length + ' selected teeth. Move individual stones in the grid; changing the layout does not change the count.';
+                stoneCapacityNotice.classList.remove('is-warning');
+            }
+        }
+
         function readConfig() {
-            const chosenTeeth = selectedTeeth();
+            const teeth = selectedNumbers();
+            const counts = selectedCountFromNumbers(teeth);
+            const requestedCount = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
             return {
-                design: design.value,
-                metal: metal.value,
-                teeth: chosenTeeth.map((tooth) => tooth.dataset.tooth),
-                upperCount: upperCountInput.value,
-                lowerCount: lowerCountInput.value,
-                finish: document.getElementById('estimateFinish').value,
-                shipping: document.getElementById('estimateShipping').value,
-                extension: document.getElementById('estimateFangExtension').value,
-                stones: stones.value,
-                clarity: document.getElementById('estimateClarity').value,
-                size: document.getElementById('estimateStoneSize').value,
-                stoneCount: document.getElementById('estimateStoneCount').value,
-                cuts: Array.from(document.querySelectorAll('.estimateCustomCut:checked'), (cut) => cut.value)
+                design:design.value,
+                metal:metal.value,
+                teeth,
+                upperCount:counts.upper,
+                lowerCount:counts.lower,
+                finish:document.getElementById('estimateFinish').value,
+                shipping:document.getElementById('estimateShipping').value,
+                extension:document.getElementById('estimateFangExtension').value,
+                stones:stones.value,
+                clarity:document.getElementById('estimateClarity').value,
+                size:document.getElementById('estimateStoneSize').value,
+                stoneCount:requestedCount,
+                cuts:Array.from(document.querySelectorAll('.estimateCustomCut:checked'), cut => cut.value),
+                stoneShape,
+                stoneTeeth:stoneTargets.slice(),
+                stoneLayout:layoutState.placements,
+                stoneLayoutSerialized:Stone.serialize(layoutState),
+                stoneProfiles:Object.fromEntries(stoneTargets.map(number => [number, Object.assign({}, ensureStoneProfile(number))])),
+                enamelProfiles:Object.fromEntries(Object.entries(enamelProfiles).filter(([number]) => teeth.includes(number)).map(([number, profile]) => [number, Object.assign({}, profile)]))
             };
         }
 
-        function updateEstimate() {
-            const chosenTeeth = selectedTeeth();
-            const hasExactSelection = chosenTeeth.length > 0;
-            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
-            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
-            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
-            upperCountInput.disabled = hasExactSelection;
-            lowerCountInput.disabled = hasExactSelection;
-
-            const est = window.MrSprinkleEstimate.calculate(readConfig());
-            const c = est.config;
-            if (hasExactSelection) {
-                upperCountInput.value = String(c.upperCount);
-                lowerCountInput.value = String(c.lowerCount);
-                exactToothSummary.textContent = `Exact teeth selected (${c.teeth.length}); edit selection below`;
-            } else {
-                exactToothSummary.textContent = 'Choose exact teeth (optional)';
-            }
-            renderDesignPreview(c);
-            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
-                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
-                : `Estimate uses ${Number.isInteger(c.stoneCount) ? c.stoneCount : '—'} stones. Setting labor is included in published pricing.`;
-
+        function renderEstimate(est) {
             result.replaceChildren();
             if (!est.ok) {
                 result.textContent = est.error;
@@ -664,7 +1316,7 @@
             }
             const list = document.createElement('ul');
             list.className = 'estimate-lines';
-            est.lines.forEach((line) => {
+            est.lines.forEach(line => {
                 const li = document.createElement('li');
                 const label = document.createElement('span');
                 label.textContent = line.label;
@@ -677,43 +1329,245 @@
             const totalLine = document.createElement('p');
             const strong = document.createElement('strong');
             if (est.status === 'estimate') {
-                strong.textContent = `Estimated total: ${currency.format(est.total)}`;
+                strong.textContent = 'Estimated total: ' + currency.format(est.total);
                 totalLine.appendChild(strong);
             } else {
                 strong.className = 'quote-required';
                 strong.textContent = 'Custom quote required — contact Mr. Sprinkle for your personalized price.';
-                totalLine.append(`Known published-price subtotal: ${currency.format(est.knownSubtotal)}. `, strong);
+                totalLine.append('Known published-price subtotal: ' + currency.format(est.knownSubtotal) + '. ', strong);
                 const why = document.createElement('span');
                 why.className = 'note';
-                why.textContent = ` Reason: ${est.quoteReasons.join('; ')}.`;
+                why.textContent = ' Reason: ' + est.quoteReasons.join('; ') + '.';
                 totalLine.appendChild(why);
             }
             result.appendChild(totalLine);
-            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach((text) => {
+            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach(text => {
                 const note = document.createElement('p');
                 note.className = 'note';
                 note.textContent = text;
                 result.appendChild(note);
             });
-            quoteLink.href = `mold-form.html?${new URLSearchParams(window.MrSprinkleEstimate.toParams(c)).toString()}`;
         }
 
-        document.querySelectorAll('#configurator select, #configurator input').forEach((input) => {
-            input.addEventListener('change', updateEstimate);
-            input.addEventListener('input', updateEstimate);
-        });
-        document.getElementById('clearTeeth').addEventListener('click', () => {
-            const hadExactSelection = selectedTeeth().length > 0;
-            document.querySelectorAll('.tooth-choice').forEach((tooth) => tooth.setAttribute('aria-pressed', 'false'));
-            if (hadExactSelection) {
-                upperCountInput.value = '0';
-                lowerCountInput.value = '0';
+        function updateEstimate(options) {
+            const opts = options || {};
+            const selected = selectedNumbers();
+            const selectedSignature = selected.join(',');
+            let targetChanged = false;
+            if (stoneTargetsAuto) {
+                const nextTargets = selected.slice();
+                targetChanged = nextTargets.join(',') !== stoneTargets.join(',');
+                stoneTargets = nextTargets;
+            } else {
+                const filtered = stoneTargets.filter(number => selected.includes(number));
+                targetChanged = filtered.join(',') !== stoneTargets.join(',');
+                stoneTargets = filtered;
             }
+            if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
+            Object.keys(stoneProfiles).forEach(number => {
+                if (!stoneTargets.includes(number)) delete stoneProfiles[number];
+            });
+            Object.keys(enamelProfiles).forEach(number => {
+                if (!selected.includes(number)) delete enamelProfiles[number];
+            });
+            if (!selected.includes(activeEnamelTooth)) activeEnamelTooth = '';
+            stoneTargets.forEach(number => {
+                const profile = ensureStoneProfile(number);
+                if (!profile.manual && stones.value !== 'none') {
+                    profile.type = stones.value;
+                    profile.clarity = document.getElementById('estimateClarity').value || 'commercial';
+                }
+            });
+
+            const layoutKey = currentLayoutKey();
+            if (!opts.preserveLayout && (targetChanged || selectedSignature !== lastSelectedSignature || layoutKey !== lastLayoutInputKey)) {
+                rebuildLayout();
+            }
+            lastSelectedSignature = selectedSignature;
+
+            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
+            const hasNaturalOnTooth = stoneTargets.some(number => {
+                const profile = ensureStoneProfile(number);
+                return profile.manual && profile.type === 'natural';
+            });
+            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural' && !hasNaturalOnTooth;
+            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
+
+            const raw = readConfig();
+            const est = E.calculate(raw);
+            const c = Object.assign({}, est.config, raw);
+            exactToothSummary.textContent = c.teeth.length
+                ? c.teeth.length + ' teeth selected · ' + c.upperCount + ' upper / ' + c.lowerCount + ' lower'
+                : '0 teeth selected — choose any combination above to preview and price your grillz.';
+            document.querySelectorAll('[data-metal-swatch]').forEach(swatch => {
+                swatch.setAttribute('aria-pressed', String(swatch.dataset.metalSwatch === c.metal));
+            });
+            document.querySelectorAll('[data-stone-shape]').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.stoneShape === stoneShape));
+            });
+
+            renderStoneTargets();
+            renderStoneCapacity();
+            renderStoneEditor();
+            renderEnamelControls();
+            renderDesignPreview(c);
+            const anyStoneType = stones.value !== 'none' || stoneTargets.some(number => {
+                const profile = ensureStoneProfile(number);
+                return profile.manual && profile.type !== 'none';
+            });
+            document.getElementById('stoneCountHint').textContent = !anyStoneType
+                ? 'Assign a stone material to each tooth receiving stones. Setting labor is included in published pricing.'
+                : 'Estimate uses ' + c.stoneCount + ' stones at ' + c.size + ' mm across your selected tooth profiles. Setting labor is included in published pricing.';
+            renderEstimate(est);
+            if (est.ok) {
+                const handoff = new URLSearchParams(E.toParams(c)).toString();
+                quoteLink.href = 'mold-form.html?' + handoff;
+                const customHandoff = new URLSearchParams(E.toParams(c));
+                customHandoff.set('customArtwork', 'true');
+                customArtworkQuoteLink.href = 'mold-form.html?' + customHandoff.toString();
+            }
+            window.__MrSprinkleGrillConfig = c;
+        }
+
+        function setToothMode(mode) {
+            toothMode = mode === 'stones' ? 'stones' : 'grill';
+            updateMode();
+            syncArchVisuals();
+        }
+
+        function toggleStoneEditor() {
+            editorOpen = !editorOpen;
+            stoneEditor.hidden = !editorOpen;
+            document.getElementById('toggleStoneEditor').textContent = editorOpen ? 'Close placement grid' : 'Open placement grid';
+            renderStoneEditor();
+        }
+
+        window.MrSprinkleGrillSelectTooth = function (number) {
+            const tooth = Array.from(document.querySelectorAll('.arch-tooth')).find(item => item.dataset.tooth === String(number));
+            if (!tooth) return;
+            if (toothMode === 'stones') {
+                window.MrSprinkleGrillSelectStoneTooth(String(number));
+            } else {
+                tooth.setAttribute('aria-pressed', String(tooth.getAttribute('aria-pressed') !== 'true'));
+                updateEstimate();
+            }
+        };
+        window.MrSprinkleGrillSelectStoneTooth = function (number) {
+            const key = String(number);
+            if (!selectedNumbers().includes(key)) {
+                setStatus('Select tooth ' + key + ' for grillz first, then assign stones to it.', true);
+                return;
+            }
+            if (!stoneTargets.includes(key)) {
+                toggleStoneTarget(key);
+            }
+            activeStoneTooth = key;
+            editorOpen = true;
+            stoneEditor.hidden = false;
+            document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
+            renderStoneTargets();
+            renderStoneEditor();
+        };
+
+        document.getElementById('toothModeGrill').addEventListener('click', () => setToothMode('grill'));
+        document.getElementById('toothModeStones').addEventListener('click', () => setToothMode('stones'));
+        document.getElementById('selectUpperTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth[data-jaw="upper"]').forEach(tooth => tooth.setAttribute('aria-pressed','true'));
             updateEstimate();
         });
-        updateEstimate();
+        document.getElementById('selectLowerTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth[data-jaw="lower"]').forEach(tooth => tooth.setAttribute('aria-pressed','true'));
+            updateEstimate();
+        });
+        document.getElementById('clearTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth').forEach(tooth => tooth.setAttribute('aria-pressed','false'));
+            stoneTargetsAuto = true;
+            stoneTargets = [];
+            layoutState = Stone.createDefault([], 0);
+            updateEstimate({ preserveLayout:true });
+        });
+
+        document.querySelectorAll('[data-metal-swatch]').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                metal.value = swatch.dataset.metalSwatch;
+                updateEstimate();
+            });
+        });
+        document.querySelectorAll('[data-stone-shape]').forEach(button => {
+            button.addEventListener('click', () => {
+                stoneShape = button.dataset.stoneShape === 'square' ? 'square' : 'round';
+                const profile = activeStoneProfile();
+                if (profile) { profile.shape = stoneShape; profile.manual = true; }
+                if (profile && stones.value === 'none') stones.value = profile.type || 'natural';
+                renderStoneEditor();
+                updateEstimate({ preserveLayout:true });
+            });
+        });
+        document.querySelectorAll('[data-stone-material]').forEach(button => {
+            button.addEventListener('click', () => {
+                const profile = activeStoneProfile();
+                if (!profile) return;
+                profile.type = button.dataset.stoneMaterial;
+                profile.manual = true;
+                if (stones.value === 'none') stones.value = profile.type;
+                if (profile.type === 'natural') profile.clarity = document.getElementById('estimateClarity').value || 'commercial';
+                updateEstimate({ preserveLayout:true });
+                setStatus('Tooth ' + activeStoneTooth + ' now uses ' + button.textContent.trim().replace(/\s+/g, ' ') + '.', false);
+            });
+        });
+        stoneColorPicker.addEventListener('input', () => {
+            const profile = activeStoneProfile();
+            if (!profile) return;
+            profile.color = stoneColorPicker.value.toLowerCase();
+            profile.manual = true;
+            if (stones.value === 'none') stones.value = profile.type || 'natural';
+            updateEstimate({ preserveLayout:true });
+        });
+        document.querySelectorAll('[data-stone-color]').forEach(button => {
+            button.addEventListener('click', () => {
+                const profile = activeStoneProfile();
+                if (!profile) return;
+                profile.color = button.dataset.stoneColor.toLowerCase();
+                profile.manual = true;
+                if (stones.value === 'none') stones.value = profile.type || 'natural';
+                renderStoneProfileControls();
+                updateEstimate({ preserveLayout:true });
+            });
+        });
+        document.querySelectorAll('[data-enamel-color]').forEach(button => {
+            button.addEventListener('click', () => setActiveEnamelColor(button.dataset.enamelColor));
+        });
+        enamelCustomColor.addEventListener('input', () => setActiveEnamelColor(enamelCustomColor.value));
+        document.getElementById('toggleStoneEditor').addEventListener('click', toggleStoneEditor);
+        document.getElementById('autoPlaceStones').addEventListener('click', () => {
+            rebuildLayout();
+            renderStoneEditor();
+            updateEstimate({ preserveLayout:true });
+            setStatus('The current stone count has been distributed evenly across your selected stone teeth. You can now move each stone individually.', false);
+        });
+        document.getElementById('removeSelectedStone').addEventListener('click', removeSelectedStone);
+
+        stoneCountInput.addEventListener('input', () => {
+            rebuildLayout();
+            updateEstimate({ preserveLayout:true });
+        });
+
+        document.querySelectorAll('#configurator select, #configurator input').forEach(input => {
+            input.addEventListener('change', () => {
+                if (input === stoneCountInput || input === stoneColorPicker) return;
+                updateEstimate();
+            });
+            input.addEventListener('input', () => {
+                if (input === stoneCountInput || input === stoneColorPicker) return;
+                updateEstimate();
+            });
+        });
+
+        updateMode();
+        updateEstimate({ preserveLayout:true });
     })();
     </script>
+    <script type="module" src="assets/grill-studio-3d.js?v=20261122-dental-cast-v3"></script>
     <script src="assets/site-header.js"></script>
 </body>
 </html>

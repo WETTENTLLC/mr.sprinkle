@@ -54,3 +54,125 @@ test("round trip through URL params gives the same estimate", () => {
   assert.equal(a.total, b.total); assert.equal(E.summaryText(a), E.summaryText(b));
   assert.equal(E.toParams(a.config).pv, catalog.version);
 });
+
+test("one exact FDI tooth produces the same approved per-tooth estimate", () => {
+  const r = E.calculate({ teeth: ["18"], metal: "silver" });
+  assert.equal(r.config.upperCount, 1);
+  assert.equal(r.config.lowerCount, 0);
+  assert.equal(r.total, 160);
+});
+test("any non-contiguous combination across both jaws is priced by exact selected count", () => {
+  const r = E.calculate({ teeth: ["18", "13", "22", "35"], metal: "gold10k" });
+  assert.equal(r.config.upperCount, 3);
+  assert.equal(r.config.lowerCount, 1);
+  assert.equal(r.total, 4 * 240 + 60);
+});
+test("single exact dental-gold tooth and one lower exact tooth both remain selectable", () => {
+  const r = E.calculate({ teeth: ["43"], metal: "dentalGold14k" });
+  assert.equal(r.config.upperCount, 0);
+  assert.equal(r.config.lowerCount, 1);
+  assert.equal(r.total, 320 + 60);
+});
+
+test("stone shape, stone target teeth, and cell layout survive quote URL round trip", () => {
+  const cfg = E.calculate({
+    teeth: ["11", "21", "22"],
+    metal: "gold14k",
+    stones: "natural",
+    stoneCount: 3,
+    stoneShape: "square",
+    stoneTeeth: ["11", "22"],
+    stoneLayout: "11:12.13;22:7"
+  }).config;
+  const params = E.toParams(cfg);
+  assert.equal(params.stoneShape, "square");
+  assert.equal(params.stoneTeeth, "11,22");
+  assert.equal(params.stoneLayout, "11:12.13;22:7");
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.equal(restored.stoneShape, "square");
+  assert.deepEqual(restored.stoneTeeth, ["11", "22"]);
+  assert.equal(restored.stoneLayout, "11:12.13;22:7");
+});
+test("legacy grill quote links default stone targets to selected grill teeth", () => {
+  const restored = E.normalize({ teeth: "11,21", stones: "natural", stoneCount: "2" });
+  assert.deepEqual(restored.stoneTeeth, ["11", "21"]);
+  assert.equal(restored.stoneShape, "round");
+});
+
+test("mixed tooth-specific stone materials and colors are priced by their assigned counts", () => {
+  const r = E.calculate({
+    teeth: ["11", "21", "22"],
+    metal: "gold14k",
+    stones: "none",
+    size: "2.0",
+    stoneCount: 6,
+    stoneTeeth: ["11", "21", "22"],
+    stoneLayout: "11:0.1;21:2.3;22:4.5",
+    stoneProfiles: {
+      "11": { type:"natural", clarity:"vvs", color:"#f4f8ff", shape:"round", manual:true },
+      "21": { type:"cubicZirconia", clarity:"commercial", color:"#6bbcf2", shape:"square", manual:true },
+      "22": { type:"vvsMoissanite", clarity:"commercial", color:"#f3a8c8", shape:"round", manual:true }
+    }
+  });
+  assert.equal(r.status, "estimate");
+  assert.equal(r.total, 3 * 300 + 60 + 2 * 28 + 2 * 6 + 2 * 3.7);
+  assert.ok(r.lines.some(line => /white VVS natural diamond: 2/.test(line.label)));
+  assert.ok(r.lines.some(line => /ice blue Cubic Zirconia: 2/.test(line.label)));
+  assert.ok(r.lines.some(line => /pink VVS Moissanite: 2/.test(line.label)));
+});
+
+test("per-tooth stone styling survives the quote URL round trip", () => {
+  const cfg = E.calculate({
+    teeth:["11","21"], stones:"natural", size:"1.5", stoneCount:4,
+    stoneTeeth:["11","21"], stoneLayout:"11:12.13;21:7.8",
+    stoneProfiles:{
+      "11":{type:"natural",clarity:"vvs",color:"#f4f8ff",shape:"round",manual:false},
+      "21":{type:"cubicZirconia",clarity:"commercial",color:"#f3a8c8",shape:"square",manual:true}
+    }
+  }).config;
+  const params = E.toParams(cfg);
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.deepEqual(restored.stoneProfiles, cfg.stoneProfiles);
+  assert.equal(restored.stoneLayout, "11:12.13;21:7.8");
+});
+
+test("the first explicitly chosen material can price unedited target teeth through the inherited default", () => {
+  const r = E.calculate({
+    teeth:["11","21"], stones:"natural", size:"1.3", stoneCount:4,
+    stoneTeeth:["11","21"], stoneLayout:"11:0.1;21:2.3",
+    stoneProfiles:{
+      "11":{type:"natural",clarity:"commercial",color:"#f4f8ff",shape:"round",manual:true},
+      "21":{type:"natural",clarity:"commercial",color:"#f4f8ff",shape:"round",manual:false}
+    }
+  });
+  assert.equal(r.status,"estimate");
+  assert.equal(r.total,2*100+60+4*6);
+});
+
+test("enamel profiles are quoted and survive the configuration handoff", () => {
+  const r = E.calculate({
+    teeth:["11","21","22"], metal:"gold14k",
+    enamelProfiles:{
+      "11":{color:"#f3a8c8",finish:"enamel",enabled:true},
+      "22":{color:"#6bbcf2",finish:"enamel",enabled:true}
+    }
+  });
+  assert.equal(r.status,"quote");
+  assert.equal(r.total,null);
+  assert.ok(r.quoteReasons.some(reason => /enamel color work/.test(reason)));
+  const params = E.toParams(r.config);
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.deepEqual(restored.enamelProfiles,r.config.enamelProfiles);
+  assert.ok(E.summaryText(r).includes("Tooth 11: enamel #f3a8c8"));
+});
+
+test("custom artwork requests are explicitly quote-only and preserved in the URL", () => {
+  const r = E.calculate({teeth:["11","21"],metal:"gold14k",customArtwork:"true"});
+  assert.equal(r.status,"quote");
+  assert.equal(r.total,null);
+  assert.ok(r.quoteReasons.some(reason => /custom artwork requires a reference image/.test(reason)));
+  const params = E.toParams(r.config);
+  assert.equal(params.customArtwork,"true");
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.equal(restored.customArtwork,true);
+});

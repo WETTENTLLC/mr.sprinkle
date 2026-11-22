@@ -39,6 +39,47 @@
         const teeth = Array.from(new Set(teethList));
         const cuts = (Array.isArray(r.cuts) ? r.cuts : String(r.cuts || "").split(","))
             .map((c) => String(c).trim()).filter((c) => c in catalog.customCuts);
+        const hasStoneTeeth = Object.prototype.hasOwnProperty.call(r, "stoneTeeth");
+        const stoneTeethRaw = Array.isArray(r.stoneTeeth) ? r.stoneTeeth : String(r.stoneTeeth || "").split(",");
+        const stoneTeeth = Array.from(new Set(stoneTeethRaw.map((t) => String(t).trim())))
+            .filter((t) => jawOf(t) && teeth.includes(t));
+        const stones = r.stones in STONES ? r.stones : "none";
+        const clarity = r.clarity in CLARITY ? r.clarity : "commercial";
+        const size = SIZES.includes(String(r.size)) ? String(r.size) : "1.3";
+        let profilesRaw = r.stoneProfiles || r.stoneProfilesSerialized || {};
+        if (typeof profilesRaw === "string") {
+            try { profilesRaw = JSON.parse(profilesRaw); } catch (_) { profilesRaw = {}; }
+        }
+        const stoneProfiles = {};
+        stoneTeeth.forEach((tooth) => {
+            const profile = profilesRaw && typeof profilesRaw === "object" ? (profilesRaw[tooth] || {}) : {};
+            const type = profile.type in STONES && profile.type !== "none" ? profile.type : stones;
+            const profileColor = /^#[0-9a-f]{6}$/i.test(String(profile.color || "")) ? String(profile.color).toLowerCase() : "#f4f8ff";
+            stoneProfiles[tooth] = {
+                type: type === "none" ? "natural" : type,
+                clarity: profile.clarity in CLARITY ? profile.clarity : clarity,
+                color: profileColor,
+                shape: profile.shape === "square" ? "square" : (profile.shape === "round" ? "round" : "round"),
+                manual: Boolean(profile.manual)
+            };
+        });
+        let enamelRaw = r.enamelProfiles || r.enamelProfilesSerialized || {};
+        if (typeof enamelRaw === "string") {
+            try { enamelRaw = JSON.parse(enamelRaw); } catch (_) { enamelRaw = {}; }
+        }
+        const enamelProfiles = {};
+        teeth.forEach((tooth) => {
+            const profile = enamelRaw && typeof enamelRaw === "object" ? (enamelRaw[tooth] || {}) : {};
+            const color = /^#[0-9a-f]{6}$/i.test(String(profile.color || "")) ? String(profile.color).toLowerCase() : "";
+            if (color && profile.enabled !== false) {
+                enamelProfiles[tooth] = { color, finish: "enamel", enabled: true };
+            }
+        });
+        const customArtwork = ["true", "1", "yes"].includes(String(r.customArtwork || "").toLowerCase());
+        const stoneShape = r.stoneShape === "square" ? "square" : "round";
+        const stoneLayout = typeof r.stoneLayoutSerialized === "string"
+            ? r.stoneLayoutSerialized
+            : (typeof r.stoneLayout === "string" ? r.stoneLayout : "");
         return {
             design: r.design in DESIGNS ? r.design : "grillz",
             metal: r.metal in METALS ? r.metal : "silver",
@@ -48,10 +89,16 @@
             finish: r.finish === "custom" ? "custom" : "standard",
             shipping: r.shipping === "rush" ? "rush" : "standard",
             extension: r.extension in EXTENSIONS ? r.extension : "",
-            stones: r.stones in STONES ? r.stones : "none",
-            clarity: r.clarity in CLARITY ? r.clarity : "commercial",
-            size: SIZES.includes(String(r.size)) ? String(r.size) : "1.3",
+            stones,
+            clarity,
+            size,
             stoneCount: int(r.stoneCount ?? 0),
+            stoneShape,
+            stoneTeeth: hasStoneTeeth ? stoneTeeth : teeth.slice(),
+            stoneLayout,
+            stoneProfiles,
+            enamelProfiles,
+            customArtwork,
             cuts: Array.from(new Set(cuts))
         };
     }
@@ -76,9 +123,11 @@
             out.error = "Enter an approximate tooth count for either jaw, or choose exact teeth, to see an estimate.";
             return out;
         }
-        const minStones = c.stones === "none" ? 0 : 1;
+        const hasManualStoneType = Object.values(c.stoneProfiles || {}).some(profile => profile && profile.manual && profile.type !== "none");
+        const hasStoneType = c.stones !== "none" || hasManualStoneType;
+        const minStones = hasStoneType ? 1 : 0;
         if (!Number.isInteger(c.stoneCount) || c.stoneCount < minStones || c.stoneCount > 100) {
-            out.error = c.stones === "none" ? "Enter a whole number of stones from 0 to 100." : "Enter an approximate stone count from 1 to 100.";
+            out.error = hasStoneType ? "Enter a whole number of stones from 1 to 100." : "Enter a whole number of stones from 0 to 100.";
             return out;
         }
 
@@ -97,15 +146,79 @@
         // Fang extension
         if (c.design === "fangs" && c.extension) add(`Fang extension: ${EXTENSIONS[c.extension]}`, catalog.fangExtensions[c.extension]);
 
-        // Stones (setting labor is included per owner decision)
-        if (c.stones !== "none") {
-            const table = c.stones === "natural" ? catalog.naturalDiamonds[c.clarity] : catalog.alternativeStones[c.stones];
-            const each = table[c.size];
-            const name = c.stones === "natural" ? `${CLARITY[c.clarity]} natural diamond` : STONES[c.stones];
-            add(`Stones: ${c.stoneCount} × ${name} ${c.size}mm at ${money(each)}`, each * c.stoneCount);
-            out.notes.push("Stone setting labor is included in published pricing.");
+        // Stones are priced by the profile assigned to each target tooth.
+        // The layout controls the displayed allocation; any requested quantity
+        // beyond visual capacity is still included in the estimate and flagged by the UI.
+        if (hasStoneType && c.stoneCount > 0) {
+            const targetTeeth = c.stoneTeeth.length ? c.stoneTeeth : (c.teeth.length ? c.teeth : (c.stones !== "none" ? ["selected set"] : []));
+            const quantityByTooth = {};
+            let placedTotal = 0;
+            String(c.stoneLayout || "").split(";").forEach((part) => {
+                const match = part.match(/^(\d{2}):([\d.]+)$/);
+                if (!match || !targetTeeth.includes(match[1])) return;
+                const qty = match[2].split(".").filter(value => /^\d+$/.test(value)).length;
+                if (qty) { quantityByTooth[match[1]] = qty; placedTotal += qty; }
+            });
+            if (!placedTotal) {
+                targetTeeth.forEach(tooth => { quantityByTooth[tooth] = 0; });
+            }
+            let remaining = Math.max(0, c.stoneCount - placedTotal);
+            let cursor = 0;
+            while (remaining > 0 && targetTeeth.length) {
+                const tooth = targetTeeth[cursor % targetTeeth.length];
+                quantityByTooth[tooth] = (quantityByTooth[tooth] || 0) + 1;
+                remaining--;
+                cursor++;
+            }
+            let overflow = Math.max(0, placedTotal - c.stoneCount);
+            if (overflow) {
+                for (let i = targetTeeth.length - 1; i >= 0 && overflow > 0; i--) {
+                    const tooth = targetTeeth[i];
+                    const remove = Math.min(overflow, quantityByTooth[tooth] || 0);
+                    quantityByTooth[tooth] -= remove;
+                    overflow -= remove;
+                }
+            }
+
+            const groups = new Map();
+            targetTeeth.forEach((tooth) => {
+                const quantity = quantityByTooth[tooth] || 0;
+                if (!quantity) return;
+                const profile = c.stoneProfiles[tooth] || {};
+                const type = profile.manual ? profile.type : c.stones;
+                if (!type || type === "none" || !(type in STONES)) return;
+                const clarity = type === "natural" ? (profile.clarity || c.clarity) : "commercial";
+                const key = [type, clarity, profile.color || "#f4f8ff"].join("|");
+                if (!groups.has(key)) groups.set(key, { type, clarity, color:profile.color || "#f4f8ff", teeth:[], quantity:0 });
+                const group = groups.get(key);
+                group.teeth.push(tooth);
+                group.quantity += quantity;
+            });
+
+            groups.forEach((group) => {
+                const table = group.type === "natural"
+                    ? catalog.naturalDiamonds[group.clarity]
+                    : catalog.alternativeStones[group.type];
+                const each = table[c.size];
+                const materialName = group.type === "natural"
+                    ? `${CLARITY[group.clarity]} natural diamond`
+                    : STONES[group.type];
+                const colorName = {
+                    "#f4f8ff":"white",
+                    "#f3a8c8":"pink",
+                    "#6bbcf2":"ice blue",
+                    "#8c72dc":"purple",
+                    "#dd5454":"ruby red",
+                    "#65bb86":"emerald green",
+                    "#e5bf70":"champagne",
+                    "#30343b":"black"
+                }[group.color] || group.color;
+                const placementLabel = group.teeth.length === 1 && group.teeth[0] === "selected set" ? "on selected set" : "on teeth " + group.teeth.join(", ");
+                add(`${colorName} ${materialName}: ${group.quantity} × ${c.size}mm ${placementLabel} at ${money(each)}`, each * group.quantity);
+            });
+            out.notes.push("Stone setting labor is included in published pricing. Per-tooth material and color choices are included in this estimate.");
         } else if (c.stoneCount > 0) {
-            out.notes.push(`About ${c.stoneCount} stones planned — choose a stone type to price them.`);
+            out.notes.push(`About ${c.stoneCount} stones planned — choose a stone type on the tooth(s) receiving stones to price them.`);
         }
 
         // Custom cuts: charged once per set (each upper or lower piece)
@@ -117,6 +230,15 @@
             });
         }
         if (c.finish === "custom") out.quoteReasons.push("custom finishes are priced per design");
+        const enamelTeeth = Object.keys(c.enamelProfiles || {});
+        if (enamelTeeth.length) {
+            out.quoteReasons.push("enamel color work on teeth " + enamelTeeth.join(", ") + " requires an individual quote");
+            out.notes.push("Enamel is a colored finish applied to selected grillz surfaces; color and artwork are reviewed and priced by the team.");
+        }
+        if (c.customArtwork) {
+            out.quoteReasons.push("custom artwork requires a reference image and written design instructions");
+            out.notes.push("Custom artwork is not priced by the configurator. Upload a reference image and describe the exact teeth, colors, and artwork on the quote form.");
+        }
 
         // Shipping: rush replaces standard
         if (c.shipping === "rush") {
@@ -143,6 +265,14 @@
             parts.push(`CUSTOM QUOTE REQUIRED: ${est.quoteReasons.join("; ")}`);
         }
         est.notes.forEach((n) => parts.push(n));
+        const profileSummary = Object.entries(est.config.stoneProfiles || {}).filter(([, profile]) => profile && profile.manual).map(([tooth, profile]) =>
+            `Tooth ${tooth}: ${STONES[profile.type] || profile.type}, ${profile.color}, ${profile.shape}`
+        );
+        if (profileSummary.length) parts.push("Per-tooth stone styling: " + profileSummary.join("; "));
+        if (est.config.stoneLayout) parts.push("Stone placement cells: " + est.config.stoneLayout);
+        const enamelSummary = Object.entries(est.config.enamelProfiles || {}).map(([tooth, profile]) => `Tooth ${tooth}: enamel ${profile.color}`);
+        if (enamelSummary.length) parts.push("Per-tooth enamel finish: " + enamelSummary.join("; "));
+        if (est.config.customArtwork) parts.push("CUSTOM ARTWORK REQUESTED: customer must upload a reference image and describe the design.");
         parts.push(`Pricing version: ${est.version}`);
         return parts.join("\n");
     }
@@ -154,7 +284,13 @@
             upperCount: String(c.upperCount), lowerCount: String(c.lowerCount), teeth: c.teeth.join(","),
             finish: c.finish, shipping: c.shipping, extension: c.extension,
             stones: c.stones, clarity: c.clarity, size: c.size, stoneCount: String(c.stoneCount),
-            cuts: c.cuts.join(","), pv: catalog.version
+            cuts: c.cuts.join(","), stoneShape: c.stoneShape,
+            stoneTeeth: (c.stoneTeeth || []).join(","),
+            stoneLayout: c.stoneLayoutSerialized || c.stoneLayout || "",
+            stoneProfiles: JSON.stringify(c.stoneProfiles || {}),
+            enamelProfiles: JSON.stringify(c.enamelProfiles || {}),
+            customArtwork: c.customArtwork ? "true" : "false",
+            pv: catalog.version
         };
     }
 
