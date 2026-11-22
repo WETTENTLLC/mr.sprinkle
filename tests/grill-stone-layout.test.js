@@ -61,3 +61,30 @@ test("invalid teeth and out-of-range grid cells are rejected", () => {
   const added = L.add(layout, "11", 25, 2);
   assert.equal(added.placedCount, 2);
 });
+
+test("stone sizes reserve wider grid spacing as stones get larger", () => {
+  assert.equal(L.allowedCells("1.3").length, 25);
+  assert.equal(L.allowedCells("1.5").length, 16);
+  assert.equal(L.allowedCells("2.0").length, 9);
+  assert.equal(L.allowedCells("3.0").length, 4);
+  const large = L.createDefault(["11", "21"], 10, { size:"3.0" });
+  assert.equal(large.capacityPerTooth, 4);
+  assert.equal(large.placedCount, 8);
+  assert.equal(large.unplacedCount, 2);
+});
+test("same-tooth reposition moves a stone instead of duplicating it", () => {
+  const layout = L.createDefault(["11"], 5);
+  const [source] = layout.placements["11"];
+  const destination = L.allowedCells("1.3").find(cell => !layout.placements["11"].includes(cell));
+  const moved = L.move(layout, "11", source, "11", destination);
+  assert.equal(moved.placedCount, 5);
+  assert.equal(moved.requestedCount, 5);
+  assert.equal(moved.placements["11"].includes(source), false);
+  assert.equal(moved.placements["11"].includes(destination), true);
+});
+test("size-specific grid refuses a stone position that is too close for 3mm", () => {
+  const large = L.createDefault(["11"], 2, { size:"3.0" });
+  const notAllowed = Array.from({length:25}, (_,cell)=>cell).find(cell => !L.allowedCells("3.0").includes(cell));
+  const result = L.add(large, "11", notAllowed, 2);
+  assert.equal(result.placedCount, 2);
+});
