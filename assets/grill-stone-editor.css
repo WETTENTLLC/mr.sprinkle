@@ -344,3 +344,15 @@
   .enamel-target-chip{min-width:70px;padding:8px 9px}
   .custom-artwork-request .cta-btn--outline{width:100%}
 }
+
+/* Close-up open articulator view inspired by the supplied dental stone model */
+.grill-3d-viewport--cast{
+  height:620px;min-height:520px;border-radius:12px;
+  border:1px solid rgba(34,198,200,.26);
+  background:radial-gradient(ellipse at 50% 47%,#343a3b 0%,#171d20 67%,#0b1012 100%);
+  box-shadow:inset 0 0 42px rgba(0,0,0,.42),0 16px 34px rgba(0,0,0,.32)
+}
+.grill-3d-viewport--cast canvas{cursor:crosshair}
+.grill-3d-viewport--cast canvas:active{cursor:crosshair}
+@media(max-width:900px){.grill-3d-viewport--cast{height:540px;min-height:460px}}
+@media(max-width:620px){.grill-3d-viewport--cast{height:450px;min-height:390px}}
