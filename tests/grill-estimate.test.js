@@ -148,3 +148,31 @@ test("the first explicitly chosen material can price unedited target teeth throu
   assert.equal(r.status,"estimate");
   assert.equal(r.total,2*100+60+4*6);
 });
+
+test("enamel profiles are quoted and survive the configuration handoff", () => {
+  const r = E.calculate({
+    teeth:["11","21","22"], metal:"gold14k",
+    enamelProfiles:{
+      "11":{color:"#f3a8c8",finish:"enamel",enabled:true},
+      "22":{color:"#6bbcf2",finish:"enamel",enabled:true}
+    }
+  });
+  assert.equal(r.status,"quote");
+  assert.equal(r.total,null);
+  assert.ok(r.quoteReasons.some(reason => /enamel color work/.test(reason)));
+  const params = E.toParams(r.config);
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.deepEqual(restored.enamelProfiles,r.config.enamelProfiles);
+  assert.ok(E.summaryText(r).includes("Tooth 11: enamel #f3a8c8"));
+});
+
+test("custom artwork requests are explicitly quote-only and preserved in the URL", () => {
+  const r = E.calculate({teeth:["11","21"],metal:"gold14k",customArtwork:"true"});
+  assert.equal(r.status,"quote");
+  assert.equal(r.total,null);
+  assert.ok(r.quoteReasons.some(reason => /custom artwork requires a reference image/.test(reason)));
+  const params = E.toParams(r.config);
+  assert.equal(params.customArtwork,"true");
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.equal(restored.customArtwork,true);
+});
