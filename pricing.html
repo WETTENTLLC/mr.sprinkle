@@ -11,6 +11,15 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
+    <link rel="stylesheet" href="assets/grill-studio.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+      }
+    }
+    </script>
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
     <script src="assets/grill-preview.js"></script>
@@ -146,40 +155,54 @@
         <div class="section" id="configurator">
             <div class="section-title">Sprinkle Studio — Grillz Estimate</div>
             <p class="note" style="margin-bottom:18px">Choose any combination of upper and lower teeth. This estimator uses published prices only; it is not checkout or an order confirmation. Appointment and rush availability are confirmed by the team.</p>
-            <div class="configurator">
-                <fieldset>
-                    <legend>Quick coverage estimate</legend>
-                    <p class="note" style="margin:0 0 12px">Enter an approximate number of teeth for each jaw. Open the optional selector below only if you want to mark exact teeth.</p>
-                    <div class="quick-coverage">
-                        <div>
-                            <label for="estimateUpperCount">Approximate upper teeth</label>
-                            <input id="estimateUpperCount" type="number" min="0" max="16" step="1" value="0">
+            <div class="configurator" id="grillMakerConfigurator">
+                <div class="grill-studio-workspace">
+                    <section class="grill-studio-panel" aria-labelledby="toothSelectionHeading">
+                        <div class="grill-studio-panel__eyebrow"><span>01</span> Tooth selection</div>
+                        <h3 id="toothSelectionHeading">Build your exact set</h3>
+                        <p class="grill-studio-panel__lead">Tap any tooth to select it. Mix upper and lower teeth freely — one tooth, a few teeth, a full arch, or any combination in between.</p>
+                        <div class="grill-arch-card">
+                            <div class="grill-arch-card__head"><span>Upper arch</span><span>FDI tooth numbers</span></div>
+                            <svg id="upperTeeth" class="tooth-arch-picker" viewBox="0 0 420 200" role="group" aria-label="Select any upper teeth"></svg>
                         </div>
-                        <div>
-                            <label for="estimateLowerCount">Approximate lower teeth</label>
-                            <input id="estimateLowerCount" type="number" min="0" max="16" step="1" value="0">
+                        <div class="grill-arch-card">
+                            <div class="grill-arch-card__head"><span>Lower arch</span><span>FDI tooth numbers</span></div>
+                            <svg id="lowerTeeth" class="tooth-arch-picker" viewBox="0 0 420 200" role="group" aria-label="Select any lower teeth"></svg>
                         </div>
-                    </div>
-                </fieldset>
-                <details class="tooth-selection-details" id="exactToothSelection">
-                    <summary id="exactToothSummary">Choose exact teeth (optional)</summary>
-                    <fieldset class="tooth-picker">
-                        <legend>Select individual teeth</legend>
-                    <div class="jaw-picker">
-                        <h3>Upper jaw</h3>
-                        <div id="upperTeeth" class="tooth-choices" aria-label="Select upper teeth"></div>
-                    </div>
-                    <div class="jaw-picker">
-                        <h3>Lower jaw</h3>
-                        <div id="lowerTeeth" class="tooth-choices" aria-label="Select lower teeth"></div>
-                    </div>
-                    <button id="clearTeeth" type="button" class="clear-teeth">Clear exact selection</button>
-                    </fieldset>
-                </details>
-                <div class="design-preview">
-                    <h3>Design preview</h3>
-                    <div id="designPreview" class="preview-teeth" aria-live="polite">No teeth selected</div>
+                        <div class="arch-selector-actions">
+                            <button id="selectUpperTeeth" type="button">Select all upper</button>
+                            <button id="selectLowerTeeth" type="button">Select all lower</button>
+                            <button id="clearTeeth" type="button">Clear selection</button>
+                        </div>
+                        <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
+                    </section>
+                    <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
+                        <div class="grill-studio-panel__eyebrow"><span>02</span> Live product mockup</div>
+                        <h3 id="grillMockupHeading">See your grillz on a dental stone model</h3>
+                        <p class="grill-studio-panel__lead">Your selected teeth turn into individual crowns in the 3D mockup. Rotate the cast, zoom in, and inspect your material and stone choices.</p>
+                        <div id="grill3DViewport" class="grill-3d-viewport" aria-label="Interactive 3D grillz mockup"></div>
+                        <div class="grill-view-controls" aria-label="Model camera views">
+                            <button type="button" data-grill-view="front" aria-pressed="true">Front</button>
+                            <button type="button" data-grill-view="top" aria-pressed="false">Top</button>
+                            <button type="button" data-grill-view="upper" aria-pressed="false">Upper</button>
+                            <button type="button" data-grill-view="lower" aria-pressed="false">Lower</button>
+                        </div>
+                        <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Preparing your 3D dental cast...</p>
+                        <p id="grill3DMaterialNote" class="grill-3d-material-note">The mockup is a design visualization. Final contours and fit are confirmed from your approved mold.</p>
+                        <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
+                    </section>
                 </div>
+                <div class="grill-materials">
+                    <div class="grill-materials__title"><strong>03 · Choose your metal appearance</strong><span>Live material preview</span></div>
+                    <div class="grill-metal-swatches" role="group" aria-label="Metal appearance">
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="silver" aria-pressed="true"><span class="grill-metal-swatch__chip"></span>Silver</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="gold10k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>10K Gold</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="gold14k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>14K Gold</button>
+                        <button type="button" class="grill-metal-swatch" data-metal-swatch="dentalGold14k" aria-pressed="false"><span class="grill-metal-swatch__chip"></span>14K Dental Gold</button>
+                    </div>
+                    <p class="grill-quote-note">The swatches show finish appearance only. The estimate below always uses the published pricing catalog; quote-only materials remain quote-only.</p>
+                </div>
+                <div class="grill-config-controls"><div class="grill-studio-panel__eyebrow"><span>04</span> Fine-tune your design</div>
                 <div class="configurator-grid">
                     <div>
                         <label for="estimateDesign">Design</label>
@@ -265,9 +288,16 @@
                     <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut — +$30 per set</label>
                 </fieldset>
                 <p class="note">Cuts are charged once per set: an upper piece and a lower piece are two sets. Custom finishes are quoted per design.</p>
-                <div id="estimateResult" class="estimate" aria-live="polite"></div>
+                <div class="grill-estimate-shell">
+                    <div id="estimateResult" class="estimate" aria-live="polite"></div>
+                    <div class="grill-estimate-summary">
+                        <h3>Ready to take this design forward?</h3>
+                        <p>Your selected teeth, metal, stone quantity, design details, and current estimate will travel with your request. Mr. Sprinkle confirms final fit, alloy, production details, and appointment availability before accepting an order.</p>
+                        <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Continue with this design</a>
+                    </div>
+                </div>
                 <p class="note">Standard fulfillment estimate: production generally 2–7 business days, plus approximately 2–3 days shipping to the main office and 2–3 days back to the customer. The customer-facing expectation is at least approximately two weeks. Simple, undecorated designs may take approximately 2 days in production; this is not a guaranteed delivery time. Rush shipping is next-day to and from the main office with production priority and a minimum 4-day completion expectation; eligibility and capacity must be confirmed. Estimates are not guarantees.</p>
-                <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Request an appointment or custom quote</a>
+                </div>
             </div>
         </div>
 
@@ -572,8 +602,6 @@
         const result = document.getElementById('estimateResult');
         const quoteLink = document.getElementById('estimateQuoteLink');
         const designPreview = document.getElementById('designPreview');
-        const upperCountInput = document.getElementById('estimateUpperCount');
-        const lowerCountInput = document.getElementById('estimateLowerCount');
         const exactToothSummary = document.getElementById('exactToothSummary');
         const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
         const toothGroups = [
@@ -583,74 +611,92 @@
             { jaw: 'lower', label: 'Lower left', teeth: ['31', '32', '33', '34', '35', '36', '37', '38'] }
         ];
 
-        toothGroups.forEach((group) => {
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        function svgNode(tag, attrs, text) {
+            const element = document.createElementNS(SVG_NS, tag);
+            Object.entries(attrs || {}).forEach(([key, value]) => element.setAttribute(key, String(value)));
+            if (text !== undefined) element.textContent = text;
+            return element;
+        }
+        function buildArchPicker(group) {
             const container = document.getElementById(group.jaw === 'upper' ? 'upperTeeth' : 'lowerTeeth');
-            group.teeth.forEach((number) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'tooth-choice';
-                button.dataset.tooth = number;
-                button.dataset.jaw = group.jaw;
-                button.setAttribute('aria-pressed', 'false');
-                button.setAttribute('aria-label', `${group.label} tooth ${number}`);
-                button.textContent = number;
-                button.addEventListener('click', () => {
-                    button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') !== 'true');
+            container.appendChild(svgNode('path', {d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67',class:'arch-guide'}));
+            container.appendChild(svgNode('path', {d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67',class:'arch-guide-inner'}));
+            group.teeth.forEach((number,index) => {
+                const t=(index-7.5)/7.5, theta=t*1.35;
+                const x=210+148*Math.sin(theta), y=35+122*Math.cos(theta);
+                const centerDistance=Math.min(index,15-index);
+                const dims=centerDistance<=1?[24,30]:centerDistance===2?[22,28]:centerDistance===3?[22,30]:centerDistance<=5?[27,28]:[30,27];
+                const w=dims[0], h=dims[1];
+                const tooth=svgNode('g',{
+                    class:'tooth-choice arch-tooth',
+                    transform:'translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(t*25).toFixed(1)+')',
+                    role:'button',tabindex:'0','aria-pressed':'false',
+                    'aria-label':group.label+' tooth '+number,'data-tooth':number,'data-jaw':group.jaw
+                });
+                const path='M '+(-w*.33)+' '+(-h*.50)+' Q 0 '+(-h*.62)+' '+(w*.33)+' '+(-h*.50)+
+                    ' L '+(w*.48)+' '+(h*.18)+' Q '+(w*.42)+' '+(h*.50)+' 0 '+(h*.50)+
+                    ' Q '+(-w*.42)+' '+(h*.50)+' '+(-w*.48)+' '+(h*.18)+' Z';
+                tooth.appendChild(svgNode('path',{d:path,class:'tooth-crown'}));
+                tooth.appendChild(svgNode('path',{d:'M '+(-w*.18)+' '+(-h*.30)+' Q 0 '+(-h*.40)+' '+(w*.18)+' '+(-h*.30),class:'tooth-shine'}));
+                tooth.appendChild(svgNode('text',{x:0,y:1,class:'tooth-number','text-anchor':'middle','dominant-baseline':'middle'},number));
+                tooth.addEventListener('click',()=>{
+                    tooth.setAttribute('aria-pressed',String(tooth.getAttribute('aria-pressed')!=='true'));
                     updateEstimate();
                 });
-                container.appendChild(button);
+                tooth.addEventListener('keydown',(event)=>{
+                    if(event.key==='Enter'||event.key===' '){event.preventDefault();tooth.click();}
+                });
+                container.appendChild(tooth);
             });
-        });
+        }
+        toothGroups.forEach(buildArchPicker);
 
         function selectedTeeth() {
             return Array.from(document.querySelectorAll('.tooth-choice[aria-pressed="true"]'));
         }
 
         function renderDesignPreview(config) {
-            if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
-                window.MrSprinkleGrillPreview.render(designPreview, config);
+            window.__MrSprinkleGrillConfig = config;
+            window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config',{detail:config}));
+            if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==='function') window.MrSprinkleGrill3D.update(config);
+            if(window.MrSprinkleGrillPreview&&typeof window.MrSprinkleGrillPreview.render==='function'){
+                window.MrSprinkleGrillPreview.render(designPreview,config);
                 return;
             }
-            designPreview.textContent = 'The design diagram could not load. Your selected teeth and estimate are still available below.';
+            designPreview.textContent='The design diagram could not load. Your selected teeth and estimate are still available below.';
         }
 
         function readConfig() {
-            const chosenTeeth = selectedTeeth();
+            const teeth=selectedTeeth().map((tooth)=>tooth.dataset.tooth);
+            const upper=['18','17','16','15','14','13','12','11','21','22','23','24','25','26','27','28'];
+            const lower=['48','47','46','45','44','43','42','41','31','32','33','34','35','36','37','38'];
             return {
-                design: design.value,
-                metal: metal.value,
-                teeth: chosenTeeth.map((tooth) => tooth.dataset.tooth),
-                upperCount: upperCountInput.value,
-                lowerCount: lowerCountInput.value,
-                finish: document.getElementById('estimateFinish').value,
-                shipping: document.getElementById('estimateShipping').value,
-                extension: document.getElementById('estimateFangExtension').value,
-                stones: stones.value,
-                clarity: document.getElementById('estimateClarity').value,
-                size: document.getElementById('estimateStoneSize').value,
-                stoneCount: document.getElementById('estimateStoneCount').value,
-                cuts: Array.from(document.querySelectorAll('.estimateCustomCut:checked'), (cut) => cut.value)
+                design:design.value,metal:metal.value,teeth,
+                upperCount:teeth.filter((tooth)=>upper.includes(tooth)).length,
+                lowerCount:teeth.filter((tooth)=>lower.includes(tooth)).length,
+                finish:document.getElementById('estimateFinish').value,
+                shipping:document.getElementById('estimateShipping').value,
+                extension:document.getElementById('estimateFangExtension').value,
+                stones:stones.value,clarity:document.getElementById('estimateClarity').value,
+                size:document.getElementById('estimateStoneSize').value,
+                stoneCount:document.getElementById('estimateStoneCount').value,
+                cuts:Array.from(document.querySelectorAll('.estimateCustomCut:checked'),(cut)=>cut.value)
             };
         }
 
         function updateEstimate() {
-            const chosenTeeth = selectedTeeth();
-            const hasExactSelection = chosenTeeth.length > 0;
-            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
-            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
-            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
-            upperCountInput.disabled = hasExactSelection;
-            lowerCountInput.disabled = hasExactSelection;
-
-            const est = window.MrSprinkleEstimate.calculate(readConfig());
-            const c = est.config;
-            if (hasExactSelection) {
-                upperCountInput.value = String(c.upperCount);
-                lowerCountInput.value = String(c.lowerCount);
-                exactToothSummary.textContent = `Exact teeth selected (${c.teeth.length}); edit selection below`;
-            } else {
-                exactToothSummary.textContent = 'Choose exact teeth (optional)';
-            }
+            document.getElementById('fangExtensionField').hidden=design.value!=='fangs';
+            document.getElementById('estimateClarityField').hidden=stones.value!=='natural';
+            document.getElementById('estimateStoneSizeField').hidden=stones.value==='none';
+            const est=window.MrSprinkleEstimate.calculate(readConfig());
+            const c=est.config;
+            exactToothSummary.textContent=c.teeth.length
+                ? c.teeth.length+' teeth selected · '+c.upperCount+' upper / '+c.lowerCount+' lower'
+                : '0 teeth selected — choose any combination above to preview and price your grillz.';
+            document.querySelectorAll('[data-metal-swatch]').forEach((swatch)=>{
+                swatch.setAttribute('aria-pressed',String(swatch.dataset.metalSwatch===c.metal));
+            });
             renderDesignPreview(c);
             document.getElementById('stoneCountHint').textContent = stones.value === 'none'
                 ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
@@ -702,18 +748,34 @@
             input.addEventListener('change', updateEstimate);
             input.addEventListener('input', updateEstimate);
         });
-        document.getElementById('clearTeeth').addEventListener('click', () => {
-            const hadExactSelection = selectedTeeth().length > 0;
-            document.querySelectorAll('.tooth-choice').forEach((tooth) => tooth.setAttribute('aria-pressed', 'false'));
-            if (hadExactSelection) {
-                upperCountInput.value = '0';
-                lowerCountInput.value = '0';
-            }
+        window.MrSprinkleGrillSelectTooth=function(number){
+            const tooth=Array.from(document.querySelectorAll('.tooth-choice')).find((item)=>item.dataset.tooth===String(number));
+            if(!tooth)return;
+            tooth.setAttribute('aria-pressed',String(tooth.getAttribute('aria-pressed')!=='true'));
             updateEstimate();
+        };
+        document.getElementById('selectUpperTeeth').addEventListener('click',()=>{
+            document.querySelectorAll('.tooth-choice[data-jaw="upper"]').forEach((tooth)=>tooth.setAttribute('aria-pressed','true'));
+            updateEstimate();
+        });
+        document.getElementById('selectLowerTeeth').addEventListener('click',()=>{
+            document.querySelectorAll('.tooth-choice[data-jaw="lower"]').forEach((tooth)=>tooth.setAttribute('aria-pressed','true'));
+            updateEstimate();
+        });
+        document.querySelectorAll('[data-metal-swatch]').forEach((swatch)=>{
+            swatch.addEventListener('click',()=>{metal.value=swatch.dataset.metalSwatch;updateEstimate();});
+        });
+        document.getElementById('clearTeeth').addEventListener('click',()=>{
+            document.querySelectorAll('.tooth-choice').forEach((tooth)=>tooth.setAttribute('aria-pressed','false'));
+            updateEstimate();
+        });
+        window.addEventListener('mr-sprinkle:grill-renderer-ready',()=>{
+            if(window.__MrSprinkleGrillConfig&&window.MrSprinkleGrill3D)window.MrSprinkleGrill3D.update(window.__MrSprinkleGrillConfig);
         });
         updateEstimate();
     })();
     </script>
+    <script type="module" src="assets/grill-studio-3d.js?v=20261122-studio-3d"></script>
     <script src="assets/site-header.js"></script>
 </body>
 </html>
