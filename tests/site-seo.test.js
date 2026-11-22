@@ -307,8 +307,8 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="grill3DViewport"/);
-  assert.match(html, /data-grill-view="front"/);
-  assert.match(html, /data-grill-view="top"/);
+  assert.match(html, /Fixed front-facing view/);
+  assert.doesNotMatch(html, /data-grill-view=/);
   assert.match(html, /data-metal-swatch="gold14k"/);
   assert.match(html, /id="selectUpperTeeth"/);
   assert.match(html, /id="selectLowerTeeth"/);
@@ -318,10 +318,13 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /const LOWER = \["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"\]/);
   assert.match(model, /new THREE\.WebGLRenderer/);
   assert.match(model, /new THREE\.MeshPhysicalMaterial/);
-  assert.match(model, /new OrbitControls/);
+  assert.doesNotMatch(model, /OrbitControls/);
+  assert.match(model, /function setFrontCamera/);
+  assert.match(model, /function createMouthFrame/);
   assert.match(model, /function addDesignDetails/);
   assert.match(css, /\.tooth-arch-picker/);
   assert.match(css, /\.grill-3d-viewport/);
+  assert.match(css, /\.grill-3d-viewport--mouth/);
   assert.match(css, /\.grill-metal-swatches/);
 });
 
@@ -348,6 +351,9 @@ test("customers can choose stone-bearing teeth and edit round or square per-toot
   assert.match(html, /data-stone-shape="round"/);
   assert.match(html, /data-stone-shape="square"/);
   assert.match(html, /id="stonePlacementGrid"/);
+  assert.match(html, /id="stoneMaterialByTooth"/);
+  assert.match(html, /id="stoneColorPicker"/);
+  assert.match(html, /data-stone-color="#f3a8c8"/);
   assert.match(html, /function handleStoneCellClick/);
   assert.match(html, /button\.addEventListener\('dragstart'/);
   assert.match(html, /Stone\.serialize\(layoutState\)/);
@@ -355,6 +361,8 @@ test("customers can choose stone-bearing teeth and edit round or square per-toot
   assert.match(layout, /function move\(/);
   assert.match(layout, /function allowedCells\(size\)/);
   assert.match(model, /placements\[item\.number\]/);
+  assert.match(model, /stoneProfiles\[item\.number\]/);
+  assert.match(model, /materialForStone\(stoneType, stoneColor\)/);
   assert.match(model, /RoundedBoxGeometry/);
   assert.match(css, /\.stone-placement-grid/);
   assert.match(css, /\.stone-slot\[data-stone-shape="square"\]/);
