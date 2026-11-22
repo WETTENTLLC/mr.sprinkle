@@ -135,7 +135,7 @@
         // The layout controls the displayed allocation; any requested quantity
         // beyond visual capacity is still included in the estimate and flagged by the UI.
         if (hasStoneType && c.stoneCount > 0) {
-            const targetTeeth = c.stoneTeeth.length ? c.stoneTeeth : c.teeth;
+            const targetTeeth = c.stoneTeeth.length ? c.stoneTeeth : (c.teeth.length ? c.teeth : (c.stones !== "none" ? ["selected set"] : []));
             const quantityByTooth = {};
             let placedTotal = 0;
             String(c.stoneLayout || "").split(";").forEach((part) => {
@@ -198,7 +198,8 @@
                     "#e5bf70":"champagne",
                     "#30343b":"black"
                 }[group.color] || group.color;
-                add(`${colorName} ${materialName}: ${group.quantity} × ${c.size}mm on teeth ${group.teeth.join(", ")} at ${money(each)}`, each * group.quantity);
+                const placementLabel = group.teeth.length === 1 && group.teeth[0] === "selected set" ? "on selected set" : "on teeth " + group.teeth.join(", ");
+                add(`${colorName} ${materialName}: ${group.quantity} × ${c.size}mm ${placementLabel} at ${money(each)}`, each * group.quantity);
             });
             out.notes.push("Stone setting labor is included in published pricing. Per-tooth material and color choices are included in this estimate.");
         } else if (c.stoneCount > 0) {
