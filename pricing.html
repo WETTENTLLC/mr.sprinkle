@@ -185,15 +185,10 @@
                     </section>
                     <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
                         <div class="grill-studio-panel__eyebrow"><span>02</span> Live product mockup</div>
-                        <h3 id="grillMockupHeading">See your grillz on a dental stone model</h3>
-                        <p class="grill-studio-panel__lead">Your selected teeth turn into individual crowns in the 3D mockup. Rotate the cast, zoom in, and inspect your material and stone choices.</p>
-                        <div id="grill3DViewport" class="grill-3d-viewport" aria-label="Interactive 3D grillz mockup"></div>
-                        <div class="grill-view-controls" aria-label="Model camera views">
-                            <button type="button" data-grill-view="front" aria-pressed="true">Front</button>
-                            <button type="button" data-grill-view="top" aria-pressed="false">Top</button>
-                            <button type="button" data-grill-view="upper" aria-pressed="false">Upper</button>
-                            <button type="button" data-grill-view="lower" aria-pressed="false">Lower</button>
-                        </div>
+                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Fixed front-facing view <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
+                        <h3 id="grillMockupHeading">Your smile. Your design.</h3>
+                        <p class="grill-studio-panel__lead">See your selected grillz, metals and stones on one clear front-facing mouth preview. Tap a tooth to edit it from the selection map.</p>
+                        <div id="grill3DViewport" class="grill-3d-viewport grill-3d-viewport--mouth" aria-label="Fixed front-facing 3D mouth and grillz preview"></div>
                         <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Loading the 3D dental cast. Your design diagram remains available as a fallback.</p>
                         <p id="grill3DMaterialNote" class="grill-3d-material-note">The mockup is a design visualization. Final contours and fit are confirmed from your approved mold.</p>
                         <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
@@ -317,6 +312,39 @@
                             <label for="stoneEditTooth">Edit tooth</label>
                             <select id="stoneEditTooth" disabled><option value="">Choose a stone tooth</option></select>
                         </div>
+                    </div>
+
+                    <div class="stone-tooth-profile">
+                        <div class="stone-tooth-profile__heading">Customize this tooth's stones</div>
+                        <div class="stone-profile-controls">
+                            <div>
+                                <label for="stoneMaterialByTooth">Stone material</label>
+                                <select id="stoneMaterialByTooth" disabled>
+                                    <option value="natural">Natural diamond</option>
+                                    <option value="labGrownDiamond">Lab-grown diamond</option>
+                                    <option value="vvsMoissanite">VVS moissanite</option>
+                                    <option value="cubicZirconia">Cubic zirconia / colored CZ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="stoneColorPicker">Stone color</label>
+                                <div class="stone-color-row">
+                                    <input id="stoneColorPicker" type="color" value="#f4f8ff" disabled aria-label="Choose this tooth's stone color">
+                                    <span id="stoneColorLabel">Diamond white</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stone-color-swatches" role="group" aria-label="Stone color presets">
+                            <button type="button" data-stone-color="#f4f8ff" aria-label="Diamond white" title="Diamond white" style="--swatch:#f4f8ff" aria-pressed="true"></button>
+                            <button type="button" data-stone-color="#f3a8c8" aria-label="Pink" title="Pink" style="--swatch:#f3a8c8" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#6bbcf2" aria-label="Ice blue" title="Ice blue" style="--swatch:#6bbcf2" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#8c72dc" aria-label="Purple" title="Purple" style="--swatch:#8c72dc" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#dd5454" aria-label="Ruby red" title="Ruby red" style="--swatch:#dd5454" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#65bb86" aria-label="Emerald green" title="Emerald green" style="--swatch:#65bb86" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#e5bf70" aria-label="Champagne" title="Champagne" style="--swatch:#e5bf70" aria-pressed="false"></button>
+                            <button type="button" data-stone-color="#30343b" aria-label="Black" title="Black" style="--swatch:#30343b" aria-pressed="false"></button>
+                        </div>
+                        <p class="stone-profile-hint">Each tooth can have its own stone material and color. Color changes the appearance; the estimate uses the published material and size price.</p>
                     </div>
 
                     <div class="stone-editor-actions">
