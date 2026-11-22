@@ -254,8 +254,8 @@
                 if (actionLink && intro.contains(actionLink) && !intro.hidden) {
                     const action = actionLink.getAttribute("data-intro-action");
                     if (action === "play") {
-                        startAudioFromGesture();
                         keepIntroVideoMoving();
+                        enterWithSound();
                     } else if (action === "quiet") {
                         enterQuietly(actionLink);
                     } else if (action === "skip") {
