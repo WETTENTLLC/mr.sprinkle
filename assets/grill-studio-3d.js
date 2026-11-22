@@ -255,8 +255,9 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       const count = baseCount + (selectedIndex < remainder ? 1 : 0);
       for (let i = 0; i < count; i++) {
         const across = count === 1 ? 0 : (i / (count - 1) - 0.5) * dims.width * 0.48;
-        const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.061, 1), gemMaterial);
-        gem.position.set(across, -dims.depth * 0.49, dims.height * 0.06 + (i % 2 ? 0.035 : 0));
+        const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
+        const gem = new THREE.Mesh(new THREE.OctahedronGeometry(stoneDiameter, 1), gemMaterial);
+        gem.position.set(across, -dims.depth * 1.055, dims.height * 0.06 + (i % 2 ? 0.035 : 0));
         gem.scale.set(0.88, 0.60, 1.0);
         gem.userData.designDetail = true;
         cap.add(gem);
@@ -266,7 +267,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     if (cuts.includes("diamondDust")) {
       for (let i = 0; i < 5; i++) {
         const dot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 6), dustMaterial);
-        dot.position.set((i - 2) * dims.width * 0.15, -dims.depth * 0.50, dims.height * 0.08);
+        dot.position.set((i - 2) * dims.width * 0.15, -dims.depth * 1.055, dims.height * 0.08);
         dot.userData.designDetail = true;
         cap.add(dot);
       }
@@ -277,7 +278,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
         new THREE.BoxGeometry(0.018, 0.018, dims.height * 0.58),
         grooveMaterial
       );
-      line.position.set(0, -dims.depth * 0.51, 0);
+      line.position.set(0, -dims.depth * 1.06, 0);
       line.userData.designDetail = true;
       cap.add(line);
     }
@@ -288,7 +289,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
           new THREE.BoxGeometry(0.014, 0.02, dims.height * 0.48),
           grooveMaterial
         );
-        line.position.set(side * dims.width * 0.20, -dims.depth * 0.50, 0);
+        line.position.set(side * dims.width * 0.20, -dims.depth * 1.06, 0);
         line.userData.designDetail = true;
         cap.add(line);
       });
@@ -299,7 +300,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
         new THREE.BoxGeometry(dims.width * 0.40, 0.018, dims.height * 0.24),
         grooveMaterial
       );
-      inset.position.set(0, -dims.depth * 0.505, dims.height * 0.06);
+      inset.position.set(0, -dims.depth * 1.06, dims.height * 0.06);
       inset.userData.designDetail = true;
       cap.add(inset);
     }
@@ -468,6 +469,11 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       controls.maxPolarAngle = Math.PI - 0.15;
       controls.target.set(0, 0, 0);
       controls.addEventListener("change", render);
+      renderer.setAnimationLoop(function () {
+        if (disposed) return;
+        if (controls) controls.update();
+        renderer.render(scene, camera);
+      });
 
       renderer.domElement.addEventListener("pointerdown", handlePointerDown);
       renderer.domElement.addEventListener("pointerup", handlePointerUp);
