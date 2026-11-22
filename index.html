@@ -688,13 +688,16 @@
                 <div class="lead-capture-form">
                     <h3>Request a Quote or Appointment</h3>
                     <p>Share your design idea and preferred contact method. A team member will follow up to discuss the next steps.</p>
-                    <form id="leadForm" class="quote-form">
+                    <form id="leadForm" class="quote-form" action="https://formspree.io/f/myzpanyg" method="POST">
+                        <input type="hidden" name="_subject" value="NEW MR. SPRINKLE WEBSITE INQUIRY">
+                        <input type="hidden" name="form_type" value="homepage_general_inquiry">
+                        <input type="hidden" name="source_page" value="homepage">
                         <div class="form-row">
                             <input type="text" id="name" name="name" placeholder="Your Name" required>
                             <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
                         </div>
                         <div class="form-row">
-                            <input type="email" id="email" name="email" placeholder="Email Address (Optional)">
+                            <input type="email" id="email" name="email" placeholder="Email Address (Required if Email is selected)">
                             <select id="contact-method" name="contact-method" required>
                                 <option value="">Preferred Contact</option>
                                 <option value="text">Text Message</option>
@@ -706,7 +709,7 @@
                             <select id="service" name="service" required>
                                 <option value="">Select Service</option>
                                 <option value="custom-grillz">Custom grillz</option>
-                                <option value="gold-press-on-nails">Gold press-on nails — quote-based</option>
+                                <option value="gold-press-on-nails">Custom gold press-on nails — fitting &amp; order request</option>
                                 <option value="mobile-mold">Mobile mold service</option>
                                 <option value="custom-jewelry">Custom jewelry — quote-based</option>
                                 <option value="wett-accessories">WETT accessories</option>
@@ -719,9 +722,12 @@
                                 <option value="quote inquiry">Custom quote inquiry</option>
                             </select>
                         </div>
-                        <textarea id="message" name="message" placeholder="Describe your dream grillz or nail style..." rows="3"></textarea>
-                        <button type="submit" class="submit-btn">Send Request</button>
+                        <textarea id="message" name="message" placeholder="Describe your design, desired service or question..." rows="3"></textarea>
+                        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0">
+                        <button type="submit" id="leadFormSubmit" class="submit-btn">Send Request</button>
                     </form>
+                    <p id="leadFormStatus" role="status" aria-live="polite" style="min-height:1.5em;margin-top:12px;color:#b8e8d4"></p>
+                    <p style="font-size:.84rem;color:#b8b8b8">For custom gold press-on nails, you can also <a href="press-on-nails.html">build your nail set and request an individual fitting</a>.</p>
                     <p class="form-guarantee">Submitting a request does not confirm an appointment, price, or order.</p>
                     <p style="color: #ff4444; font-size: 0.8rem; margin-top: 0.5rem;">⚠️ By submitting, you acknowledge reading our <a href="safety-policy.html" style="color: #ff4444;">Safety Policy</a> and agree to purchase at your own risk.</p>
                 </div>
@@ -815,43 +821,73 @@
             });
         });
 
-        // Lead Form Handler
-        document.getElementById('leadForm').addEventListener('submit', function(e) {
+        // Lead Form Handler — submit to the business intake before showing success.
+        const leadForm = document.getElementById('leadForm');
+        const leadEmail = document.getElementById('email');
+        const leadContactMethod = document.getElementById('contact-method');
+        const leadStatus = document.getElementById('leadFormStatus');
+        const leadSubmit = document.getElementById('leadFormSubmit');
+
+        function syncLeadEmailRequirement() {
+            const emailRequired = leadContactMethod.value === 'email';
+            leadEmail.required = emailRequired;
+            leadEmail.setCustomValidity(emailRequired && !leadEmail.value.trim()
+                ? 'Enter an email address because you selected email as your preferred contact method.'
+                : '');
+        }
+        leadContactMethod.addEventListener('change', syncLeadEmailRequirement);
+        leadEmail.addEventListener('input', syncLeadEmailRequirement);
+        syncLeadEmailRequirement();
+
+        leadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Track conversion
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'generate_lead', {
-                    'event_category': 'Lead Generation',
-                    'event_label': data.service,
-                    'value': 1
+            syncLeadEmailRequirement();
+            if (!leadForm.reportValidity()) return;
+
+            const formData = new FormData(leadForm);
+            formData.set('form_type', 'homepage_general_inquiry');
+            formData.set('source_page', window.location.pathname || '/');
+            formData.set('_subject', 'NEW MR. SPRINKLE WEBSITE INQUIRY');
+
+            leadSubmit.disabled = true;
+            leadSubmit.textContent = 'Sending request…';
+            leadStatus.style.color = '#b8e8d4';
+            leadStatus.textContent = 'Sending your inquiry securely…';
+
+            try {
+                const response = await fetch('https://formspree.io/f/myzpanyg', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
                 });
+                if (!response.ok) {
+                    throw new Error('Your request could not be submitted (' + response.status + '). Please try again.');
+                }
+
+                const selectedService = formData.get('service') || 'general inquiry';
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'generate_lead', {
+                        event_category: 'Lead Generation',
+                        event_label: selectedService,
+                        value: 1
+                    });
+                }
+
+                const customerName = String(formData.get('name') || '').trim();
+                leadStatus.textContent = 'Thank you' + (customerName ? ', ' + customerName : '') +
+                    '. Your inquiry has been submitted. We will follow up using your preferred contact method. This is not an appointment or order confirmation.';
+                leadForm.reset();
+                syncLeadEmailRequirement();
+            } catch (error) {
+                console.error('Homepage inquiry submission failed:', error);
+                leadStatus.style.color = '#ffb0a8';
+                leadStatus.textContent = error.message || 'We could not submit your inquiry. Please try again or text (530) 214-0676.';
+            } finally {
+                leadSubmit.disabled = false;
+                leadSubmit.textContent = 'Send Request';
             }
-            
-            // Create contact message
-            const message = `NEW LEAD: ${data.name} from ${data.location} wants ${data.service}. Phone: ${data.phone}. Email: ${data.email || 'Not provided'}. Prefers: ${data['contact-method']}. Message: ${data.message}`;
-            
-            // Handle preferred contact method
-            if (data['contact-method'] === 'email' && data.email) {
-                // Create email
-                const emailSubject = `New Grillz Quote Request from ${data.name}`;
-                const emailBody = `Hello Mr. Sprinkle,\n\nNew quote request:\n\nName: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nLocation: ${data.location}\nService: ${data.service}\nPreferred Contact: ${data['contact-method']}\n\nMessage:\n${data.message}\n\nPlease respond as soon as possible.\n\nThank you!`;
-                
-                window.open(`mailto:info@mrsprinklereno.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`, '_blank');
-                alert('✅ Your quote request email is being sent! We\'ll get back to you as soon as we can.');
-            } else {
-                // Default to SMS
-                window.open(`sms:+15302140676?body=${encodeURIComponent(message)}`, '_blank');
-                alert('✅ Your quote request is being sent! We\'ll get back to you as soon as we can.');
-            }
-            
-            // Reset form
-            this.reset();
         });
-        
+
         // Scroll to form function
         function scrollToForm() {
             document.querySelector('.lead-capture-form').scrollIntoView({ behavior: 'smooth' });
