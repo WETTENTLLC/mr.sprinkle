@@ -302,15 +302,20 @@ test("grill designer renders a dental-arch diagram without changing the estimate
 });
 
 
-test("intro buttons call a direct entry action and the fallback works without the music controller", () => {
+test("homepage intro offers direct entry choices through the external controller", () => {
   const html = read("index.html");
-  assert.match(html, /window\.mrSprinkleIntroAction = function \(action, button\)/);
-  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('play', this\);"/);
-  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('quiet', this\);"/);
-  assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('skip', this\);"/);
-  assert.match(html, /window\.localStorage\.setItem\("introSeen", "true"\)/);
-  assert.match(html, /intro\.hidden = true/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
-  assert.match(html, /assets\/sound\.css\?v=20261121-intro-controls-external-wiring/);
-  assert.doesNotMatch(read("assets/sound.js"), /target\.closest\("#introPlay"\)/);
+  const js = read("assets/sound.js");
+  const introStart = html.indexOf('<div id="videoIntro"');
+  const headerStart = html.indexOf('<header class="ms-site-header">', introStart);
+  const introMarkup = html.slice(introStart, headerStart);
+  assert.match(introMarkup, /data-intro-action="play"/);
+  assert.match(introMarkup, /data-intro-action="quiet"/);
+  assert.match(introMarkup, /data-intro-action="skip"/);
+  assert.doesNotMatch(introMarkup, /onclick=/i);
+  assert.match(js, /function startAudioFromGesture\(\)/);
+  assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
+  assert.match(js, /function enterQuietly\(button\)/);
+  assert.match(js, /window\.MrSprinkleIntro = Object\.freeze/);
+  assert.match(js, /target\.closest\("\[data-intro-action\]"\)/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
 });
