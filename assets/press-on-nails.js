@@ -159,7 +159,12 @@
     const data = new FormData(form);
     if (file) data.set("referenceImage", file);
 
+    const orderReference = "NAIL-" + new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14) + "-" + Math.random().toString(36).slice(2, 7).toUpperCase();
+    const submittedAt = new Date().toISOString();
     const payload = {
+      order_reference: orderReference,
+      submitted_at: submittedAt,
+      notification_email: "wettentertainmentllc@gmail.com",
       form_type: "press_on_nails_order_request",
       booking_flow: "custom_nail_impression",
       submitted_at: new Date().toISOString(),
@@ -182,28 +187,26 @@
       payment_status: "not_collected_secure_payment_link_after_quote_approval"
     };
 
+    data.set("orderReference", orderReference);
+    data.set("submittedAt", submittedAt);
+    data.set("notificationEmail", payload.notification_email);
+    data.set("orderDetails", JSON.stringify(payload, null, 2));
+    data.set("_subject", "NEW CUSTOM GOLD PRESS-ON NAIL REQUEST — " + orderReference);
+
     try {
       const response = await fetch(form.action, {
         method: "POST",
         body: data,
         headers: { "Accept": "application/json" }
       });
-      if (!response.ok) throw new Error("The request could not be sent (" + response.status + ").");
-
-      // Keep the existing Mr. Sprinkle lead / Google Sheet intake route.
-      try {
-        await fetch("https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec", {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-      } catch (sheetError) {
-        // Formspree remains the confirmed customer request channel if the sheet is unavailable.
-        console.warn("The secondary order log could not be reached.", sheetError);
+      let result = {};
+      try { result = await response.json(); } catch (_) {}
+      if (!response.ok || result.errors) {
+        const detail = result.errors ? result.errors.map((item) => item.message).join("; ") : "HTTP " + response.status;
+        throw new Error("The request could not be confirmed as delivered (" + detail + ").");
       }
 
-      window.location.href = "thank-you.html?service=press-on-nails";
+      window.location.href = "thank-you.html?service=press-on-nails&ref=" + encodeURIComponent(orderReference);
     } catch (error) {
       status.textContent = error.message || "We could not send your request. Please try again or text (530) 214-0676.";
       status.className = "press-nail-status is-error";
