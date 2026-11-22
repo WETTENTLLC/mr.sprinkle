@@ -187,7 +187,7 @@
                             <button type="button" data-grill-view="upper" aria-pressed="false">Upper</button>
                             <button type="button" data-grill-view="lower" aria-pressed="false">Lower</button>
                         </div>
-                        <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Preparing your 3D dental cast...</p>
+                        <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Loading the 3D dental cast. Your design diagram remains available as a fallback.</p>
                         <p id="grill3DMaterialNote" class="grill-3d-material-note">The mockup is a design visualization. Final contours and fit are confirmed from your approved mold.</p>
                         <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
                     </section>
@@ -658,8 +658,11 @@
 
         function renderDesignPreview(config) {
             window.__MrSprinkleGrillConfig = config;
-            window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config',{detail:config}));
-            if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==='function') window.MrSprinkleGrill3D.update(config);
+            if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==='function') {
+                window.MrSprinkleGrill3D.update(config);
+            } else {
+                window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config',{detail:config}));
+            }
             if(window.MrSprinkleGrillPreview&&typeof window.MrSprinkleGrillPreview.render==='function'){
                 window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
