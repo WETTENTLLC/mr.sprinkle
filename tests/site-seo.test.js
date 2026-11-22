@@ -327,7 +327,10 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /new THREE\.MeshPhysicalMaterial/);
   assert.doesNotMatch(model, /OrbitControls/);
   assert.match(model, /function setFrontCamera/);
-  assert.match(model, /function createMouthFrame/);
+  assert.match(model, /function createDentalCastBase/);
+  assert.match(model, /camera.position.set\(0\.42, -7\.4, 2\.30\)/);
+  assert.match(model, /const crownZ = isUpper \? 0\.70 : -0\.70/);
+  assert.match(html, /grill-3d-viewport--cast/);
   assert.match(model, /function addDesignDetails/);
   assert.match(model, /function crownFrontSurfaceY/);
   assert.match(model, /new THREE\.CylinderGeometry\(fitDiameter \* 0\.53/);
