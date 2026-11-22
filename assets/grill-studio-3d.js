@@ -252,12 +252,25 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     if (stoneType !== "none" && totalStoneCount > 0 && selected.length) {
       const baseCount = Math.floor(totalStoneCount / selected.length);
       const remainder = totalStoneCount % selected.length;
-      const count = baseCount + (selectedIndex < remainder ? 1 : 0);
-      for (let i = 0; i < count; i++) {
-        const across = count === 1 ? 0 : (i / (count - 1) - 0.5) * dims.width * 0.48;
-        const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
+      const requestedForThisTooth = baseCount + (selectedIndex < remainder ? 1 : 0);
+      const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
+      const spacing = stoneDiameter * 1.42;
+      const maxColumns = Math.max(1, Math.floor((dims.width * 0.72) / spacing));
+      const maxRows = Math.max(1, Math.floor((dims.height * 0.62) / spacing));
+      const visualCapacity = maxColumns * maxRows;
+      const visibleCount = Math.min(requestedForThisTooth, visualCapacity);
+      const rows = Math.ceil(visibleCount / maxColumns);
+
+      for (let i = 0; i < visibleCount; i++) {
+        const row = Math.floor(i / maxColumns);
+        const rowCount = Math.min(maxColumns, visibleCount - row * maxColumns);
+        const column = i % maxColumns;
+        const x = (column - (rowCount - 1) / 2) * spacing;
+        const z = (row - (rows - 1) / 2) * spacing + dims.height * 0.06;
+        const surfaceRatio = Math.min(0.92, (x * x) / (dims.width * dims.width) + (z * z) / (dims.height * dims.height));
+        const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio);
         const gem = new THREE.Mesh(new THREE.OctahedronGeometry(stoneDiameter, 1), gemMaterial);
-        gem.position.set(across, -dims.depth * 1.055, dims.height * 0.06 + (i % 2 ? 0.035 : 0));
+        gem.position.set(x, frontSurface - 0.012, z);
         gem.scale.set(0.88, 0.60, 1.0);
         gem.userData.designDetail = true;
         cap.add(gem);
@@ -336,9 +349,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
     const note = document.getElementById("grill3DMaterialNote");
     if (note) {
-      note.textContent = lastConfig.metal === "quote"
+      const stoneNote = lastConfig.stones && lastConfig.stones !== "none" && Number(lastConfig.stoneCount) > 0
+        ? " Stone quantity informs the estimate; the mockup shows a representative crown layout and final placement is confirmed from your mold."
+        : "";
+      note.textContent = (lastConfig.metal === "quote"
         ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
-        : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.";
+        : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
     }
     render();
   }
