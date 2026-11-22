@@ -450,10 +450,10 @@
             <div class="bf-home-inner">
                 <p class="bf-kicker">MR. SPRINKLE × ENVY KUTZ PRESENT</p>
                 <h2>THE BLACK FRIDAY TAKEOVER</h2>
-                <p class="bf-home-offers"><strong>50% OFF HAIRCUTS</strong><span>+</span><strong>COMPLIMENTARY DIAMONDS WITH GRILLZ</strong></p>
-                <p class="bf-home-sub">Two ways to upgrade your look. One limited-time experience.</p>
+                <p class="bf-home-offers"><strong>50% OFF HAIRCUTS</strong><span>+</span><strong>FREE DIAMONDS WITH $500+ GRILLZ</strong></p>
+                <p class="bf-home-sub">Get up to five complimentary 1.3mm lab-grown diamond accents with an eligible $500+ custom grillz order.</p>
                 <a class="bf-home-button" href="black-friday.html">EXPLORE THE SPECIAL <span aria-hidden="true">→</span></a>
-                <p class="bf-home-deadline">Book your haircut promotion by Thanksgiving Day · November 26</p>
+                <p class="bf-home-deadline">Claim the promotion by Thanksgiving Day · November 26, 2026</p>
             </div>
         </section>
 
@@ -928,5 +928,14 @@
     <script src="assets/sound.js?v=20261122-intro-native-entry"></script>
 
     <script src="assets/site-header.js"></script>
+    <script>
+        // Temporary Black Friday homepage takeover ends Thanksgiving night, Pacific Time.
+        (() => {
+            const expiresAt = new Date('2026-11-27T07:59:59Z').getTime();
+            const campaignBanner = document.getElementById('blackFridayHome');
+            if (campaignBanner && Date.now() > expiresAt) campaignBanner.remove();
+        })();
+    </script>
+
 </body>
 </html>
