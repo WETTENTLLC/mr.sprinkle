@@ -36,7 +36,7 @@
         try {
             const secure = window.location && window.location.protocol === "https:" ? "; Secure" : "";
             const host = window.location && window.location.hostname || "";
-            const domain = /(^|\\.)mrsprinklereno\\.com$/i.test(host) ? "; Domain=.mrsprinklereno.com" : "";
+            const domain = /(^|\.)mrsprinklereno\.com$/i.test(host) ? "; Domain=.mrsprinklereno.com" : "";
             document.cookie = encodeURIComponent(key) + "=" + encodeURIComponent(value) +
                 "; Max-Age=31536000; Path=/; SameSite=Lax" + secure + domain;
         } catch (error) {
