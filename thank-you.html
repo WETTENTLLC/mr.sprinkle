@@ -97,6 +97,7 @@
             <p><strong>We will contact you within 24 hours</strong> to confirm appointment availability and review your final quote. Your requested time is not confirmed until you hear from our team.</p>
         </div>
         <div id="pressNailConfirmation" class="contact-info" style="display:none;border:2px solid #d6b66e;background:#211d15">
+            <p id="pressNailOrderReference" style="font-size:.95rem;color:#ddd"></p>
             <h3 style="color:#e4c77f;margin-bottom:10px">Your custom nail fitting request is in!</h3>
             <p>We have received your selected fingers, gold preference, base estimate and any design inspiration you submitted.</p>
             <p><strong>We will contact you within 24 hours</strong> to review your preferred fitting time and confirm the next step for your individual nail impressions.</p>
@@ -153,6 +154,8 @@
         document.getElementById('mainHeading').textContent = 'Your Custom Nail Fitting Request Was Received';
         document.getElementById('mainMessage').textContent = 'Thank you. Your selected nails, gold preference and base estimate have been sent to Mr. Sprinkle.';
         document.getElementById('pressNailConfirmation').style.display = 'block';
+        const nailOrderReference = urlParams.get('ref');
+        if (nailOrderReference) document.getElementById('pressNailOrderReference').textContent = 'Order reference: ' + nailOrderReference;
         document.getElementById('thankYouReviewStep').textContent = '• We will review the fingers and gold you selected';
         document.getElementById('thankYouAvailabilityStep').textContent = '• We will contact you within 24 hours to confirm a fitting time at Envy Kutz in downtown Reno';
         document.getElementById('thankYouQuoteStep').textContent = '• We will take an individual impression of every selected nail, then confirm the final quote and secure payment link';
