@@ -167,7 +167,7 @@ test("Grill Maker booking handoff avoids repeated design questions and carries a
   assert.match(pricing, /MrSprinkleArtworkHandoff\.save\(\{ file, notes \}\)/);
   assert.match(handoff, /indexedDB\.open\(DB_NAME, DB_VERSION\)/);
   assert.match(handoff, /file: file/);
-  assert.match(form, /quote=configurator/);
+  assert.match(form, /urlParams.get\('quote'\) === 'configurator'/);
   assert.match(form, /data-configurator-duplicate="materialType"/);
   assert.match(form, /data-configurator-duplicate="budget"/);
   assert.match(form, /data-configurator-duplicate="diamondType"/);
