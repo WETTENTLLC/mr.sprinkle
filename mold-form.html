@@ -745,11 +745,15 @@
                 estimateBox.hidden = false;
                 estimateBody.replaceChildren();
                 const c = est.config;
+                const toothStoneProfiles = Object.entries(c.stoneProfiles || {}).map(([tooth, profile]) =>
+                    `Tooth ${tooth}: ${E.labels.STONES[profile.type] || profile.type}, ${profile.color}, ${profile.shape}`
+                ).join(' | ');
                 const opts = `Design: ${E.labels.DESIGNS[c.design]}; Metal: ${E.labels.METALS[c.metal]}; Teeth: ${c.teeth.length ? c.teeth.join(', ') : `approx. ${c.upperCount} upper, ${c.lowerCount} lower`}; Finish: ${c.finish}; Shipping: ${c.shipping}` +
                     (c.design === 'fangs' ? `; Fang extension: ${c.extension ? E.labels.EXTENSIONS[c.extension] : 'none'}` : '') +
-                    `; Stones: ${E.labels.STONES[c.stones]}` + (c.stones !== 'none' ? ` (${c.stones === 'natural' ? E.labels.CLARITY[c.clarity] + ', ' : ''}${c.size}mm, ${c.stoneCount})` : (c.stoneCount > 0 ? ` (about ${c.stoneCount} planned)` : '')) +
+                    `; Stones: ${E.labels.STONES[c.stones]}` + (c.stoneCount > 0 ? ` (${c.size}mm, ${c.stoneCount})` : '') +
                     `; Cuts: ${c.cuts.length ? c.cuts.join(', ') : 'none'}` +
-                    `; Stone shape: ${c.stoneShape}; Stone teeth: ${c.stoneTeeth.length ? c.stoneTeeth.join(', ') : 'none'}; Stone placements: ${c.stoneLayout || 'not specified'}`;
+                    `; Stone shape default: ${c.stoneShape}; Stone teeth: ${c.stoneTeeth.length ? c.stoneTeeth.join(', ') : 'none'}; Stone placements: ${c.stoneLayout || 'not specified'}` +
+                    `; Tooth stone profiles: ${toothStoneProfiles || 'inherit default material'}`;
                 setHidden('configuratorOptions', opts);
                 setHidden('pricingVersion', est.version);
                 if (!est.ok) {
