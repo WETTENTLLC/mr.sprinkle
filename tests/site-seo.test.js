@@ -299,6 +299,32 @@ test("grill designer renders a dental-arch diagram without changing the estimate
 });
 
 
+test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", () => {
+  const html = read("pricing.html");
+  const model = read("assets/grill-studio-3d.js");
+  const css = read("assets/grill-studio.css");
+  assert.match(html, /three@0\.187\.0\/build\/three\.module\.js/);
+  assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
+  assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
+  assert.match(html, /id="grill3DViewport"/);
+  assert.match(html, /data-grill-view="front"/);
+  assert.match(html, /data-grill-view="top"/);
+  assert.match(html, /data-metal-swatch="gold14k"/);
+  assert.match(html, /id="selectUpperTeeth"/);
+  assert.match(html, /id="selectLowerTeeth"/);
+  assert.doesNotMatch(html, /estimateUpperCount|estimateLowerCount/);
+  assert.match(html, /window\.MrSprinkleGrillSelectTooth/);
+  assert.match(model, /const UPPER = \["18","17","16","15","14","13","12","11","21","22","23","24","25","26","27","28"\]/);
+  assert.match(model, /const LOWER = \["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"\]/);
+  assert.match(model, /new THREE\.WebGLRenderer/);
+  assert.match(model, /new THREE\.MeshPhysicalMaterial/);
+  assert.match(model, /new OrbitControls/);
+  assert.match(model, /function addDesignDetails/);
+  assert.match(css, /\.tooth-arch-picker/);
+  assert.match(css, /\.grill-3d-viewport/);
+  assert.match(css, /\.grill-metal-swatches/);
+});
+
 test("intro video remains playable and the native entry links bypass the overlay", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
