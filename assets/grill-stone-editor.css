@@ -275,3 +275,72 @@
   .stone-material-choices button{min-height:50px}
   .stone-edit-tooth-chip{min-width:38px;padding:8px 9px}
 }
+
+/* Enamel finish studio */
+.grill-enamel-studio{
+  margin:18px 0 22px;padding:19px;
+  border:1px solid rgba(34,198,200,.24);border-radius:12px;
+  background:linear-gradient(150deg,#101718 0%,#090d0f 72%,#13110d 100%);
+  box-shadow:0 12px 30px rgba(0,0,0,.22)
+}
+.grill-enamel-studio h3{margin:7px 0 9px;color:#f2e4c3;font-size:1.15rem}
+.grill-enamel-studio .grill-studio-panel__lead{max-width:900px;color:#c8c0b4;font-size:.88rem;line-height:1.6}
+.enamel-target-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:15px 0 9px}
+.enamel-target-heading strong{color:#f0dfbb;font-size:.83rem}
+.enamel-target-heading span{color:#9a9b92;font-size:.72rem}
+.enamel-target-teeth{display:flex;flex-wrap:wrap;gap:7px}
+.enamel-target-item{display:flex;align-items:stretch;gap:4px}
+.enamel-target-chip{
+  min-width:78px;padding:9px 11px;border:1px solid #65573d;border-radius:6px;
+  background:#1c1c18;color:#d8cba9;font-size:.76rem;font-weight:800;cursor:pointer
+}
+.enamel-target-chip[aria-pressed="true"]{border-color:rgba(34,198,200,.75)}
+.enamel-target-chip.is-active{
+  border-color:var(--sprinkle-teal);background:#173638;color:#f2ffff;
+  box-shadow:0 0 0 1px rgba(34,198,200,.42)
+}
+.enamel-target-remove{
+  width:27px;min-width:27px;border:1px solid rgba(221,120,120,.35);
+  border-radius:5px;background:#211719;color:#e5a6a6;font-size:1.1rem;
+  line-height:1;cursor:pointer
+}
+.enamel-active-editor{
+  margin-top:14px;padding:13px;border:1px solid rgba(214,179,107,.22);
+  border-radius:8px;background:rgba(5,9,10,.62)
+}
+.enamel-active-editor__title{color:#c8c0b4;font-size:.79rem;font-weight:700}
+.enamel-active-editor__title strong{color:#80d6d4}
+.enamel-color-swatches{display:flex;flex-wrap:wrap;gap:11px;margin:12px 0 10px}
+.enamel-color-swatches button{
+  width:33px;height:33px;border:2px solid rgba(255,255,255,.32);
+  border-radius:50%;background:var(--enamel-swatch);cursor:pointer;
+  box-shadow:inset 0 1px 3px rgba(255,255,255,.45),0 2px 7px rgba(0,0,0,.35)
+}
+.enamel-color-swatches button[aria-pressed="true"]{
+  outline:2px solid var(--sprinkle-teal);outline-offset:3px;border-color:#fff;transform:scale(1.06)
+}
+.enamel-color-swatches button:disabled{opacity:.35;cursor:not-allowed}
+.enamel-custom-color{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.enamel-custom-color label{color:#a9a89e;font-size:.74rem;font-weight:700}
+.enamel-custom-color input[type="color"]{
+  width:44px;height:32px;padding:2px;border:1px solid #776847;border-radius:6px;
+  background:#151a1a;cursor:pointer
+}
+.enamel-custom-color input:disabled{opacity:.35;cursor:not-allowed}
+.custom-artwork-request{
+  margin-top:16px;padding:15px;border:1px solid rgba(214,179,107,.35);
+  border-radius:9px;background:linear-gradient(135deg,rgba(214,179,107,.08),rgba(34,198,200,.035))
+}
+.custom-artwork-request h4{margin:0 0 7px;color:#f2dfb1;font-size:.9rem}
+.custom-artwork-request p{margin:0 0 12px;color:#c3bcae;font-size:.79rem;line-height:1.55}
+.custom-artwork-request .cta-btn--outline{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid rgba(34,198,200,.55);background:#111c1e;color:#d9ffff;
+  text-decoration:none;padding:10px 14px;border-radius:7px;font-weight:800;font-size:.78rem
+}
+.custom-artwork-request .cta-btn--outline:hover{border-color:var(--sprinkle-teal);background:#183235}
+@media(max-width:620px){
+  .grill-enamel-studio{padding:14px}
+  .enamel-target-chip{min-width:70px;padding:8px 9px}
+  .custom-artwork-request .cta-btn--outline{width:100%}
+}
