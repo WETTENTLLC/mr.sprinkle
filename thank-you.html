@@ -101,6 +101,11 @@
             <p><strong>We will contact you within 24 hours</strong> to review your preferred fitting time and confirm the next step for your individual nail impressions.</p>
             <p>After your impressions and final design are reviewed, you will receive your final quote and a secure payment link before production. No payment has been collected yet.</p>
         </div>
+        <div id="ambassadorApplicationConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
+            <h3 style="color:#FFD700;margin-bottom:10px">Your ambassador application was submitted!</h3>
+            <p>Thank you for applying to the Mr. Sprinkle Ambassador Program. Your application has been received for team review.</p>
+            <p>Any referral code, discount or ambassador status is subject to review and approval. This page does not confirm acceptance into the program or payment of commissions.</p>
+        </div>
         <div id="giftCardRequestConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
             <h3 style="color:#FFD700;margin-bottom:10px">Your gift card request was received!</h3>
             <p>We have received the requested gift-card value and recipient information.</p>
@@ -158,6 +163,14 @@
         document.getElementById('grillBookingConfirmation').style.display = 'block';
     }
 
+    if (urlParams.get('service') === 'ambassador-application') {
+        document.getElementById('mainHeading').textContent = 'Your Ambassador Application Was Received';
+        document.getElementById('mainMessage').textContent = 'Thank you. Your application has been submitted for review.';
+        document.getElementById('ambassadorApplicationConfirmation').style.display = 'block';
+        document.getElementById('thankYouReviewStep').textContent = '• Our team will review your submitted profile and social channels';
+        document.getElementById('thankYouAvailabilityStep').textContent = '• Any ambassador approval, referral discount or eligibility is confirmed separately by the team';
+        document.getElementById('thankYouQuoteStep').textContent = '• We will follow up using the contact details included in your application';
+    }
     if (urlParams.get('service') === 'gift-card') {
         document.getElementById('mainHeading').textContent = 'Your Gift Card Request Was Received';
         document.getElementById('mainMessage').textContent = 'Thank you. Your requested gift card value and recipient details have been sent to Mr. Sprinkle.';
