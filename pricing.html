@@ -942,6 +942,7 @@
             }
             const placedOnTooth = (layoutState.placements[activeStoneTooth] || []).length;
             const totalPlaced = layoutState.placedCount;
+            document.getElementById('removeSelectedStone').disabled = !moveSource || stones.value === 'none';
             setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. Tap an empty guide to add, or select a gem then tap an empty guide to move it.', false);
         }
 
@@ -1127,7 +1128,7 @@
             renderDesignPreview(c);
             document.getElementById('stoneCountHint').textContent = stones.value === 'none'
                 ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
-                : 'Estimate uses ' + requestedCount + ' stones. Stone setting labor is included in published pricing.';
+                : 'Estimate uses ' + c.stoneCount + ' stones. Stone setting labor is included in published pricing.';
             renderEstimate(est);
             if (est.ok) {
                 quoteLink.href = 'mold-form.html?' + new URLSearchParams(E.toParams(c)).toString();
