@@ -75,7 +75,7 @@ test("intro dismissal persists across Home navigation and repeat visits", () => 
   assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
   assert.match(js, /function markIntroSeen\(\)/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /class="ms-site-brand" href="\/" aria-label="Mr\. Sprinkle home"/);
+  assert.match(html, /class="ms-site-brand" href="\/#home" aria-label="Mr\. Sprinkle home"/);
   assert.match(html, /href="\/#home">Home<\/a>/);
   assert.match(html, /assets\/sound\.js\?v=20261122-intro-native-entry/);
 });
