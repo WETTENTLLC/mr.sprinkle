@@ -347,13 +347,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       targetCells.forEach(function (cell) {
         const column = cell % 5;
         const row = Math.floor(cell / 5);
-        const x = ((column - 2) / 2) * dims.width * 0.62;
-        const z = ((2 - row) / 2) * dims.height * 0.62 + dims.height * 0.045;
+        const x = ((column - 2) / 2) * dims.width * 0.72;
+        const z = ((2 - row) / 2) * dims.height * 0.60 + dims.height * 0.045;
         const surfaceRatio = Math.min(0.92,
-          (x * x) / (dims.width * dims.width * 0.92) +
-          (z * z) / (dims.height * dims.height * 0.94));
+          (x * x) / (dims.width * dims.width * 1.02) +
+          (z * z) / (dims.height * dims.height * 1.02));
         const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio) * 1.015;
-        const fitDiameter = Math.min(stoneDiameter, dims.width * 0.42, dims.height * 0.34);
+        const fitDiameter = Math.min(stoneDiameter, dims.width * 0.72, dims.height * 0.52);
         const shape = config.stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
           : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
