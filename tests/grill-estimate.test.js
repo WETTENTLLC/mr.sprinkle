@@ -217,3 +217,12 @@ test("gift card checkout does not display a fake redeemable code and passes face
   assert.match(html, /wettentertainmentllc@gmail\.com/);
   assert.match(html, /\(amount - 100\) % 50/);
 });
+
+
+test("Grill Maker captures referral codes and includes them in the owner notification", () => {
+  const fs = require("node:fs");
+  const html = fs.readFileSync(require("node:path").join(__dirname, "..", "mold-form.html"), "utf8");
+  assert.match(html, /id="ambassadorCode" name="ambassadorCode"/);
+  assert.match(html, /urlParams\.get\("ref"\)/);
+  assert.match(html, /ambassador_code: formData\.get\('ambassadorCode'\)/);
+});
