@@ -74,6 +74,8 @@ test("direct grill mold requests validate required customer and safety informati
   assert.match(form, /id="email"[^>]*required/);
   assert.match(form, /id="phone"[^>]*required/);
   assert.match(form, /id="healthAcknowledgment"/);
+  assert.match(form, /name="form_type" value="mold_order"/);
+  assert.match(form, /formData\.set\('form_type', isConfiguratorBooking \? 'grill_design_appointment' : 'mold_order'\)/);
   assert.match(form, /fetch\('https:\/\/formspree\.io\/f\/myzpanyg'/);
   assert.match(form, /Please choose your preferred appointment date and time/);
   const thanks = read("thank-you.html");
@@ -101,6 +103,10 @@ test("ambassador application submits through the current hosted intake", () => {
   assert.match(page, /portfolio-photos/);
   assert.match(page, /ambassador_application/);
   assert.match(page, /fetch\('https:\/\/formspree\.io\/f\/myzpanyg'/);
+  assert.match(page, /if \(!response\.ok\)/);
+  assert.match(page, /thank-you\.html\?service=ambassador-application/);
+  assert.match(read("thank-you.html"), /ambassadorApplicationConfirmation/);
+  assert.doesNotMatch(page, /catch\(err\)[\s\S]*?ambassador-new\.html/);
 });
 
 test("legacy ambassador booking is a request, not a broken PHP booking or auto-applied discount", () => {
