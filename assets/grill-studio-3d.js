@@ -84,6 +84,23 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     clearcoatRoughness: 0.015,
     envMapIntensity: 1.8
   });
+  const STONE_FINISHES = {
+    natural:        { color: 0xf1f7ff, roughness: 0.018, transmission: 0.52, ior: 2.42, envMapIntensity: 2.2 },
+    labGrownDiamond:{ color: 0xf4faff, roughness: 0.022, transmission: 0.50, ior: 2.42, envMapIntensity: 2.15 },
+    vvsMoissanite:  { color: 0xeaf4ff, roughness: 0.025, transmission: 0.40, ior: 2.55, envMapIntensity: 2.3 },
+    cubicZirconia:  { color: 0xfff2dc, roughness: 0.075, transmission: 0.24, ior: 2.15, envMapIntensity: 1.55 }
+  };
+
+  function applyStoneAppearance(key) {
+    const look = STONE_FINISHES[key] || STONE_FINISHES.natural;
+    gemMaterial.color.setHex(look.color);
+    gemMaterial.roughness = look.roughness;
+    gemMaterial.transmission = look.transmission;
+    gemMaterial.ior = look.ior;
+    gemMaterial.envMapIntensity = look.envMapIntensity;
+    gemMaterial.needsUpdate = true;
+  }
+
   const dustMaterial = new THREE.MeshStandardMaterial({
     color: 0xffe6a0,
     roughness: 0.2,
@@ -324,6 +341,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
     const look = MATERIALS[lastConfig.metal] || MATERIALS.silver;
     const capMaterial = materialForMetal(lastConfig.metal);
+    applyStoneAppearance(lastConfig.stones);
     const selectedList = Array.from(selected);
 
     toothMeshes.forEach(function (item) {
