@@ -380,9 +380,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const cuts = Array.isArray(config.cuts) ? config.cuts : [];
     const stoneProfiles = config.stoneProfiles && typeof config.stoneProfiles === "object" ? config.stoneProfiles : {};
     const profile = stoneProfiles[item.number] || {};
-    const stoneType = profile.type || config.stones || "none";
+    const stoneType = profile.manual ? profile.type : (config.stones || "none");
     const stoneColor = profile.color || "#f4f8ff";
-    const stoneShape = profile.shape || config.stoneShape || "round";
+    const stoneShape = profile.manual ? (profile.shape || config.stoneShape || "round") : (config.stoneShape || "round");
     const stoneMaterial = materialForStone(stoneType, stoneColor);
     const totalStoneCount = Math.max(0, Math.min(100, Number(config.stoneCount) || 0));
     const selected = toothMeshes.filter(function (entry) {
