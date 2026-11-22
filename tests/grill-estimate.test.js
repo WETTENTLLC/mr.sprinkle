@@ -54,3 +54,22 @@ test("round trip through URL params gives the same estimate", () => {
   assert.equal(a.total, b.total); assert.equal(E.summaryText(a), E.summaryText(b));
   assert.equal(E.toParams(a.config).pv, catalog.version);
 });
+
+test("one exact FDI tooth produces the same approved per-tooth estimate", () => {
+  const r = E.calculate({ teeth: ["18"], metal: "silver" });
+  assert.equal(r.config.upperCount, 1);
+  assert.equal(r.config.lowerCount, 0);
+  assert.equal(r.total, 160);
+});
+test("any non-contiguous combination across both jaws is priced by exact selected count", () => {
+  const r = E.calculate({ teeth: ["18", "13", "22", "35"], metal: "gold10k" });
+  assert.equal(r.config.upperCount, 3);
+  assert.equal(r.config.lowerCount, 1);
+  assert.equal(r.total, 4 * 240 + 60);
+});
+test("single exact dental-gold tooth and one lower exact tooth both remain selectable", () => {
+  const r = E.calculate({ teeth: ["43"], metal: "dentalGold14k" });
+  assert.equal(r.config.upperCount, 0);
+  assert.equal(r.config.lowerCount, 1);
+  assert.equal(r.total, 320 + 60);
+});
