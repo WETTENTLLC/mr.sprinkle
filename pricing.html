@@ -643,7 +643,13 @@
     </script>
     <script>
     (() => {
-        const catalog = window.MrSprinklePricing;
+        const E = window.MrSprinkleEstimate;
+        const Stone = window.MrSprinkleStoneLayout;
+        if (!E || !Stone) {
+            console.error("Sprinkle Studio setup failed: pricing or stone layout engine is unavailable.");
+            return;
+        }
+
         const design = document.getElementById('estimateDesign');
         const metal = document.getElementById('estimateMetal');
         const stones = document.getElementById('estimateStones');
@@ -651,13 +657,34 @@
         const quoteLink = document.getElementById('estimateQuoteLink');
         const designPreview = document.getElementById('designPreview');
         const exactToothSummary = document.getElementById('exactToothSummary');
+        const stoneCountInput = document.getElementById('estimateStoneCount');
+        const stoneTargetsHost = document.getElementById('stoneTargetTeeth');
+        const stoneEditTooth = document.getElementById('stoneEditTooth');
+        const stoneGrid = document.getElementById('stonePlacementGrid');
+        const stoneEditor = document.getElementById('stonePlacementEditor');
+        const stoneStatus = document.getElementById('stoneLayoutStatus');
+        const stoneCapacityNotice = document.getElementById('stoneCapacityNotice');
+        const stoneGridTitle = document.getElementById('stoneGridTitle');
         const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
         const toothGroups = [
-            { jaw: 'upper', label: 'Upper right', teeth: ['18', '17', '16', '15', '14', '13', '12', '11'] },
-            { jaw: 'upper', label: 'Upper left', teeth: ['21', '22', '23', '24', '25', '26', '27', '28'] },
-            { jaw: 'lower', label: 'Lower right', teeth: ['48', '47', '46', '45', '44', '43', '42', '41'] },
-            { jaw: 'lower', label: 'Lower left', teeth: ['31', '32', '33', '34', '35', '36', '37', '38'] }
+            { jaw: 'upper', label: 'Upper right', teeth: Stone.upper.slice(0,8) },
+            { jaw: 'upper', label: 'Upper left', teeth: Stone.upper.slice(8) },
+            { jaw: 'lower', label: 'Lower right', teeth: Stone.lower.slice(0,8) },
+            { jaw: 'lower', label: 'Lower left', teeth: Stone.lower.slice(8) }
         ];
+        const upperSet = new Set(Stone.upper);
+        const lowerSet = new Set(Stone.lower);
+        let toothMode = 'grill';
+        let stoneTargets = [];
+        let stoneTargetsAuto = true;
+        let activeStoneTooth = '';
+        let stoneShape = 'round';
+        let layoutState = Stone.createDefault([], 0);
+        let moveSource = null;
+        let editorOpen = false;
+        let lastLayoutInputKey = '';
+        let lastSelectedSignature = '';
 
         const SVG_NS = 'http://www.w3.org/2000/svg';
         function svgNode(tag, attrs, text) {
@@ -666,93 +693,324 @@
             if (text !== undefined) element.textContent = text;
             return element;
         }
+
+        function selectedTeeth() {
+            return Array.from(document.querySelectorAll('.arch-tooth[aria-pressed="true"]'));
+        }
+        function selectedNumbers() {
+            return selectedTeeth().map(tooth => tooth.dataset.tooth);
+        }
+        function selectedCountFromNumbers(teeth) {
+            return {
+                upper: teeth.filter(tooth => upperSet.has(tooth)).length,
+                lower: teeth.filter(tooth => lowerSet.has(tooth)).length
+            };
+        }
+        function currentLayoutKey() {
+            return stoneTargets.join(',') + '|' + String(stoneCountInput.value || '0');
+        }
+        function rebuildLayout() {
+            const requested = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
+            layoutState = Stone.createDefault(stoneTargets, requested);
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
+            renderStoneEditor();
+        }
+        function setStatus(message, isWarning) {
+            stoneStatus.textContent = message;
+            stoneStatus.classList.toggle('is-warning', !!isWarning);
+        }
+
+        function syncArchVisuals() {
+            const grillTeeth = new Set(selectedNumbers());
+            const targets = new Set(stoneTargets);
+            document.querySelectorAll('.arch-tooth').forEach(tooth => {
+                const number = tooth.dataset.tooth;
+                tooth.setAttribute('aria-pressed', String(grillTeeth.has(number)));
+                tooth.classList.toggle('stone-target', targets.has(number));
+                tooth.setAttribute('data-stone-target', String(targets.has(number)));
+            });
+        }
+
+        function updateMode() {
+            window.MrSprinkleGrillEditMode = toothMode;
+            document.getElementById('toothModeGrill').setAttribute('aria-pressed', String(toothMode === 'grill'));
+            document.getElementById('toothModeStones').setAttribute('aria-pressed', String(toothMode === 'stones'));
+            document.getElementById('toothModeHint').textContent = toothMode === 'grill'
+                ? 'Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.'
+                : 'Stone mode: tap a selected grill tooth to include or remove it from the stone layout. Click a selected tooth in the 3D model to open its placement grid.';
+        }
+
         function buildArchPicker(group) {
             const container = document.getElementById(group.jaw === 'upper' ? 'upperTeeth' : 'lowerTeeth');
-            container.appendChild(svgNode('path', {d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67',class:'arch-guide'}));
-            container.appendChild(svgNode('path', {d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67',class:'arch-guide-inner'}));
+            container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide' }));
+            container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide-inner' }));
             group.teeth.forEach((number,index) => {
-                const t=(index-7.5)/7.5, theta=t*1.35;
-                const x=210+148*Math.sin(theta), y=35+122*Math.cos(theta);
-                const centerDistance=Math.min(index,15-index);
-                const dims=centerDistance<=2?[31,28]:centerDistance<=4?[27,28]:centerDistance===5?[22,31]:centerDistance===6?[22,29]:[25,32];
-                const w=dims[0], h=dims[1];
-                const tooth=svgNode('g',{
+                const t = (index - 7.5) / 7.5;
+                const theta = t * 1.35;
+                const x = 210 + 148 * Math.sin(theta);
+                const y = 35 + 122 * Math.cos(theta);
+                const centerDistance = Math.min(index, 15-index);
+                const dims = centerDistance <= 2 ? [31,28] :
+                    centerDistance <= 4 ? [27,28] :
+                    centerDistance === 5 ? [22,31] :
+                    centerDistance === 6 ? [22,29] : [25,32];
+                const w = dims[0], h = dims[1];
+                const tooth = svgNode('g', {
                     class:'tooth-choice arch-tooth',
                     transform:'translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(t*25).toFixed(1)+')',
-                    role:'button',tabindex:'0','aria-pressed':'false',
-                    'aria-label':group.label+' tooth '+number,'data-tooth':number,'data-jaw':group.jaw
+                    role:'button', tabindex:'0', 'aria-pressed':'false', 'data-stone-target':'false',
+                    'aria-label':group.label+' tooth '+number, 'data-tooth':number, 'data-jaw':group.jaw
                 });
-                const path='M '+(-w*.33)+' '+(-h*.50)+' Q 0 '+(-h*.62)+' '+(w*.33)+' '+(-h*.50)+
+                const path = 'M '+(-w*.33)+' '+(-h*.50)+' Q 0 '+(-h*.62)+' '+(w*.33)+' '+(-h*.50)+
                     ' L '+(w*.48)+' '+(h*.18)+' Q '+(w*.42)+' '+(h*.50)+' 0 '+(h*.50)+
                     ' Q '+(-w*.42)+' '+(h*.50)+' '+(-w*.48)+' '+(h*.18)+' Z';
                 tooth.appendChild(svgNode('path',{d:path,class:'tooth-crown'}));
                 tooth.appendChild(svgNode('path',{d:'M '+(-w*.18)+' '+(-h*.30)+' Q 0 '+(-h*.40)+' '+(w*.18)+' '+(-h*.30),class:'tooth-shine'}));
                 tooth.appendChild(svgNode('text',{x:0,y:1,class:'tooth-number','text-anchor':'middle','dominant-baseline':'middle'},number));
-                tooth.addEventListener('click',()=>{
-                    tooth.setAttribute('aria-pressed',String(tooth.getAttribute('aria-pressed')!=='true'));
+                tooth.addEventListener('click', () => {
+                    if (toothMode === 'stones') {
+                        toggleStoneTarget(number);
+                        return;
+                    }
+                    tooth.setAttribute('aria-pressed', String(tooth.getAttribute('aria-pressed') !== 'true'));
                     updateEstimate();
                 });
-                tooth.addEventListener('keydown',(event)=>{
-                    if(event.key==='Enter'||event.key===' '){event.preventDefault();tooth.click();}
+                tooth.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        tooth.click();
+                    }
                 });
                 container.appendChild(tooth);
             });
         }
         toothGroups.forEach(buildArchPicker);
 
-        function selectedTeeth() {
-            return Array.from(document.querySelectorAll('.tooth-choice[aria-pressed="true"]'));
-        }
-
         function renderDesignPreview(config) {
             window.__MrSprinkleGrillConfig = config;
-            if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==='function') {
+            if (window.MrSprinkleGrill3D && typeof window.MrSprinkleGrill3D.update === 'function') {
                 window.MrSprinkleGrill3D.update(config);
             } else {
-                window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config',{detail:config}));
+                window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config', { detail:config }));
             }
-            if(window.MrSprinkleGrillPreview&&typeof window.MrSprinkleGrillPreview.render==='function'){
+            if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
                 window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
             }
-            designPreview.textContent='The design diagram could not load. Your selected teeth and estimate are still available below.';
+            designPreview.textContent = 'The design diagram could not load. Your selected teeth and estimate are still available below.';
+        }
+
+        function renderStoneTargets() {
+            const selected = selectedNumbers();
+            stoneTargetsHost.replaceChildren();
+            if (!selected.length) {
+                const empty = document.createElement('span');
+                empty.className = 'stone-empty';
+                empty.textContent = 'Select grill teeth first.';
+                stoneTargetsHost.appendChild(empty);
+            } else {
+                selected.forEach(number => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'stone-target-chip';
+                    button.textContent = number;
+                    button.setAttribute('aria-pressed', String(stoneTargets.includes(number)));
+                    button.setAttribute('aria-label', (stoneTargets.includes(number) ? 'Remove stones from tooth ' : 'Place stones on tooth ') + number);
+                    button.addEventListener('click', () => toggleStoneTarget(number));
+                    stoneTargetsHost.appendChild(button);
+                });
+            }
+            stoneEditTooth.replaceChildren();
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = stoneTargets.length ? 'Choose a tooth' : 'Choose grill teeth first';
+            stoneEditTooth.appendChild(placeholder);
+            stoneTargets.forEach(number => {
+                const option = document.createElement('option');
+                option.value = number;
+                option.textContent = 'Tooth ' + number;
+                stoneEditTooth.appendChild(option);
+            });
+            stoneEditTooth.disabled = !stoneTargets.length;
+            if (activeStoneTooth && stoneTargets.includes(activeStoneTooth)) stoneEditTooth.value = activeStoneTooth;
+            else if (stoneTargets.length) {
+                activeStoneTooth = stoneTargets[0];
+                stoneEditTooth.value = activeStoneTooth;
+            } else {
+                activeStoneTooth = '';
+            }
+            document.getElementById('toggleStoneEditor').disabled = !stoneTargets.length || stones.value === 'none';
+            document.getElementById('autoPlaceStones').disabled = !stoneTargets.length || stones.value === 'none';
+            document.getElementById('removeSelectedStone').disabled = !moveSource || stones.value === 'none';
+            syncArchVisuals();
+        }
+
+        function toggleStoneTarget(number) {
+            if (!selectedNumbers().includes(String(number))) {
+                setStatus('Select tooth ' + number + ' as a grill tooth first. Stone layouts can only be placed on selected grill teeth.', true);
+                return;
+            }
+            stoneTargetsAuto = false;
+            if (stoneTargets.includes(String(number))) {
+                stoneTargets = stoneTargets.filter(tooth => tooth !== String(number));
+                if (activeStoneTooth === String(number)) activeStoneTooth = stoneTargets[0] || '';
+            } else {
+                stoneTargets = stoneTargets.concat(String(number));
+                activeStoneTooth = String(number);
+            }
+            rebuildLayout();
+            renderStoneTargets();
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function renderStoneEditor() {
+            stoneEditor.hidden = !editorOpen;
+            if (!editorOpen || !activeStoneTooth || stones.value === 'none') {
+                stoneGrid.replaceChildren();
+                return;
+            }
+            stoneGrid.replaceChildren();
+            stoneGridTitle.textContent = 'Tooth ' + activeStoneTooth + ' · individual stone positions';
+            const occupied = new Set((layoutState.placements[activeStoneTooth] || []).map(Number));
+            for (let cell = 0; cell < 25; cell++) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'stone-slot';
+                button.dataset.cell = String(cell);
+                button.dataset.stoneShape = stoneShape;
+                button.setAttribute('role', 'gridcell');
+                button.setAttribute('aria-pressed', String(occupied.has(cell)));
+                button.setAttribute('aria-label', 'Tooth ' + activeStoneTooth + ', position ' + (cell + 1) + (occupied.has(cell) ? ', stone placed' : ', empty position'));
+                button.draggable = occupied.has(cell);
+                if (occupied.has(cell)) {
+                    button.classList.add('is-occupied');
+                    const gem = document.createElement('span');
+                    gem.className = 'stone-slot__gem';
+                    gem.setAttribute('aria-hidden', 'true');
+                    button.appendChild(gem);
+                }
+                if (moveSource && moveSource.tooth === activeStoneTooth && moveSource.cell === cell) button.classList.add('is-moving');
+
+                button.addEventListener('click', () => handleStoneCellClick(cell, occupied.has(cell)));
+                button.addEventListener('dragstart', event => {
+                    if (!occupied.has(cell)) { event.preventDefault(); return; }
+                    moveSource = { tooth:activeStoneTooth, cell };
+                    if (event.dataTransfer) {
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('text/plain', String(cell));
+                    }
+                    renderStoneEditor();
+                });
+                button.addEventListener('dragover', event => event.preventDefault());
+                button.addEventListener('drop', event => {
+                    event.preventDefault();
+                    if (moveSource) moveStoneToCell(activeStoneTooth, cell);
+                });
+                stoneGrid.appendChild(button);
+            }
+            const placedOnTooth = (layoutState.placements[activeStoneTooth] || []).length;
+            const totalPlaced = layoutState.placedCount;
+            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. Tap an empty guide to add, or select a gem then tap an empty guide to move it.', false);
+        }
+
+        function handleStoneCellClick(cell, occupied) {
+            if (!activeStoneTooth) return;
+            if (moveSource) {
+                if (occupied && moveSource.cell !== cell) {
+                    moveSource = { tooth:activeStoneTooth, cell };
+                    renderStoneEditor();
+                    return;
+                }
+                if (!occupied) {
+                    moveStoneToCell(activeStoneTooth, cell);
+                    return;
+                }
+                if (moveSource.cell === cell) {
+                    moveSource = null;
+                    renderStoneEditor();
+                    return;
+                }
+            }
+            if (occupied) {
+                moveSource = { tooth:activeStoneTooth, cell };
+                renderStoneEditor();
+                setStatus('Stone selected. Tap or drag it to an empty guide to reposition it.', false);
+                return;
+            }
+            if (stones.value === 'none') {
+                setStatus('Choose a stone type before adding stones to the mockup.', true);
+                return;
+            }
+            layoutState = Stone.add(layoutState, activeStoneTooth, cell, layoutState.requestedCount);
+            stoneCountInput.value = String(layoutState.placedCount);
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function moveStoneToCell(tooth, destinationCell) {
+            if (!moveSource) return;
+            layoutState = Stone.move(layoutState, moveSource.tooth, moveSource.cell, tooth, destinationCell);
+            moveSource = null;
+            lastLayoutInputKey = currentLayoutKey();
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function removeSelectedStone() {
+            if (!moveSource) return;
+            layoutState = Stone.remove(layoutState, moveSource.tooth, moveSource.cell);
+            stoneCountInput.value = String(layoutState.placedCount);
+            lastLayoutInputKey = currentLayoutKey();
+            moveSource = null;
+            updateEstimate({ preserveLayout:true });
+        }
+
+        function renderStoneCapacity() {
+            const requested = Math.max(0, Math.floor(Number(stoneCountInput.value) || 0));
+            const capacity = stoneTargets.length * Stone.capacityPerTooth;
+            const placed = layoutState.placedCount;
+            if (!requested || stones.value === 'none') {
+                stoneCapacityNotice.textContent = 'Stone positions remain editable and the published estimate updates from the stone type and count.';
+                stoneCapacityNotice.classList.remove('is-warning');
+                return;
+            }
+            if (layoutState.unplacedCount > 0) {
+                stoneCapacityNotice.textContent = requested + ' stones requested, but the current ' + stoneTargets.length + ' target tooth/tooth surfaces hold ' + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
+                stoneCapacityNotice.classList.add('is-warning');
+            } else {
+                stoneCapacityNotice.textContent = requested + ' stones placed across ' + stoneTargets.length + ' selected teeth. Move individual stones in the grid; changing the layout does not change the count.';
+                stoneCapacityNotice.classList.remove('is-warning');
+            }
         }
 
         function readConfig() {
-            const teeth=selectedTeeth().map((tooth)=>tooth.dataset.tooth);
-            const upper=['18','17','16','15','14','13','12','11','21','22','23','24','25','26','27','28'];
-            const lower=['48','47','46','45','44','43','42','41','31','32','33','34','35','36','37','38'];
+            const teeth = selectedNumbers();
+            const counts = selectedCountFromNumbers(teeth);
+            const requestedCount = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
             return {
-                design:design.value,metal:metal.value,teeth,
-                upperCount:teeth.filter((tooth)=>upper.includes(tooth)).length,
-                lowerCount:teeth.filter((tooth)=>lower.includes(tooth)).length,
+                design:design.value,
+                metal:metal.value,
+                teeth,
+                upperCount:counts.upper,
+                lowerCount:counts.lower,
                 finish:document.getElementById('estimateFinish').value,
                 shipping:document.getElementById('estimateShipping').value,
                 extension:document.getElementById('estimateFangExtension').value,
-                stones:stones.value,clarity:document.getElementById('estimateClarity').value,
+                stones:stones.value,
+                clarity:document.getElementById('estimateClarity').value,
                 size:document.getElementById('estimateStoneSize').value,
-                stoneCount:document.getElementById('estimateStoneCount').value,
-                cuts:Array.from(document.querySelectorAll('.estimateCustomCut:checked'),(cut)=>cut.value)
+                stoneCount:requestedCount,
+                cuts:Array.from(document.querySelectorAll('.estimateCustomCut:checked'), cut => cut.value),
+                stoneShape,
+                stoneTeeth:stoneTargets.slice(),
+                stoneLayout:layoutState.placements,
+                stoneLayoutSerialized:Stone.serialize(layoutState)
             };
         }
 
-        function updateEstimate() {
-            document.getElementById('fangExtensionField').hidden=design.value!=='fangs';
-            document.getElementById('estimateClarityField').hidden=stones.value!=='natural';
-            document.getElementById('estimateStoneSizeField').hidden=stones.value==='none';
-            const est=window.MrSprinkleEstimate.calculate(readConfig());
-            const c=est.config;
-            exactToothSummary.textContent=c.teeth.length
-                ? c.teeth.length+' teeth selected · '+c.upperCount+' upper / '+c.lowerCount+' lower'
-                : '0 teeth selected — choose any combination above to preview and price your grillz.';
-            document.querySelectorAll('[data-metal-swatch]').forEach((swatch)=>{
-                swatch.setAttribute('aria-pressed',String(swatch.dataset.metalSwatch===c.metal));
-            });
-            renderDesignPreview(c);
-            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
-                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
-                : `Estimate uses ${Number.isInteger(c.stoneCount) ? c.stoneCount : '—'} stones. Setting labor is included in published pricing.`;
-
+        function renderEstimate(est) {
             result.replaceChildren();
             if (!est.ok) {
                 result.textContent = est.error;
@@ -761,7 +1019,7 @@
             }
             const list = document.createElement('ul');
             list.className = 'estimate-lines';
-            est.lines.forEach((line) => {
+            est.lines.forEach(line => {
                 const li = document.createElement('li');
                 const label = document.createElement('span');
                 label.textContent = line.label;
@@ -774,53 +1032,181 @@
             const totalLine = document.createElement('p');
             const strong = document.createElement('strong');
             if (est.status === 'estimate') {
-                strong.textContent = `Estimated total: ${currency.format(est.total)}`;
+                strong.textContent = 'Estimated total: ' + currency.format(est.total);
                 totalLine.appendChild(strong);
             } else {
                 strong.className = 'quote-required';
                 strong.textContent = 'Custom quote required — contact Mr. Sprinkle for your personalized price.';
-                totalLine.append(`Known published-price subtotal: ${currency.format(est.knownSubtotal)}. `, strong);
+                totalLine.append('Known published-price subtotal: ' + currency.format(est.knownSubtotal) + '. ', strong);
                 const why = document.createElement('span');
                 why.className = 'note';
-                why.textContent = ` Reason: ${est.quoteReasons.join('; ')}.`;
+                why.textContent = ' Reason: ' + est.quoteReasons.join('; ') + '.';
                 totalLine.appendChild(why);
             }
             result.appendChild(totalLine);
-            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach((text) => {
+            est.notes.concat(['This is an estimate, not checkout or an order confirmation.']).forEach(text => {
                 const note = document.createElement('p');
                 note.className = 'note';
                 note.textContent = text;
                 result.appendChild(note);
             });
-            quoteLink.href = `mold-form.html?${new URLSearchParams(window.MrSprinkleEstimate.toParams(c)).toString()}`;
         }
 
-        document.querySelectorAll('#configurator select, #configurator input').forEach((input) => {
-            input.addEventListener('change', updateEstimate);
-            input.addEventListener('input', updateEstimate);
-        });
-        window.MrSprinkleGrillSelectTooth=function(number){
-            const tooth=Array.from(document.querySelectorAll('.tooth-choice')).find((item)=>item.dataset.tooth===String(number));
-            if(!tooth)return;
-            tooth.setAttribute('aria-pressed',String(tooth.getAttribute('aria-pressed')!=='true'));
-            updateEstimate();
+        function updateEstimate(options) {
+            const opts = options || {};
+            const selected = selectedNumbers();
+            const selectedSignature = selected.join(',');
+            let targetChanged = false;
+            if (stoneTargetsAuto) {
+                const nextTargets = selected.slice();
+                targetChanged = nextTargets.join(',') !== stoneTargets.join(',');
+                stoneTargets = nextTargets;
+            } else {
+                const filtered = stoneTargets.filter(number => selected.includes(number));
+                targetChanged = filtered.join(',') !== stoneTargets.join(',');
+                stoneTargets = filtered;
+            }
+            if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
+
+            const layoutKey = currentLayoutKey();
+            if (!opts.preserveLayout && (targetChanged || selectedSignature !== lastSelectedSignature || layoutKey !== lastLayoutInputKey)) {
+                rebuildLayout();
+            }
+            lastSelectedSignature = selectedSignature;
+
+            document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
+            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
+            document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
+
+            const raw = readConfig();
+            const est = E.calculate(raw);
+            const c = Object.assign({}, est.config, raw);
+            exactToothSummary.textContent = c.teeth.length
+                ? c.teeth.length + ' teeth selected · ' + c.upperCount + ' upper / ' + c.lowerCount + ' lower'
+                : '0 teeth selected — choose any combination above to preview and price your grillz.';
+            document.querySelectorAll('[data-metal-swatch]').forEach(swatch => {
+                swatch.setAttribute('aria-pressed', String(swatch.dataset.metalSwatch === c.metal));
+            });
+            document.querySelectorAll('[data-stone-shape]').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.stoneShape === stoneShape));
+            });
+
+            renderStoneTargets();
+            renderStoneCapacity();
+            renderStoneEditor();
+            renderDesignPreview(c);
+            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
+                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
+                : 'Estimate uses ' + requestedCount + ' stones. Stone setting labor is included in published pricing.';
+            renderEstimate(est);
+            if (est.ok) {
+                quoteLink.href = 'mold-form.html?' + new URLSearchParams(E.toParams(c)).toString();
+            }
+            window.__MrSprinkleGrillConfig = c;
+        }
+
+        function setToothMode(mode) {
+            toothMode = mode === 'stones' ? 'stones' : 'grill';
+            updateMode();
+            syncArchVisuals();
+        }
+
+        function toggleStoneEditor() {
+            editorOpen = !editorOpen;
+            stoneEditor.hidden = !editorOpen;
+            document.getElementById('toggleStoneEditor').textContent = editorOpen ? 'Close placement grid' : 'Open placement grid';
+            renderStoneEditor();
+        }
+
+        window.MrSprinkleGrillSelectTooth = function (number) {
+            const tooth = Array.from(document.querySelectorAll('.arch-tooth')).find(item => item.dataset.tooth === String(number));
+            if (!tooth) return;
+            if (toothMode === 'stones') {
+                window.MrSprinkleGrillSelectStoneTooth(String(number));
+            } else {
+                tooth.setAttribute('aria-pressed', String(tooth.getAttribute('aria-pressed') !== 'true'));
+                updateEstimate();
+            }
         };
-        document.getElementById('selectUpperTeeth').addEventListener('click',()=>{
-            document.querySelectorAll('.tooth-choice[data-jaw="upper"]').forEach((tooth)=>tooth.setAttribute('aria-pressed','true'));
+        window.MrSprinkleGrillSelectStoneTooth = function (number) {
+            const key = String(number);
+            if (!selectedNumbers().includes(key)) {
+                setStatus('Select tooth ' + key + ' for grillz first, then assign stones to it.', true);
+                return;
+            }
+            if (!stoneTargets.includes(key)) {
+                toggleStoneTarget(key);
+            }
+            activeStoneTooth = key;
+            editorOpen = true;
+            stoneEditor.hidden = false;
+            document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
+            renderStoneTargets();
+            renderStoneEditor();
+        };
+
+        document.getElementById('toothModeGrill').addEventListener('click', () => setToothMode('grill'));
+        document.getElementById('toothModeStones').addEventListener('click', () => setToothMode('stones'));
+        document.getElementById('selectUpperTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth[data-jaw="upper"]').forEach(tooth => tooth.setAttribute('aria-pressed','true'));
             updateEstimate();
         });
-        document.getElementById('selectLowerTeeth').addEventListener('click',()=>{
-            document.querySelectorAll('.tooth-choice[data-jaw="lower"]').forEach((tooth)=>tooth.setAttribute('aria-pressed','true'));
+        document.getElementById('selectLowerTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth[data-jaw="lower"]').forEach(tooth => tooth.setAttribute('aria-pressed','true'));
             updateEstimate();
         });
-        document.querySelectorAll('[data-metal-swatch]').forEach((swatch)=>{
-            swatch.addEventListener('click',()=>{metal.value=swatch.dataset.metalSwatch;updateEstimate();});
+        document.getElementById('clearTeeth').addEventListener('click', () => {
+            document.querySelectorAll('.arch-tooth').forEach(tooth => tooth.setAttribute('aria-pressed','false'));
+            stoneTargetsAuto = true;
+            stoneTargets = [];
+            layoutState = Stone.createDefault([], 0);
+            updateEstimate({ preserveLayout:true });
         });
-        document.getElementById('clearTeeth').addEventListener('click',()=>{
-            document.querySelectorAll('.tooth-choice').forEach((tooth)=>tooth.setAttribute('aria-pressed','false'));
-            updateEstimate();
+
+        document.querySelectorAll('[data-metal-swatch]').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                metal.value = swatch.dataset.metalSwatch;
+                updateEstimate();
+            });
         });
-        updateEstimate();
+        document.querySelectorAll('[data-stone-shape]').forEach(button => {
+            button.addEventListener('click', () => {
+                stoneShape = button.dataset.stoneShape === 'square' ? 'square' : 'round';
+                updateEstimate({ preserveLayout:true });
+            });
+        });
+        document.getElementById('stoneEditTooth').addEventListener('change', event => {
+            activeStoneTooth = event.target.value;
+            moveSource = null;
+            renderStoneEditor();
+        });
+        document.getElementById('toggleStoneEditor').addEventListener('click', toggleStoneEditor);
+        document.getElementById('autoPlaceStones').addEventListener('click', () => {
+            rebuildLayout();
+            renderStoneEditor();
+            updateEstimate({ preserveLayout:true });
+            setStatus('The current stone count has been distributed evenly across your selected stone teeth. You can now move each stone individually.', false);
+        });
+        document.getElementById('removeSelectedStone').addEventListener('click', removeSelectedStone);
+
+        stoneCountInput.addEventListener('input', () => {
+            rebuildLayout();
+            updateEstimate({ preserveLayout:true });
+        });
+
+        document.querySelectorAll('#configurator select, #configurator input').forEach(input => {
+            input.addEventListener('change', () => {
+                if (input === stoneCountInput) return;
+                updateEstimate();
+            });
+            input.addEventListener('input', () => {
+                if (input === stoneCountInput) return;
+                updateEstimate();
+            });
+        });
+
+        updateMode();
+        updateEstimate({ preserveLayout:true });
     })();
     </script>
     <script type="module" src="assets/grill-studio-3d.js?v=20261122-studio-3d"></script>
