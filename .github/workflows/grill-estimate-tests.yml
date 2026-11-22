@@ -1,4 +1,4 @@
-name: Grill Estimate and SEO Tests
+name: Customer Journey and Site Regression Tests
 
 on:
   push:
@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   site-regression:
-    name: Verify grill pricing, SEO metadata, and discoverability
+    name: Verify customer journeys, pricing, inquiries, and discoverability
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -36,4 +36,4 @@ jobs:
           node-version: "20"
 
       - name: Run site regression tests
-        run: node --test tests/grill-estimate.test.js tests/site-seo.test.js
+        run: node --test tests/*.test.js
