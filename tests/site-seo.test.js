@@ -303,6 +303,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   const html = read("pricing.html");
   const model = read("assets/grill-studio-3d.js");
   const css = read("assets/grill-studio.css");
+  const stoneCss = read("assets/grill-stone-editor.css");
   assert.match(html, /three@0\.187\.0\/build\/three\.module\.js/);
   assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
@@ -324,7 +325,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /function addDesignDetails/);
   assert.match(css, /\.tooth-arch-picker/);
   assert.match(css, /\.grill-3d-viewport/);
-  assert.match(css, /\.grill-3d-viewport--mouth/);
+  assert.match(stoneCss, /\.grill-3d-viewport--mouth/);
   assert.match(css, /\.grill-metal-swatches/);
 });
 
