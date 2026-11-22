@@ -366,11 +366,47 @@
                     <p id="stoneCapacityNotice" class="stone-capacity-notice" role="status" aria-live="polite"></p>
                 </section>
 
+                <section class="grill-enamel-studio" aria-labelledby="enamelStudioHeading">
+                    <div class="grill-studio-panel__eyebrow"><span>06</span> Colored enamel finish</div>
+                    <h3 id="enamelStudioHeading">Add color with enamel</h3>
+                    <p class="grill-studio-panel__lead">Enamel is a colored finish applied to the surface of your grillz. It is different from a gemstone: enamel adds solid color to a tooth, while stones add individual gems. Choose a color for each tooth below to preview a simple enamel finish. Detailed patterns, pictures, lettering and logos are custom artwork and require an uploaded reference image and a written description for a quote.</p>
+
+                    <div class="enamel-target-heading"><strong>Choose teeth for enamel</strong><span>Only teeth selected for grillz can receive enamel</span></div>
+                    <div id="enamelTargetTeeth" class="enamel-target-teeth" aria-live="polite">
+                        <span class="stone-empty">Select grill teeth first.</span>
+                    </div>
+
+                    <div class="enamel-active-editor">
+                        <div class="enamel-active-editor__title">Enamel color for <strong id="enamelActiveToothLabel">No tooth selected</strong></div>
+                        <div class="enamel-color-swatches" role="group" aria-label="Enamel color presets">
+                            <button type="button" data-enamel-color="#f3a8c8" aria-label="Pink enamel" title="Pink" style="--enamel-swatch:#f3a8c8" disabled></button>
+                            <button type="button" data-enamel-color="#6bbcf2" aria-label="Ice blue enamel" title="Ice blue" style="--enamel-swatch:#6bbcf2" disabled></button>
+                            <button type="button" data-enamel-color="#8c72dc" aria-label="Purple enamel" title="Purple" style="--enamel-swatch:#8c72dc" disabled></button>
+                            <button type="button" data-enamel-color="#dd5454" aria-label="Ruby red enamel" title="Red" style="--enamel-swatch:#dd5454" disabled></button>
+                            <button type="button" data-enamel-color="#65bb86" aria-label="Emerald green enamel" title="Green" style="--enamel-swatch:#65bb86" disabled></button>
+                            <button type="button" data-enamel-color="#e5bf70" aria-label="Champagne enamel" title="Champagne" style="--enamel-swatch:#e5bf70" disabled></button>
+                            <button type="button" data-enamel-color="#30343b" aria-label="Black enamel" title="Black" style="--enamel-swatch:#30343b" disabled></button>
+                            <button type="button" data-enamel-color="#f4f8ff" aria-label="White enamel" title="White" style="--enamel-swatch:#f4f8ff" disabled></button>
+                        </div>
+                        <div class="enamel-custom-color">
+                            <label for="enamelCustomColor">Choose another enamel color</label>
+                            <input id="enamelCustomColor" type="color" value="#f3a8c8" disabled>
+                        </div>
+                        <p id="enamelStatus" class="stone-profile-hint" role="status" aria-live="polite">Choose a grill tooth above, then select its enamel color. Enamel work is quote-based.</p>
+                    </div>
+
+                    <div class="custom-artwork-request">
+                        <h4>Want a picture, pattern, character, lettering or logo?</h4>
+                        <p>Upload a clear inspiration image and tell us what you want, which teeth it belongs on, and any colors or details. Our team will review the artwork and provide a custom quote. Your selected teeth, metal, stone layout and enamel colors will be included with the request.</p>
+                        <a id="customArtworkQuoteLink" class="cta-btn cta-btn--outline" href="mold-form.html?quote=configurator&amp;customArtwork=true">Upload artwork &amp; request a custom quote</a>
+                    </div>
+                </section>
+
                 <div class="grill-estimate-shell">
                     <div id="estimateResult" class="estimate" aria-live="polite"></div>
                     <div class="grill-estimate-summary">
                         <h3>Ready to take this design forward?</h3>
-                        <p>Your selected teeth, metal, stone quantity, design details, and current estimate will travel with your request. Mr. Sprinkle confirms final fit, alloy, production details, and appointment availability before accepting an order.</p>
+                        <p>Your selected teeth, metal, stone placements, enamel colors and estimate or quote status will travel with your request. Mr. Sprinkle confirms final fit, alloy, production details, and appointment availability before accepting an order.</p>
                         <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Continue with this design</a>
                     </div>
                 </div>
@@ -694,6 +730,11 @@
         const stoneEditor = document.getElementById('stonePlacementEditor');
         const stoneStatus = document.getElementById('stoneLayoutStatus');
         const stoneCapacityNotice = document.getElementById('stoneCapacityNotice');
+        const enamelTargetHost = document.getElementById('enamelTargetTeeth');
+        const enamelActiveToothLabel = document.getElementById('enamelActiveToothLabel');
+        const enamelCustomColor = document.getElementById('enamelCustomColor');
+        const enamelStatus = document.getElementById('enamelStatus');
+        const customArtworkQuoteLink = document.getElementById('customArtworkQuoteLink');
         const stoneGridTitle = document.getElementById('stoneGridTitle');
         const stoneColorPicker = document.getElementById('stoneColorPicker');
         const stoneColorLabel = document.getElementById('stoneColorLabel');
@@ -711,6 +752,8 @@
         let activeStoneTooth = '';
         let stoneShape = 'round';
         let stoneProfiles = {};
+        let enamelProfiles = {};
+        let activeEnamelTooth = '';
         let layoutState = Stone.createDefault([], 0);
         let moveSource = null;
         let editorOpen = false;
@@ -785,6 +828,80 @@
                     button.setAttribute('aria-pressed', String(button.dataset.stoneShape === stoneShape));
                 });
             }
+        }
+
+        const enamelColorNames = {
+            '#f3a8c8':'Pink','#6bbcf2':'Ice blue','#8c72dc':'Purple',
+            '#dd5454':'Ruby red','#65bb86':'Emerald green','#e5bf70':'Champagne',
+            '#30343b':'Black','#f4f8ff':'White'
+        };
+        function renderEnamelControls() {
+            const selected = selectedNumbers();
+            enamelTargetHost.replaceChildren();
+            if (!selected.length) {
+                const empty = document.createElement('span');
+                empty.className = 'stone-empty';
+                empty.textContent = 'Select grill teeth first.';
+                enamelTargetHost.appendChild(empty);
+                activeEnamelTooth = '';
+            } else {
+                selected.forEach(number => {
+                    const profile = enamelProfiles[number];
+                    const item = document.createElement('div');
+                    item.className = 'enamel-target-item';
+                    const choose = document.createElement('button');
+                    choose.type = 'button';
+                    choose.className = 'enamel-target-chip' + (activeEnamelTooth === number ? ' is-active' : '');
+                    choose.textContent = (profile ? '✓ ' : '+ ') + 'Tooth ' + number;
+                    choose.setAttribute('aria-pressed', String(Boolean(profile)));
+                    choose.setAttribute('aria-label', profile ? 'Edit enamel color for tooth ' + number : 'Add enamel to tooth ' + number);
+                    choose.addEventListener('click', () => {
+                        if (!enamelProfiles[number]) enamelProfiles[number] = { color:'#f3a8c8', finish:'enamel', enabled:true };
+                        activeEnamelTooth = number;
+                        renderEnamelControls();
+                        updateEstimate({ preserveLayout:true });
+                    });
+                    item.appendChild(choose);
+                    if (profile) {
+                        const remove = document.createElement('button');
+                        remove.type = 'button';
+                        remove.className = 'enamel-target-remove';
+                        remove.textContent = '×';
+                        remove.setAttribute('aria-label', 'Remove enamel from tooth ' + number);
+                        remove.addEventListener('click', event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            delete enamelProfiles[number];
+                            if (activeEnamelTooth === number) activeEnamelTooth = '';
+                            renderEnamelControls();
+                            updateEstimate({ preserveLayout:true });
+                        });
+                        item.appendChild(remove);
+                    }
+                    enamelTargetHost.appendChild(item);
+                });
+                if (!selected.includes(activeEnamelTooth)) activeEnamelTooth = '';
+            }
+
+            const profile = activeEnamelTooth ? enamelProfiles[activeEnamelTooth] : null;
+            const disabled = !profile;
+            document.querySelectorAll('[data-enamel-color]').forEach(button => {
+                button.disabled = disabled;
+                button.setAttribute('aria-pressed', String(Boolean(profile && button.dataset.enamelColor.toLowerCase() === profile.color.toLowerCase())));
+            });
+            enamelCustomColor.disabled = disabled;
+            enamelCustomColor.value = profile ? profile.color : '#f3a8c8';
+            enamelActiveToothLabel.textContent = activeEnamelTooth || 'No tooth selected';
+            enamelStatus.textContent = profile
+                ? 'Tooth ' + activeEnamelTooth + ' · ' + (enamelColorNames[profile.color] || profile.color) + ' enamel. The preview is illustrative; enamel work is quoted individually.'
+                : 'Choose a grill tooth above, then select its enamel color. Enamel work is quote-based.';
+        }
+        function setActiveEnamelColor(color) {
+            if (!activeEnamelTooth || !enamelProfiles[activeEnamelTooth]) return;
+            if (!/^#[0-9a-f]{6}$/i.test(String(color || ''))) return;
+            enamelProfiles[activeEnamelTooth].color = color.toLowerCase();
+            renderEnamelControls();
+            updateEstimate({ preserveLayout:true });
         }
 
         function currentLayoutKey() {
@@ -1185,7 +1302,8 @@
                 stoneTeeth:stoneTargets.slice(),
                 stoneLayout:layoutState.placements,
                 stoneLayoutSerialized:Stone.serialize(layoutState),
-                stoneProfiles:Object.fromEntries(stoneTargets.map(number => [number, Object.assign({}, ensureStoneProfile(number))]))
+                stoneProfiles:Object.fromEntries(stoneTargets.map(number => [number, Object.assign({}, ensureStoneProfile(number))])),
+                enamelProfiles:Object.fromEntries(Object.entries(enamelProfiles).filter(([number]) => teeth.includes(number)).map(([number, profile]) => [number, Object.assign({}, profile)]))
             };
         }
 
@@ -1249,6 +1367,10 @@
             Object.keys(stoneProfiles).forEach(number => {
                 if (!stoneTargets.includes(number)) delete stoneProfiles[number];
             });
+            Object.keys(enamelProfiles).forEach(number => {
+                if (!selected.includes(number)) delete enamelProfiles[number];
+            });
+            if (!selected.includes(activeEnamelTooth)) activeEnamelTooth = '';
             stoneTargets.forEach(number => {
                 const profile = ensureStoneProfile(number);
                 if (!profile.manual && stones.value !== 'none') {
@@ -1287,6 +1409,7 @@
             renderStoneTargets();
             renderStoneCapacity();
             renderStoneEditor();
+            renderEnamelControls();
             renderDesignPreview(c);
             const anyStoneType = stones.value !== 'none' || stoneTargets.some(number => {
                 const profile = ensureStoneProfile(number);
@@ -1297,7 +1420,11 @@
                 : 'Estimate uses ' + c.stoneCount + ' stones at ' + c.size + ' mm across your selected tooth profiles. Setting labor is included in published pricing.';
             renderEstimate(est);
             if (est.ok) {
-                quoteLink.href = 'mold-form.html?' + new URLSearchParams(E.toParams(c)).toString();
+                const handoff = new URLSearchParams(E.toParams(c)).toString();
+                quoteLink.href = 'mold-form.html?' + handoff;
+                const customHandoff = new URLSearchParams(E.toParams(c));
+                customHandoff.set('customArtwork', 'true');
+                customArtworkQuoteLink.href = 'mold-form.html?' + customHandoff.toString();
             }
             window.__MrSprinkleGrillConfig = c;
         }
@@ -1407,6 +1534,10 @@
                 updateEstimate({ preserveLayout:true });
             });
         });
+        document.querySelectorAll('[data-enamel-color]').forEach(button => {
+            button.addEventListener('click', () => setActiveEnamelColor(button.dataset.enamelColor));
+        });
+        enamelCustomColor.addEventListener('input', () => setActiveEnamelColor(enamelCustomColor.value));
         document.getElementById('toggleStoneEditor').addEventListener('click', toggleStoneEditor);
         document.getElementById('autoPlaceStones').addEventListener('click', () => {
             rebuildLayout();
@@ -1436,7 +1567,7 @@
         updateEstimate({ preserveLayout:true });
     })();
     </script>
-    <script type="module" src="assets/grill-studio-3d.js?v=20261122-studio-3d"></script>
+    <script type="module" src="assets/grill-studio-3d.js?v=20261122-studio-3d-v2"></script>
     <script src="assets/site-header.js"></script>
 </body>
 </html>
