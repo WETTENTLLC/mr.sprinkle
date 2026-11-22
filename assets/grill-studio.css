@@ -1,0 +1,136 @@
+/* Sprinkle Studio — visual design system for the custom grill maker */
+.grill-studio-intro{
+  max-width:900px;margin:0 auto 22px;text-align:center;color:#c8c0b1;
+  font-size:.98rem;line-height:1.65
+}
+.grill-studio-workspace{
+  display:grid;grid-template-columns:minmax(300px,.92fr) minmax(0,1.24fr);
+  gap:18px;align-items:stretch;margin:18px 0 24px
+}
+.grill-studio-panel{
+  min-width:0;padding:18px;background:linear-gradient(150deg,#1b1a18,#111110 70%);
+  border:1px solid rgba(201,178,118,.48);border-radius:14px;
+  box-shadow:0 16px 38px rgba(0,0,0,.24)
+}
+.grill-studio-panel__eyebrow{
+  display:flex;align-items:center;gap:9px;color:#bda36c;font-size:.72rem;
+  font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px
+}
+.grill-studio-panel__eyebrow span{
+  display:grid;place-items:center;width:25px;height:25px;border:1px solid #bda36c;
+  border-radius:50%;font-size:.7rem;letter-spacing:0
+}
+.grill-studio-panel h3{color:#f3e7ca;font-size:1.22rem;margin:0 0 7px}
+.grill-studio-panel__lead{color:#bcb5a8;font-size:.86rem;line-height:1.55;margin:0 0 16px}
+.grill-arch-card{
+  padding:12px 10px 10px;background:#e6e1d7;border:1px solid #b5aa95;
+  border-radius:10px;margin:12px 0 15px;color:#24211c;overflow:hidden
+}
+.grill-arch-card__head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:0 5px 6px;color:#27231d;font-size:.86rem;font-weight:800
+}
+.grill-arch-card__head span:last-child{font-size:.72rem;font-weight:600;color:#6b6254}
+.tooth-arch-picker{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
+.tooth-arch-picker .arch-guide{
+  fill:none;stroke:#b9ad99;stroke-width:25;stroke-linecap:round;opacity:.72
+}
+.tooth-arch-picker .arch-guide-inner{
+  fill:none;stroke:#f7f3eb;stroke-width:3;stroke-linecap:round;opacity:.9
+}
+.tooth-arch-picker .arch-tooth{cursor:pointer;outline:none}
+.tooth-arch-picker .tooth-crown{
+  fill:#fffdf8;stroke:#afa696;stroke-width:1.7;
+  filter:drop-shadow(0 1.3px 1px rgba(40,30,18,.2));
+  transition:fill .12s ease,stroke .12s ease,filter .12s ease
+}
+.tooth-arch-picker .tooth-shine{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1.5;stroke-linecap:round}
+.tooth-arch-picker .tooth-number{
+  fill:#39332a;font:700 10.5px/1 Arial,sans-serif;text-anchor:middle;
+  dominant-baseline:middle;pointer-events:none
+}
+.tooth-arch-picker .arch-tooth:hover .tooth-crown,
+.tooth-arch-picker .arch-tooth:focus-visible .tooth-crown{
+  stroke:#a27c35;stroke-width:2.8;filter:drop-shadow(0 0 3px rgba(193,156,76,.6))
+}
+.tooth-arch-picker .arch-tooth[aria-pressed="true"] .tooth-crown{
+  fill:#d3ac54;stroke:#74531f;stroke-width:2.1;filter:drop-shadow(0 1px 2px rgba(65,43,10,.3))
+}
+.tooth-arch-picker .arch-tooth[aria-pressed="true"] .tooth-number{fill:#17130d}
+.arch-selector-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.arch-selector-actions button{
+  border:1px solid #86734d;background:#24221d;color:#e6d4a6;border-radius:6px;
+  padding:9px 11px;font-size:.78rem;font-weight:700;cursor:pointer
+}
+.arch-selector-actions button:hover{background:#393122;border-color:#d0b16b;color:#fff2ce}
+.grill-selection-summary{
+  padding:12px 13px;background:#171613;border:1px solid #50432e;border-radius:8px;
+  color:#efe1bd;font-size:.84rem;line-height:1.55
+}
+.grill-selection-summary strong{color:#e1c279}
+.grill-selection-summary small{display:block;color:#a9a193;margin-top:3px}
+.grill-3d-viewport{
+  position:relative;width:100%;height:405px;min-height:330px;overflow:hidden;
+  border:1px solid rgba(201,178,118,.28);border-radius:10px;
+  background:radial-gradient(ellipse at 50% 44%,#32302c 0%,#1a1917 54%,#111110 100%);
+  touch-action:pan-y
+}
+.grill-3d-viewport canvas{display:block;width:100%;height:100%;outline:none}
+.grill-3d-viewport[data-ready="false"]{display:none}
+.grill-view-controls{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0 0}
+.grill-view-controls button{
+  min-width:64px;padding:8px 12px;border:1px solid #63553b;border-radius:5px;
+  background:#1c1b18;color:#c9c1b4;font-size:.76rem;font-weight:700;cursor:pointer
+}
+.grill-view-controls button[aria-pressed="true"]{
+  background:#c9ad70;color:#17130b;border-color:#e6cd91
+}
+.grill-3d-status{min-height:1.4em;margin:10px 0 0;color:#d6c38e;font-size:.8rem}
+.grill-3d-status.is-error{color:#e1a49a}
+.grill-3d-material-note{margin:5px 0 0;color:#aaa396;font-size:.76rem;line-height:1.5}
+.grill-materials{margin:18px 0;padding:16px;border:1px solid #514a3b;border-radius:10px;background:#171614}
+.grill-materials__title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.grill-materials__title strong{color:#e9d8ae;font-size:.95rem}
+.grill-materials__title span{color:#969083;font-size:.74rem}
+.grill-metal-swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.grill-metal-swatch{
+  display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 9px;
+  border:1px solid #514a3b;border-radius:7px;background:#20201d;color:#d8d0c2;
+  text-align:left;font-size:.76rem;font-weight:700;cursor:pointer
+}
+.grill-metal-swatch[aria-pressed="true"]{border-color:#dfc27e;box-shadow:0 0 0 1px #dfc27e;background:#29251d;color:#fff1c7}
+.grill-metal-swatch__chip{
+  width:24px;height:24px;flex:0 0 24px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 1px 3px rgba(255,255,255,.5),0 1px 3px rgba(0,0,0,.3)
+}
+.grill-metal-swatch[data-metal="silver"] .grill-metal-swatch__chip{background:linear-gradient(135deg,#fff,#98a2ae 55%,#e9edf2)}
+.grill-metal-swatch[data-metal="gold10k"] .grill-metal-swatch__chip{background:linear-gradient(135deg,#f3d18b,#b27a25 60%,#f6d993)}
+.grill-metal-swatch[data-metal="gold14k"] .grill-metal-swatch__chip{background:linear-gradient(135deg,#fff0b2,#d0a039 55%,#98651e)}
+.grill-metal-swatch[data-metal="dentalGold14k"] .grill-metal-swatch__chip{background:linear-gradient(135deg,#fff2bf,#dfbc5d 55%,#a47c2e)}
+.grill-quote-note{margin:9px 0 0;color:#a9a193;font-size:.75rem;line-height:1.5}
+#designPreview{margin:12px 0 0}
+#designPreview[hidden]{display:none!important}
+.grill-config-controls{margin-top:18px;padding-top:15px;border-top:1px solid #4f4636}
+.grill-estimate-shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);gap:18px;align-items:start;margin-top:20px}
+.grill-estimate-shell .estimate{margin:0;min-height:140px}
+.grill-estimate-summary{
+  padding:17px;border:1px solid rgba(201,178,118,.45);border-radius:9px;background:#1a1916
+}
+.grill-estimate-summary h3{color:#e6d2a2;font-size:1rem;margin-bottom:8px}
+.grill-estimate-summary p{color:#aaa396;font-size:.83rem;line-height:1.55}
+.grill-estimate-summary strong{display:block;color:#f4dc9d;font-size:1.65rem;margin-top:7px}
+@media(max-width:900px){
+  .grill-studio-workspace{grid-template-columns:1fr}
+  .grill-3d-viewport{height:380px}
+}
+@media(max-width:620px){
+  .grill-studio-panel{padding:13px}
+  .grill-3d-viewport{height:310px;min-height:280px}
+  .grill-metal-swatches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grill-estimate-shell{grid-template-columns:1fr}
+  .grill-arch-card{padding:8px 6px}
+  .arch-selector-actions button{flex:1 1 auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .tooth-arch-picker .tooth-crown{transition:none}
+}
