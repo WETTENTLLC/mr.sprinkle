@@ -1322,6 +1322,7 @@
                 stoneShape = button.dataset.stoneShape === 'square' ? 'square' : 'round';
                 const profile = activeStoneProfile();
                 if (profile) { profile.shape = stoneShape; profile.manual = true; }
+                if (profile && stones.value === 'none') stones.value = profile.type || 'natural';
                 renderStoneEditor();
                 updateEstimate({ preserveLayout:true });
             });
@@ -1331,6 +1332,7 @@
             if (!profile) return;
             profile.type = stoneMaterialByTooth.value;
             profile.manual = true;
+            if (stones.value === 'none') stones.value = profile.type;
             if (profile.type === 'natural') profile.clarity = document.getElementById('estimateClarity').value || 'commercial';
             updateEstimate({ preserveLayout:true });
         });
@@ -1339,6 +1341,7 @@
             if (!profile) return;
             profile.color = stoneColorPicker.value.toLowerCase();
             profile.manual = true;
+            if (stones.value === 'none') stones.value = profile.type || 'natural';
             updateEstimate({ preserveLayout:true });
         });
         document.querySelectorAll('[data-stone-color]').forEach(button => {
@@ -1347,6 +1350,7 @@
                 if (!profile) return;
                 profile.color = button.dataset.stoneColor.toLowerCase();
                 profile.manual = true;
+                if (stones.value === 'none') stones.value = profile.type || 'natural';
                 renderStoneProfileControls();
                 updateEstimate({ preserveLayout:true });
             });
