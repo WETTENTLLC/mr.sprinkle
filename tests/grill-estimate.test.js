@@ -189,3 +189,31 @@ test("Grill Maker order handoff uses confirmed Formspree delivery and a traceabl
   assert.match(html, /Your request was not confirmed as delivered/);
   assert.doesNotMatch(html, /mode:\s*['"]no-cors['"]/);
 });
+
+
+test("customer intake routes use verified Formspree responses and the WETT notification destination", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const root = path.join(__dirname, "..");
+  const grill = fs.readFileSync(path.join(root, "mold-form.html"), "utf8");
+  const nails = fs.readFileSync(path.join(root, "assets", "press-on-nails.js"), "utf8");
+  const ambassador = fs.readFileSync(path.join(root, "ambassador.html"), "utf8");
+  assert.match(grill, /wettentertainmentllc@gmail\.com/);
+  assert.match(nails, /wettentertainmentllc@gmail\.com/);
+  assert.match(ambassador, /wettentertainmentllc@gmail\.com/);
+  assert.match(nails, /!response\.ok \|\| result\.errors/);
+  assert.match(ambassador, /!response\.ok \|\| result\.errors/);
+  assert.doesNotMatch(grill + nails + ambassador, /mode:\s*['"]no-cors['"]/);
+});
+
+test("gift card checkout does not display a fake redeemable code and passes face value to PayPal", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const html = fs.readFileSync(path.join(__dirname, "..", "gift-card.html"), "utf8");
+  assert.match(html, /ISSUED AFTER PAYMENT/);
+  assert.match(html, /itemName-giftCard/);
+  assert.match(html, /custom-giftCard/);
+  assert.match(html, /invoice-giftCard/);
+  assert.match(html, /wettentertainmentllc@gmail\.com/);
+  assert.match(html, /\(amount - 100\) % 50/);
+});
