@@ -39,6 +39,14 @@
         const teeth = Array.from(new Set(teethList));
         const cuts = (Array.isArray(r.cuts) ? r.cuts : String(r.cuts || "").split(","))
             .map((c) => String(c).trim()).filter((c) => c in catalog.customCuts);
+        const hasStoneTeeth = Object.prototype.hasOwnProperty.call(r, "stoneTeeth");
+        const stoneTeethRaw = Array.isArray(r.stoneTeeth) ? r.stoneTeeth : String(r.stoneTeeth || "").split(",");
+        const stoneTeeth = Array.from(new Set(stoneTeethRaw.map((t) => String(t).trim())))
+            .filter((t) => jawOf(t) && teeth.includes(t));
+        const stoneShape = r.stoneShape === "square" ? "square" : "round";
+        const stoneLayout = typeof r.stoneLayoutSerialized === "string"
+            ? r.stoneLayoutSerialized
+            : (typeof r.stoneLayout === "string" ? r.stoneLayout : "");
         return {
             design: r.design in DESIGNS ? r.design : "grillz",
             metal: r.metal in METALS ? r.metal : "silver",
@@ -52,6 +60,9 @@
             clarity: r.clarity in CLARITY ? r.clarity : "commercial",
             size: SIZES.includes(String(r.size)) ? String(r.size) : "1.3",
             stoneCount: int(r.stoneCount ?? 0),
+            stoneShape,
+            stoneTeeth: hasStoneTeeth ? stoneTeeth : teeth.slice(),
+            stoneLayout,
             cuts: Array.from(new Set(cuts))
         };
     }
@@ -154,7 +165,10 @@
             upperCount: String(c.upperCount), lowerCount: String(c.lowerCount), teeth: c.teeth.join(","),
             finish: c.finish, shipping: c.shipping, extension: c.extension,
             stones: c.stones, clarity: c.clarity, size: c.size, stoneCount: String(c.stoneCount),
-            cuts: c.cuts.join(","), pv: catalog.version
+            cuts: c.cuts.join(","), stoneShape: c.stoneShape,
+            stoneTeeth: (c.stoneTeeth || []).join(","),
+            stoneLayout: c.stoneLayoutSerialized || c.stoneLayout || "",
+            pv: catalog.version
         };
     }
 
