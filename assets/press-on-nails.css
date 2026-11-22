@@ -1,0 +1,64 @@
+/* Custom gold press-on nail service page */
+.press-nails-page{background:radial-gradient(ellipse at 18% 2%,rgba(202,163,79,.16),transparent 34rem),radial-gradient(ellipse at 90% 25%,rgba(147,112,51,.12),transparent 34rem),#080808;color:#f5f0e6}
+.press-nails-main{max-width:1160px;margin:0 auto;padding:125px 22px 70px}
+.press-nails-page a{color:inherit}
+.press-nails-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:clamp(24px,4vw,56px);align-items:center;border:1px solid rgba(216,186,120,.25);border-radius:24px;padding:clamp(22px,4vw,48px);background:linear-gradient(135deg,rgba(28,25,20,.94),rgba(8,8,8,.97));box-shadow:0 22px 65px rgba(0,0,0,.42)}
+.press-nails-eyebrow{color:#d7b978;font-size:.76rem;letter-spacing:.2em;font-weight:800;text-transform:uppercase}
+.press-nails-hero h1{margin:12px 0 14px;max-width:680px;color:#fff8e9;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.3rem,5vw,4.35rem);line-height:1.04;letter-spacing:-.035em}
+.press-nails-hero h1 span{color:#e2c27f}
+.press-nails-hero-copy{max-width:640px;color:#d2c9b8;font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.75}
+.press-nails-pill{display:inline-flex;align-items:center;gap:8px;margin:8px 0 16px;padding:8px 12px;border:1px solid rgba(214,183,116,.42);border-radius:999px;color:#ead8b3;background:rgba(212,177,105,.09);font-size:.78rem;font-weight:700}
+.press-nails-hero-image{min-height:330px;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;border:1px solid rgba(220,190,124,.32);border-radius:18px;background:radial-gradient(ellipse,#282018,#101010 70%)}
+.press-nails-hero-image img{display:block;width:100%;height:420px;max-height:54vw;object-fit:contain;object-position:center;border-radius:12px}
+.press-nails-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.press-nails-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 22px;border:1px solid #d8b86f;border-radius:10px;background:linear-gradient(135deg,#f5df9c,#c99b42);color:#15110a!important;font-weight:900;text-decoration:none;box-shadow:0 8px 24px rgba(211,168,82,.18)}
+.press-nails-btn--secondary{background:transparent;color:#f0dba9!important;box-shadow:none}
+.press-nails-section{margin-top:44px}
+.press-nails-section-title{margin:0 0 10px;color:#f4e5c2;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.65rem,3vw,2.3rem)}
+.press-nails-lead{color:#c9c2b5;max-width:780px;line-height:1.75}
+.press-nails-process{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.press-nails-step{min-height:160px;padding:20px;border:1px solid rgba(210,177,111,.22);border-radius:15px;background:linear-gradient(145deg,#1b1915,#0e0e0e)}
+.press-nails-step strong{display:block;margin:4px 0 8px;color:#e6c77f;font-size:1rem}
+.press-nails-step p{margin:0;color:#c9c2b5;font-size:.91rem;line-height:1.65}
+.press-nails-step-number{display:inline-flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:50%;background:#d6b66e;color:#17120a;font-weight:900}
+.press-nails-price-note{padding:19px 21px;border-left:3px solid #d6b66e;border-radius:0 12px 12px 0;background:rgba(214,182,110,.08);color:#d8d0c2;line-height:1.7}
+.press-nails-order-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(280px,.92fr);gap:22px;align-items:start;margin-top:20px}
+.press-nails-panel{padding:clamp(18px,3vw,28px);border:1px solid rgba(214,182,110,.3);border-radius:18px;background:linear-gradient(145deg,#171613,#0b0b0b);box-shadow:0 16px 45px rgba(0,0,0,.28)}
+.press-nails-panel h3{margin:0 0 12px;color:#e4c77f;font-family:Georgia,"Times New Roman",serif;font-size:1.35rem}
+.press-nails-field{margin:0 0 18px}
+.press-nails-field label,.press-nails-field legend{display:block;margin:0 0 7px;color:#ead5a6;font-size:.9rem;font-weight:800}
+.press-nails-field input:not([type="checkbox"]):not([type="file"]),.press-nails-field select,.press-nails-field textarea{width:100%;min-height:48px;padding:12px 13px;border:1px solid #514a3b;border-radius:8px;background:#151515;color:#fff;font:inherit}
+.press-nails-field textarea{min-height:100px;resize:vertical}
+.press-nails-field input:focus,.press-nails-field select:focus,.press-nails-field textarea:focus{outline:2px solid #d3b36c;outline-offset:1px;border-color:#d3b36c}
+.press-nails-field input[type="file"]{display:block;max-width:100%;width:100%;color:#ded6c7}
+.press-nails-help{display:block;margin-top:6px;color:#a9a396;font-size:.78rem;line-height:1.5}
+.press-nails-fingers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.press-nails-hand{padding:14px;border:1px solid #4b4436;border-radius:11px;background:#111}
+.press-nails-hand h4{margin:0 0 10px;color:#e2c27e;font-size:.95rem}
+.press-nails-finger{display:flex!important;align-items:center;gap:10px;margin:0!important;padding:7px 3px;color:#e9e3d9!important;font-size:.88rem!important;font-weight:600!important;cursor:pointer}
+.press-nails-finger input{width:18px;height:18px;accent-color:#d7b76f;flex:0 0 auto}
+.press-nails-picker-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.press-nails-picker-actions button{padding:8px 12px;border:1px solid #76613c;border-radius:8px;background:#201b12;color:#e9d29b;font-weight:700;cursor:pointer}
+.press-nails-estimate{position:sticky;top:100px;padding:21px;border:1px solid rgba(216,186,120,.42);border-radius:15px;background:radial-gradient(ellipse at top right,rgba(197,151,62,.15),transparent 55%),#111}
+.press-nails-estimate h3{margin:0 0 16px;color:#f1dfb7;font-family:Georgia,"Times New Roman",serif}
+.press-nails-estimate-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #3b362d;color:#cbc3b4}
+.press-nails-estimate-row strong{color:#fff0cf;text-align:right}
+.press-nails-estimate-total{margin-top:14px;padding-top:8px;color:#e7c77b;font-size:1.2rem;font-weight:900}
+.press-nails-estimate-note{color:#aaa396;font-size:.8rem;line-height:1.6;margin:12px 0 0}
+.press-nails-image-preview{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px;border:1px solid #4d473c;border-radius:9px;background:#111}
+.press-nails-image-preview img{width:88px;height:88px;object-fit:contain;background:#050505;border-radius:7px}
+.press-nails-image-preview span{color:#ccc4b6;font-size:.82rem;overflow-wrap:anywhere}
+.press-nails-consent{display:flex!important;align-items:flex-start;gap:10px;color:#d8d1c4!important;font-size:.86rem!important;font-weight:600!important;line-height:1.55}
+.press-nails-consent input{margin-top:4px;width:18px;height:18px;accent-color:#d7b76f;flex:0 0 auto}
+.press-nail-status{min-height:24px;margin:12px 0;color:#a9e3cb;font-size:.9rem}
+.press-nail-status.is-error{color:#ffb0a8}
+.press-nails-submit{display:block;width:100%;min-height:53px;border:1px solid #f0d99b;border-radius:10px;background:linear-gradient(135deg,#f0d890,#c7983e);color:#15110a;font-size:1rem;font-weight:900;cursor:pointer}
+.press-nails-submit:disabled{opacity:.55;cursor:wait}
+.press-nails-payment-note{margin-top:16px;padding:15px;border-radius:10px;background:#111d1b;border:1px solid rgba(113,190,165,.32);color:#c8dbd4;font-size:.85rem;line-height:1.65}
+.press-nails-faq{margin-top:24px;padding:18px 20px;border:1px solid #403929;border-radius:12px;background:#111}
+.press-nails-faq h3{margin:0 0 6px;color:#e4c77f}
+.press-nails-faq p{margin:0;color:#c8c1b5;line-height:1.7}
+.press-nails-footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:36px;padding-top:20px;border-top:1px solid #403929;color:#9f988b;font-size:.85rem}
+.press-nails-footer a{color:#e5c781}
+@media(max-width:800px){.press-nails-main{padding:110px 14px 46px}.press-nails-hero,.press-nails-order-layout{grid-template-columns:1fr}.press-nails-hero-image{min-height:240px}.press-nails-hero-image img{height:330px;max-height:none}.press-nails-process{grid-template-columns:1fr}.press-nails-estimate{position:static}}
+@media(max-width:480px){.press-nails-fingers{grid-template-columns:1fr}.press-nails-hero{padding:18px}.press-nails-actions .press-nails-btn{width:100%}}

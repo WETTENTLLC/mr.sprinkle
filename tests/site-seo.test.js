@@ -9,7 +9,7 @@ const json = (file) => JSON.parse(read(file));
 
 test("main customer-facing pages use the shared home-style header", () => {
   const pages = [
-    "index.html", "pricing.html", "mold-form.html", "gold-teeth-reno.html",
+    "index.html", "pricing.html", "mold-form.html", "press-on-nails.html", "gold-teeth-reno.html",
     "gold-teeth-tahoe.html", "service-areas.html", "blog.html", "gift-card.html",
     "tax-time-promo.html", "safety-policy.html", "partner-signup.html",
     "ambassador.html", "intro-music.html"
@@ -123,6 +123,7 @@ test("sitemap focuses on customer-facing Nevada pages", () => {
   const sitemap = read("sitemap.xml");
   assert.match(sitemap, /service-areas\.html/);
   assert.match(sitemap, /gold-teeth-reno\.html/);
+  assert.match(sitemap, /press-on-nails\.html/);
   assert.doesNotMatch(sitemap, /ambassador-portal\.html|admin-dashboard\.html|gold-teeth-seattle\.html|gold-teeth-bay-area\.html|ai-context\.json/);
 });
 
@@ -155,6 +156,71 @@ test("booking form continues to use the existing approved Formspree endpoint and
   assert.ok(form.includes('custom_artwork_request:'));
 });
 
+
+test("Grill Maker booking handoff avoids repeated design questions and carries artwork forward", () => {
+  const pricing = read("pricing.html");
+  const form = read("mold-form.html");
+  const handoff = read("assets/grill-artwork-handoff.js");
+  const thanks = read("thank-you.html");
+
+  assert.match(pricing, /id="grillArtworkReference"/);
+  assert.match(pricing, /id="grillArtworkNotes"/);
+  assert.match(pricing, /MrSprinkleArtworkHandoff\.save\(\{ file, notes \}\)/);
+  assert.match(handoff, /indexedDB\.open\(DB_NAME, DB_VERSION\)/);
+  assert.match(handoff, /file: file/);
+  assert.match(form, /urlParams.get\('quote'\) === 'configurator'/);
+  assert.match(form, /data-configurator-duplicate="materialType"/);
+  assert.match(form, /data-configurator-duplicate="budget"/);
+  assert.match(form, /data-configurator-duplicate="diamondType"/);
+  assert.match(form, /id="configuratorBookingIntro"/);
+  assert.match(form, /id="configuratorDesignText"/);
+  assert.match(form, /referenceImageInput\.files = transfer\.files/);
+  assert.match(form, /getElementById\('appointmentDate'\)\.required = true/);
+  assert.match(form, /getElementById\('preferredTime'\)\.required = true/);
+  assert.match(form, /step = '1800'/);
+  assert.match(form, /within 24 hours to confirm availability/);
+  assert.match(form, /body: formData/);
+  assert.match(form, /appointment_availability_status: isConfiguratorBooking/);
+  assert.match(form, /thank-you\.html\?booking=grillz/);
+  assert.match(thanks, /grillBookingConfirmation/);
+  assert.match(thanks, /contact you within 24 hours/);
+});
+
+test("custom press-on nails use individual impressions and catalog-based per-nail estimates without collecting card data", () => {
+  const page = read("press-on-nails.html");
+  const script = read("assets/press-on-nails.js");
+  const home = read("index.html");
+  const styles = read("styles.css");
+  const catalog = read("assets/pricing-catalog.js");
+
+  assert.match(page, /id="pressNailOrderForm"/);
+  assert.match(page, /individual impression/i);
+  assert.match(page, /name="nailFinger\[\]"/);
+  assert.match(page, /10K Gold/);
+  assert.match(page, /14K Gold/);
+  assert.match(page, /assets\/pricing-catalog\.js/);
+  assert.match(script, /catalog\.grillz\[metal\.value\]/);
+  assert.match(script, /selectedMetal\.perTooth/);
+  assert.match(catalog, /gold10k: Object\.freeze\(\{ perTooth: 240/);
+  assert.match(catalog, /gold14k: Object\.freeze\(\{ perTooth: 300/);
+  assert.match(script, /press_on_nails_order_request/);
+  assert.match(page, /formspree\.io/);
+  assert.match(page, /secure payment link/);
+  assert.doesNotMatch(page, /name=["'](?:cardNumber|creditCard|cvv|cvc)["']/i);
+  assert.match(home, /href="press-on-nails\.html"/);
+  assert.match(home, /Build Your Nail Set/);
+  assert.match(styles, /\.service-image img[\s\S]*?object-fit: contain/);
+  assert.match(styles, /\.gallery-item img[\s\S]*?object-fit: contain/);
+});
+
+test("homepage service and gallery product photos are fully contained instead of cover-cropped", () => {
+  const css = read("styles.css");
+  const service = css.match(/\.service-image img\s*\{([^}]+)\}/);
+  const gallery = css.match(/\.gallery-item img\s*\{([^}]+)\}/);
+  assert.ok(service && /object-fit:\s*contain/.test(service[1]));
+  assert.ok(gallery && /object-fit:\s*contain/.test(gallery[1]));
+  assert.match(css, /\.gallery-item:hover img\s*\{[^}]*filter:/);
+});
 
 test("primary indexable pages have unique titles, descriptions, and canonical URLs", () => {
   const pages = [

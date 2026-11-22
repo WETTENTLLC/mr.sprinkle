@@ -63,7 +63,7 @@ html.ms-intro-open, html.ms-intro-open body { overflow: hidden; }
     background: var(--ms-panel); border: 1px solid var(--ms-line); border-radius: 2px; padding: 10px 14px 10px 10px;
     backdrop-filter: blur(8px); max-width: calc(100% - 48px);
 }
-.ms-track__cover { width: 48px; height: 48px; object-fit: cover; border: 1px solid var(--ms-line); flex-shrink: 0; }
+.ms-track__cover { width: 48px; height: 48px; object-fit: contain; border: 1px solid var(--ms-line); background: #0c0c0b; flex-shrink: 0; }
 .ms-track__meta { min-width: 0; }
 .ms-track__kicker { color: var(--ms-muted); font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .ms-track__title { color: var(--ms-platinum); font-family: Georgia, serif; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }

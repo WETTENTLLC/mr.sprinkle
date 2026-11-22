@@ -386,3 +386,21 @@
 .grill-3d-viewport--smile{height:440px;min-height:400px}
 @media(max-width:900px){.grill-3d-viewport--smile{height:410px;min-height:370px}}
 @media(max-width:620px){.grill-3d-viewport--smile{height:280px;min-height:260px}}
+
+/* Artwork upload stays with the Grill Maker design through appointment booking */
+.grill-artwork-upload{
+  display:grid;grid-template-columns:1fr;gap:8px;margin:13px 0 15px;
+  padding:14px;border:1px solid rgba(34,198,200,.24);border-radius:8px;
+  background:rgba(3,8,10,.48)
+}
+.grill-artwork-upload label{margin:3px 0 0;color:#e3d2aa;font-size:.76rem;font-weight:800}
+.grill-artwork-upload input[type="file"]{
+  width:100%;max-width:100%;padding:10px;border:1px solid #555047;border-radius:6px;
+  background:#15191a;color:#ded8ca;font-size:.78rem
+}
+.grill-artwork-upload textarea{
+  width:100%;min-height:84px;padding:10px;border:1px solid #555047;border-radius:6px;
+  background:#15191a;color:#eee;font:inherit;font-size:.8rem;resize:vertical
+}
+.grill-artwork-upload textarea:focus,.grill-artwork-upload input:focus{outline:2px solid var(--sprinkle-teal);outline-offset:1px}
+.grill-artwork-upload #grillArtworkHandoffStatus{margin:2px 0 0;font-size:.72rem;line-height:1.45}

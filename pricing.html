@@ -21,6 +21,7 @@
       }
     }
     </script>
+    <script src="assets/grill-artwork-handoff.js?v=20261122-booking-handoff-v1"></script>
     <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
@@ -397,8 +398,15 @@
 
                     <div class="custom-artwork-request">
                         <h4>Want a picture, pattern, character, lettering or logo?</h4>
-                        <p>Upload a clear inspiration image and tell us what you want, which teeth it belongs on, and any colors or details. Our team will review the artwork and provide a custom quote. Your selected teeth, metal, stone layout and enamel colors will be included with the request.</p>
-                        <a id="customArtworkQuoteLink" class="cta-btn cta-btn--outline" href="mold-form.html?quote=configurator&amp;customArtwork=true">Upload artwork &amp; request a custom quote</a>
+                        <p>Upload your inspiration here and leave a note describing the artwork, colors and exact teeth. Your image and notes will travel with your grill design to the booking page, so you will not need to upload them again. Custom artwork receives an individual quote.</p>
+                        <div class="grill-artwork-upload">
+                            <label for="grillArtworkReference">Artwork reference image (optional)</label>
+                            <input id="grillArtworkReference" type="file" accept="image/*">
+                            <label for="grillArtworkNotes">What would you like us to create?</label>
+                            <textarea id="grillArtworkNotes" rows="3" placeholder="Describe the design, colors, exact teeth, patterns, lettering or logo..."></textarea>
+                            <p id="grillArtworkHandoffStatus" class="stone-profile-hint" role="status" aria-live="polite">Add both an image and a description for custom artwork. Simple enamel color selections are already included in your design.</p>
+                        </div>
+                        <a id="customArtworkQuoteLink" class="cta-btn cta-btn--outline" href="mold-form.html?quote=configurator&amp;customArtwork=true">Continue to booking with custom artwork</a>
                     </div>
                 </section>
 
@@ -406,7 +414,7 @@
                     <div id="estimateResult" class="estimate" aria-live="polite"></div>
                     <div class="grill-estimate-summary">
                         <h3>Ready to take this design forward?</h3>
-                        <p>Your selected teeth, metal, stone placements, enamel colors and estimate or quote status will travel with your request. Mr. Sprinkle confirms final fit, alloy, production details, and appointment availability before accepting an order.</p>
+                        <p>Your selected teeth, metal, stone placements, enamel colors, artwork image and design notes will travel with your request. On the next page, you will only confirm your design, choose an appointment date and preferred time, and enter your contact details.</p>
                         <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Continue with this design</a>
                     </div>
                 </div>
@@ -1565,6 +1573,46 @@
 
         updateMode();
         updateEstimate({ preserveLayout:true });
+
+        const artworkInput = document.getElementById('grillArtworkReference');
+        const artworkNotes = document.getElementById('grillArtworkNotes');
+        const artworkStatus = document.getElementById('grillArtworkHandoffStatus');
+        const hasArtworkHandoff = () => Boolean((artworkInput.files && artworkInput.files[0]) || artworkNotes.value.trim());
+        function bindBookingHandoff(link) {
+            link.addEventListener('click', async event => {
+                event.preventDefault();
+                const file = artworkInput.files && artworkInput.files[0] ? artworkInput.files[0] : null;
+                const notes = artworkNotes.value.trim();
+                const explicitCustom = link.id === 'customArtworkQuoteLink';
+                if ((file && !notes) || (!file && notes)) {
+                    artworkStatus.textContent = 'For custom artwork, please provide both a reference image and a short description.';
+                    artworkStatus.style.color = '#ffb3b3';
+                    return;
+                }
+                if (explicitCustom && (!file || !notes)) {
+                    artworkStatus.textContent = 'Please add the artwork image and description before continuing with a custom artwork request.';
+                    artworkStatus.style.color = '#ffb3b3';
+                    artworkInput.focus();
+                    return;
+                }
+                const target = new URL(link.href, window.location.href);
+                if (hasArtworkHandoff() || explicitCustom) target.searchParams.set('customArtwork', 'true');
+                else target.searchParams.delete('customArtwork');
+                try {
+                    await window.MrSprinkleArtworkHandoff.save({ file, notes });
+                    artworkStatus.textContent = hasArtworkHandoff()
+                        ? 'Your artwork and notes are saved with this design and will appear on the booking page.'
+                        : 'Your grill design is ready. Continue to booking to choose your date and preferred time.';
+                    artworkStatus.style.color = '#a7e7d5';
+                    window.location.href = target.toString();
+                } catch (error) {
+                    artworkStatus.textContent = error.message || 'We could not save the artwork handoff. Please try again.';
+                    artworkStatus.style.color = '#ffb3b3';
+                }
+            });
+        }
+        bindBookingHandoff(quoteLink);
+        bindBookingHandoff(document.getElementById('customArtworkQuoteLink'));
     })();
     </script>
     <script type="module" src="assets/grill-studio-3d.js?v=20261122-smile-viewer-v2-3"></script>

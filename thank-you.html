@@ -90,6 +90,21 @@
         <h2 id="mainHeading">Your Mold Request Has Been Submitted</h2>
         
         <p id="mainMessage">We have received your request. The team will follow up to discuss availability and next steps.</p>
+        <div id="grillBookingConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
+            <h3 style="color:#FFD700;margin-bottom:10px">Your grill design request is in!</h3>
+            <p>We have received your design, estimate and preferred appointment time.</p>
+            <p><strong>We will contact you within 24 hours</strong> to confirm appointment availability and review your final quote. Your requested time is not confirmed until you hear from our team.</p>
+        </div>
+        <div id="pressNailConfirmation" class="contact-info" style="display:none;border:2px solid #d6b66e;background:#211d15">
+            <h3 style="color:#e4c77f;margin-bottom:10px">Your custom nail fitting request is in!</h3>
+            <p>We have received your selected fingers, gold preference, base estimate and any design inspiration you submitted.</p>
+            <p><strong>We will contact you within 24 hours</strong> to review your preferred fitting time and confirm the next step for your individual nail impressions.</p>
+            <p>After your impressions and final design are reviewed, you will receive your final quote and a secure payment link before production. No payment has been collected yet.</p>
+        </div>
+        <div id="promoConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
+            <h3 style="color:#FFD700;margin-bottom:10px">Promotion request received</h3>
+            <p>Your promotion details have been received. Please review any payment or eligibility instructions included with your original offer.</p>
+        </div>
         
         <div id="musicConfirmation" style="display:none;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);padding:25px;border-radius:10px;border:3px solid #FFD700;margin:20px 0">
             <h2 style="color:#FFD700;margin-bottom:15px">Track Purchased!</h2>
@@ -101,9 +116,9 @@
         
         <div class="contact-info">
             <h3 style="color: #FFD700; margin-bottom: 1rem;">What Happens Next?</h3>
-            <p>• We'll review your selected teeth and design preferences</p>
-            <p>• Appointment requests are confirmed by the team; availability is not guaranteed by this submission</p>
-            <p>• Discuss published prices, any required custom quote, and timing for your request</p>
+            <p id="thankYouReviewStep">• We'll review your selected teeth and design preferences</p>
+            <p id="thankYouAvailabilityStep">• Appointment requests are confirmed by the team; availability is not guaranteed by this submission</p>
+            <p id="thankYouQuoteStep">• Discuss published prices, any required custom quote, and timing for your request</p>
             <p>• In-person appointments take place only at Envy Kutz — Braids &amp; Locs, 275 E 4th St, Reno, NV 89501</p>
         </div>
         
@@ -124,8 +139,22 @@
     </div>
     
     <script>
-    // Check if user came from Tax Time promo purchase
+    // Grill Maker booking confirmation
     const urlParams=new URLSearchParams(window.location.search);
+    if (urlParams.get('booking') === 'grillz') {
+        document.getElementById('mainHeading').textContent = 'Your Grill Design Appointment Request Was Received';
+        document.getElementById('mainMessage').textContent = 'Thank you. Your Grill Maker design and estimated quote have been sent to Mr. Sprinkle.';
+        document.getElementById('grillBookingConfirmation').style.display = 'block';
+    }
+    if (urlParams.get('service') === 'press-on-nails') {
+        document.getElementById('mainHeading').textContent = 'Your Custom Nail Fitting Request Was Received';
+        document.getElementById('mainMessage').textContent = 'Thank you. Your selected nails, gold preference and base estimate have been sent to Mr. Sprinkle.';
+        document.getElementById('pressNailConfirmation').style.display = 'block';
+        document.getElementById('thankYouReviewStep').textContent = '• We will review the fingers and gold you selected';
+        document.getElementById('thankYouAvailabilityStep').textContent = '• We will contact you within 24 hours to confirm a fitting time at Envy Kutz in downtown Reno';
+        document.getElementById('thankYouQuoteStep').textContent = '• We will take an individual impression of every selected nail, then confirm the final quote and secure payment link';
+    }
+    // Check if user came from Tax Time promo purchase
     if(urlParams.get('promo')==='taxtime'){
         document.getElementById('promoConfirmation').style.display='block';
         document.getElementById('mainHeading').textContent='Payment Confirmed!';
