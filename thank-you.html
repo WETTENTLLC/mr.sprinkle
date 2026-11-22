@@ -103,6 +103,12 @@
             <p><strong>We will contact you within 24 hours</strong> to review your preferred fitting time and confirm the next step for your individual nail impressions.</p>
             <p>After your impressions and final design are reviewed, you will receive your final quote and a secure payment link before production. No payment has been collected yet.</p>
         </div>
+        <div id="giftCardConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
+            <h3 style="color:#FFD700;margin-bottom:10px">Gift card payment submitted</h3>
+            <p>Thank you. Our team will verify the PayPal transaction and then issue your unique redeemable gift card code to the email address used at checkout.</p>
+            <p><strong>The preview shown before checkout is not a redeemable code.</strong> Your gift card becomes valid only after the payment is verified and the code is issued.</p>
+            <p>For assistance, contact wettentertainmentllc@gmail.com or text (530) 214-0676.</p>
+        </div>
         <div id="promoConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
             <h3 style="color:#FFD700;margin-bottom:10px">Promotion request received</h3>
             <p>Your promotion details have been received. Please review any payment or eligibility instructions included with your original offer.</p>
@@ -160,7 +166,12 @@
         document.getElementById('thankYouAvailabilityStep').textContent = '• We will contact you within 24 hours to confirm a fitting time at Envy Kutz in downtown Reno';
         document.getElementById('thankYouQuoteStep').textContent = '• We will take an individual impression of every selected nail, then confirm the final quote and secure payment link';
     }
-    // Check if user came from Tax Time promo purchase
+    if (urlParams.get('purchase') === 'gift-card') {
+        document.getElementById('giftCardConfirmation').style.display = 'block';
+        document.getElementById('mainHeading').textContent = 'Your Gift Card Request Is Being Verified';
+        document.getElementById('mainMessage').textContent = 'Thank you. We will verify your PayPal payment before issuing your redeemable gift card code.';
+    }
+        // Check if user came from Tax Time promo purchase
     if(urlParams.get('promo')==='taxtime'){
         document.getElementById('promoConfirmation').style.display='block';
         document.getElementById('mainHeading').textContent='Payment Confirmed!';
