@@ -402,7 +402,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
-    const crownZ = isUpper ? 0.70 : -0.70;
+    const crownZ = isUpper ? 0.55 : -0.55;
     const group = new THREE.Group();
     group.name = jaw + " open dental-model gum arch";
 
@@ -744,7 +744,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function setFrontCamera() {
     if (!camera) return;
     camera.up.set(0, 0, 1);
-    camera.position.set(0.16, -7.15, 1.10);
+    camera.position.set(0.12, -6.45, 0.95);
     camera.lookAt(0, -0.12, 0);
     camera.updateProjectionMatrix();
     render();
@@ -794,7 +794,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       scene.background = new THREE.Color(0x090607);
 
       camera = new THREE.PerspectiveCamera(34, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0.16, -7.15, 1.10);
+      camera.position.set(0.12, -6.45, 0.95);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
