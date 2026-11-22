@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Sprinkle Gift Cards | $100–$1,500</title>
-    <meta name="description" content="Give the gift of custom grillz and jewelry with a Mr. Sprinkle gift card. Choose an amount from $100 to $1,500 and redeem it toward an eligible order.">
+    <title>Mr. Sprinkle Gift Card Requests | $100–$1,500</title>
+    <meta name="description" content="Request a Mr. Sprinkle digital gift card from $100 to $1,500. Submit the value and recipient details; receive a secure payment link after the team confirms your request.">
     <link rel="canonical" href="https://mrsprinklereno.com/gift-card.html">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
@@ -17,7 +17,6 @@
         .card-option{background:#1a1a1a;border:2px solid #FFD700;border-radius:15px;padding:30px;text-align:center;transition:all 0.3s}
         .card-option:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,215,0,0.4)}
         .card-option h3{color:#FFD700;font-size:1.8em;margin-bottom:15px}
-        .discount-badge{background:#c41e3a;color:#fff;padding:8px 20px;border-radius:20px;display:inline-block;margin:10px 0;font-weight:bold}
         .price-input{width:100%;padding:15px;font-size:1.2em;border:2px solid #FFD700;border-radius:8px;background:#2a2a2a;color:#fff;margin:15px 0}
         .buy-btn{background:#FFD700;color:#000;padding:15px 40px;border:none;border-radius:8px;font-size:1.2em;font-weight:bold;cursor:pointer;width:100%;transition:all 0.3s}
         .buy-btn:hover{background:#FFA500;transform:scale(1.05)}
@@ -57,72 +56,66 @@
             </div>
 
             <div class="card-options">
-                <div class="card-option" style="max-width:500px;margin:0 auto">
-                    <h3>🎁 Mr. Sprinkle Gift Card</h3>
-                    <p style="margin:20px 0;color:#ccc">Perfect luxury gift for that special someone</p>
-                    <input type="number" id="giftCard" class="price-input" placeholder="Enter amount ($100-$1500)" min="100" max="1500" step="50">
-                    <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftCardPrice">0</span></p>
-                    <form id="form-giftCard" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
-                        <input type="hidden" name="item_name" value="Mr. Sprinkle Gift Card">
-                        <input type="hidden" name="amount" id="amount-giftCard">
-                        <input type="hidden" name="currency_code" value="USD">
-                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
-                        <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
-                    </form>
-                    <button class="buy-btn" onclick="buyGiftCard('giftCard')">Buy Gift Card 🎁</button>
-                </div>
-            </div>
-
-            <!-- Gift Card Preview -->
-            <div id="previewSection" style="display:none;margin:50px 0;text-align:center">
-                <h3 style="color:#FFD700;margin-bottom:30px;font-size:2em">✨ Your Gift Card Preview ✨</h3>
-                <div id="giftCardGraphic" style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);border-radius:20px;padding:40px;max-width:500px;margin:0 auto;box-shadow:0 20px 60px rgba(255,215,0,0.4);border:3px solid #000">
-                    <!-- Card Inner -->
-                    <div style="background:#000;border-radius:15px;padding:40px;text-align:center;position:relative;overflow:hidden">
-                        <!-- Background Pattern -->
-                        <div style="position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.05;background-image:url('data:image/svg+xml,%3Csvg width=%2720%27 height=%2720%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Ctext x=%2710%27 y=%2715%27 font-size=%2715%27 fill=%27%23FFD700%27%3EMr.%3C/text%3E%3C/svg%3E');background-repeat:repeat;pointer-events:none"></div>
-                        
-                        <!-- Content -->
-                        <div style="position:relative;z-index:1">
-                            <img src="assets/trans.png" alt="Mr. Sprinkle" style="width:80px;margin-bottom:20px">
-                            <h2 style="color:#FFD700;font-size:2.5em;margin:20px 0;text-shadow:2px 2px 4px rgba(0,0,0,0.8)">LUXURY GIFT CARD</h2>
-                            <div style="border:2px solid #FFD700;padding:20px;border-radius:10px;margin:30px 0;background:rgba(255,215,0,0.1)">
-                                <p style="color:#ccc;font-size:0.9em;margin:5px 0">GIFT CARD VALUE</p>
-                                <p style="color:#FFD700;font-size:3em;font-weight:bold;margin:10px 0">$<span id="previewAmount">0</span></p>
-                            </div>
-                            <div style="background:rgba(255,215,0,0.15);padding:15px;border-radius:8px;margin:20px 0">
-                                <p style="color:#999;font-size:0.8em;margin:5px 0">CODE</p>
-                                <p id="previewCode" style="color:#FFD700;font-size:1.4em;font-family:monospace;font-weight:bold;letter-spacing:3px;margin:10px 0">XXXXXXXX</p>
-                            </div>
-                            <p style="color:#ccc;font-size:0.85em;margin-top:20px">🎁 PERFECT LUXURY GIFT</p>
-                            <p style="color:#999;font-size:0.75em;margin-top:10px">Redeemable at mrsprinklereno.com</p>
+                <div class="card-option" style="max-width:650px;margin:0 auto;text-align:left">
+                    <h3 style="text-align:center">🎁 Mr. Sprinkle Digital Gift Card</h3>
+                    <p style="margin:12px 0 22px;color:#ccc;text-align:center">Choose a gift value and tell us who it is for. We will confirm the details and send a secure hosted payment link before issuing the gift card.</p>
+                    <form id="giftCardRequestForm" action="https://formspree.io/f/myzpanyg" method="POST">
+                        <input type="hidden" name="_subject" value="NEW MR. SPRINKLE GIFT CARD REQUEST">
+                        <input type="hidden" name="form_type" value="gift_card_order_request">
+                        <div style="margin:14px 0">
+                            <label for="giftCard" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Gift card value (USD)</label>
+                            <input type="number" id="giftCard" name="faceValue" class="price-input" placeholder="$100–$1,500 in $50 increments" min="100" max="1500" step="50" required>
+                            <p style="color:#FFD700;font-size:1.1em;margin:8px 0">Requested gift card value: $<span id="giftCardPrice">0.00</span></p>
                         </div>
-                    </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+                            <div style="margin:8px 0">
+                                <label for="giftCardSenderName" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Your name</label>
+                                <input id="giftCardSenderName" name="senderName" type="text" autocomplete="name" required class="price-input" style="margin:0">
+                            </div>
+                            <div style="margin:8px 0">
+                                <label for="giftCardSenderEmail" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Your email</label>
+                                <input id="giftCardSenderEmail" name="senderEmail" type="email" autocomplete="email" required class="price-input" style="margin:0">
+                            </div>
+                            <div style="margin:8px 0">
+                                <label for="giftCardSenderPhone" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Your phone (optional)</label>
+                                <input id="giftCardSenderPhone" name="senderPhone" type="tel" autocomplete="tel" class="price-input" style="margin:0">
+                            </div>
+                            <div style="margin:8px 0">
+                                <label for="giftCardRecipientName" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Recipient name</label>
+                                <input id="giftCardRecipientName" name="recipientName" type="text" required class="price-input" style="margin:0">
+                            </div>
+                            <div style="margin:8px 0;grid-column:1/-1">
+                                <label for="giftCardRecipientEmail" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Recipient email for delivery</label>
+                                <input id="giftCardRecipientEmail" name="recipientEmail" type="email" required class="price-input" style="margin:0">
+                            </div>
+                        </div>
+                        <div style="margin:14px 0">
+                            <label for="giftCardMessage" style="display:block;color:#FFD700;font-weight:bold;margin-bottom:7px">Gift message (optional)</label>
+                            <textarea id="giftCardMessage" name="giftMessage" rows="3" maxlength="500" placeholder="Add a personal message for the recipient..." class="price-input" style="font:inherit;resize:vertical"></textarea>
+                        </div>
+                        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0">
+                        <p id="giftCardStatus" role="status" aria-live="polite" style="min-height:1.5em;color:#b8e8d4;font-size:.9rem"></p>
+                        <button type="submit" id="giftCardSubmit" class="buy-btn">Request Gift Card &amp; Secure Payment Link</button>
+                    </form>
+                    <p style="margin-top:18px;color:#cfcfcf;font-size:.88rem;line-height:1.6">This is a request, not a payment. No card details are collected here. The gift card is not issued and no code is generated until your request is reviewed and payment has been verified.</p>
                 </div>
-                <p style="color:#FFD700;margin-top:30px;font-size:1.1em">💾 Screenshot & Save this card to share with the recipient!</p>
             </div>
 
             <div class="info-box">
-                <h3 style="color:#FFD700;margin-bottom:15px">📋 How It Works</h3>
+                <h3 style="color:#FFD700;margin-bottom:15px">📋 How Gift Card Requests Work</h3>
                 <ol style="text-align:left;line-height:2;color:#ccc">
-                    <li>Choose your gift card amount ($100-$1500)</li>
-                    <li>Pay securely via PayPal (accepts Credit Cards, Visa, MasterCard, American Express, Discover)</li>
-                    <li>Receive a unique digital gift card code by email</li>
-                    <li>Recipient may use the gift card toward a Mr. Sprinkle order</li>
-                    <li>They use the discount at checkout - simple as that! 🎉</li>
+                    <li>Choose a value between $100 and $1,500 in $50 increments.</li>
+                    <li>Provide your contact information and the recipient's name and email.</li>
+                    <li>Mr. Sprinkle reviews the request and confirms the gift-card details.</li>
+                    <li>You receive a secure hosted payment link from the team.</li>
+                    <li>After payment is verified, the gift card is issued and delivery is confirmed.</li>
                 </ol>
+                <p style="color:#f5d88d;margin-top:14px;font-weight:bold">Submitting this form does not charge you or issue a gift card. The team must confirm and fulfill the request.</p>
             </div>
 
             <div class="info-box">
-                <h3 style="color:#FFD700;margin-bottom:15px">💎 What Can They Get?</h3>
-                <ul style="text-align:left;line-height:2;color:#ccc">
-                    <li><strong>$100-300:</strong> Single tooth silver or 10K gold grill</li>
-                    <li><strong>$300-600:</strong> 2-3 tooth custom set</li>
-                    <li><strong>$600-1,200:</strong> Full 6 tooth set (silver)</li>
-                    <li><strong>$1,200+:</strong> Full gold set or diamond-encrusted grillz</li>
-                </ul>
+                <h3 style="color:#FFD700;margin-bottom:15px">💎 Giving the Gift of Custom Jewelry</h3>
+                <p style="color:#ccc;line-height:1.8">An issued Mr. Sprinkle gift card may be applied toward eligible custom grillz and jewelry services. The team will confirm eligible products, redemption instructions, expiration or other applicable terms, and the final card details when your request is fulfilled.</p>
             </div>
 
             <div style="text-align:center;margin:40px 0;padding:30px;background:#1a1a1a;border-radius:15px">
@@ -139,41 +132,61 @@
     </footer>
 
     <script>
-    function generateGiftCardCode(){
-        const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code='';
-        for(let i=0;i<8;i++){code+=chars.charAt(Math.floor(Math.random()*chars.length));}
-        return code;
-    }
+    (function () {
+        const form = document.getElementById('giftCardRequestForm');
+        const amountInput = document.getElementById('giftCard');
+        const amountOutput = document.getElementById('giftCardPrice');
+        const status = document.getElementById('giftCardStatus');
+        const submit = document.getElementById('giftCardSubmit');
 
-    function calculatePrice(type){
-        const input=document.getElementById(type);
-        const amount=parseFloat(input.value)||0;
-        const discount=0.10;
-        const final=amount*(1-discount);
-        document.getElementById(type+'Price').textContent=final.toFixed(2);
-        document.getElementById('amount-'+type).value=final.toFixed(2);
-        
-        // Update preview
-        if(type==='giftCard'&&amount>=100){
-            document.getElementById('previewAmount').textContent=amount.toFixed(2);
-            document.getElementById('previewCode').textContent=generateGiftCardCode();
-            document.getElementById('previewSection').style.display='block';
-        } else if(type==='giftCard'&&amount<100){
-            document.getElementById('previewSection').style.display='none';
+        function updateGiftCardValue() {
+            const amount = Number(amountInput.value);
+            amountOutput.textContent = Number.isFinite(amount) && amount > 0 ? amount.toFixed(2) : '0.00';
         }
-    }
-    
-    document.getElementById('giftCard').addEventListener('input',()=>calculatePrice('giftCard'));
+        amountInput.addEventListener('input', updateGiftCardValue);
 
-    function buyGiftCard(type){
-        const input=document.getElementById(type);
-        const amount=parseFloat(input.value);
-        const max=1500;
-        if(!amount||amount<100){alert('Please enter at least $100');return;}
-        if(amount>max){alert(`Maximum amount is $${max}`);return;}
-        document.getElementById('form-'+type).submit();
-    }
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const amount = Number(amountInput.value);
+            if (!Number.isFinite(amount) || amount < 100 || amount > 1500 || amount % 50 !== 0) {
+                status.style.color = '#ffb0a8';
+                status.textContent = 'Enter a gift card value from $100 to $1,500 in $50 increments.';
+                amountInput.focus();
+                return;
+            }
+            if (!form.reportValidity()) return;
+
+            const data = new FormData(form);
+            data.set('form_type', 'gift_card_order_request');
+            data.set('gift_card_value', amount.toFixed(2));
+            data.set('_subject', 'NEW MR. SPRINKLE GIFT CARD REQUEST');
+
+            submit.disabled = true;
+            submit.textContent = 'Sending request…';
+            status.style.color = '#b8e8d4';
+            status.textContent = 'Sending your gift card request securely…';
+
+            try {
+                const response = await fetch('https://formspree.io/f/myzpanyg', {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error('Your request could not be submitted (' + response.status + '). Please try again.');
+                }
+                window.location.href = 'thank-you.html?service=gift-card';
+            } catch (error) {
+                console.error('Gift card request submission failed:', error);
+                status.style.color = '#ffb0a8';
+                status.textContent = error.message || 'We could not submit your request. Please try again or text (530) 214-0676.';
+                submit.disabled = false;
+                submit.textContent = 'Request Gift Card & Secure Payment Link';
+            }
+        });
+
+        updateGiftCardValue();
+    })();
     </script>
     <script src="assets/site-header.js"></script>
 </body>
