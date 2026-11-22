@@ -63,6 +63,19 @@
                 manual: Boolean(profile.manual)
             };
         });
+        let enamelRaw = r.enamelProfiles || r.enamelProfilesSerialized || {};
+        if (typeof enamelRaw === "string") {
+            try { enamelRaw = JSON.parse(enamelRaw); } catch (_) { enamelRaw = {}; }
+        }
+        const enamelProfiles = {};
+        teeth.forEach((tooth) => {
+            const profile = enamelRaw && typeof enamelRaw === "object" ? (enamelRaw[tooth] || {}) : {};
+            const color = /^#[0-9a-f]{6}$/i.test(String(profile.color || "")) ? String(profile.color).toLowerCase() : "";
+            if (color && profile.enabled !== false) {
+                enamelProfiles[tooth] = { color, finish: "enamel", enabled: true };
+            }
+        });
+        const customArtwork = ["true", "1", "yes"].includes(String(r.customArtwork || "").toLowerCase());
         const stoneShape = r.stoneShape === "square" ? "square" : "round";
         const stoneLayout = typeof r.stoneLayoutSerialized === "string"
             ? r.stoneLayoutSerialized
@@ -84,6 +97,8 @@
             stoneTeeth: hasStoneTeeth ? stoneTeeth : teeth.slice(),
             stoneLayout,
             stoneProfiles,
+            enamelProfiles,
+            customArtwork,
             cuts: Array.from(new Set(cuts))
         };
     }
@@ -215,6 +230,15 @@
             });
         }
         if (c.finish === "custom") out.quoteReasons.push("custom finishes are priced per design");
+        const enamelTeeth = Object.keys(c.enamelProfiles || {});
+        if (enamelTeeth.length) {
+            out.quoteReasons.push("enamel color work on teeth " + enamelTeeth.join(", ") + " requires an individual quote");
+            out.notes.push("Enamel is a colored finish applied to selected grillz surfaces; color and artwork are reviewed and priced by the team.");
+        }
+        if (c.customArtwork) {
+            out.quoteReasons.push("custom artwork requires a reference image and written design instructions");
+            out.notes.push("Custom artwork is not priced by the configurator. Upload a reference image and describe the exact teeth, colors, and artwork on the quote form.");
+        }
 
         // Shipping: rush replaces standard
         if (c.shipping === "rush") {
@@ -246,6 +270,9 @@
         );
         if (profileSummary.length) parts.push("Per-tooth stone styling: " + profileSummary.join("; "));
         if (est.config.stoneLayout) parts.push("Stone placement cells: " + est.config.stoneLayout);
+        const enamelSummary = Object.entries(est.config.enamelProfiles || {}).map(([tooth, profile]) => `Tooth ${tooth}: enamel ${profile.color}`);
+        if (enamelSummary.length) parts.push("Per-tooth enamel finish: " + enamelSummary.join("; "));
+        if (est.config.customArtwork) parts.push("CUSTOM ARTWORK REQUESTED: customer must upload a reference image and describe the design.");
         parts.push(`Pricing version: ${est.version}`);
         return parts.join("\n");
     }
@@ -261,6 +288,8 @@
             stoneTeeth: (c.stoneTeeth || []).join(","),
             stoneLayout: c.stoneLayoutSerialized || c.stoneLayout || "",
             stoneProfiles: JSON.stringify(c.stoneProfiles || {}),
+            enamelProfiles: JSON.stringify(c.enamelProfiles || {}),
+            customArtwork: c.customArtwork ? "true" : "false",
             pv: catalog.version
         };
     }
