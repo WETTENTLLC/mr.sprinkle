@@ -135,7 +135,7 @@
     placements[from] = source.filter(value => value !== sourceCell);
     if (!placements[from].length) delete placements[from];
     placements[to] = destination.concat(targetCell);
-    return makeResult(targets, placements, count(placements));
+    return makeResult(targets, placements, layout && Number.isFinite(Number(layout.requestedCount)) ? Number(layout.requestedCount) : count(placements));
   }
 
   function withTargets(targets, requestedCount) {
