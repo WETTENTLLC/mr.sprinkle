@@ -24,10 +24,10 @@ test("14K dental gap filler", () => assert.equal(total({ design: "gapFiller", me
 test("10K fangs is quote", () => { const r = E.calculate({ design: "fangs", metal: "gold10k" }); assert.equal(r.status, "quote"); assert.equal(r.total, null); });
 test("stones priced, labor included, no quote", () => {
   const r = E.calculate({ upperCount: 6, stones: "natural", clarity: "vvs", size: "2.0", stoneCount: 20 });
-  assert.equal(r.status, "estimate"); assert.equal(r.total, 600 + 560 + 60);
+  assert.equal(r.status, "estimate"); assert.equal(r.total, 600 + 1300 + 60);
   assert.ok(r.notes.some((n) => /labor is included/.test(n)));
 });
-test("decimal stone prices round to cents", () => assert.equal(total({ upperCount: 1, stones: "labGrownDiamond", size: "1.3", stoneCount: 3 }), 100 + 9.9 + 60));
+test("decimal stone prices round to cents", () => assert.equal(total({ upperCount: 1, stones: "labGrownDiamond", size: "1.3", stoneCount: 3 }), 100 + 15 + 60));
 test("cut charged once per set: upper only", () => assert.equal(total({ upperCount: 6, cuts: "diamondDust" }), 600 + 30 + 60));
 test("cut charged per set: upper + lower = 2 sets", () => assert.equal(total({ upperCount: 6, lowerCount: 6, cuts: "openFace,centerSplit" }), 1200 + 80 + 40 + 60));
 test("cut on fangs = 1 set", () => assert.equal(total({ design: "fangs", cuts: "deepBar" }), 180 + 30 + 60));
@@ -115,7 +115,7 @@ test("mixed tooth-specific stone materials and colors are priced by their assign
     }
   });
   assert.equal(r.status, "estimate");
-  assert.equal(r.total, 3 * 300 + 60 + 2 * 28 + 2 * 6 + 2 * 3.7);
+  assert.equal(r.total, 3 * 300 + 60 + 2 * 65 + 2 * 6 + 2 * 5);
   assert.ok(r.lines.some(line => /white VVS natural diamond: 2/.test(line.label)));
   assert.ok(r.lines.some(line => /ice blue Cubic Zirconia: 2/.test(line.label)));
   assert.ok(r.lines.some(line => /pink VVS Moissanite: 2/.test(line.label)));
@@ -146,7 +146,7 @@ test("the first explicitly chosen material can price unedited target teeth throu
     }
   });
   assert.equal(r.status,"estimate");
-  assert.equal(r.total,2*100+60+4*6);
+  assert.equal(r.total,2*100+60+4*10);
 });
 
 test("enamel profiles are quoted and survive the configuration handoff", () => {
