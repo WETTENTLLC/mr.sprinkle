@@ -359,6 +359,40 @@
             border-left: 4px solid #FFD700;
         }
         .chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:#FFD700;color:#000;border-radius:50%;border:none;font-size:30px;text-decoration:none;box-shadow:0 4px 12px rgba(255,215,0,0.4);z-index:1000}
+
+/* Short, focused Grill Maker booking handoff */
+.booking-design-summary{
+  margin:20px 0 26px;padding:22px;border:1px solid rgba(255,215,0,.55);
+  border-radius:14px;background:linear-gradient(145deg,#171717,#090909);
+  box-shadow:0 10px 26px rgba(0,0,0,.32)
+}
+.booking-design-summary__eyebrow{color:#72d7d0;font-size:.72rem;font-weight:800;letter-spacing:.15em}
+.booking-design-summary h2{margin:7px 0 8px;color:#FFD700}
+.booking-design-summary>p{color:#d2d2d2;font-size:.93rem;margin-bottom:14px}
+.booking-design-summary__details{
+  color:#f3e7ca;padding:12px;border-radius:8px;background:#242424;
+  font-size:.86rem;line-height:1.65;overflow-wrap:anywhere
+}
+.booking-artwork-preview{
+  display:flex;gap:14px;align-items:flex-start;margin-top:13px;padding:12px;
+  border:1px solid #4a514e;border-radius:9px;background:#111918
+}
+.booking-artwork-preview img{
+  display:block;width:112px;height:112px;object-fit:cover;border-radius:7px;
+  border:1px solid rgba(255,215,0,.45);background:#222
+}
+.booking-artwork-preview strong{color:#8be0d8}
+.booking-artwork-preview p{margin:5px 0;color:#eee;font-size:.85rem;white-space:pre-wrap}
+.booking-artwork-preview small{color:#aaa;font-size:.75rem;overflow-wrap:anywhere}
+#configuratorBookingIntro[hidden],#estimateBox[hidden]{display:none!important}
+#appointmentDate:focus,#preferredTime:focus{border-color:#FFD700}
+#moldFormSubmitButton:disabled{opacity:.55;cursor:wait;transform:none}
+@media(max-width:600px){
+  .booking-design-summary{padding:15px}
+  .booking-artwork-preview{flex-direction:column}
+  .booking-artwork-preview img{width:100%;height:180px;object-fit:contain}
+}
+
     </style>
 </head>
 <body>
@@ -717,6 +751,12 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
+        const isConfiguratorBooking = urlParams.get('quote') === 'configurator';
+        let customArtworkRequested = urlParams.get('customArtwork') === 'true';
+        let artworkRestorePromise = Promise.resolve();
+        const bookingDesignIntro = document.getElementById('configuratorBookingIntro');
+        const bookingSubmitButton = document.getElementById('moldFormSubmitButton');
+
         const validToothNumbers = new Set(Array.from(document.querySelectorAll('.tooth'), tooth => tooth.dataset.tooth));
         const requestedTeeth = (urlParams.get('teeth') || '')
             .split(',')
@@ -731,14 +771,48 @@
             }
         });
         updateSelectedTeethDisplay();
-        const customArtworkRequested = urlParams.get('customArtwork') === 'true';
         const customArtworkNotice = document.getElementById('customArtworkNotice');
         const customArtworkRequestInput = document.getElementById('customArtworkRequest');
         const referenceImageInput = document.getElementById('referenceImage');
         const imageDescriptionInput = document.getElementById('imageDescription');
-        if (customArtworkRequested) {
+        const referenceImageGroup = referenceImageInput.closest('.form-group');
+        const imageDescriptionGroup = imageDescriptionInput.closest('.form-group');
+        const artworkPreview = document.getElementById('bookingArtworkPreview');
+        const artworkPreviewImage = document.getElementById('bookingArtworkImage');
+        const artworkPreviewNotes = document.getElementById('bookingArtworkNotes');
+        const artworkPreviewName = document.getElementById('bookingArtworkFileName');
+
+        if (isConfiguratorBooking) {
+            document.getElementById('bookingPageTitle').textContent = 'Confirm Your Grill Design & Book an Appointment';
+            bookingDesignIntro.hidden = false;
+            document.getElementById('moldKitPanel').hidden = true;
+            document.getElementById('giftCardBookingPanel').hidden = true;
+            document.getElementById('legacyToothInstructions').hidden = true;
+            document.getElementById('legacyToothLegend').hidden = true;
+            document.getElementById('toothSelectionPanel').hidden = true;
+            document.getElementById('legacyDepositInformation').hidden = true;
+            document.querySelectorAll('[data-configurator-duplicate]').forEach(field => { field.hidden = true; });
+            document.getElementById('serviceType').value = 'grillz';
+            document.getElementById('appointmentMode').value = 'in-person';
+            referenceImageGroup.hidden = true;
+            imageDescriptionGroup.hidden = true;
+            customArtworkNotice.hidden = true;
+            referenceImageInput.required = false;
+            imageDescriptionInput.required = false;
+            document.getElementById('appointmentLocationInfo').querySelector('p:nth-of-type(2)').textContent =
+                'Your appointment will be at this Reno location. Choose a preferred date and start time below. We will check the schedule and contact you within 24 hours to confirm availability.';
+            document.getElementById('appointmentDate').required = true;
+            document.getElementById('preferredTime').required = true;
+            document.getElementById('preferredTime').step = '1800';
+            bookingSubmitButton.textContent = 'Request My Appointment & Confirm Design';
+            bookingSubmitButton.disabled = true;
+            const estimateBox = document.getElementById('estimateBox');
+            bookingDesignIntro.appendChild(estimateBox);
+        } else if (customArtworkRequested) {
             customArtworkRequestInput.value = 'yes';
             customArtworkNotice.hidden = false;
+            referenceImageGroup.hidden = false;
+            imageDescriptionGroup.hidden = false;
             referenceImageInput.required = true;
             imageDescriptionInput.required = true;
             imageDescriptionInput.placeholder = 'Required: describe the design, enamel colors, exact teeth, placement and any lettering or details you want us to quote...';
@@ -795,6 +869,7 @@
                     `; Enamel finishes: ${toothEnamelProfiles || 'none'}` +
                     `; Custom artwork request: ${customArtworkRequested ? 'yes — image and written design notes required' : 'no'}`;
                 setHidden('configuratorOptions', opts);
+                document.getElementById('configuratorDesignText').textContent = opts;
                 setHidden('pricingVersion', est.version);
                 if (!est.ok) {
                     estimateBody.textContent = est.error;
@@ -829,6 +904,60 @@
             ['materialType', 'rushDelivery', 'serviceType'].forEach((id) => document.getElementById(id).addEventListener('change', window.updateGrillEstimate));
             window.updateGrillEstimate();
         }
+
+        async function restoreConfiguratorArtwork() {
+            if (!isConfiguratorBooking) return;
+            if (!customArtworkRequested) {
+                try { await window.MrSprinkleArtworkHandoff.clear(); } catch (_) {}
+                bookingSubmitButton.disabled = false;
+                return;
+            }
+            customArtworkRequestInput.value = 'yes';
+            customArtworkNotice.hidden = false;
+            referenceImageGroup.hidden = false;
+            imageDescriptionGroup.hidden = false;
+            try {
+                const saved = await window.MrSprinkleArtworkHandoff.load();
+                if (saved && saved.file) {
+                    const storedBlob = saved.file;
+                    const file = storedBlob instanceof File
+                        ? storedBlob
+                        : new File([storedBlob], saved.fileName || 'grill-artwork-reference', {
+                            type: saved.fileType || storedBlob.type || 'image/*',
+                            lastModified: saved.fileLastModified || Date.now()
+                        });
+                    const transfer = new DataTransfer();
+                    transfer.items.add(file);
+                    referenceImageInput.files = transfer.files;
+                    artworkPreviewImage.src = URL.createObjectURL(file);
+                    artworkPreviewName.textContent = file.name;
+                    artworkPreview.hidden = false;
+                }
+                if (saved && saved.notes) {
+                    imageDescriptionInput.value = saved.notes;
+                    artworkPreviewNotes.textContent = saved.notes;
+                }
+            } catch (error) {
+                document.getElementById('formStatus').textContent =
+                    'Your design was carried over, but the artwork file could not be restored. Please attach it again below.';
+            }
+            const hasFile = Boolean(referenceImageInput.files && referenceImageInput.files[0]);
+            const hasNotes = Boolean(imageDescriptionInput.value.trim());
+            referenceImageInput.required = true;
+            imageDescriptionInput.required = true;
+            if (hasFile && hasNotes) {
+                artworkPreview.hidden = false;
+                artworkPreviewNotes.textContent = imageDescriptionInput.value.trim();
+            } else {
+                artworkPreview.hidden = true;
+            }
+            if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
+            bookingSubmitButton.disabled = false;
+        }
+        if (isConfiguratorBooking) {
+            artworkRestorePromise = restoreConfiguratorArtwork();
+        }
+
         const appointmentDate = document.getElementById('appointmentDate');
         const today = new Date();
         today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
@@ -839,11 +968,14 @@
         function updateAppointmentHours() {
             const isMobile = appointmentMode.value === 'mobile';
             preferredTime.min = isMobile ? '' : '10:00';
-            preferredTime.max = isMobile ? '' : '18:00';
-            timePreferenceNote.textContent = isMobile
-                ? 'Mobile service may be scheduled outside regular hours, subject to confirmation.'
-                : 'In-person requests must be within regular hours, 10:00 AM–6:00 PM.';
+            preferredTime.max = isConfiguratorBooking ? '17:30' : (isMobile ? '' : '18:00');
+            timePreferenceNote.textContent = isConfiguratorBooking
+                ? 'Choose a preferred start time between 10:00 AM and 5:30 PM. We check the schedule and contact you within 24 hours to confirm availability. Your appointment is not booked until we confirm it.'
+                : (isMobile
+                    ? 'Mobile service may be scheduled outside regular hours, subject to confirmation.'
+                    : 'In-person requests must be within regular hours, 10:00 AM–6:00 PM.');
         }
+        updateAppointmentHours();
         appointmentMode.addEventListener('change', updateAppointmentHours);
         document.getElementById('serviceType').addEventListener('change', function() {
             if (this.value === 'mobile-mold-service') {
@@ -854,7 +986,13 @@
 
         // Form submission
         document.getElementById('moldForm').addEventListener('submit', async function(e) {
+            if (isConfiguratorBooking) await artworkRestorePromise;
             const isGrillzRequest = document.getElementById('serviceType').value === 'grillz';
+            if (isConfiguratorBooking && (!appointmentDate.value || !preferredTime.value)) {
+                e.preventDefault();
+                alert('Please choose your preferred appointment date and time.');
+                return;
+            }
             if (isGrillzRequest && !document.getElementById('materialType').value) {
                 e.preventDefault();
                 alert('Please select a material preference for your grillz request.');
@@ -893,7 +1031,10 @@
             const fileInput = document.getElementById('referenceImage');
             if(fileInput.files[0]) formData.set('referenceImage', fileInput.files[0]);
             const payload = {
-                form_type: 'mold_order',
+                form_type: isConfiguratorBooking ? 'grill_design_appointment' : 'mold_order',
+                booking_flow: isConfiguratorBooking ? 'grill_maker_handoff' : 'general_service_form',
+                appointment_availability_status: isConfiguratorBooking ? 'pending_team_confirmation' : '',
+                customer_contact_expectation: isConfiguratorBooking ? 'within_24_hours' : '',
                 date: new Date().toISOString(),
                 customer_name: formData.get('customerName'),
                 email: formData.get('email'),
@@ -937,7 +1078,10 @@
                     body: JSON.stringify(payload)
                 });
 
-                window.location.href = 'thank-you.html';
+                if (isConfiguratorBooking && window.MrSprinkleArtworkHandoff) {
+                    try { await window.MrSprinkleArtworkHandoff.clear(); } catch (_) {}
+                }
+                window.location.href = isConfiguratorBooking ? 'thank-you.html?booking=grillz' : 'thank-you.html';
             } catch(err) {
                 console.error(err);
                 document.getElementById('formStatus').textContent =
