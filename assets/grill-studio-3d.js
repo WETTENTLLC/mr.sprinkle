@@ -6,6 +6,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 (() => {
   "use strict";
@@ -137,43 +138,113 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
   }
 
   function toothDimensions(index) {
+    const centerDistance = Math.min(index, 15 - index);
     const type = toothClass(index);
     const sizes = {
-      incisor:  [0.15, 0.175, 0.33],
-      canine:   [0.155, 0.18, 0.38],
-      premolar: [0.185, 0.215, 0.325],
-      molar:    [0.23, 0.245, 0.30]
+      incisor:  [centerDistance === 7 ? 0.165 : 0.142, 0.145, centerDistance === 7 ? 0.39 : 0.35],
+      canine:   [0.158, 0.158, 0.43],
+      premolar: [centerDistance === 4 ? 0.175 : 0.182, 0.174, centerDistance === 4 ? 0.33 : 0.32],
+      molar:    [centerDistance === 0 ? 0.205 : centerDistance === 1 ? 0.222 : 0.235, 0.213, centerDistance === 0 ? 0.27 : 0.30]
     };
-    return { type, width: sizes[type][0], depth: sizes[type][1], height: sizes[type][2] };
+    return { type, width: sizes[type][0], depth: sizes[type][1], height: sizes[type][2], centerDistance };
+  }
+
+  function gaussian(x, y, cx, cy, spread) {
+    const dx = (x - cx) / spread;
+    const dy = (y - cy) / spread;
+    return Math.exp(-(dx * dx + dy * dy) * 1.4);
+  }
+
+  function cuspProfile(type, x, y) {
+    if (type === "canine") return gaussian(x, y, 0, -0.06, 0.43);
+    if (type === "premolar") {
+      return Math.max(gaussian(x, y, -0.02, -0.48, 0.36), gaussian(x, y, -0.02, 0.48, 0.36));
+    }
+    if (type === "molar") {
+      return Math.max(
+        gaussian(x, y, -0.44, -0.43, 0.34),
+        gaussian(x, y,  0.44, -0.43, 0.34),
+        gaussian(x, y, -0.44,  0.43, 0.34),
+        gaussian(x, y,  0.44,  0.43, 0.34)
+      );
+    }
+    return 0.16 * (1 - x * x);
   }
 
   function makeToothGeometry(dimensions, jaw) {
-    const geometry = new THREE.SphereGeometry(1, 32, 24);
-    const position = geometry.attributes.position;
+    // Lofted, tooth-specific crown geometry: tapered cervical neck,
+    // individual crown proportions, rounded incisal edges and natural cusps.
+    const geometry = new THREE.BufferGeometry();
     const kind = dimensions.type;
-    for (let i = 0; i < position.count; i++) {
-      let x = position.getX(i);
-      let y = position.getY(i);
-      let z = position.getZ(i);
+    const sign = jaw === "upper" ? -1 : 1;
+    const profile = {
+      incisor: [
+        [0.00,0.60,0.66],[0.08,0.76,0.79],[0.22,0.91,0.93],
+        [0.48,1.00,1.00],[0.70,1.00,0.99],[0.88,0.96,0.94],[1.00,0.82,0.86]
+      ],
+      canine: [
+        [0.00,0.58,0.64],[0.10,0.75,0.80],[0.26,0.92,0.95],
+        [0.52,1.00,1.00],[0.76,0.91,0.94],[0.92,0.70,0.76],[1.00,0.20,0.26]
+      ],
+      premolar: [
+        [0.00,0.62,0.66],[0.10,0.79,0.81],[0.26,0.94,0.95],
+        [0.52,1.00,1.00],[0.76,0.97,0.97],[0.90,0.86,0.89],[1.00,0.70,0.75]
+      ],
+      molar: [
+        [0.00,0.64,0.66],[0.10,0.80,0.81],[0.28,0.96,0.96],
+        [0.56,1.00,1.00],[0.78,0.98,0.98],[0.92,0.91,0.92],[1.00,0.80,0.82]
+      ]
+    }[kind];
+    const segments = 40;
+    const positions = [];
+    const indices = [];
 
-      // Anatomical character: tapered cervical end, broader biting edge,
-      // canines slightly sharper, molars subtly multi-cusped.
-      const crown = jaw === "upper" ? -z : z;
-      if (kind === "canine") {
-        const taper = 1 - 0.17 * Math.max(0, crown);
-        x *= taper;
-        y *= taper;
-      } else if (kind === "incisor") {
-        x *= 1.04 - 0.07 * Math.max(0, crown);
-        y *= 0.98;
-      } else if (kind === "molar" && crown > 0.25) {
-        const cusp = Math.cos(x * 8) * Math.cos(y * 7) * 0.045;
-        z += (jaw === "upper" ? -1 : 1) * cusp;
+    profile.forEach(function (level) {
+      const fraction = level[0];
+      for (let segment = 0; segment < segments; segment++) {
+        const angle = (segment / segments) * Math.PI * 2;
+        const nx = Math.cos(angle);
+        const ny = Math.sin(angle);
+        const x = nx * dimensions.width * level[1];
+        const y = ny * dimensions.depth * level[2];
+        const cusp = cuspProfile(kind, nx, ny);
+        const blend = Math.max(0, Math.min(1, (fraction - 0.70) / 0.30));
+        const crownZ = dimensions.height * fraction + dimensions.height * 0.095 * cusp * blend;
+        positions.push(x, y, sign * crownZ);
       }
-      position.setXYZ(i, x, y, z);
+    });
+
+    const ringCount = profile.length;
+    for (let ring = 0; ring < ringCount - 1; ring++) {
+      for (let segment = 0; segment < segments; segment++) {
+        const next = (segment + 1) % segments;
+        const a = ring * segments + segment;
+        const b = ring * segments + next;
+        const c = (ring + 1) * segments + next;
+        const d = (ring + 1) * segments + segment;
+        if (sign > 0) indices.push(a,b,d,b,c,d);
+        else indices.push(a,d,b,b,d,c);
+      }
     }
+
+    const lowerCenter = positions.length / 3;
+    positions.push(0,0,0);
+    const upperCenter = positions.length / 3;
+    positions.push(0,0,sign * dimensions.height * 1.035);
+    const topStart = (ringCount - 1) * segments;
+    for (let segment = 0; segment < segments; segment++) {
+      const next = (segment + 1) % segments;
+      if (sign > 0) {
+        indices.push(lowerCenter,next,segment,upperCenter,topStart + segment,topStart + next);
+      } else {
+        indices.push(lowerCenter,segment,next,upperCenter,topStart + next,topStart + segment);
+      }
+    }
+
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
     geometry.computeVertexNormals();
-    geometry.scale(dimensions.width, dimensions.depth, dimensions.height);
+    geometry.computeBoundingSphere();
     return geometry;
   }
 
@@ -208,7 +279,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       const dims = toothDimensions(index);
       const root = new THREE.Group();
       root.position.set(x, y, crownZ);
-      root.rotation.z = -theta * 0.42;
+      root.rotation.z = theta * 0.48;
       root.userData.tooth = number;
 
       const toothGeometry = makeToothGeometry(dims, jaw);
@@ -266,32 +337,33 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     const selectedIndex = selected.findIndex(function (entry) { return entry.number === item.number; });
     if (selectedIndex < 0) return;
 
-    if (stoneType !== "none" && totalStoneCount > 0 && selected.length) {
-      const baseCount = Math.floor(totalStoneCount / selected.length);
-      const remainder = totalStoneCount % selected.length;
-      const requestedForThisTooth = baseCount + (selectedIndex < remainder ? 1 : 0);
+    const stoneTargets = Array.isArray(config.stoneTeeth) ? config.stoneTeeth.map(String) : selected.map(entry => entry.number);
+    const placements = config.stoneLayout && typeof config.stoneLayout === "object" ? config.stoneLayout : {};
+    const targetCells = stoneTargets.includes(item.number) && Array.isArray(placements[item.number])
+      ? placements[item.number].map(Number).filter(cell => Number.isInteger(cell) && cell >= 0 && cell < 25)
+      : [];
+    if (stoneType !== "none" && totalStoneCount > 0 && targetCells.length) {
       const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
-      const spacing = stoneDiameter * 1.42;
-      const maxColumns = Math.max(1, Math.floor((dims.width * 0.72) / spacing));
-      const maxRows = Math.max(1, Math.floor((dims.height * 0.62) / spacing));
-      const visualCapacity = maxColumns * maxRows;
-      const visibleCount = Math.min(requestedForThisTooth, visualCapacity);
-      const rows = Math.ceil(visibleCount / maxColumns);
-
-      for (let i = 0; i < visibleCount; i++) {
-        const row = Math.floor(i / maxColumns);
-        const rowCount = Math.min(maxColumns, visibleCount - row * maxColumns);
-        const column = i % maxColumns;
-        const x = (column - (rowCount - 1) / 2) * spacing;
-        const z = (row - (rows - 1) / 2) * spacing + dims.height * 0.06;
-        const surfaceRatio = Math.min(0.92, (x * x) / (dims.width * dims.width) + (z * z) / (dims.height * dims.height));
-        const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio);
-        const gem = new THREE.Mesh(new THREE.OctahedronGeometry(stoneDiameter, 1), gemMaterial);
-        gem.position.set(x, frontSurface - 0.012, z);
-        gem.scale.set(0.88, 0.60, 1.0);
+      targetCells.forEach(function (cell) {
+        const column = cell % 5;
+        const row = Math.floor(cell / 5);
+        const x = ((column - 2) / 2) * dims.width * 0.62;
+        const z = ((2 - row) / 2) * dims.height * 0.62 + dims.height * 0.045;
+        const surfaceRatio = Math.min(0.92,
+          (x * x) / (dims.width * dims.width * 0.92) +
+          (z * z) / (dims.height * dims.height * 0.94));
+        const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio) * 1.015;
+        const fitDiameter = Math.min(stoneDiameter, dims.width * 0.42, dims.height * 0.34);
+        const shape = config.stoneShape === "square"
+          ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
+          : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
+        const gem = new THREE.Mesh(shape, gemMaterial);
+        gem.position.set(x, frontSurface - 0.009, z);
+        if (config.stoneShape !== "square") gem.scale.set(1, 0.48, 1);
         gem.userData.designDetail = true;
+        gem.userData.stoneCell = cell;
         cap.add(gem);
-      }
+      });
     }
 
     if (cuts.includes("diamondDust")) {
@@ -419,8 +491,11 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     });
     const hit = raycaster.intersectObjects(candidates, false)[0];
     if (!hit || !hit.object.userData.tooth) return;
-    if (typeof window.MrSprinkleGrillSelectTooth === "function") {
-      window.MrSprinkleGrillSelectTooth(String(hit.object.userData.tooth));
+    const toothNumber = String(hit.object.userData.tooth);
+    if (window.MrSprinkleGrillEditMode === "stones" && typeof window.MrSprinkleGrillSelectStoneTooth === "function") {
+      window.MrSprinkleGrillSelectStoneTooth(toothNumber);
+    } else if (typeof window.MrSprinkleGrillSelectTooth === "function") {
+      window.MrSprinkleGrillSelectTooth(toothNumber);
     }
   }
 
