@@ -20,6 +20,7 @@
       }
     }
     </script>
+    <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
     <script src="assets/grill-preview.js"></script>
@@ -174,6 +175,11 @@
                             <button id="selectLowerTeeth" type="button">Select all lower</button>
                             <button id="clearTeeth" type="button">Clear selection</button>
                         </div>
+                        <div class="arch-selector-actions tooth-mode-controls" role="group" aria-label="Tooth selection mode">
+                            <button id="toothModeGrill" type="button" aria-pressed="true">Select grill teeth</button>
+                            <button id="toothModeStones" type="button" aria-pressed="false">Choose teeth for stones</button>
+                        </div>
+                        <p id="toothModeHint" class="stone-editor-hint">Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.</p>
                         <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
                     </section>
                     <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
@@ -288,6 +294,47 @@
                     <label><input type="checkbox" class="estimateCustomCut" value="deepBar"> Deep / Bar cut — +$30 per set</label>
                 </fieldset>
                 <p class="note">Cuts are charged once per set: an upper piece and a lower piece are two sets. Custom finishes are quoted per design.</p>
+                <section class="grill-stone-studio" aria-labelledby="stoneStudioHeading">
+                    <div class="grill-studio-panel__eyebrow"><span>05</span> Precision stone placement</div>
+                    <h3 id="stoneStudioHeading">Place every stone exactly where you want it</h3>
+                    <p class="grill-studio-panel__lead">Choose the teeth that receive stones, then open a tooth's placement grid. Tap an empty guide to add a stone, tap a stone and then an empty guide to move it, or drag a stone to a new position. The count and estimate update with your layout.</p>
+
+                    <div class="stone-target-section">
+                        <div class="stone-target-heading"><strong>Teeth receiving stones</strong><span>Tap to include or remove each tooth</span></div>
+                        <div id="stoneTargetTeeth" class="stone-target-chips" aria-live="polite">
+                            <span class="stone-empty">Select grill teeth first.</span>
+                        </div>
+                    </div>
+
+                    <div class="stone-layout-toolbar">
+                        <div class="stone-shape-choice" role="group" aria-label="Stone setting shape">
+                            <span class="stone-toolbar-label">Setting layout</span>
+                            <button type="button" data-stone-shape="round" aria-pressed="true"><span class="shape-symbol shape-symbol--round"></span>Round</button>
+                            <button type="button" data-stone-shape="square" aria-pressed="false"><span class="shape-symbol shape-symbol--square"></span>Square</button>
+                        </div>
+                        <div class="stone-tooth-editor-select">
+                            <label for="stoneEditTooth">Edit tooth</label>
+                            <select id="stoneEditTooth" disabled><option value="">Choose a stone tooth</option></select>
+                        </div>
+                    </div>
+
+                    <div class="stone-editor-actions">
+                        <button id="toggleStoneEditor" type="button" disabled>Open placement grid</button>
+                        <button id="autoPlaceStones" type="button" disabled>Auto-place stones</button>
+                        <button id="removeSelectedStone" type="button" disabled>Remove selected stone</button>
+                    </div>
+
+                    <div id="stonePlacementEditor" class="stone-placement-editor" hidden>
+                        <div class="stone-placement-editor__head">
+                            <strong id="stoneGridTitle">Stone placement grid</strong>
+                            <span>5 × 5 crown surface</span>
+                        </div>
+                        <div id="stonePlacementGrid" class="stone-placement-grid" role="grid" aria-label="Individual stone placement positions"></div>
+                        <p id="stoneLayoutStatus" class="stone-layout-status" aria-live="polite">Choose a stone-bearing tooth to edit its positions.</p>
+                    </div>
+                    <p id="stoneCapacityNotice" class="stone-capacity-notice" role="status" aria-live="polite"></p>
+                </section>
+
                 <div class="grill-estimate-shell">
                     <div id="estimateResult" class="estimate" aria-live="polite"></div>
                     <div class="grill-estimate-summary">
