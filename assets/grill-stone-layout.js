@@ -13,6 +13,7 @@
   const ROWS = 5;
   const COLUMNS = 5;
   const CAPACITY_PER_TOOTH = ROWS * COLUMNS;
+  const SIZE_CAPACITY = Object.freeze({ "1.3":25, "1.5":16, "2.0":9, "3.0":4 });
   const UPPER = ["18","17","16","15","14","13","12","11","21","22","23","24","25","26","27","28"];
   const LOWER = ["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"];
   const VALID = new Set(UPPER.concat(LOWER));
@@ -29,6 +30,14 @@
   function uniqueTeeth(values) {
     const list = Array.isArray(values) ? values : String(values || "").split(",");
     return Array.from(new Set(list.map(String).map(v => v.trim()).filter(v => VALID.has(v))));
+  }
+
+  function capacityForSize(size) {
+    return SIZE_CAPACITY[String(size)] || CAPACITY_PER_TOOTH;
+  }
+
+  function allowedCells(size) {
+    return centerFirstCells.slice(0, capacityForSize(size));
   }
 
   function normalizeLayout(layout, targets) {
@@ -49,15 +58,17 @@
     return Object.values(layout || {}).reduce((sum, cells) => sum + (Array.isArray(cells) ? cells.length : 0), 0);
   }
 
-  function makeResult(targets, placements, requestedCount) {
+  function makeResult(targets, placements, requestedCount, capacity, size) {
     const selected = uniqueTeeth(targets);
     const clean = normalizeLayout(placements, selected);
     const requested = Math.max(0, Math.min(100, Math.floor(Number(requestedCount) || 0)));
+    const perToothCapacity = capacity || capacityForSize(size);
     const placedCount = count(clean);
     return {
       rows: ROWS,
       columns: COLUMNS,
-      capacityPerTooth: CAPACITY_PER_TOOTH,
+      capacityPerTooth: perToothCapacity,
+      stoneSize: String(size || "1.3"),
       stoneTeeth: selected,
       placements: clean,
       requestedCount: requested,
@@ -66,12 +77,14 @@
     };
   }
 
-  function createDefault(targets, requestedCount) {
+  function createDefault(targets, requestedCount, options) {
+    const size = options && options.size ? String(options.size) : "1.3";
+    const perToothCapacity = capacityForSize(size);
     const selected = uniqueTeeth(targets);
     const requested = Math.max(0, Math.min(100, Math.floor(Number(requestedCount) || 0)));
     const placements = {};
     selected.forEach(tooth => { placements[tooth] = []; });
-    if (!selected.length || !requested) return makeResult(selected, placements, requested);
+    if (!selected.length || !requested) return makeResult(selected, placements, requested, perToothCapacity, size);
 
     let remaining = requested;
     let cursor = 0;
@@ -79,7 +92,7 @@
     while (remaining > 0) {
       const tooth = selected[cursor % selected.length];
       const cells = placements[tooth];
-      if (cells.length < CAPACITY_PER_TOOTH) {
+      if (cells.length < perToothCapacity) {
         const nextCell = centerFirstCells[cellCursor % centerFirstCells.length];
         if (!cells.includes(nextCell)) {
           cells.push(nextCell);
@@ -89,9 +102,9 @@
       }
       cursor++;
       if (cursor > requested * selected.length * 3 + selected.length) break;
-      if (selected.every(t => placements[t].length >= CAPACITY_PER_TOOTH)) break;
+      if (selected.every(t => placements[t].length >= perToothCapacity)) break;
     }
-    return makeResult(selected, placements, requested);
+    return makeResult(selected, placements, requested, perToothCapacity, size);
   }
 
   function add(layout, tooth, cell, requestedCount) {
@@ -103,10 +116,12 @@
       return makeResult(targets, placements, requestedCount);
     }
     const current = placements[key] || [];
-    if (!current.includes(slot) && current.length < CAPACITY_PER_TOOTH) {
+    const capacity = layout && layout.capacityPerTooth ? layout.capacityPerTooth : CAPACITY_PER_TOOTH;
+    const size = layout && layout.stoneSize ? layout.stoneSize : "1.3";
+    if (!current.includes(slot) && current.length < capacity) {
       placements[key] = current.concat(slot);
     }
-    return makeResult(targets, placements, Math.max(Number(requestedCount) || 0, count(placements)));
+    return makeResult(targets, placements, Math.max(Number(requestedCount) || 0, count(placements)), capacity, size);
   }
 
   function remove(layout, tooth, cell) {
@@ -119,7 +134,7 @@
       if (!placements[key].length) delete placements[key];
     }
     const total = count(placements);
-    return makeResult(targets, placements, total);
+    return makeResult(targets, placements, total, layout && layout.capacityPerTooth, layout && layout.stoneSize);
   }
 
   function move(layout, fromTooth, fromCell, toTooth, toCell) {
@@ -129,17 +144,25 @@
     const sourceCell = Number(fromCell), targetCell = Number(toCell);
     const source = placements[from] || [];
     const destination = placements[to] || [];
-    if (!targets.includes(from) || !targets.includes(to)) return makeResult(targets, placements, count(placements));
-    if (!source.includes(sourceCell) || destination.includes(targetCell)) return makeResult(targets, placements, count(placements));
-    if (!Number.isInteger(targetCell) || targetCell < 0 || targetCell >= CAPACITY_PER_TOOTH) return makeResult(targets, placements, count(placements));
-    placements[from] = source.filter(value => value !== sourceCell);
-    if (!placements[from].length) delete placements[from];
-    placements[to] = destination.concat(targetCell);
-    return makeResult(targets, placements, layout && Number.isFinite(Number(layout.requestedCount)) ? Number(layout.requestedCount) : count(placements));
+    const capacity = layout && layout.capacityPerTooth ? layout.capacityPerTooth : CAPACITY_PER_TOOTH;
+    const size = layout && layout.stoneSize ? layout.stoneSize : "1.3";
+    const requested = layout && Number.isFinite(Number(layout.requestedCount)) ? Number(layout.requestedCount) : count(placements);
+    if (!targets.includes(from) || !targets.includes(to)) return makeResult(targets, placements, requested, capacity, size);
+    if (!source.includes(sourceCell) || destination.includes(targetCell)) return makeResult(targets, placements, requested, capacity, size);
+    if (!Number.isInteger(targetCell) || targetCell < 0 || targetCell >= CAPACITY_PER_TOOTH) return makeResult(targets, placements, requested, capacity, size);
+    if (from !== to && destination.length >= capacity) return makeResult(targets, placements, requested, capacity, size);
+    if (from === to) {
+      placements[from] = source.filter(value => value !== sourceCell).concat(targetCell);
+    } else {
+      placements[from] = source.filter(value => value !== sourceCell);
+      if (!placements[from].length) delete placements[from];
+      placements[to] = destination.concat(targetCell);
+    }
+    return makeResult(targets, placements, requested, capacity, size);
   }
 
   function withTargets(targets, requestedCount) {
-    return createDefault(targets, requestedCount);
+    return createDefault(targets, requestedCount, { size:layout && layout.stoneSize });
   }
 
   function serialize(layout) {
@@ -166,6 +189,8 @@
     rows: ROWS,
     columns: COLUMNS,
     capacityPerTooth: CAPACITY_PER_TOOTH,
+    capacityForSize,
+    allowedCells,
     upper: Object.freeze(UPPER.slice()),
     lower: Object.freeze(LOWER.slice()),
     uniqueTeeth,
