@@ -32,13 +32,24 @@ test("shared navigation supports mobile open, close, and Escape", () => {
   assert.match(css, /max-width: 1080px/);
 });
 
-test("intro controls remain clickable and enter on the first Play click", () => {
+test("intro controls use external click handlers and survive inline-script restrictions", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
   const css = read("assets/sound.css");
-  assert.match(html, /id="introPlay"/);
-  assert.match(html, /Enter quietly/);
-  assert.match(html, /id="introStatus"/);
+  const introStart = html.indexOf('<div id="videoIntro"');
+  const headerStart = html.indexOf('<header class="ms-site-header">', introStart);
+  const introMarkup = html.slice(introStart, headerStart);
+  assert.match(introMarkup, /id="introPlay"[^>]*data-intro-action="play"/);
+  assert.match(introMarkup, /data-intro-action="quiet"/);
+  assert.match(introMarkup, /data-intro-action="skip"/);
+  assert.doesNotMatch(introMarkup, /onclick=/i);
+  assert.doesNotMatch(html, /mrSprinkleIntroAction/);
+  assert.match(js, /function bindIntroActions\(\)/);
+  assert.match(js, /intro\.querySelectorAll\("\[data-intro-action\]"\)/);
+  assert.match(js, /button\.addEventListener\("click"/);
+  assert.match(js, /action === "play"\) enterWithSound\(\)/);
+  assert.match(js, /action === "quiet"\) enterQuietly\(button\)/);
+  assert.match(js, /action === "skip"\) closeIntro\(\)/);
   assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
   assert.match(js, /document\.addEventListener\("click"[\s\S]*?true\)/);
   assert.match(js, /target\.closest\('a\[data-track="buy"\]'\)[\s\S]*?markIntroSeen\(\)/);
@@ -48,7 +59,7 @@ test("intro controls remain clickable and enter on the first Play click", () => 
   assert.match(css, /#videoIntro \.ms-intro__content[\s\S]*?z-index:\s*20/);
   assert.match(css, /#videoIntro \.ms-track[\s\S]*?z-index:\s*5/);
   assert.match(css, /pointer-events: none/);
-  assert.match(html, /assets\/sound\.js\?v=/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
   assert.match(html, /assets\/sound\.css\?v=/);
 });
 
@@ -68,7 +79,7 @@ test("intro dismissal persists for returning visitors and across Home navigation
   assert.match(js, /if \(store\.get\("introSeen"\)\)/);
   assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-recovery/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {
@@ -298,7 +309,7 @@ test("intro buttons call a direct entry action and the fallback works without th
   assert.match(html, /onclick="return window\.mrSprinkleIntroAction\('skip', this\);"/);
   assert.match(html, /window\.localStorage\.setItem\("introSeen", "true"\)/);
   assert.match(html, /intro\.hidden = true/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-recovery/);
-  assert.match(html, /assets\/sound\.css\?v=20261121-intro-controls-recovery/);
+  assert.match(html, /assets\/sound\.js\?v=20261121-intro-controls-external-wiring/);
+  assert.match(html, /assets\/sound\.css\?v=20261121-intro-controls-external-wiring/);
   assert.doesNotMatch(read("assets/sound.js"), /target\.closest\("#introPlay"\)/);
 });
