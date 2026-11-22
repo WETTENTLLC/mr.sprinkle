@@ -228,3 +228,50 @@
   .stone-profile-controls{grid-template-columns:1fr}
   .mouth-preview-kicker{font-size:.62rem}
 }
+
+/* Direct tooth switching: no select-menu rebuild while editing a set */
+.stone-target-item{display:flex;align-items:stretch;gap:4px}
+.stone-target-chip{min-width:77px}
+.stone-target-chip.is-active{
+  border-color:var(--sprinkle-teal);background:#17383a;color:#e7ffff;
+  box-shadow:0 0 0 1px rgba(34,198,200,.55),0 0 12px rgba(34,198,200,.15)
+}
+.stone-target-remove{
+  width:27px;min-width:27px;border:1px solid rgba(221,120,120,.35);
+  border-radius:5px;background:#211719;color:#e5a6a6;font-size:1.1rem;
+  line-height:1;cursor:pointer
+}
+.stone-target-remove:hover{border-color:#ea9999;background:#3a2024;color:#fff}
+.stone-edit-tooth-chips{display:flex;gap:6px;flex-wrap:wrap}
+.stone-edit-tooth-chip{
+  min-width:40px;padding:8px 11px;border:1px solid #60553f;border-radius:6px;
+  background:#1e1d19;color:#cfc7b8;font-size:.78rem;font-weight:800;cursor:pointer
+}
+.stone-edit-tooth-chip.is-active,.stone-edit-tooth-chip[aria-pressed="true"]{
+  border-color:var(--sprinkle-teal);background:#17383a;color:#f0ffff;
+  box-shadow:0 0 0 1px rgba(34,198,200,.45)
+}
+.stone-profile-label{display:block;margin:0 0 6px;color:#bdb4a3;font-size:.74rem;font-weight:700}
+.stone-material-choices{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px
+}
+.stone-material-choices button{
+  display:flex;align-items:center;gap:8px;min-height:52px;padding:8px 9px;
+  border:1px solid #4d514a;border-radius:7px;background:#181d1d;color:#ddd5c6;
+  font-size:.7rem;font-weight:700;text-align:left;line-height:1.25;cursor:pointer
+}
+.stone-material-choices button[aria-pressed="true"]{
+  border-color:var(--sprinkle-teal);background:#173235;color:#f4ffff;
+  box-shadow:0 0 0 1px rgba(34,198,200,.42),0 0 12px rgba(34,198,200,.12)
+}
+.stone-material-choices button:disabled{opacity:.38;cursor:not-allowed}
+.stone-material-icon{
+  display:grid;place-items:center;flex:0 0 25px;height:25px;border-radius:50%;
+  color:#111;background:linear-gradient(145deg,#fff,#c3d8e6 50%,#6d8798);
+  box-shadow:0 0 9px rgba(210,230,245,.15);font-size:.94rem
+}
+@media(max-width:620px){
+  .stone-target-item{flex:0 0 auto}
+  .stone-material-choices button{min-height:50px}
+  .stone-edit-tooth-chip{min-width:38px;padding:8px 9px}
+}
