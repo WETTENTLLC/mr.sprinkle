@@ -49,7 +49,7 @@ test("intro actions are native homepage links with external controller enhanceme
   assert.match(js, /function keepIntroVideoMoving\(\)/);
   assert.match(js, /keepIntroVideoMoving\(\);/);
   assert.doesNotMatch(js, /if \(reduceMotion && video\) video\.pause\(\)/);
-  assert.match(css, /html:has\(#home:target\) #videoIntro \{ display: none !important; \}/);
+  assert.match(css, /html:has\(:target\) #videoIntro \{ display: none !important; \}/);
   assert.match(html, /assets\/sound\.js\?v=20261122-intro-native-entry/);
 });
 
