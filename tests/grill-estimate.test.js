@@ -73,3 +73,28 @@ test("single exact dental-gold tooth and one lower exact tooth both remain selec
   assert.equal(r.config.lowerCount, 1);
   assert.equal(r.total, 320 + 60);
 });
+
+test("stone shape, stone target teeth, and cell layout survive quote URL round trip", () => {
+  const cfg = E.calculate({
+    teeth: ["11", "21", "22"],
+    metal: "gold14k",
+    stones: "natural",
+    stoneCount: 3,
+    stoneShape: "square",
+    stoneTeeth: ["11", "22"],
+    stoneLayout: "11:12.13;22:7"
+  }).config;
+  const params = E.toParams(cfg);
+  assert.equal(params.stoneShape, "square");
+  assert.equal(params.stoneTeeth, "11,22");
+  assert.equal(params.stoneLayout, "11:12.13;22:7");
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.equal(restored.stoneShape, "square");
+  assert.deepEqual(restored.stoneTeeth, ["11", "22"]);
+  assert.equal(restored.stoneLayout, "11:12.13;22:7");
+});
+test("legacy grill quote links default stone targets to selected grill teeth", () => {
+  const restored = E.normalize({ teeth: "11,21", stones: "natural", stoneCount: "2" });
+  assert.deepEqual(restored.stoneTeeth, ["11", "21"]);
+  assert.equal(restored.stoneShape, "round");
+});
