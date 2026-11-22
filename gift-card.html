@@ -62,13 +62,16 @@
                     <p style="margin:20px 0;color:#ccc">Perfect luxury gift for that special someone</p>
                     <input type="number" id="giftCard" class="price-input" placeholder="Enter amount ($100-$1500)" min="100" max="1500" step="50">
                     <p style="color:#FFD700;font-size:1.2em;margin:15px 0">You Pay: $<span id="giftCardPrice">0</span></p>
+                    <p style="color:#ccc;font-size:.9em">Includes a 10% promotional discount. Your redeemable gift card code is issued after payment verification.</p>
                     <form id="form-giftCard" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
                         <input type="hidden" name="cmd" value="_xclick">
                         <input type="hidden" name="business" value="wettentertainmentllc@gmail.com">
-                        <input type="hidden" name="item_name" value="Mr. Sprinkle Gift Card">
+                        <input type="hidden" name="item_name" id="itemName-giftCard" value="Mr. Sprinkle Gift Card">
                         <input type="hidden" name="amount" id="amount-giftCard">
                         <input type="hidden" name="currency_code" value="USD">
-                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html">
+                        <input type="hidden" name="custom" id="custom-giftCard">
+                        <input type="hidden" name="invoice" id="invoice-giftCard">
+                        <input type="hidden" name="return" value="https://mrsprinklereno.com/thank-you.html?purchase=gift-card">
                         <input type="hidden" name="cancel_return" value="https://mrsprinklereno.com/gift-card.html">
                     </form>
                     <button class="buy-btn" onclick="buyGiftCard('giftCard')">Buy Gift Card 🎁</button>
@@ -94,7 +97,7 @@
                             </div>
                             <div style="background:rgba(255,215,0,0.15);padding:15px;border-radius:8px;margin:20px 0">
                                 <p style="color:#999;font-size:0.8em;margin:5px 0">CODE</p>
-                                <p id="previewCode" style="color:#FFD700;font-size:1.4em;font-family:monospace;font-weight:bold;letter-spacing:3px;margin:10px 0">XXXXXXXX</p>
+                                <p id="previewCode" style="color:#FFD700;font-size:1.2em;font-family:monospace;font-weight:bold;letter-spacing:1px;margin:10px 0">ISSUED AFTER PAYMENT</p>
                             </div>
                             <p style="color:#ccc;font-size:0.85em;margin-top:20px">🎁 PERFECT LUXURY GIFT</p>
                             <p style="color:#999;font-size:0.75em;margin-top:10px">Redeemable at mrsprinklereno.com</p>
@@ -109,7 +112,7 @@
                 <ol style="text-align:left;line-height:2;color:#ccc">
                     <li>Choose your gift card amount ($100-$1500)</li>
                     <li>Pay securely via PayPal (accepts Credit Cards, Visa, MasterCard, American Express, Discover)</li>
-                    <li>Receive a unique digital gift card code by email</li>
+                    <li>After payment is verified, WETT emails your unique redeemable gift card code</li>
                     <li>Recipient may use the gift card toward a Mr. Sprinkle order</li>
                     <li>They use the discount at checkout - simple as that! 🎉</li>
                 </ol>
@@ -128,7 +131,7 @@
             <div style="text-align:center;margin:40px 0;padding:30px;background:#1a1a1a;border-radius:15px">
                 <h3 style="color:#FFD700;margin-bottom:20px">Questions? Contact Us</h3>
                 <p style="margin:10px 0"><a href="sms:+15302140676" style="color:#FFD700;font-size:1.2em">📱 Text (530) 214-0676</a></p>
-                <p style="margin:10px 0"><a href="mailto:info@mrsprinklereno.com" style="color:#FFD700">📧 info@mrsprinklereno.com</a></p>
+                <p style="margin:10px 0"><a href="mailto:wettentertainmentllc@gmail.com" style="color:#FFD700">📧 wettentertainmentllc@gmail.com</a></p>
             </div>
         </div>
     </main>
@@ -139,12 +142,7 @@
     </footer>
 
     <script>
-    function generateGiftCardCode(){
-        const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code='';
-        for(let i=0;i<8;i++){code+=chars.charAt(Math.floor(Math.random()*chars.length));}
-        return code;
-    }
+    function generateGiftCardCode(){ return 'ISSUED AFTER PAYMENT'; }
 
     function calculatePrice(type){
         const input=document.getElementById(type);
@@ -172,6 +170,29 @@
         const max=1500;
         if(!amount||amount<100){alert('Please enter at least $100');return;}
         if(amount>max){alert(`Maximum amount is $${max}`);return;}
+        if ((amount - 100) % 50 !== 0) { alert('Please choose an amount in $50 increments, from $100 to $1,500.'); return; }
+        const reference = 'GC-' + new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+        document.getElementById('itemName-'+type).value = 'Mr. Sprinkle Gift Card — 
+    }
+    </script>
+    <script src="assets/site-header.js"></script>
+</body>
+</html>
+ + amount.toFixed(2) + ' value';
+        document.getElementById('custom-'+type).value = 'Gift card face value: 
+    }
+    </script>
+    <script src="assets/site-header.js"></script>
+</body>
+</html>
+ + amount.toFixed(2) + '; promotional payment: 
+    }
+    </script>
+    <script src="assets/site-header.js"></script>
+</body>
+</html>
+ + (amount * 0.90).toFixed(2) + '; reference: ' + reference + '; redeemable code to be issued manually after PayPal payment verification.';
+        document.getElementById('invoice-'+type).value = reference;
         document.getElementById('form-'+type).submit();
     }
     </script>
