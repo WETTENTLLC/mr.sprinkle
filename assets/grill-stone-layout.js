@@ -37,7 +37,21 @@
   }
 
   function allowedCells(size) {
-    return centerFirstCells.slice(0, capacityForSize(size));
+    const key = String(size || "1.3");
+    const positions = {
+      "1.3": [0,1,2,3,4],
+      "1.5": [0,1,3,4],
+      "2.0": [0,2,4],
+      "3.0": [0,4]
+    }[key] || [0,1,2,3,4];
+    const allowed = [];
+    positions.forEach(row => positions.forEach(column => allowed.push(row * COLUMNS + column)));
+    return allowed.sort((a,b) => {
+      const ax=a%COLUMNS, ay=Math.floor(a/COLUMNS), bx=b%COLUMNS, by=Math.floor(b/COLUMNS);
+      const da=Math.pow(ax-2,2)+Math.pow(ay-2,2);
+      const db=Math.pow(bx-2,2)+Math.pow(by-2,2);
+      return da-db || ay-by || ax-bx;
+    });
   }
 
   function normalizeLayout(layout, targets) {
@@ -88,12 +102,13 @@
 
     let remaining = requested;
     let cursor = 0;
+    const sizeCells = allowedCells(size);
     let cellCursor = 0;
     while (remaining > 0) {
       const tooth = selected[cursor % selected.length];
       const cells = placements[tooth];
       if (cells.length < perToothCapacity) {
-        const nextCell = centerFirstCells[cellCursor % centerFirstCells.length];
+        const nextCell = sizeCells[cellCursor % sizeCells.length];
         if (!cells.includes(nextCell)) {
           cells.push(nextCell);
           remaining--;
@@ -118,7 +133,7 @@
       return makeResult(targets, placements, requestedCount, capacity, size);
     }
     const current = placements[key] || [];
-    if (!current.includes(slot) && current.length < capacity) {
+    if (!current.includes(slot) && current.length < capacity && allowedCells(size).includes(slot)) {
       placements[key] = current.concat(slot);
     }
     return makeResult(targets, placements, Math.max(Number(requestedCount) || 0, count(placements)), capacity, size);
@@ -149,7 +164,7 @@
     const requested = layout && Number.isFinite(Number(layout.requestedCount)) ? Number(layout.requestedCount) : count(placements);
     if (!targets.includes(from) || !targets.includes(to)) return makeResult(targets, placements, requested, capacity, size);
     if (!source.includes(sourceCell) || destination.includes(targetCell)) return makeResult(targets, placements, requested, capacity, size);
-    if (!Number.isInteger(targetCell) || targetCell < 0 || targetCell >= CAPACITY_PER_TOOTH) return makeResult(targets, placements, requested, capacity, size);
+    if (!Number.isInteger(targetCell) || targetCell < 0 || targetCell >= CAPACITY_PER_TOOTH || !allowedCells(size).includes(targetCell)) return makeResult(targets, placements, requested, capacity, size);
     if (from !== to && destination.length >= capacity) return makeResult(targets, placements, requested, capacity, size);
     if (from === to) {
       placements[from] = source.filter(value => value !== sourceCell).concat(targetCell);
