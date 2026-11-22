@@ -411,7 +411,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
           : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
-        const gem = new THREE.Mesh(shape, gemMaterial);
+        const gem = new THREE.Mesh(shape, stoneMaterial);
         gem.position.set(x, frontSurface - 0.009, z);
         if (config.stoneShape !== "square") gem.scale.set(1, 0.48, 1);
         gem.userData.designDetail = true;
