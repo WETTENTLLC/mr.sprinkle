@@ -182,3 +182,10 @@ li.ms-sound-item { display: flex; align-items: center; }
 }
 #videoIntro .ms-track a { position: relative; z-index: 6; pointer-events: auto; }
 #videoIntro .ms-btn:disabled { opacity: 1; cursor: pointer; }
+
+
+/* Native intro escape: anchor buttons target the main homepage, even without JS. */
+#home { scroll-margin-top: 110px; }
+#videoIntro .ms-btn { text-decoration: none; }
+html:has(:target) #videoIntro { display: none !important; }
+html:has(:target), html:has(:target) body { overflow: auto !important; }

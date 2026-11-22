@@ -101,6 +101,20 @@
         }
     }
 
+    function keepIntroVideoMoving() {
+        if (!video) return;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.loop = true;
+        video.playsInline = true;
+        try {
+            const attempt = video.play();
+            if (attempt && typeof attempt.catch === "function") attempt.catch(function () {});
+        } catch (error) {
+            // The native #home link still lets the visitor enter if video playback is blocked.
+        }
+    }
+
     function startAudioFromGesture() {
         if (!audio) return false;
         try {
@@ -228,29 +242,32 @@
             }
         } else {
             document.documentElement.classList.add("ms-intro-open");
-            if (reduceMotion && video) video.pause();
+            keepIntroVideoMoving();
 
-            // A single capture-phase handler owns every intro action. It runs before
-            // target/bubble listeners, so no other page script can leave a visible
-            // control inert. The same handler also persists the visit before links navigate.
+            // The entry controls are real anchors to #home, so they still work even
+            // when JavaScript is blocked. This handler adds music/audio and visit state.
             document.addEventListener("click", function (event) {
                 const target = event.target instanceof Element ? event.target : null;
                 if (!target) return;
 
-                const actionButton = target.closest("[data-intro-action]");
-                if (actionButton && intro.contains(actionButton) && !intro.hidden) {
-                    event.preventDefault();
-                    const action = actionButton.getAttribute("data-intro-action");
-                    if (action === "play") enterWithSound();
-                    else if (action === "quiet") enterQuietly(actionButton);
-                    else if (action === "skip") closeIntro();
+                const actionLink = target.closest("a[data-intro-action]");
+                if (actionLink && intro.contains(actionLink) && !intro.hidden) {
+                    const action = actionLink.getAttribute("data-intro-action");
+                    if (action === "play") {
+                        keepIntroVideoMoving();
+                        enterWithSound();
+                    } else if (action === "quiet") {
+                        enterQuietly(actionLink);
+                    } else if (action === "skip") {
+                        closeIntro();
+                    }
+                    // Do not cancel the link. Its #home target is the no-script escape route.
                     return;
                 }
 
                 const buyLink = target.closest('a[data-track="buy"]');
                 if (buyLink && intro.contains(buyLink) && !intro.hidden) {
                     markIntroSeen();
-                    return; // Let the normal navigation to the music page continue.
                 }
             }, true);
 

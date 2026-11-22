@@ -371,11 +371,11 @@
         <div class="ms-intro__content">
             <h2 id="introTitle" class="ms-intro__eyebrow">Mr. Sprinkle · Custom Grillz · Jewelry · WETT</h2>
             <div class="ms-intro__actions">
-                <button id="introPlay" type="button" class="ms-btn ms-btn--primary" data-intro-action="play" aria-label="Play featured music and enter site">
+                <a id="introPlay" href="#home" class="ms-btn ms-btn--primary" data-intro-action="play" aria-label="Play featured music and enter site">
                     <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
                     <span data-label>Play with sound</span>
-                </button>
-                <button type="button" class="ms-btn ms-btn--ghost" data-intro-skip data-intro-mute data-intro-action="quiet" aria-label="Enter site quietly">Enter quietly</button>
+                </a>
+                <a href="#home" class="ms-btn ms-btn--ghost" data-intro-skip data-intro-mute data-intro-action="quiet" aria-label="Enter site quietly">Enter quietly</a>
             </div>
             <p id="introStatus" class="ms-intro__status" aria-live="polite" role="status"></p>
         </div>
@@ -387,11 +387,11 @@
             </div>
             <a data-track="buy" data-price-text="Buy · {price}" href="intro-music.html">Buy · $1</a>
         </div>
-        <button type="button" class="ms-intro__skip" data-intro-skip data-intro-action="skip" aria-label="Skip intro and enter site">Skip intro</button>
+        <a href="#home" class="ms-intro__skip" data-intro-skip data-intro-action="skip" aria-label="Skip intro and enter site">Skip intro</a>
     </div>
     <header class="ms-site-header">
   <div class="ms-header-inner">
-    <a class="ms-site-brand" href="/" aria-label="Mr. Sprinkle home">
+    <a class="ms-site-brand" href="/#home" aria-label="Mr. Sprinkle home">
       <img src="assets/trans.png" alt="Mr. Sprinkle">
     </a>
     <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation">
@@ -399,7 +399,7 @@
     </button>
     <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
       <ul>
-        <li><a href="/">Home</a></li>
+        <li><a href="/#home">Home</a></li>
         <li><a href="index.html#services">Shop Grillz</a></li>
         <li><a href="pricing.html#configurator">Pricing</a></li>
         <li><a href="index.html#gallery">Gallery</a></li>
@@ -425,7 +425,7 @@
         <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_30zhnNWOXaygqeYTbhEO5mnIHNL/cdc87077-fc76-427c-8488-b5fefe48aacc.mp3" type="audio/mpeg">
     </audio>
 
-    <main>
+    <main id="home">
 
         <section id="hero">
             <div class="container">
@@ -910,7 +910,7 @@
     </script>
     
     <script src="assets/site-track.js?v=20261121-damn-remix"></script>
-    <script src="assets/sound.js?v=20261121-intro-capture-cookie-fix"></script>
+    <script src="assets/sound.js?v=20261122-intro-native-entry"></script>
 
     <script src="assets/site-header.js"></script>
 </body>

@@ -32,28 +32,25 @@ test("shared navigation supports mobile open, close, and Escape", () => {
   assert.match(css, /max-width: 1080px/);
 });
 
-test("intro actions are delegated in capture phase and work without inline handlers", () => {
+test("intro actions are native homepage links with external controller enhancements", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
   const css = read("assets/sound.css");
   const introStart = html.indexOf('<div id="videoIntro"');
   const headerStart = html.indexOf('<header class="ms-site-header">', introStart);
   const introMarkup = html.slice(introStart, headerStart);
-  assert.match(introMarkup, /id="introPlay"[^>]*data-intro-action="play"/);
-  assert.match(introMarkup, /data-intro-action="quiet"/);
-  assert.match(introMarkup, /data-intro-action="skip"/);
-  assert.doesNotMatch(introMarkup, /onclick=/i);
-  assert.doesNotMatch(html, /mrSprinkleIntroAction/);
-  assert.match(js, /document\.addEventListener\("click"[\s\S]*?target\.closest\("\[data-intro-action\]"\)[\s\S]*?event\.preventDefault\(\)[\s\S]*?action === "play"\)[\s\S]*?enterWithSound\(\)[\s\S]*?action === "quiet"\)[\s\S]*?enterQuietly\(actionButton\)[\s\S]*?action === "skip"\)[\s\S]*?closeIntro\(\)[\s\S]*?\}, true\)/);
-  assert.doesNotMatch(js, /function bindIntroActions/);
-  assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
-  assert.match(js, /target\.closest\('a\[data-track="buy"\]'\)[\s\S]*?markIntroSeen\(\)/);
-  assert.match(css, /Intro interaction hotfix/);
-  assert.match(css, /#videoIntro \.ms-intro__content[\s\S]*?z-index:\s*20/);
-  assert.match(css, /#videoIntro \.ms-track[\s\S]*?z-index:\s*5/);
-  assert.match(css, /pointer-events: none/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
-  assert.match(html, /assets\/sound\.css\?v=/);
+  assert.match(introMarkup, /<a id="introPlay" href="#home"[^>]*data-intro-action="play"/);
+  assert.match(introMarkup, /<a href="#home"[^>]*data-intro-action="quiet"/);
+  assert.match(introMarkup, /<a href="#home"[^>]*data-intro-action="skip"/);
+  assert.match(html, /<main id="home">/);
+  assert.doesNotMatch(introMarkup, /<button[^>]*data-intro-action/);
+  assert.match(js, /target\.closest\("a\[data-intro-action\]"\)/);
+  assert.doesNotMatch(js, /event\.preventDefault\(\)[\s\S]*?data-intro-action/);
+  assert.match(js, /function keepIntroVideoMoving\(\)/);
+  assert.match(js, /keepIntroVideoMoving\(\);/);
+  assert.doesNotMatch(js, /if \(reduceMotion && video\) video\.pause\(\)/);
+  assert.match(css, /html:has\(:target\) #videoIntro \{ display: none !important; \}/);
+  assert.match(html, /assets\/sound\.js\?v=20261122-intro-native-entry/);
 });
 
 
@@ -78,9 +75,9 @@ test("intro dismissal persists across Home navigation and repeat visits", () => 
   assert.match(js, /event\.key === "introSeen" && event\.newValue === "true"/);
   assert.match(js, /function markIntroSeen\(\)/);
   assert.doesNotMatch(js, /forceIntro/);
-  assert.match(html, /class="ms-site-brand" href="\/" aria-label="Mr\. Sprinkle home"/);
-  assert.match(html, /href="\/">Home<\/a>/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
+  assert.match(html, /class="ms-site-brand" href="\/#home" aria-label="Mr\. Sprinkle home"/);
+  assert.match(html, /href="\/#home">Home<\/a>/);
+  assert.match(html, /assets\/sound\.js\?v=20261122-intro-native-entry/);
 });
 
 test("homepage and area hub clearly target Reno and nearby Northern Nevada", () => {
@@ -302,20 +299,16 @@ test("grill designer renders a dental-arch diagram without changing the estimate
 });
 
 
-test("homepage intro offers direct entry choices through the external controller", () => {
+test("intro video remains playable and the native entry links bypass the overlay", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
-  const introStart = html.indexOf('<div id="videoIntro"');
-  const headerStart = html.indexOf('<header class="ms-site-header">', introStart);
-  const introMarkup = html.slice(introStart, headerStart);
-  assert.match(introMarkup, /data-intro-action="play"/);
-  assert.match(introMarkup, /data-intro-action="quiet"/);
-  assert.match(introMarkup, /data-intro-action="skip"/);
-  assert.doesNotMatch(introMarkup, /onclick=/i);
-  assert.match(js, /function startAudioFromGesture\(\)/);
-  assert.match(js, /function enterWithSound\(\)\s*\{\s*startAudioFromGesture\(\);\s*closeIntro\(\);/);
-  assert.match(js, /function enterQuietly\(button\)/);
-  assert.match(js, /window\.MrSprinkleIntro = Object\.freeze/);
-  assert.match(js, /target\.closest\("\[data-intro-action\]"\)/);
-  assert.match(html, /assets\/sound\.js\?v=20261121-intro-capture-cookie-fix/);
+  const videoStart = html.indexOf('<video id="introVideo"');
+  const videoEnd = html.indexOf("</video>", videoStart);
+  const videoTag = html.slice(videoStart, videoEnd);
+  assert.match(videoTag, /autoplay muted loop playsinline/);
+  assert.match(js, /video\.muted = true/);
+  assert.match(js, /const attempt = video\.play\(\)/);
+  assert.doesNotMatch(js, /if \(reduceMotion && video\) video\.pause\(\)/);
+  assert.match(html, /href="#home"[^>]*data-intro-action="skip"/);
+  assert.match(html, /<main id="home">/);
 });
