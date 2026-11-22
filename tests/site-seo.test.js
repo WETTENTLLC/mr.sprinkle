@@ -314,7 +314,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="grill3DViewport"/);
-  assert.match(html, /Fixed front-facing view/);
+  assert.match(html, /Close-up smile view/);
   assert.doesNotMatch(html, /data-grill-view=/);
   assert.match(html, /data-metal-swatch="gold14k"/);
   assert.match(html, /id="selectUpperTeeth"/);
