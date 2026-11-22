@@ -148,11 +148,11 @@ test("published pages do not reintroduce unsupported gold safety guarantees", ()
 test("booking form continues to use the existing approved Formspree endpoint and requires artwork references on custom requests", () => {
   const form = read("mold-form.html");
   assert.match(form, /https:\/\/formspree\.io\/f\/myzpanyg/);
-  assert.match(form, /enctype="multipart\\/form-data"/);
-  assert.match(form, /id="customArtworkNotice"/);
-  assert.match(form, /referenceImageInput\\.required = true/);
-  assert.match(form, /imageDescriptionInput\\.required = true/);
-  assert.match(form, /custom_artwork_request:/);
+  assert.ok(form.includes('enctype="multipart/form-data"'));
+  assert.ok(form.includes('id="customArtworkNotice"'));
+  assert.ok(form.includes('referenceImageInput.required = true'));
+  assert.ok(form.includes('imageDescriptionInput.required = true'));
+  assert.ok(form.includes('custom_artwork_request:'));
 });
 
 
