@@ -482,7 +482,7 @@
                     <div id="selectedTeethList">None selected</div>
                 </div>
 
-                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST">
+                <form id="moldForm" action="https://formspree.io/f/myzpanyg" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="customerName">Full Name:</label>
                         <input type="text" id="customerName" name="customerName" required>
@@ -576,15 +576,20 @@
                         <textarea id="gemPlacement" name="gemPlacement" rows="3" placeholder="Describe where you want diamonds/gems placed on your selected teeth..."></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label for="imageDescription">Custom Image/Logo Description:</label>
-                        <textarea id="imageDescription" name="imageDescription" rows="4" placeholder="Describe any custom images, logos, or symbols you want on your teeth and specify which teeth you want them on..."></textarea>
+                    <div id="customArtworkNotice" class="instructions" hidden>
+                        <h3>Custom artwork quote request</h3>
+                        <p>To request enamel artwork, patterns, pictures, characters, lettering or logos, attach a clear reference image and describe the design below. Tell us exactly which teeth should receive it, the colors you want, and any details we should review. This work is individually reviewed and priced by quote; no custom artwork price is calculated here.</p>
                     </div>
 
                     <div class="form-group">
-                        <label for="referenceImage">Reference Image (optional):</label>
+                        <label for="imageDescription">Custom artwork / enamel design notes:</label>
+                        <textarea id="imageDescription" name="imageDescription" rows="4" placeholder="Describe the artwork, enamel colors, exact teeth, placement, and any details you want us to quote..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referenceImage">Reference Image:</label>
                         <input type="file" id="referenceImage" name="referenceImage" accept="image/*" style="padding:0.75rem;cursor:pointer">
-                        <p style="color:#ccc;font-size:0.85em;margin-top:0.5rem">Upload a photo of inspiration, a design you like, or your current teeth.</p>
+                        <p style="color:#ccc;font-size:0.85em;margin-top:0.5rem">Upload a clear photo or artwork reference. Custom artwork requests require one image. Maximum single-file size: 25 MB.</p>
                     </div>
 
                     <div class="form-group">
@@ -646,6 +651,7 @@
                     <input type="hidden" id="pricingVersion" name="pricingVersion">
                     <input type="hidden" id="configuratorOptions" name="configuratorOptions">
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
+                    <input type="hidden" id="customArtworkRequest" name="customArtworkRequest" value="no">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
                     <p id="formStatus" role="status" aria-live="polite"></p>
@@ -709,6 +715,19 @@
             }
         });
         updateSelectedTeethDisplay();
+        const customArtworkRequested = urlParams.get('customArtwork') === 'true';
+        const customArtworkNotice = document.getElementById('customArtworkNotice');
+        const customArtworkRequestInput = document.getElementById('customArtworkRequest');
+        const referenceImageInput = document.getElementById('referenceImage');
+        const imageDescriptionInput = document.getElementById('imageDescription');
+        if (customArtworkRequested) {
+            customArtworkRequestInput.value = 'yes';
+            customArtworkNotice.hidden = false;
+            referenceImageInput.required = true;
+            imageDescriptionInput.required = true;
+            imageDescriptionInput.placeholder = 'Required: describe the design, enamel colors, exact teeth, placement and any lettering or details you want us to quote...';
+            document.getElementById('serviceType').value = 'grillz';
+        }
         const quoteService = urlParams.get('quote');
         const quoteServiceTypes = {
             'tooth-gems': 'tooth-gems',
@@ -748,12 +767,17 @@
                 const toothStoneProfiles = Object.entries(c.stoneProfiles || {}).map(([tooth, profile]) =>
                     `Tooth ${tooth}: ${E.labels.STONES[profile.type] || profile.type}, ${profile.color}, ${profile.shape}`
                 ).join(' | ');
+                const toothEnamelProfiles = Object.entries(c.enamelProfiles || {}).map(([tooth, profile]) =>
+                    `Tooth ${tooth}: enamel ${profile.color}`
+                ).join(' | ');
                 const opts = `Design: ${E.labels.DESIGNS[c.design]}; Metal: ${E.labels.METALS[c.metal]}; Teeth: ${c.teeth.length ? c.teeth.join(', ') : `approx. ${c.upperCount} upper, ${c.lowerCount} lower`}; Finish: ${c.finish}; Shipping: ${c.shipping}` +
                     (c.design === 'fangs' ? `; Fang extension: ${c.extension ? E.labels.EXTENSIONS[c.extension] : 'none'}` : '') +
                     `; Stones: ${E.labels.STONES[c.stones]}` + (c.stoneCount > 0 ? ` (${c.size}mm, ${c.stoneCount})` : '') +
                     `; Cuts: ${c.cuts.length ? c.cuts.join(', ') : 'none'}` +
                     `; Stone shape default: ${c.stoneShape}; Stone teeth: ${c.stoneTeeth.length ? c.stoneTeeth.join(', ') : 'none'}; Stone placements: ${c.stoneLayout || 'not specified'}` +
-                    `; Tooth stone profiles: ${toothStoneProfiles || 'inherit default material'}`;
+                    `; Tooth stone profiles: ${toothStoneProfiles || 'inherit default material'}` +
+                    `; Enamel finishes: ${toothEnamelProfiles || 'none'}` +
+                    `; Custom artwork request: ${customArtworkRequested ? 'yes — image and written design notes required' : 'no'}`;
                 setHidden('configuratorOptions', opts);
                 setHidden('pricingVersion', est.version);
                 if (!est.ok) {
@@ -825,6 +849,19 @@
                 alert('Please select at least one tooth for gold work.');
                 return;
             }
+            if (customArtworkRequested) {
+                const file = referenceImageInput.files && referenceImageInput.files[0];
+                if (!file || !imageDescriptionInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Custom artwork requests need a reference image and written design notes.');
+                    return;
+                }
+                if (file.size > 25 * 1024 * 1024) {
+                    e.preventDefault();
+                    alert('Please upload an image no larger than 25 MB.');
+                    return;
+                }
+            }
             if (isGrillzRequest && !document.getElementById('healthAcknowledgment').checked) {
                 e.preventDefault();
                 alert('You must acknowledge the health risks and safety policies before submitting.');
@@ -855,6 +892,9 @@
                 rush_delivery: formData.get('rushDelivery'),
                 design: formData.get('design') || '',
                 image_description: formData.get('imageDescription') || '',
+                custom_artwork_request: formData.get('customArtworkRequest') || 'no',
+                reference_image_filename: referenceImageInput.files && referenceImageInput.files[0] ? referenceImageInput.files[0].name : '',
+                enamel_profiles: urlParams.get('enamelProfiles') || '',
                 configurator_options: formData.get('configuratorOptions') || '',
                 estimate_summary: formData.get('estimateSummary') || '',
                 estimate_total: formData.get('estimateTotal') || '',
