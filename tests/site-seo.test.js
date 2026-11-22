@@ -174,8 +174,8 @@ test("Grill Maker booking handoff avoids repeated design questions and carries a
   assert.match(form, /id="configuratorBookingIntro"/);
   assert.match(form, /id="configuratorDesignText"/);
   assert.match(form, /referenceImageInput\.files = transfer\.files/);
-  assert.match(form, /appointmentDate\.required = true/);
-  assert.match(form, /preferredTime\.required = true/);
+  assert.match(form, /getElementById\('appointmentDate'\)\.required = true/);
+  assert.match(form, /getElementById\('preferredTime'\)\.required = true/);
   assert.match(form, /step = '1800'/);
   assert.match(form, /within 24 hours to confirm availability/);
   assert.match(form, /body: formData/);
