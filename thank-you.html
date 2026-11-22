@@ -90,6 +90,11 @@
         <h2 id="mainHeading">Your Mold Request Has Been Submitted</h2>
         
         <p id="mainMessage">We have received your request. The team will follow up to discuss availability and next steps.</p>
+        <div id="grillBookingConfirmation" class="contact-info" style="display:none;border:2px solid #FFD700;background:#242016">
+            <h3 style="color:#FFD700;margin-bottom:10px">Your grill design request is in!</h3>
+            <p>We have received your design, estimate and preferred appointment time.</p>
+            <p><strong>We will contact you within 24 hours</strong> to confirm appointment availability and review your final quote. Your requested time is not confirmed until you hear from our team.</p>
+        </div>
         
         <div id="musicConfirmation" style="display:none;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);padding:25px;border-radius:10px;border:3px solid #FFD700;margin:20px 0">
             <h2 style="color:#FFD700;margin-bottom:15px">Track Purchased!</h2>
@@ -124,8 +129,14 @@
     </div>
     
     <script>
-    // Check if user came from Tax Time promo purchase
+    // Grill Maker booking confirmation
     const urlParams=new URLSearchParams(window.location.search);
+    if (urlParams.get('booking') === 'grillz') {
+        document.getElementById('mainHeading').textContent = 'Your Grill Design Appointment Request Was Received';
+        document.getElementById('mainMessage').textContent = 'Thank you. Your Grill Maker design and estimated quote have been sent to Mr. Sprinkle.';
+        document.getElementById('grillBookingConfirmation').style.display = 'block';
+    }
+    // Check if user came from Tax Time promo purchase
     if(urlParams.get('promo')==='taxtime'){
         document.getElementById('promoConfirmation').style.display='block';
         document.getElementById('mainHeading').textContent='Payment Confirmed!';
