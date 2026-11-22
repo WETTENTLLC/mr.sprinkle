@@ -74,7 +74,8 @@ test("direct grill mold requests validate required customer and safety informati
   assert.match(form, /id="healthAcknowledgment"/);
   assert.match(form, /fetch\('https:\/\/formspree\.io\/f\/myzpanyg'/);
   assert.match(form, /Please choose your preferred appointment date and time/);
-  assert.match(form, /Your Grill Design Appointment Request Was Received/);
+  const thanks = read("thank-you.html");
+  assert.match(thanks, /Your Grill Design Appointment Request Was Received/);
 });
 
 test("press-on nail orders carry selected fingers, gold, estimate and artwork to intake", () => {
