@@ -156,6 +156,35 @@ test("booking form continues to use the existing approved Formspree endpoint and
 });
 
 
+test("Grill Maker booking handoff avoids repeated design questions and carries artwork forward", () => {
+  const pricing = read("pricing.html");
+  const form = read("mold-form.html");
+  const handoff = read("assets/grill-artwork-handoff.js");
+  const thanks = read("thank-you.html");
+
+  assert.match(pricing, /id="grillArtworkReference"/);
+  assert.match(pricing, /id="grillArtworkNotes"/);
+  assert.match(pricing, /MrSprinkleArtworkHandoff\.save\(\{ file, notes \}\)/);
+  assert.match(handoff, /indexedDB\.open\(DB_NAME, DB_VERSION\)/);
+  assert.match(handoff, /file: file/);
+  assert.match(form, /quote=configurator/);
+  assert.match(form, /data-configurator-duplicate="materialType"/);
+  assert.match(form, /data-configurator-duplicate="budget"/);
+  assert.match(form, /data-configurator-duplicate="diamondType"/);
+  assert.match(form, /id="configuratorBookingIntro"/);
+  assert.match(form, /id="configuratorDesignText"/);
+  assert.match(form, /referenceImageInput\.files = transfer\.files/);
+  assert.match(form, /appointmentDate\.required = true/);
+  assert.match(form, /preferredTime\.required = true/);
+  assert.match(form, /step = '1800'/);
+  assert.match(form, /within 24 hours to confirm availability/);
+  assert.match(form, /body: formData/);
+  assert.match(form, /appointment_availability_status: isConfiguratorBooking/);
+  assert.match(form, /thank-you\.html\?booking=grillz/);
+  assert.match(thanks, /grillBookingConfirmation/);
+  assert.match(thanks, /contact you within 24 hours/);
+});
+
 test("primary indexable pages have unique titles, descriptions, and canonical URLs", () => {
   const pages = [
     "index.html", "pricing.html", "mold-form.html", "gold-teeth-reno.html",
