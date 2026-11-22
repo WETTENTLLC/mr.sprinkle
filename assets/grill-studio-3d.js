@@ -4,7 +4,6 @@
  * Three.js is pinned in pricing.html; all dental geometry and design logic are ours.
  */
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
@@ -24,14 +23,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     quote:        { label: "Custom quote metal",   color: 0xd1d5db, roughness: 0.20, metalness: 1.00 }
   };
   const NS = "http://www.w3.org/2000/svg";
-  let renderer, scene, camera, controls, modelRoot, pmrem;
+  let renderer, scene, camera, modelRoot, pmrem;
   let lastConfig = null;
   let resizeObserver = null;
   let disposed = false;
   const toothMeshes = [];
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
-  const viewButtons = Array.from(document.querySelectorAll("[data-grill-view]"));
 
   function setStatus(message, isError) {
     const status = document.getElementById("grill3DStatus");
@@ -74,33 +72,53 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     roughness: 0.72,
     metalness: 0.01
   });
-  const gemMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xf6fbff,
-    roughness: 0.045,
-    metalness: 0.02,
-    transmission: 0.28,
-    thickness: 0.22,
-    ior: 2.1,
-    clearcoat: 1,
-    clearcoatRoughness: 0.015,
-    envMapIntensity: 1.8
-  });
   const STONE_FINISHES = {
-    natural:        { color: 0xf1f7ff, roughness: 0.018, transmission: 0.52, ior: 2.42, envMapIntensity: 2.2 },
-    labGrownDiamond:{ color: 0xf4faff, roughness: 0.022, transmission: 0.50, ior: 2.42, envMapIntensity: 2.15 },
-    vvsMoissanite:  { color: 0xeaf4ff, roughness: 0.025, transmission: 0.40, ior: 2.55, envMapIntensity: 2.3 },
-    cubicZirconia:  { color: 0xfff2dc, roughness: 0.075, transmission: 0.24, ior: 2.15, envMapIntensity: 1.55 }
+    natural:         { color: 0xf4f8ff, roughness: 0.018, transmission: 0.52, ior: 2.42, envMapIntensity: 2.2 },
+    labGrownDiamond: { color: 0xf4faff, roughness: 0.022, transmission: 0.50, ior: 2.42, envMapIntensity: 2.15 },
+    vvsMoissanite:   { color: 0xeaf4ff, roughness: 0.025, transmission: 0.40, ior: 2.55, envMapIntensity: 2.3 },
+    cubicZirconia:   { color: 0xfff2dc, roughness: 0.075, transmission: 0.24, ior: 2.15, envMapIntensity: 1.55 }
   };
+  const stoneMaterialCache = new Map();
 
-  function applyStoneAppearance(key) {
-    const look = STONE_FINISHES[key] || STONE_FINISHES.natural;
-    gemMaterial.color.setHex(look.color);
-    gemMaterial.roughness = look.roughness;
-    gemMaterial.transmission = look.transmission;
-    gemMaterial.ior = look.ior;
-    gemMaterial.envMapIntensity = look.envMapIntensity;
-    gemMaterial.needsUpdate = true;
+  function materialForStone(type, color) {
+    const key = STONE_FINISHES[type] ? type : "natural";
+    const finish = STONE_FINISHES[key];
+    const colorValue = /^#[0-9a-f]{6}$/i.test(String(color || "")) ? String(color) : "#" + finish.color.toString(16).padStart(6, "0");
+    const cacheKey = key + "|" + colorValue.toLowerCase();
+    if (stoneMaterialCache.has(cacheKey)) return stoneMaterialCache.get(cacheKey);
+    const material = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(colorValue),
+      roughness: finish.roughness,
+      metalness: 0.02,
+      transmission: finish.transmission,
+      thickness: 0.26,
+      ior: finish.ior,
+      clearcoat: 1,
+      clearcoatRoughness: 0.012,
+      envMapIntensity: finish.envMapIntensity
+    });
+    stoneMaterialCache.set(cacheKey, material);
+    return material;
   }
+
+  const gumMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xb85161, roughness: 0.38, metalness: 0,
+    clearcoat: 0.46, clearcoatRoughness: 0.22
+  });
+  const gumHighlightMaterial = new THREE.MeshStandardMaterial({
+    color: 0xe18d91, roughness: 0.42, metalness: 0
+  });
+  const lipMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xa83f50, roughness: 0.31, metalness: 0,
+    clearcoat: 0.62, clearcoatRoughness: 0.18
+  });
+  const lipHighlightMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xd47a83, roughness: 0.29, metalness: 0,
+    clearcoat: 0.74, clearcoatRoughness: 0.16
+  });
+  const mouthInteriorMaterial = new THREE.MeshStandardMaterial({
+    color: 0x17080d, roughness: 0.92, metalness: 0
+  });
 
   const dustMaterial = new THREE.MeshStandardMaterial({
     color: 0xffe6a0,
@@ -248,27 +266,58 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     return geometry;
   }
 
+  function createMouthFrame() {
+    const cavity = new THREE.Shape();
+    cavity.absellipse(0, 0, 2.12, 0.86, 0, Math.PI * 2, false, 0);
+    const mouth = new THREE.Mesh(new THREE.ShapeGeometry(cavity, 72), mouthInteriorMaterial);
+    mouth.rotation.x = Math.PI / 2;
+    mouth.position.set(0, -0.88, 0);
+    modelRoot.add(mouth);
+
+    // The upper and lower lip are one continuous soft oval rim around the smile.
+    const lipRim = new THREE.Mesh(new THREE.TorusGeometry(1.92, 0.145, 24, 112), lipMaterial);
+    lipRim.rotation.x = Math.PI / 2;
+    lipRim.scale.set(1.08, 0.47, 1);
+    lipRim.position.set(0, -1.49, 0);
+    lipRim.castShadow = true;
+    modelRoot.add(lipRim);
+
+    const lipHighlight = new THREE.Mesh(new THREE.TorusGeometry(1.91, 0.045, 12, 112), lipHighlightMaterial);
+    lipHighlight.rotation.x = Math.PI / 2;
+    lipHighlight.scale.set(1.08, 0.47, 1);
+    lipHighlight.position.set(0, -1.515, 0);
+    modelRoot.add(lipHighlight);
+
+    // Soft mouth corners add depth without distracting from the tooth design.
+    [-1, 1].forEach(function (side) {
+      const corner = new THREE.Mesh(new THREE.SphereGeometry(0.105, 20, 14), lipMaterial);
+      corner.scale.set(1.35, 0.55, 0.78);
+      corner.position.set(side * 1.93, -1.48, 0);
+      modelRoot.add(corner);
+    });
+  }
+
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
-    const baseZ = isUpper ? 0.70 : -0.70;
     const crownZ = isUpper ? 0.40 : -0.40;
     const group = new THREE.Group();
-    group.name = jaw + " dental stone cast";
+    group.name = jaw + " anatomical gum arch";
 
-    const archCurve = makeArchCurve(jaw, 2.02, 1.18, baseZ);
-    const baseGeometry = new THREE.TubeGeometry(archCurve, 76, 0.38, 24, false);
-    const base = new THREE.Mesh(baseGeometry, stoneMaterial);
-    base.castShadow = true;
-    base.receiveShadow = true;
-    group.add(base);
-
-    const edgeCurve = makeArchCurve(jaw, 2.02, 1.18, baseZ + (isUpper ? 0.14 : -0.14));
-    const edge = new THREE.Mesh(
-      new THREE.TubeGeometry(edgeCurve, 76, 0.065, 12, false),
-      stoneEdgeMaterial
+    const archCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ);
+    const gumBand = new THREE.Mesh(
+      new THREE.TubeGeometry(archCurve, 88, 0.19, 28, false),
+      gumMaterial
     );
-    edge.castShadow = true;
-    group.add(edge);
+    gumBand.castShadow = true;
+    gumBand.receiveShadow = true;
+    group.add(gumBand);
+
+    const gumLineCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ + (isUpper ? -0.12 : 0.12));
+    const gumLine = new THREE.Mesh(
+      new THREE.TubeGeometry(gumLineCurve, 88, 0.035, 12, false),
+      gumHighlightMaterial
+    );
+    group.add(gumLine);
 
     const toothNumbers = isUpper ? UPPER : LOWER;
     toothNumbers.forEach((number, index) => {
@@ -329,7 +378,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const cap = item.cap;
     const dims = item.dimensions;
     const cuts = Array.isArray(config.cuts) ? config.cuts : [];
-    const stoneType = config.stones || "none";
+    const stoneProfiles = config.stoneProfiles && typeof config.stoneProfiles === "object" ? config.stoneProfiles : {};
+    const profile = stoneProfiles[item.number] || {};
+    const stoneType = profile.type || config.stones || "none";
+    const stoneColor = profile.color || "#f4f8ff";
+    const stoneShape = profile.shape || config.stoneShape || "round";
+    const stoneMaterial = materialForStone(stoneType, stoneColor);
     const totalStoneCount = Math.max(0, Math.min(100, Number(config.stoneCount) || 0));
     const selected = toothMeshes.filter(function (entry) {
       return config.teeth && config.teeth.map(String).includes(entry.number);
@@ -354,7 +408,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           (z * z) / (dims.height * dims.height * 1.02));
         const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio) * 1.015;
         const fitDiameter = Math.min(stoneDiameter, dims.width * 0.72, dims.height * 0.52);
-        const shape = config.stoneShape === "square"
+        const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
           : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
         const gem = new THREE.Mesh(shape, gemMaterial);
@@ -413,7 +467,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
     const look = MATERIALS[lastConfig.metal] || MATERIALS.silver;
     const capMaterial = materialForMetal(lastConfig.metal);
-    applyStoneAppearance(lastConfig.stones);
     const selectedList = Array.from(selected);
 
     toothMeshes.forEach(function (item) {
@@ -453,23 +506,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     if (renderer && scene && camera && !disposed) renderer.render(scene, camera);
   }
 
-  function setView(view) {
-    if (!camera || !controls) return;
-    const views = {
-      front:  { position: [0, -6.8, 2.0], target: [0, 0, 0] },
-      top:    { position: [0, -0.15, 7.2], target: [0, 0, 0] },
-      upper:  { position: [0, -2.7, 7.1], target: [0, 0, 0.28] },
-      lower:  { position: [0, -2.7, -7.1], target: [0, 0, -0.28] }
-    };
-    const preset = views[view] || views.front;
-    camera.up.set(0, view === "top" ? 1 : 0, view === "top" ? 0 : 1);
-    camera.position.set(preset.position[0], preset.position[1], preset.position[2]);
-    controls.target.set(preset.target[0], preset.target[1], preset.target[2]);
-    controls.update();
-    viewButtons.forEach(function (button) {
-      const active = button.getAttribute("data-grill-view") === view;
-      button.setAttribute("aria-pressed", String(active));
-    });
+  function setFrontCamera() {
+    if (!camera) return;
+    camera.up.set(0, 0, 1);
+    camera.position.set(0, -8.1, 0.02);
+    camera.lookAt(0, -0.88, 0);
+    camera.updateProjectionMatrix();
     render();
   }
 
@@ -514,25 +556,25 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       host.replaceChildren(renderer.domElement);
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x171716);
+      scene.background = new THREE.Color(0x080d10);
 
-      camera = new THREE.PerspectiveCamera(34, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0, -6.8, 2.0);
+      camera = new THREE.PerspectiveCamera(27, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
+      camera.position.set(0, -8.1, 0.02);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
       scene.environment = pmremGenerator.fromScene(environment, 0.04).texture;
       pmremGenerator.dispose();
 
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x6a6256, 2.1));
+      scene.add(new THREE.HemisphereLight(0xfff1e8, 0x382c31, 2.35));
 
-      const key = new THREE.DirectionalLight(0xfff1d7, 3.4);
+      const key = new THREE.DirectionalLight(0xffe5c1, 3.7);
       key.position.set(-3.8, -4.5, 6);
       key.castShadow = true;
       key.shadow.mapSize.set(1024, 1024);
       scene.add(key);
 
-      const fill = new THREE.DirectionalLight(0xd8e5ff, 1.7);
+      const fill = new THREE.DirectionalLight(0xa9e7e5, 2.0);
       fill.position.set(4, -1.5, 2.8);
       scene.add(fill);
 
@@ -542,56 +584,31 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
       modelRoot = new THREE.Group();
       scene.add(modelRoot);
+      createMouthFrame();
       createJaw("upper");
       createJaw("lower");
 
-      // Small metal hinge posts echo the articulated dental-stone reference model.
-      const hingeMaterial = new THREE.MeshStandardMaterial({ color: 0x9da5ad, metalness: 0.72, roughness: 0.28 });
-      [-1, 1].forEach(function (side) {
-        const hinge = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.12, 16), hingeMaterial);
-        hinge.rotation.x = Math.PI / 2;
-        hinge.position.set(side * 2.38, 0.28, 0);
-        hinge.castShadow = true;
-        modelRoot.add(hinge);
-        const hingeEnd = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), hingeMaterial);
-        hingeEnd.position.set(side * 2.38, 0.28, 0.62);
-        modelRoot.add(hingeEnd);
-      });
+      const frontFill = new THREE.DirectionalLight(0xffffff, 2.25);
+      frontFill.position.set(0, -5, 0.2);
+      scene.add(frontFill);
 
       const floor = new THREE.Mesh(
         new THREE.CircleGeometry(5, 64),
-        new THREE.MeshStandardMaterial({ color: 0x171716, roughness: 0.92 })
+        new THREE.MeshStandardMaterial({ color: 0x080d10, roughness: 0.92 })
       );
       floor.rotation.x = 0;
-      floor.position.z = -1.25;
+      floor.position.z = -1.55;
       floor.receiveShadow = true;
       scene.add(floor);
 
-      camera.up.set(0, 0, 1);
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.075;
-      controls.enablePan = false;
-      controls.minDistance = 4.8;
-      controls.maxDistance = 12;
-      controls.minPolarAngle = 0.15;
-      controls.maxPolarAngle = Math.PI - 0.15;
-      controls.target.set(0, 0, 0);
-      controls.addEventListener("change", render);
+      setFrontCamera();
       renderer.setAnimationLoop(function () {
         if (disposed) return;
-        if (controls) controls.update();
         renderer.render(scene, camera);
       });
 
       renderer.domElement.addEventListener("pointerdown", handlePointerDown);
       renderer.domElement.addEventListener("pointerup", handlePointerUp);
-
-      viewButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-          setView(button.getAttribute("data-grill-view"));
-        });
-      });
 
       if (typeof ResizeObserver !== "undefined") {
         resizeObserver = new ResizeObserver(function () {
@@ -614,16 +631,16 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         });
       }
 
-      window.MrSprinkleGrill3D = Object.freeze({ update, setView });
+      window.MrSprinkleGrill3D = Object.freeze({ update });
       window.addEventListener("mr-sprinkle:grill-config", function (event) {
         if (event.detail) update(event.detail);
       });
       host.dataset.ready = "true";
-      host.setAttribute("aria-label", "Interactive three-dimensional grillz mockup");
+      host.setAttribute("aria-label", "Fixed front-facing three-dimensional mouth and grillz mockup");
       const fallback = document.getElementById("designPreview");
       if (fallback) fallback.hidden = true;
-      setStatus("Drag to rotate · scroll to zoom · select teeth in the model or arch chart", false);
-      setView("front");
+      setStatus("Fixed front view · tap a tooth to select it or choose stone placement mode", false);
+      setFrontCamera();
       if (window.__MrSprinkleGrillConfig) update(window.__MrSprinkleGrillConfig);
       window.dispatchEvent(new CustomEvent("mr-sprinkle:grill-renderer-ready"));
     } catch (error) {
