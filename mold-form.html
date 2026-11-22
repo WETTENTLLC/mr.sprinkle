@@ -700,6 +700,7 @@
                     <input type="hidden" id="pricingVersion" name="pricingVersion">
                     <input type="hidden" id="configuratorOptions" name="configuratorOptions">
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
+                    <input type="hidden" id="ambassadorCode" name="ambassadorCode">
                     <input type="hidden" id="customArtworkRequest" name="customArtworkRequest" value="no">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
@@ -751,6 +752,8 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
+        const incomingAmbassadorCode = urlParams.get("ref") || localStorage.getItem("referralCode") || "";
+        document.getElementById("ambassadorCode").value = incomingAmbassadorCode;
         const isConfiguratorBooking = urlParams.get('quote') === 'configurator';
         let customArtworkRequested = urlParams.get('customArtwork') === 'true';
         let artworkRestorePromise = Promise.resolve();
@@ -1051,6 +1054,7 @@
                 customer_name: formData.get('customerName'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
+                ambassador_code: formData.get('ambassadorCode') || '',
                 service_type: formData.get('serviceType'),
                 appointment_mode: formData.get('appointmentMode'),
                 preferred_appointment_date: formData.get('appointmentDate'),
