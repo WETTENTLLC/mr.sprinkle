@@ -374,12 +374,120 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     toRemove.forEach(function (child) { child.parent.remove(child); });
   }
 
+  function crownRadiiAt(type, fraction) {
+    const profile = {
+      incisor: [[0.00,0.60,0.66],[0.08,0.76,0.79],[0.22,0.91,0.93],[0.48,1.00,1.00],[0.70,1.00,0.99],[0.88,0.96,0.94],[1.00,0.82,0.86]],
+      canine: [[0.00,0.58,0.64],[0.10,0.75,0.80],[0.26,0.92,0.95],[0.52,1.00,1.00],[0.76,0.91,0.94],[0.92,0.70,0.76],[1.00,0.20,0.26]],
+      premolar: [[0.00,0.62,0.66],[0.10,0.79,0.81],[0.26,0.94,0.95],[0.52,1.00,1.00],[0.76,0.97,0.97],[0.90,0.86,0.89],[1.00,0.70,0.75]],
+      molar: [[0.00,0.64,0.66],[0.10,0.80,0.81],[0.28,0.96,0.96],[0.56,1.00,1.00],[0.78,0.98,0.98],[0.92,0.91,0.92],[1.00,0.80,0.82]]
+    }[type] || [[0,0.62,0.66],[0.5,1,1],[1,0.82,0.86]];
+    const f = Math.max(0, Math.min(1, fraction));
+    for (let i = 0; i < profile.length - 1; i++) {
+      const a = profile[i], b = profile[i + 1];
+      if (f < a[0] || f > b[0]) continue;
+      const t = (f - a[0]) / Math.max(0.0001, b[0] - a[0]);
+      return [a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+    }
+    return [profile[profile.length - 1][1], profile[profile.length - 1][2]];
+  }
+
+  // Returns the actual front-facing Y coordinate of the tooth-specific loft,
+  // not an unrelated flat/ellipsoid approximation. The sign of Z follows
+  // upper/lower crown orientation so placements remain on both arches.
+  function crownFrontSurfaceY(dimensions, jaw, x, signedZ) {
+    const targetZ = Math.abs(signedZ);
+    let low = 0;
+    let high = 1;
+    let fraction = targetZ / Math.max(0.001, dimensions.height);
+
+    for (let i = 0; i < 24; i++) {
+      fraction = (low + high) * 0.5;
+      const radii = crownRadiiAt(dimensions.type, fraction);
+      const nx = Math.max(-0.995, Math.min(0.995, x / (dimensions.width * radii[0])));
+      const ny = -Math.sqrt(Math.max(0.0001, 1 - nx * nx));
+      const cusp = cuspProfile(dimensions.type, nx, ny);
+      const blend = Math.max(0, Math.min(1, (fraction - 0.70) / 0.30));
+      const actualZ = dimensions.height * fraction + dimensions.height * 0.095 * cusp * blend;
+      if (actualZ < targetZ) low = fraction;
+      else high = fraction;
+    }
+
+    fraction = (low + high) * 0.5;
+    const radii = crownRadiiAt(dimensions.type, fraction);
+    const nx = Math.max(-0.995, Math.min(0.995, x / (dimensions.width * radii[0])));
+    const ny = -Math.sqrt(Math.max(0.0001, 1 - nx * nx));
+    return ny * dimensions.depth * radii[1];
+  }
+
+  function capLocalPoint(cap, x, y, z) {
+    return new THREE.Vector3(
+      x / cap.scale.x,
+      (y - cap.position.y) / cap.scale.y,
+      z / cap.scale.z
+    );
+  }
+
+  function addEnamelOverlay(item, profile) {
+    if (!profile || !/^#[0-9a-f]{6}$/i.test(String(profile.color || ""))) return;
+    const cap = item.cap;
+    const dims = item.dimensions;
+    const sign = item.jaw === "upper" ? -1 : 1;
+    const rows = 8;
+    const columns = 8;
+    const positions = [];
+    const indices = [];
+
+    for (let row = 0; row <= rows; row++) {
+      const toothFraction = 0.24 + (row / rows) * 0.50;
+      const z = sign * dims.height * toothFraction;
+      for (let col = 0; col <= columns; col++) {
+        const x = ((col / columns) * 2 - 1) * dims.width * 0.54;
+        const y = crownFrontSurfaceY(dims, item.jaw, x, z) - 0.004;
+        const point = capLocalPoint(cap, x * cap.scale.x, cap.position.y + y * cap.scale.y, z * cap.scale.z);
+        positions.push(point.x, point.y, point.z);
+      }
+    }
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const a = row * (columns + 1) + col;
+        const b = a + 1;
+        const c = b + columns + 1;
+        const d = a + columns + 1;
+        indices.push(a, b, d, b, c, d);
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    const material = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(profile.color),
+      roughness: 0.19,
+      metalness: 0.035,
+      clearcoat: 0.72,
+      clearcoatRoughness: 0.13,
+      side: THREE.DoubleSide,
+      polygonOffset: true,
+      polygonOffsetFactor: -2,
+      polygonOffsetUnits: -2
+    });
+    const overlay = new THREE.Mesh(geometry, material);
+    overlay.userData.designDetail = true;
+    overlay.userData.enamelOverlay = true;
+    cap.add(overlay);
+  }
+
   function addDesignDetails(item, config, metalMaterial) {
     const cap = item.cap;
     const dims = item.dimensions;
     const cuts = Array.isArray(config.cuts) ? config.cuts : [];
     const stoneProfiles = config.stoneProfiles && typeof config.stoneProfiles === "object" ? config.stoneProfiles : {};
+    const enamelProfiles = config.enamelProfiles && typeof config.enamelProfiles === "object" ? config.enamelProfiles : {};
+    const enamelProfile = enamelProfiles[item.number] || null;
     const profile = stoneProfiles[item.number] || {};
+    if (enamelProfile && enamelProfile.color) addEnamelOverlay(item, enamelProfile);
     const stoneType = profile.manual ? profile.type : (config.stones || "none");
     const stoneColor = profile.color || "#f4f8ff";
     const stoneShape = profile.manual ? (profile.shape || config.stoneShape || "round") : (config.stoneShape || "round");
@@ -398,22 +506,46 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       : [];
     if (stoneType !== "none" && totalStoneCount > 0 && targetCells.length) {
       const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
+      const jawSign = item.jaw === "upper" ? -1 : 1;
       targetCells.forEach(function (cell) {
         const column = cell % 5;
         const row = Math.floor(cell / 5);
-        const x = ((column - 2) / 2) * dims.width * 0.72;
-        const z = ((2 - row) / 2) * dims.height * 0.60 + dims.height * 0.045;
-        const surfaceRatio = Math.min(0.92,
-          (x * x) / (dims.width * dims.width * 1.02) +
-          (z * z) / (dims.height * dims.height * 1.02));
-        const frontSurface = -dims.depth * Math.sqrt(1 - surfaceRatio) * 1.015;
-        const fitDiameter = Math.min(stoneDiameter, dims.width * 0.72, dims.height * 0.52);
+        // Keep the 5×5 diagram aligned to the visible crown face:
+        // upper teeth run from gum (top row) toward the incisal edge;
+        // lower teeth run from the incisal edge (top row) toward the gum.
+        const x = ((column - 2) / 2) * dims.width * 0.68;
+        const verticalFraction = item.jaw === "upper"
+          ? 0.18 + row * 0.15
+          : 0.78 - row * 0.15;
+        const z = jawSign * dims.height * verticalFraction;
+        const frontSurface = crownFrontSurfaceY(dims, item.jaw, x, z);
+        const fitDiameter = Math.min(stoneDiameter, dims.width * 0.52, dims.height * 0.34);
+        const mountDepth = Math.max(0.010, fitDiameter * 0.18);
+        const gemHalfDepth = fitDiameter * (stoneShape === "square" ? 0.14 : 0.27);
+
+        // A shallow metal seat sits flush on the curved crown surface.
+        // Both setting and stone are transformed back into cap-local space
+        // so the cap's own scale never lifts a stone off its tooth.
+        const surfaceY = cap.position.y + frontSurface * cap.scale.y;
+        const mount = new THREE.Mesh(
+          new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
+          metalMaterial
+        );
+        const mountPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth * 0.5, z * cap.scale.z);
+        mount.position.copy(mountPoint);
+        mount.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
+        mount.userData.designDetail = true;
+        mount.userData.stoneCell = cell;
+        cap.add(mount);
+
         const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
           : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
         const gem = new THREE.Mesh(shape, stoneMaterial);
-        gem.position.set(x, frontSurface - 0.009, z);
-        if (config.stoneShape !== "square") gem.scale.set(1, 0.48, 1);
+        const gemPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth - gemHalfDepth, z * cap.scale.z);
+        gem.position.copy(gemPoint);
+        gem.scale.set(1 / cap.scale.x, 1 / cap.scale.y, 1 / cap.scale.z);
+        if (stoneShape !== "square") gem.scale.y *= 0.48;
         gem.userData.designDetail = true;
         gem.userData.stoneCell = cell;
         cap.add(gem);
