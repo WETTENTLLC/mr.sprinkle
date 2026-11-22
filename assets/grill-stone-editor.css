@@ -135,3 +135,10 @@
 .tooth-arch-picker .arch-tooth[data-stone-target="true"][aria-pressed="true"] .tooth-crown{
   fill:#d9b96e;stroke:#785722;stroke-width:2.8
 }
+
+.stone-slot.is-disabled{
+  opacity:.16;cursor:not-allowed;pointer-events:auto;
+  border-color:rgba(150,140,120,.12);background:rgba(0,0,0,.12)
+}
+.stone-slot.is-disabled:hover{outline:none;transform:none;border-color:rgba(150,140,120,.12)}
+.stone-slot:disabled .stone-slot__gem{display:none}
