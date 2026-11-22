@@ -181,7 +181,6 @@ test("custom artwork requests are explicitly quote-only and preserved in the URL
 test("Grill Maker order handoff uses confirmed Formspree delivery and a traceable order record", () => {
   const fs = require("node:fs");
   const html = fs.readFileSync(require("node:path").join(__dirname, "..", "mold-form.html"), "utf8");
-  assert.match(html, /formspree\.io\/f\/myz panyg/i) === false;
   assert.match(html, /formspree\.io\/f\/myzpanyg/);
   assert.match(html, /orderReference/);
   assert.match(html, /orderDetails/);
