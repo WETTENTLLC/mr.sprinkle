@@ -145,8 +145,14 @@ test("published pages do not reintroduce unsupported gold safety guarantees", ()
   assert.doesNotMatch(blog, /0% tarnish guarantee|tarnish-free|hypoallergenic formulations/);
 });
 
-test("booking form continues to use the existing approved Formspree endpoint", () => {
-  assert.match(read("mold-form.html"), /https:\/\/formspree\.io\/f\/myzpanyg/);
+test("booking form continues to use the existing approved Formspree endpoint and requires artwork references on custom requests", () => {
+  const form = read("mold-form.html");
+  assert.match(form, /https:\/\/formspree\.io\/f\/myzpanyg/);
+  assert.match(form, /enctype="multipart\\/form-data"/);
+  assert.match(form, /id="customArtworkNotice"/);
+  assert.match(form, /referenceImageInput\\.required = true/);
+  assert.match(form, /imageDescriptionInput\\.required = true/);
+  assert.match(form, /custom_artwork_request:/);
 });
 
 
@@ -323,6 +329,11 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /function setFrontCamera/);
   assert.match(model, /function createMouthFrame/);
   assert.match(model, /function addDesignDetails/);
+  assert.match(model, /function crownFrontSurfaceY/);
+  assert.match(model, /new THREE\.CylinderGeometry\(fitDiameter \* 0\.53/);
+  assert.doesNotMatch(model, /surfaceRatio/);
+  assert.match(model, /const jawSign = item\.jaw === "upper" \? -1 : 1/);
+  assert.match(model, /function addEnamelOverlay/);
   assert.match(css, /\.tooth-arch-picker/);
   assert.match(css, /\.grill-3d-viewport/);
   assert.match(stoneCss, /\.grill-3d-viewport--mouth/);
@@ -370,6 +381,13 @@ test("customers can choose stone-bearing teeth and edit round or square per-toot
   assert.match(model, /RoundedBoxGeometry/);
   assert.match(css, /\.stone-placement-grid/);
   assert.match(css, /\.stone-slot\[data-stone-shape="square"\]/);
+  assert.match(html, /id="enamelStudioHeading"/);
+  assert.match(html, /id="enamelTargetTeeth"/);
+  assert.match(html, /data-enamel-color="#f3a8c8"/);
+  assert.match(html, /id="customArtworkQuoteLink"/);
+  assert.match(html, /customHandoff\.set\('customArtwork', 'true'\)/);
+  assert.match(css, /\.grill-enamel-studio/);
+  assert.match(css, /\.custom-artwork-request/);
 });
 
 test("intro video remains playable and the native entry links bypass the overlay", () => {
