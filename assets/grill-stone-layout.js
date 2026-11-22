@@ -112,12 +112,12 @@
     const placements = normalizeLayout(layout && layout.placements, targets);
     const key = String(tooth);
     const slot = Number(cell);
-    if (!targets.includes(key) || !Number.isInteger(slot) || slot < 0 || slot >= CAPACITY_PER_TOOTH) {
-      return makeResult(targets, placements, requestedCount);
-    }
-    const current = placements[key] || [];
     const capacity = layout && layout.capacityPerTooth ? layout.capacityPerTooth : CAPACITY_PER_TOOTH;
     const size = layout && layout.stoneSize ? layout.stoneSize : "1.3";
+    if (!targets.includes(key) || !Number.isInteger(slot) || slot < 0 || slot >= CAPACITY_PER_TOOTH) {
+      return makeResult(targets, placements, requestedCount, capacity, size);
+    }
+    const current = placements[key] || [];
     if (!current.includes(slot) && current.length < capacity) {
       placements[key] = current.concat(slot);
     }
@@ -161,8 +161,8 @@
     return makeResult(targets, placements, requested, capacity, size);
   }
 
-  function withTargets(targets, requestedCount) {
-    return createDefault(targets, requestedCount, { size:layout && layout.stoneSize });
+  function withTargets(targets, requestedCount, options) {
+    return createDefault(targets, requestedCount, options);
   }
 
   function serialize(layout) {
@@ -182,7 +182,7 @@
       if (!match || !selected.includes(match[1])) return;
       raw[match[1]] = match[2].split(".").map(Number);
     });
-    return makeResult(selected, raw, requestedCount === undefined ? count(raw) : requestedCount);
+    return makeResult(selected, raw, requestedCount === undefined ? count(raw) : requestedCount, capacityForSize("1.3"), "1.3");
   }
 
   return Object.freeze({
