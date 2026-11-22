@@ -170,7 +170,8 @@ header h1 {
 .upload-preview img {
     width: 80px;
     height: 80px;
-    object-fit: cover;
+    object-fit: contain;
+    background: #101010;
     border-radius: 5px;
     border: 2px solid #ffd700;
 }
