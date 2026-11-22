@@ -113,11 +113,10 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
   function toothClass(index) {
     const centerDistance = Math.min(index, 15 - index);
-    if (centerDistance <= 1) return "incisor";
-    if (centerDistance === 2) return "incisor";
-    if (centerDistance === 3) return "canine";
-    if (centerDistance <= 5) return "premolar";
-    return "molar";
+    if (centerDistance <= 2) return "molar";
+    if (centerDistance <= 4) return "premolar";
+    if (centerDistance === 5) return "canine";
+    return "incisor";
   }
 
   function toothDimensions(index) {
@@ -351,11 +350,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     if (!camera || !controls) return;
     const views = {
       front:  { position: [0, -6.8, 2.0], target: [0, 0, 0] },
-      top:    { position: [0, 0.1, 7.2], target: [0, 0, 0] },
+      top:    { position: [0, -0.15, 7.2], target: [0, 0, 0] },
       upper:  { position: [0, -2.7, 7.1], target: [0, 0, 0.28] },
       lower:  { position: [0, -2.7, -7.1], target: [0, 0, -0.28] }
     };
     const preset = views[view] || views.front;
+    camera.up.set(0, view === "top" ? 1 : 0, view === "top" ? 0 : 1);
     camera.position.set(preset.position[0], preset.position[1], preset.position[2]);
     controls.target.set(preset.target[0], preset.target[1], preset.target[2]);
     controls.update();
@@ -435,6 +435,19 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       createJaw("upper");
       createJaw("lower");
 
+      // Small metal hinge posts echo the articulated dental-stone reference model.
+      const hingeMaterial = new THREE.MeshStandardMaterial({ color: 0x9da5ad, metalness: 0.72, roughness: 0.28 });
+      [-1, 1].forEach(function (side) {
+        const hinge = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.12, 16), hingeMaterial);
+        hinge.rotation.x = Math.PI / 2;
+        hinge.position.set(side * 2.38, 0.28, 0);
+        hinge.castShadow = true;
+        modelRoot.add(hinge);
+        const hingeEnd = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), hingeMaterial);
+        hingeEnd.position.set(side * 2.38, 0.28, 0.62);
+        modelRoot.add(hingeEnd);
+      });
+
       const floor = new THREE.Mesh(
         new THREE.CircleGeometry(5, 64),
         new THREE.MeshStandardMaterial({ color: 0x171716, roughness: 0.92 })
@@ -444,6 +457,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       floor.receiveShadow = true;
       scene.add(floor);
 
+      camera.up.set(0, 0, 1);
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.075;
