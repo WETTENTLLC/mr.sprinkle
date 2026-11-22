@@ -325,6 +325,41 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(css, /\.grill-metal-swatches/);
 });
 
+test("Sprinkle Studio renders one complete 16-tooth arch per jaw", () => {
+  const html = read("pricing.html");
+  const script = html.slice(html.indexOf("const toothGroups = ["), html.indexOf("const SVG_NS", html.indexOf("const toothGroups = [")));
+  assert.match(script, /label: 'Upper jaw', teeth: Stone\.upper\.slice\(\)/);
+  assert.match(script, /label: 'Lower jaw', teeth: Stone\.lower\.slice\(\)/);
+  assert.doesNotMatch(script, /Upper right|Upper left|Lower right|Lower left/);
+  assert.match(html, /data-tooth-kind/);
+  assert.match(html, /central-incisor/);
+  assert.match(html, /lateral-incisor/);
+  assert.match(html, /tooth-groove/);
+});
+
+test("customers can choose stone-bearing teeth and edit round or square per-tooth positions", () => {
+  const html = read("pricing.html");
+  const model = read("assets/grill-studio-3d.js");
+  const layout = read("assets/grill-stone-layout.js");
+  const css = read("assets/grill-stone-editor.css");
+  assert.match(html, /id="toothModeStones"/);
+  assert.match(html, /id="stoneTargetTeeth"/);
+  assert.match(html, /id="stoneEditTooth"/);
+  assert.match(html, /data-stone-shape="round"/);
+  assert.match(html, /data-stone-shape="square"/);
+  assert.match(html, /id="stonePlacementGrid"/);
+  assert.match(html, /function handleStoneCellClick/);
+  assert.match(html, /button\.addEventListener\('dragstart'/);
+  assert.match(html, /Stone\.serialize\(layoutState\)/);
+  assert.match(layout, /function createDefault\(targets, requestedCount, options\)/);
+  assert.match(layout, /function move\(/);
+  assert.match(layout, /function allowedCells\(size\)/);
+  assert.match(model, /placements\[item\.number\]/);
+  assert.match(model, /RoundedBoxGeometry/);
+  assert.match(css, /\.stone-placement-grid/);
+  assert.match(css, /\.stone-slot\[data-stone-shape="square"\]/);
+});
+
 test("intro video remains playable and the native entry links bypass the overlay", () => {
   const html = read("index.html");
   const js = read("assets/sound.js");
