@@ -136,7 +136,22 @@
         closeIntro();
     }
 
-    // Expose safe entry points for inline fallbacks and testing.
+    // Bind controls from this same-origin external file instead of inline onclick handlers.
+    function bindIntroActions() {
+        if (!intro) return;
+        intro.querySelectorAll("[data-intro-action]").forEach(function (button) {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                if (intro.hidden) return;
+                const action = button.getAttribute("data-intro-action");
+                if (action === "play") enterWithSound();
+                else if (action === "quiet") enterQuietly(button);
+                else if (action === "skip") closeIntro();
+            });
+        });
+    }
+
+    // Expose safe entry points for integration and testing.
     window.skipIntro = closeIntro;
     window.MrSprinkleIntro = Object.freeze({
         close: closeIntro,
@@ -187,6 +202,8 @@
     });
 
     if (intro) {
+        bindIntroActions();
+
         // Keep other already-open tabs in sync when one tab completes the intro.
         window.addEventListener("storage", function (event) {
             if (event.key === "introSeen" && event.newValue === "true") closeIntro();
