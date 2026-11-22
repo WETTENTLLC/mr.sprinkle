@@ -57,6 +57,8 @@ test("Grill Maker booking carries its existing design and uploads into the appoi
   assert.match(page, /MrSprinkleArtworkHandoff\.save\(\{ file, notes \}\)/);
   assert.match(handoff, /indexedDB\.open\(DB_NAME, DB_VERSION\)/);
   assert.match(handoff, /file: file/);
+  assert.match(handoff, /maxAgeMs = 24 \* 60 \* 60 \* 1000/);
+  assert.match(handoff, /await clear\(\)/);
   assert.match(form, /urlParams\.get\('quote'\) === 'configurator'/);
   assert.match(form, /MrSprinkleArtworkHandoff\.load\(\)/);
   assert.match(form, /referenceImageInput\.files = transfer\.files/);
