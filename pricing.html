@@ -296,7 +296,7 @@
                     <p class="grill-studio-panel__lead">Choose the teeth that receive stones, then open a tooth's placement grid. Tap an empty guide to add a stone, tap a stone and then an empty guide to move it, or drag a stone to a new position. The count and estimate update with your layout.</p>
 
                     <div class="stone-target-section">
-                        <div class="stone-target-heading"><strong>Teeth receiving stones</strong><span>Tap to include or remove each tooth</span></div>
+                        <div class="stone-target-heading"><strong>Teeth receiving stones</strong><span>Tap a tooth to edit it · use × to remove its stones</span></div>
                         <div id="stoneTargetTeeth" class="stone-target-chips" aria-live="polite">
                             <span class="stone-empty">Select grill teeth first.</span>
                         </div>
@@ -309,8 +309,10 @@
                             <button type="button" data-stone-shape="square" aria-pressed="false"><span class="shape-symbol shape-symbol--square"></span>Square</button>
                         </div>
                         <div class="stone-tooth-editor-select">
-                            <label for="stoneEditTooth">Edit tooth</label>
-                            <select id="stoneEditTooth" disabled><option value="">Choose a stone tooth</option></select>
+                            <span class="stone-toolbar-label">Active tooth</span>
+                            <div id="stoneEditToothChips" class="stone-edit-tooth-chips" aria-live="polite">
+                                <span class="stone-empty">Choose a tooth above.</span>
+                            </div>
                         </div>
                     </div>
 
@@ -318,13 +320,13 @@
                         <div class="stone-tooth-profile__heading">Customize this tooth's stones</div>
                         <div class="stone-profile-controls">
                             <div>
-                                <label for="stoneMaterialByTooth">Stone material</label>
-                                <select id="stoneMaterialByTooth" disabled>
-                                    <option value="natural">Natural diamond</option>
-                                    <option value="labGrownDiamond">Lab-grown diamond</option>
-                                    <option value="vvsMoissanite">VVS moissanite</option>
-                                    <option value="cubicZirconia">Cubic zirconia / colored CZ</option>
-                                </select>
+                                <span class="stone-profile-label">Stone material</span>
+                                <div id="stoneMaterialChoices" class="stone-material-choices" role="group" aria-label="Stone material for active tooth">
+                                    <button type="button" data-stone-material="natural" aria-pressed="true" disabled><span class="stone-material-icon">◆</span><span>Natural<br>diamond</span></button>
+                                    <button type="button" data-stone-material="labGrownDiamond" aria-pressed="false" disabled><span class="stone-material-icon">✧</span><span>Lab-grown<br>diamond</span></button>
+                                    <button type="button" data-stone-material="vvsMoissanite" aria-pressed="false" disabled><span class="stone-material-icon">✦</span><span>VVS<br>moissanite</span></button>
+                                    <button type="button" data-stone-material="cubicZirconia" aria-pressed="false" disabled><span class="stone-material-icon">◇</span><span>Cubic<br>zirconia</span></button>
+                                </div>
                             </div>
                             <div>
                                 <label for="stoneColorPicker">Stone color</label>
