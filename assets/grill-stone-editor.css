@@ -356,3 +356,33 @@
 .grill-3d-viewport--cast canvas:active{cursor:crosshair}
 @media(max-width:900px){.grill-3d-viewport--cast{height:540px;min-height:460px}}
 @media(max-width:620px){.grill-3d-viewport--cast{height:450px;min-height:390px}}
+
+/* Mr. Sprinkle smile viewer v2 — a close-up product mouth, not a dental cast */
+.grill-3d-viewport--smile{
+  height:640px;min-height:540px;
+  overflow:hidden;
+  border:1px solid rgba(214,179,107,.28);
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 48%,rgba(91,39,43,.68) 0%,rgba(35,13,17,.72) 39%,rgba(9,6,7,.98) 79%),
+    linear-gradient(145deg,#160d0f,#080607);
+  box-shadow:
+    inset 0 0 75px rgba(0,0,0,.48),
+    0 18px 48px rgba(0,0,0,.42),
+    0 0 24px rgba(115,48,56,.09)
+}
+.grill-3d-viewport--smile canvas{
+  display:block;width:100%;height:100%;cursor:crosshair
+}
+.grill-3d-viewport--smile canvas:active{cursor:crosshair}
+@media(max-width:900px){
+  .grill-3d-viewport--smile{height:580px;min-height:500px}
+}
+@media(max-width:620px){
+  .grill-3d-viewport--smile{height:470px;min-height:410px;border-radius:10px}
+}
+
+/* Keep the mouth wide and close like the approved product reference */
+.grill-3d-viewport--smile{height:440px;min-height:400px}
+@media(max-width:900px){.grill-3d-viewport--smile{height:410px;min-height:370px}}
+@media(max-width:620px){.grill-3d-viewport--smile{height:280px;min-height:260px}}

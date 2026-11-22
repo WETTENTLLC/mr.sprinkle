@@ -262,31 +262,147 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     return geometry;
   }
 
-  function createDentalCastBase(jaw) {
-    const isUpper = jaw === "upper";
-    const baseZ = isUpper ? 1.18 : -1.18;
-    const baseCurve = makeArchCurve(jaw, 2.06, 1.22, baseZ);
-    const base = new THREE.Mesh(
-      new THREE.TubeGeometry(baseCurve, 104, 0.36, 36, false),
-      castMaterial
-    );
-    base.castShadow = true;
-    base.receiveShadow = true;
-    base.name = jaw + " ivory dental cast base";
-    modelRoot.add(base);
+  const oralCavityMaterial = new THREE.MeshBasicMaterial({
+    color: 0x16090b,
+    side: THREE.DoubleSide,
+    depthWrite: true
+  });
+  const upperLipMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x743038,
+    roughness: 0.245,
+    metalness: 0,
+    clearcoat: 0.92,
+    clearcoatRoughness: 0.14,
+    sheen: 0.42,
+    sheenColor: 0x9f5158
+  });
+  const lowerLipMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x91404a,
+    roughness: 0.225,
+    metalness: 0,
+    clearcoat: 0.96,
+    clearcoatRoughness: 0.12,
+    sheen: 0.5,
+    sheenColor: 0xc16a72
+  });
+  const lipInnerMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xc56d76,
+    roughness: 0.24,
+    metalness: 0,
+    clearcoat: 0.82,
+    clearcoatRoughness: 0.12
+  });
 
-    const outerEdge = makeArchCurve(jaw, 2.06, 1.22, baseZ + (isUpper ? 0.19 : -0.19));
-    const trim = new THREE.Mesh(
-      new THREE.TubeGeometry(outerEdge, 104, 0.035, 12, false),
-      castEdgeMaterial
+  function makeLipGeometry(isUpper) {
+    const width = 2.13;
+    const columns = 88;
+    const rows = 14;
+    const positions = [];
+    const indices = [];
+
+    for (let row = 0; row <= rows; row++) {
+      const t = row / rows;
+      for (let column = 0; column <= columns; column++) {
+        const u = (column / columns) * 2 - 1;
+        const x = u * width;
+        const taper = Math.pow(Math.max(0.0005, 1 - u * u), 0.43);
+        const theta = Math.asin(Math.max(-0.995, Math.min(0.995, x / 2.08)));
+        const archY = -1.18 * Math.cos(theta);
+
+        let outerZ;
+        let innerZ;
+        if (isUpper) {
+          const cupidPeaks = 0.105 * Math.exp(-Math.pow((Math.abs(u) - 0.19) / 0.105, 2));
+          const cupidDip = 0.052 * Math.exp(-Math.pow(u / 0.075, 2));
+          outerZ = 1.15 * taper + cupidPeaks - cupidDip;
+          innerZ = 0.66 * taper;
+        } else {
+          innerZ = -0.66 * taper;
+          outerZ = -1.22 * taper;
+        }
+        const z = outerZ + (innerZ - outerZ) * t;
+        const fullness = Math.sin(Math.PI * t) * taper;
+        const lipBulge = (isUpper ? 0.075 : 0.105) * fullness;
+        const y = archY - 0.205 - lipBulge - 0.018 * taper;
+        positions.push(x, y, z);
+      }
+    }
+
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        const a = row * (columns + 1) + column;
+        const b = a + 1;
+        const c = b + columns + 1;
+        const d = a + columns + 1;
+        indices.push(a, b, d, b, c, d);
+      }
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function createOralCavity() {
+    const shape = new THREE.Shape();
+    shape.absellipse(0, 0, 2.12, 0.82, 0, Math.PI * 2, false, 0);
+    const geometry = new THREE.ShapeGeometry(shape, 88);
+    geometry.rotateX(Math.PI / 2);
+    const cavity = new THREE.Mesh(geometry, oralCavityMaterial);
+    cavity.position.set(0, -1.055, 0);
+    cavity.name = "dark oral cavity behind the teeth";
+    modelRoot.add(cavity);
+  }
+
+  function createSmileLips() {
+    const upperGeometry = makeLipGeometry(true);
+    const lowerGeometry = makeLipGeometry(false);
+    const upper = new THREE.Mesh(upperGeometry, upperLipMaterial);
+    const lower = new THREE.Mesh(lowerGeometry, lowerLipMaterial);
+    upper.name = "sculpted upper lip";
+    lower.name = "sculpted lower lip";
+    upper.castShadow = true;
+    lower.castShadow = true;
+    upper.receiveShadow = true;
+    lower.receiveShadow = true;
+    modelRoot.add(upper, lower);
+
+    [-1, 1].forEach(function (side) {
+      const corner = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 16), upperLipMaterial);
+      corner.scale.set(1.32, 0.68, 0.82);
+      corner.position.set(side * 2.01, -0.39, -0.005);
+      corner.name = "mouth corner";
+      modelRoot.add(corner);
+    });
+
+    const upperWetlinePoints = [];
+    const lowerWetlinePoints = [];
+    for (let i = 0; i <= 88; i++) {
+      const u = (i / 88) * 2 - 1;
+      const x = u * 2.13;
+      const taper = Math.pow(Math.max(0.0005, 1 - u * u), 0.43);
+      const theta = Math.asin(Math.max(-0.995, Math.min(0.995, x / 2.08)));
+      const y = -1.18 * Math.cos(theta) - 0.215;
+      upperWetlinePoints.push(new THREE.Vector3(x, y - 0.012, 0.66 * taper));
+      lowerWetlinePoints.push(new THREE.Vector3(x, y - 0.018, -0.66 * taper));
+    }
+    const upperWetline = new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(upperWetlinePoints), 100, 0.022, 8, false),
+      lipInnerMaterial
     );
-    trim.name = jaw + " dental cast base edge";
-    modelRoot.add(trim);
+    const lowerWetline = new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lowerWetlinePoints), 100, 0.026, 8, false),
+      lipInnerMaterial
+    );
+    upperWetline.name = "upper wet lip line";
+    lowerWetline.name = "lower wet lip line";
+    modelRoot.add(upperWetline, lowerWetline);
   }
 
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
-    const crownZ = isUpper ? 0.70 : -0.70;
+    const crownZ = isUpper ? 0.45 : -0.45;
     const group = new THREE.Group();
     group.name = jaw + " open dental-model gum arch";
 
@@ -628,8 +744,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function setFrontCamera() {
     if (!camera) return;
     camera.up.set(0, 0, 1);
-    camera.position.set(0.42, -7.4, 2.30);
-    camera.lookAt(0, -0.08, 0);
+    camera.position.set(0.12, -6.45, 0.95);
+    camera.lookAt(0, -0.12, 0);
     camera.updateProjectionMatrix();
     render();
   }
@@ -663,22 +779,22 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function init() {
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.65));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
       renderer.setSize(host.clientWidth || 640, host.clientHeight || 390, false);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.08;
+      renderer.toneMappingExposure = 1.13;
       renderer.shadowMap.enabled = true;
  
       renderer.domElement.setAttribute("role", "img");
-      renderer.domElement.setAttribute("aria-label", "Interactive close-up 3D open dental articulator with upper and lower tooth arches");
+      renderer.domElement.setAttribute("aria-label", "Interactive close-up 3D mouth preview with sculpted lips, gums, upper and lower teeth, and customizable grillz");
       host.replaceChildren(renderer.domElement);
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x111518);
+      scene.background = new THREE.Color(0x090607);
 
-      camera = new THREE.PerspectiveCamera(31, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0.42, -7.4, 2.30);
+      camera = new THREE.PerspectiveCamera(34, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
+      camera.position.set(0.12, -6.45, 0.95);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
@@ -687,39 +803,32 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
       scene.add(new THREE.HemisphereLight(0xfff1e8, 0x382c31, 2.35));
 
-      const key = new THREE.DirectionalLight(0xffe5c1, 3.7);
-      key.position.set(-3.8, -4.5, 6);
+      const key = new THREE.DirectionalLight(0xffe5c1, 3.4);
+      key.position.set(-3.4, -4.0, 4.4);
       key.castShadow = true;
       key.shadow.mapSize.set(1024, 1024);
       scene.add(key);
 
-      const fill = new THREE.DirectionalLight(0xa9e7e5, 2.0);
-      fill.position.set(4, -1.5, 2.8);
+      const fill = new THREE.DirectionalLight(0xffb7b5, 1.6);
+      fill.position.set(4, -2.5, 1.5);
       scene.add(fill);
 
-      const rim = new THREE.DirectionalLight(0xffffff, 2.0);
-      rim.position.set(0, 4.5, 4.4);
+      const rim = new THREE.DirectionalLight(0xffffff, 1.8);
+      rim.position.set(0, 4.5, 2.2);
       scene.add(rim);
 
       modelRoot = new THREE.Group();
       scene.add(modelRoot);
-      createDentalCastBase("upper");
-      createDentalCastBase("lower");
+      createOralCavity();
       createJaw("upper");
       createJaw("lower");
+      createSmileLips();
 
       const frontFill = new THREE.DirectionalLight(0xffffff, 2.25);
       frontFill.position.set(0, -5, 0.2);
       scene.add(frontFill);
 
-      const floor = new THREE.Mesh(
-        new THREE.CircleGeometry(5, 64),
-        new THREE.MeshStandardMaterial({ color: 0x111518, roughness: 0.92 })
-      );
-      floor.rotation.x = 0;
-      floor.position.z = -1.62;
-      floor.receiveShadow = true;
-      scene.add(floor);
+
 
       setFrontCamera();
       renderer.setAnimationLoop(function () {
@@ -756,10 +865,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         if (event.detail) update(event.detail);
       });
       host.dataset.ready = "true";
-      host.setAttribute("aria-label", "Fixed front-facing three-dimensional mouth and grillz mockup");
+      host.setAttribute("aria-label", "Close-up mouth and grillz mockup with sculpted lips");
       const fallback = document.getElementById("designPreview");
       if (fallback) fallback.hidden = true;
-      setStatus("Fixed front view · tap a tooth to select it or choose stone placement mode", false);
+      setStatus("Close-up smile preview · tap any visible tooth to customize it", false);
       setFrontCamera();
       if (window.__MrSprinkleGrillConfig) update(window.__MrSprinkleGrillConfig);
       window.dispatchEvent(new CustomEvent("mr-sprinkle:grill-renderer-ready"));
