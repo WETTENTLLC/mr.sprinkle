@@ -938,7 +938,9 @@
                         event.dataTransfer.effectAllowed = 'move';
                         event.dataTransfer.setData('text/plain', String(cell));
                     }
-                    renderStoneEditor();
+                    button.classList.add('is-moving');
+                    setStatus('Stone selected. Drop it on an empty guide, or tap an empty guide to move it.', false);
+                    document.getElementById('removeSelectedStone').disabled = false;
                 });
                 button.addEventListener('dragover', event => event.preventDefault());
                 button.addEventListener('drop', event => {
