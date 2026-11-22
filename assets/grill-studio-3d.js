@@ -493,7 +493,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const note = document.getElementById("grill3DMaterialNote");
     if (note) {
       const stoneNote = lastConfig.stones && lastConfig.stones !== "none" && Number(lastConfig.stoneCount) > 0
-        ? " Stone quantity informs the estimate; the mockup shows a representative crown layout and final placement is confirmed from your mold."
+        ? " The exact tooth-by-tooth stone layout is shown in this preview. Final setting, clearances and fit are verified against your approved mold."
         : "";
       note.textContent = (lastConfig.metal === "quote"
         ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
