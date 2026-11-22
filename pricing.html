@@ -997,7 +997,6 @@
                 return;
             }
             activeStoneTooth = key;
-            moveSource = null;
             editorOpen = true;
             document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
             renderStoneTargets();
@@ -1015,6 +1014,7 @@
             if (stoneTargets.includes(String(number))) {
                 stoneTargets = stoneTargets.filter(tooth => tooth !== String(number));
                 delete stoneProfiles[String(number)];
+                if (moveSource && moveSource.tooth === String(number)) moveSource = null;
                 if (activeStoneTooth === String(number)) activeStoneTooth = stoneTargets[0] || '';
             } else {
                 stoneTargets = stoneTargets.concat(String(number));
@@ -1086,7 +1086,10 @@
             const totalPlaced = layoutState.placedCount;
             document.getElementById('removeSelectedStone').disabled = !moveSource;
             const materialLabel = activeProfile && activeProfile.type ? activeProfile.type : 'choose material';
-            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. ' + materialLabel + ' · ' + layoutState.stoneSize + ' mm guides. Tap an empty guide to add or a gem to move it.', false);
+            const placementInstruction = moveSource
+                ? ' Stone selected from tooth ' + moveSource.tooth + ' — choose an empty guide here to move it across teeth.'
+                : ' Tap an empty guide to add a stone, or select a gem and switch teeth to move it across the smile.';
+            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. ' + materialLabel + ' · ' + layoutState.stoneSize + ' mm guides.' + placementInstruction, false);
         }
 
         function handleStoneCellClick(cell, occupied) {
