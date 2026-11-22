@@ -701,6 +701,7 @@
                     <input type="hidden" id="configuratorOptions" name="configuratorOptions">
                     <input type="hidden" id="selectedTeeth" name="selectedTeeth">
                     <input type="hidden" id="customArtworkRequest" name="customArtworkRequest" value="no">
+                    <input type="hidden" id="moldFormType" name="form_type" value="mold_order">
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
                     <p id="formStatus" role="status" aria-live="polite"></p>
@@ -1034,6 +1035,7 @@
             if (typeof window.updateGrillEstimate === 'function') window.updateGrillEstimate();
 
             const formData = new FormData(this);
+            formData.set('form_type', isConfiguratorBooking ? 'grill_design_appointment' : 'mold_order');
             // attach file if provided
             const fileInput = document.getElementById('referenceImage');
             if(fileInput.files[0]) formData.set('referenceImage', fileInput.files[0]);
