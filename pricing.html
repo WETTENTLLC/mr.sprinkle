@@ -661,7 +661,7 @@
             window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config',{detail:config}));
             if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==='function') window.MrSprinkleGrill3D.update(config);
             if(window.MrSprinkleGrillPreview&&typeof window.MrSprinkleGrillPreview.render==='function'){
-                window.MrSprinkleGrillPreview.render(designPreview,config);
+                window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
             }
             designPreview.textContent='The design diagram could not load. Your selected teeth and estimate are still available below.';
@@ -768,9 +768,6 @@
         document.getElementById('clearTeeth').addEventListener('click',()=>{
             document.querySelectorAll('.tooth-choice').forEach((tooth)=>tooth.setAttribute('aria-pressed','false'));
             updateEstimate();
-        });
-        window.addEventListener('mr-sprinkle:grill-renderer-ready',()=>{
-            if(window.__MrSprinkleGrillConfig&&window.MrSprinkleGrill3D)window.MrSprinkleGrill3D.update(window.__MrSprinkleGrillConfig);
         });
         updateEstimate();
     })();
