@@ -108,16 +108,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   const gumHighlightMaterial = new THREE.MeshStandardMaterial({
     color: 0xe18d91, roughness: 0.42, metalness: 0
   });
-  const lipMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xa83f50, roughness: 0.31, metalness: 0,
-    clearcoat: 0.62, clearcoatRoughness: 0.18
+  const castMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xe9e3d5, roughness: 0.72, metalness: 0.015,
+    clearcoat: 0.12, clearcoatRoughness: 0.38
   });
-  const lipHighlightMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xd47a83, roughness: 0.29, metalness: 0,
-    clearcoat: 0.74, clearcoatRoughness: 0.16
-  });
-  const mouthInteriorMaterial = new THREE.MeshStandardMaterial({
-    color: 0x17080d, roughness: 0.92, metalness: 0
+  const castEdgeMaterial = new THREE.MeshStandardMaterial({
+    color: 0xcfc6b4, roughness: 0.76, metalness: 0.01
   });
 
   const dustMaterial = new THREE.MeshStandardMaterial({
@@ -266,46 +262,37 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     return geometry;
   }
 
-  function createMouthFrame() {
-    const cavity = new THREE.Shape();
-    cavity.absellipse(0, 0, 2.12, 0.86, 0, Math.PI * 2, false, 0);
-    const mouth = new THREE.Mesh(new THREE.ShapeGeometry(cavity, 72), mouthInteriorMaterial);
-    mouth.rotation.x = Math.PI / 2;
-    mouth.position.set(0, -0.88, 0);
-    modelRoot.add(mouth);
+  function createDentalCastBase(jaw) {
+    const isUpper = jaw === "upper";
+    const baseZ = isUpper ? 1.18 : -1.18;
+    const baseCurve = makeArchCurve(jaw, 2.06, 1.22, baseZ);
+    const base = new THREE.Mesh(
+      new THREE.TubeGeometry(baseCurve, 104, 0.36, 36, false),
+      castMaterial
+    );
+    base.castShadow = true;
+    base.receiveShadow = true;
+    base.name = jaw + " ivory dental cast base";
+    modelRoot.add(base);
 
-    // The upper and lower lip are one continuous soft oval rim around the smile.
-    const lipRim = new THREE.Mesh(new THREE.TorusGeometry(1.92, 0.145, 24, 112), lipMaterial);
-    lipRim.rotation.x = Math.PI / 2;
-    lipRim.scale.set(1.08, 0.47, 1);
-    lipRim.position.set(0, -1.49, 0);
-    lipRim.castShadow = true;
-    modelRoot.add(lipRim);
-
-    const lipHighlight = new THREE.Mesh(new THREE.TorusGeometry(1.91, 0.045, 12, 112), lipHighlightMaterial);
-    lipHighlight.rotation.x = Math.PI / 2;
-    lipHighlight.scale.set(1.08, 0.47, 1);
-    lipHighlight.position.set(0, -1.515, 0);
-    modelRoot.add(lipHighlight);
-
-    // Soft mouth corners add depth without distracting from the tooth design.
-    [-1, 1].forEach(function (side) {
-      const corner = new THREE.Mesh(new THREE.SphereGeometry(0.105, 20, 14), lipMaterial);
-      corner.scale.set(1.35, 0.55, 0.78);
-      corner.position.set(side * 1.93, -1.48, 0);
-      modelRoot.add(corner);
-    });
+    const outerEdge = makeArchCurve(jaw, 2.06, 1.22, baseZ + (isUpper ? 0.19 : -0.19));
+    const trim = new THREE.Mesh(
+      new THREE.TubeGeometry(outerEdge, 104, 0.035, 12, false),
+      castEdgeMaterial
+    );
+    trim.name = jaw + " dental cast base edge";
+    modelRoot.add(trim);
   }
 
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
-    const crownZ = isUpper ? 0.40 : -0.40;
+    const crownZ = isUpper ? 0.70 : -0.70;
     const group = new THREE.Group();
-    group.name = jaw + " anatomical gum arch";
+    group.name = jaw + " open dental-model gum arch";
 
     const archCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ);
     const gumBand = new THREE.Mesh(
-      new THREE.TubeGeometry(archCurve, 88, 0.19, 28, false),
+      new THREE.TubeGeometry(archCurve, 88, 0.225, 32, false),
       gumMaterial
     );
     gumBand.castShadow = true;
@@ -641,8 +628,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function setFrontCamera() {
     if (!camera) return;
     camera.up.set(0, 0, 1);
-    camera.position.set(0, -8.1, 0.02);
-    camera.lookAt(0, -0.88, 0);
+    camera.position.set(0.42, -7.4, 2.30);
+    camera.lookAt(0, -0.08, 0);
     camera.updateProjectionMatrix();
     render();
   }
@@ -684,14 +671,14 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       renderer.shadowMap.enabled = true;
  
       renderer.domElement.setAttribute("role", "img");
-      renderer.domElement.setAttribute("aria-label", "Interactive 3D dental stone model with selected grillz crowns");
+      renderer.domElement.setAttribute("aria-label", "Interactive close-up 3D open dental articulator with upper and lower tooth arches");
       host.replaceChildren(renderer.domElement);
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x080d10);
+      scene.background = new THREE.Color(0x111518);
 
-      camera = new THREE.PerspectiveCamera(27, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0, -8.1, 0.02);
+      camera = new THREE.PerspectiveCamera(31, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
+      camera.position.set(0.42, -7.4, 2.30);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
@@ -716,7 +703,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
       modelRoot = new THREE.Group();
       scene.add(modelRoot);
-      createMouthFrame();
+      createDentalCastBase("upper");
+      createDentalCastBase("lower");
       createJaw("upper");
       createJaw("lower");
 
@@ -726,10 +714,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
       const floor = new THREE.Mesh(
         new THREE.CircleGeometry(5, 64),
-        new THREE.MeshStandardMaterial({ color: 0x080d10, roughness: 0.92 })
+        new THREE.MeshStandardMaterial({ color: 0x111518, roughness: 0.92 })
       );
       floor.rotation.x = 0;
-      floor.position.z = -1.55;
+      floor.position.z = -1.62;
       floor.receiveShadow = true;
       scene.add(floor);
 
