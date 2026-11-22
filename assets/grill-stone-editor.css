@@ -142,3 +142,89 @@
 }
 .stone-slot.is-disabled:hover{outline:none;transform:none;border-color:rgba(150,140,120,.12)}
 .stone-slot:disabled .stone-slot__gem{display:none}
+
+/* Locked visual direction: luxury mouth-first studio */
+:root{--sprinkle-gold:#d6b36b;--sprinkle-teal:#22c6c8;--sprinkle-ink:#07090b}
+.grill-studio-panel{
+  border-color:rgba(34,198,200,.25);
+  background:linear-gradient(155deg,#11181a 0%,#090c0e 66%,#11100d 100%);
+}
+.grill-studio-panel__eyebrow{color:var(--sprinkle-teal)}
+.grill-studio-panel__eyebrow span{border-color:var(--sprinkle-teal);color:var(--sprinkle-teal)}
+.grill-studio-panel h3{color:#f8edcf;font-size:1.3rem;letter-spacing:.015em}
+.mouth-preview-kicker{
+  display:flex;align-items:center;gap:8px;margin:0 0 9px;
+  color:#8ce3df;font-size:.68rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase
+}
+.mouth-preview-kicker__dot{
+  width:7px;height:7px;border-radius:50%;background:var(--sprinkle-teal);
+  box-shadow:0 0 9px rgba(34,198,200,.8)
+}
+.mouth-preview-kicker__tag{
+  margin-left:auto;padding:4px 7px;border:1px solid rgba(214,179,107,.38);
+  border-radius:4px;color:#e6ca8f;font-size:.6rem;letter-spacing:.12em
+}
+.grill-3d-viewport--mouth{
+  height:520px;min-height:420px;border-radius:12px;
+  border:1px solid rgba(34,198,200,.25);
+  background:radial-gradient(ellipse at 50% 48%,#182326 0%,#0b1114 57%,#07090b 100%);
+  box-shadow:inset 0 0 55px rgba(0,0,0,.72),0 16px 34px rgba(0,0,0,.38);
+  cursor:crosshair;touch-action:pan-y
+}
+.grill-3d-viewport--mouth canvas{cursor:crosshair}
+.grill-3d-viewport--mouth canvas:active{cursor:crosshair}
+.grill-materials,.grill-stone-studio{
+  border-color:rgba(34,198,200,.23);
+  background:linear-gradient(140deg,#111719,#0a0d0f 75%)
+}
+.grill-materials__title strong,.grill-stone-studio h3{color:#f1dfb9}
+.grill-materials__title span{color:#7bbfc0}
+.grill-selection-summary{border-color:rgba(34,198,200,.24);background:#0c1416}
+.grill-arch-card{border-color:rgba(34,198,200,.38)}
+.grill-metal-swatch[aria-pressed="true"]{
+  border-color:var(--sprinkle-teal);
+  box-shadow:0 0 0 1px var(--sprinkle-teal),0 0 18px rgba(34,198,200,.11)
+}
+.grill-metal-swatch__chip{box-shadow:inset 0 1px 3px rgba(255,255,255,.5),0 0 8px rgba(34,198,200,.10)}
+.grill-view-controls{display:none!important}
+.grill-config-controls{border-top-color:rgba(34,198,200,.2)}
+.grill-stone-studio{box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.stone-tooth-profile{
+  margin:14px 0 12px;padding:13px;border:1px solid rgba(34,198,200,.23);
+  border-radius:8px;background:rgba(4,9,11,.54)
+}
+.stone-tooth-profile__heading{
+  margin-bottom:10px;color:#ead8ae;font-size:.82rem;font-weight:800;letter-spacing:.03em
+}
+.stone-profile-controls{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px
+}
+.stone-profile-controls label{
+  display:block;margin:0 0 5px;color:#bdb4a3;font-size:.74rem;font-weight:700
+}
+.stone-profile-controls select{
+  width:100%;min-height:38px;padding:8px 10px;border:1px solid #6e6655;
+  border-radius:6px;background:#151b1d;color:#fff
+}
+.stone-color-row{display:flex;align-items:center;gap:9px;min-height:38px}
+.stone-color-row input[type="color"]{
+  width:44px;height:34px;padding:2px;border:1px solid #756747;
+  border-radius:6px;background:#171a1a;cursor:pointer
+}
+.stone-color-row span{color:#e2d7c1;font-size:.76rem}
+.stone-color-swatches{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0 0}
+.stone-color-swatches button{
+  width:29px;height:29px;border:2px solid rgba(255,255,255,.28);
+  border-radius:50%;background:var(--swatch);cursor:pointer;
+  box-shadow:0 2px 7px rgba(0,0,0,.4);transition:transform .12s,border-color .12s
+}
+.stone-color-swatches button[aria-pressed="true"]{
+  border-color:#fff;outline:2px solid var(--sprinkle-teal);outline-offset:2px;transform:scale(1.08)
+}
+.stone-profile-hint{margin:9px 0 0;color:#99998f;font-size:.72rem;line-height:1.5}
+@media(max-width:900px){.grill-3d-viewport--mouth{height:470px;min-height:390px}}
+@media(max-width:620px){
+  .grill-3d-viewport--mouth{height:390px;min-height:340px}
+  .stone-profile-controls{grid-template-columns:1fr}
+  .mouth-preview-kicker{font-size:.62rem}
+}
