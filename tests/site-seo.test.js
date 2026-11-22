@@ -204,7 +204,7 @@ test("custom press-on nails use individual impressions and catalog-based per-nai
   assert.match(catalog, /gold10k: Object\.freeze\(\{ perTooth: 240/);
   assert.match(catalog, /gold14k: Object\.freeze\(\{ perTooth: 300/);
   assert.match(script, /press_on_nails_order_request/);
-  assert.match(script, /formspree\.io/);
+  assert.match(page, /formspree\.io/);
   assert.match(page, /secure payment link/);
   assert.doesNotMatch(page, /name=["'](?:cardNumber|creditCard|cvv|cvc)["']/i);
   assert.match(home, /href="press-on-nails\.html"/);
