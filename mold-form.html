@@ -551,7 +551,7 @@
                         <label for="serviceType">What are you interested in?</label>
                         <select id="serviceType" name="serviceType" required>
                             <option value="grillz">Custom grillz</option>
-                            <option value="gold-press-on-nails">Gold press-on nails — quote-based</option>
+                            <option value="gold-press-on-nails">Gold press-on nails — dedicated fitting page</option>
                             <option value="mobile-mold-service">Mobile mold service inquiry</option>
                             <option value="custom-jewelry">Custom jewelry — quote-based</option>
                             <option value="wett-accessories">WETT accessories</option>
@@ -981,6 +981,10 @@
         updateAppointmentHours();
         appointmentMode.addEventListener('change', updateAppointmentHours);
         document.getElementById('serviceType').addEventListener('change', function() {
+            if (this.value === 'gold-press-on-nails') {
+                window.location.href = 'press-on-nails.html';
+                return;
+            }
             if (this.value === 'mobile-mold-service') {
                 appointmentMode.value = 'mobile';
                 updateAppointmentHours();
