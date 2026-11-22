@@ -1,0 +1,127 @@
+
+/* Precision stone layout editor */
+.tooth-mode-controls button[aria-pressed="true"]{
+  background:#c9ad70;color:#17130b;border-color:#e6cd91;
+  box-shadow:0 0 0 1px rgba(230,205,145,.34)
+}
+.stone-editor-hint{margin:6px 0 12px;color:#aaa396;font-size:.78rem;line-height:1.5}
+.tooth-arch-picker .arch-tooth.stone-target .tooth-crown{
+  fill:#d3dce5;stroke:#54718c;stroke-width:2.6;stroke-dasharray:2 1
+}
+.tooth-arch-picker .arch-tooth.stone-target[aria-pressed="true"] .tooth-crown{
+  fill:#b6d2e6;stroke:#315f7b;stroke-width:3
+}
+.grill-stone-studio{
+  margin:20px 0 22px;padding:20px;border:1px solid rgba(201,178,118,.5);
+  border-radius:13px;background:linear-gradient(155deg,#1c1b18,#111110 75%)
+}
+.grill-stone-studio h3{margin:0 0 8px;color:#f3e7ca;font-size:1.18rem}
+.grill-stone-studio>.grill-studio-panel__lead{max-width:900px}
+.stone-target-section{
+  margin:15px 0;padding:14px;background:#171613;border:1px solid #50432e;border-radius:8px
+}
+.stone-target-heading{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:10px}
+.stone-target-heading strong{color:#ead8ae;font-size:.88rem}
+.stone-target-heading span{color:#9b9488;font-size:.72rem}
+.stone-target-chips{display:flex;gap:7px;flex-wrap:wrap;min-height:34px}
+.stone-target-chip{
+  min-width:42px;padding:8px 10px;border:1px solid #5e543f;border-radius:6px;
+  background:#22201b;color:#c9c1b4;font-size:.78rem;font-weight:800;cursor:pointer
+}
+.stone-target-chip[aria-pressed="true"]{
+  color:#15120c;background:#d9bd7b;border-color:#f3dc9f;box-shadow:0 0 0 1px rgba(243,220,159,.32)
+}
+.stone-empty{color:#8f887c;font-size:.78rem}
+.stone-layout-toolbar{
+  display:grid;grid-template-columns:minmax(0,1.2fr) minmax(180px,.8fr);gap:14px;align-items:end
+}
+.stone-shape-choice{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.stone-toolbar-label{width:100%;color:#b9ae98;font-size:.74rem;font-weight:700}
+.stone-shape-choice button{
+  display:flex;align-items:center;gap:8px;min-width:105px;padding:9px 12px;
+  border:1px solid #63553b;border-radius:6px;background:#1d1b17;color:#d8d0c2;
+  font-size:.78rem;font-weight:700;cursor:pointer
+}
+.stone-shape-choice button[aria-pressed="true"]{
+  background:#d0b578;color:#17130b;border-color:#edd9a4
+}
+.shape-symbol{display:inline-block;width:13px;height:13px;border:2px solid currentColor}
+.shape-symbol--round{border-radius:50%}
+.shape-symbol--square{border-radius:2px}
+.stone-tooth-editor-select label{display:block;margin:0 0 5px;color:#b9ae98;font-size:.74rem;font-weight:700}
+.stone-tooth-editor-select select{
+  width:100%;min-height:39px;padding:8px 10px;border:1px solid #71664e;
+  border-radius:6px;background:#1d1d1d;color:#fff
+}
+.stone-editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.stone-editor-actions button{
+  padding:9px 12px;border:1px solid #716144;border-radius:6px;background:#25221c;
+  color:#e1d1ac;font-size:.77rem;font-weight:700;cursor:pointer
+}
+.stone-editor-actions button:disabled{opacity:.38;cursor:not-allowed}
+.stone-editor-actions button:hover:not(:disabled){border-color:#e1c27c;background:#30291c;color:#fff1c6}
+.stone-placement-editor{
+  padding:15px;border:1px solid #806b43;border-radius:10px;
+  background:radial-gradient(ellipse at center,#27241e,#171614 75%)
+}
+.stone-placement-editor[hidden]{display:none!important}
+.stone-placement-editor__head{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px
+}
+.stone-placement-editor__head strong{color:#f0dfba;font-size:.88rem}
+.stone-placement-editor__head span{color:#a59b89;font-size:.72rem}
+.stone-placement-grid{
+  --slot-size:clamp(39px,7vw,58px);
+  display:grid;grid-template-columns:repeat(5,var(--slot-size));
+  gap:clamp(7px,1.8vw,13px);justify-content:center;
+  width:max-content;max-width:100%;margin:0 auto;padding:13px;
+  border:1px solid rgba(217,189,123,.24);border-radius:9px;
+  background:linear-gradient(145deg,rgba(240,232,211,.06),rgba(0,0,0,.22))
+}
+.stone-slot{
+  position:relative;display:grid;place-items:center;width:var(--slot-size);height:var(--slot-size);
+  border:1px dashed rgba(222,203,164,.3);border-radius:50%;
+  background:rgba(240,231,210,.045);color:#fff2d2;cursor:crosshair;
+  transition:background .12s ease,border-color .12s ease,transform .12s ease
+}
+.stone-slot[data-stone-shape="square"]{border-radius:5px}
+.stone-slot:hover,.stone-slot:focus-visible{
+  background:rgba(215,184,119,.18);border-color:#e5c77e;outline:2px solid #d7b76f;outline-offset:2px
+}
+.stone-slot.is-occupied{
+  border:1px solid rgba(248,244,231,.8);
+  background:radial-gradient(circle at 31% 25%,#fff,#b9d1e0 35%,#52758f 70%,#162b3b);
+  box-shadow:0 0 12px rgba(184,214,234,.23),inset 0 1px 5px rgba(255,255,255,.72);
+  cursor:grab
+}
+.stone-slot[data-stone-shape="square"].is-occupied{
+  border-radius:5px;
+  background:linear-gradient(140deg,#fff9e8 0%,#dcecf5 28%,#718ba3 63%,#243a4d 100%);
+}
+.stone-slot.is-moving{
+  outline:3px solid #e5c77e;outline-offset:3px;transform:scale(1.08)
+}
+.stone-slot__gem{
+  width:42%;height:42%;display:block;transform:rotate(45deg);
+  border:1px solid rgba(255,255,255,.86);
+  background:linear-gradient(135deg,#fff 0%,#d9edf9 42%,#7997ae 72%,#ecf7ff 100%);
+  box-shadow:0 0 6px rgba(255,255,255,.8)
+}
+.stone-slot[data-stone-shape="square"] .stone-slot__gem{border-radius:1px}
+.stone-slot:not(.is-occupied) .stone-slot__gem{display:none}
+.stone-layout-status{
+  min-height:1.4em;margin:11px 0 0;color:#d7c28d;font-size:.78rem;line-height:1.5;text-align:center
+}
+.stone-capacity-notice{
+  min-height:1.4em;margin:10px 0 0;color:#a9a193;font-size:.78rem;line-height:1.5
+}
+.stone-capacity-notice.is-warning{color:#f0b59a}
+@media(max-width:620px){
+  .grill-stone-studio{padding:13px}
+  .stone-layout-toolbar{grid-template-columns:1fr}
+  .stone-target-heading{display:block}
+  .stone-target-heading span{display:block;margin-top:4px}
+  .stone-placement-editor{padding:10px 6px}
+  .stone-placement-grid{--slot-size:clamp(38px,14vw,50px);gap:6px;padding:8px}
+  .stone-target-chip{min-width:39px;padding:8px}
+}
