@@ -187,5 +187,5 @@ li.ms-sound-item { display: flex; align-items: center; }
 /* Native intro escape: anchor buttons target the main homepage, even without JS. */
 #home { scroll-margin-top: 110px; }
 #videoIntro .ms-btn { text-decoration: none; }
-html:has(#home:target) #videoIntro { display: none !important; }
-html:has(#home:target), html:has(#home:target) body { overflow: auto !important; }
+html:has(:target) #videoIntro { display: none !important; }
+html:has(:target), html:has(:target) body { overflow: auto !important; }
