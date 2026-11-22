@@ -330,6 +330,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.doesNotMatch(model, /function createDentalCastBase/);
   assert.match(model, /function createOralCavity/);
   assert.match(model, /function makeLipGeometry\(isUpper\)/);
+  assert.match(model, /const crownZ = isUpper \? 0\.45 : -0\.45/);
   assert.match(model, /function createSmileLips/);
   assert.match(model, /camera.position.set\(0\.12, -6\.45, 0\.95\)/);
   assert.match(html, /grill-3d-viewport--smile/);
