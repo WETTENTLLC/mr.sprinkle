@@ -65,8 +65,9 @@
 
   async function load() {
     const db = await openDatabase();
+    let record = null;
     try {
-      return await new Promise(function (resolve, reject) {
+      record = await new Promise(function (resolve, reject) {
         const tx = db.transaction(STORE_NAME, "readonly");
         const request = tx.objectStore(STORE_NAME).get(RECORD_KEY);
         request.onsuccess = function () { resolve(request.result || null); };
@@ -75,6 +76,17 @@
     } finally {
       db.close();
     }
+
+    // Artwork handoff is short-lived: remove abandoned customer files after 24 hours.
+    if (record) {
+      const savedAt = Date.parse(record.savedAt || "");
+      const maxAgeMs = 24 * 60 * 60 * 1000;
+      if (!Number.isFinite(savedAt) || Date.now() - savedAt > maxAgeMs) {
+        await clear();
+        return null;
+      }
+    }
+    return record;
   }
 
   async function clear() {
