@@ -132,32 +132,7 @@
         }
         
         function sendAmbassadorEmail(name, code, link) {
-            const subject = `New Ambassador Registration - ${name}`;
-            const body = `New ambassador registered:
-
-Name: ${name}
-Code: ${code}
-Link: ${link}
-Timestamp: ${new Date().toISOString()}
-
-Next steps:
-1. Review application and approve/deny
-2. If approved, send welcome email with:
-   - Ambassador code: ${code}
-   - Portal access: https://mrsprinklereno.com/ambassador-portal.html
-   - Commission structure details
-3. Add to ambassador tracking system
-
-Sample approval email:
-"Welcome to the Mr. Sprinkle Ambassador Program! Your ambassador code is: ${code}
-
-Access your portal at: https://mrsprinklereno.com/ambassador-portal.html
-Use your ambassador code to log in and start tracking your earnings!"`;
-            
-            const mailtoLink = `mailto:wettentertainmentllc@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.open(mailtoLink);
-            
-            alert('This referral link is a preview only. It is not active for referral tracking until WETT reviews and approves your ambassador application. To apply, use the Ambassador Program application form.');
+            alert('This referral link is a preview only. It is not active for referral tracking until WETT reviews and approves your ambassador application. To apply, use the Ambassador Program application form or email wettentertainmentllc@gmail.com.');
         }
     </script>
 </body>
