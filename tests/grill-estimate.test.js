@@ -98,3 +98,53 @@ test("legacy grill quote links default stone targets to selected grill teeth", (
   assert.deepEqual(restored.stoneTeeth, ["11", "21"]);
   assert.equal(restored.stoneShape, "round");
 });
+
+test("mixed tooth-specific stone materials and colors are priced by their assigned counts", () => {
+  const r = E.calculate({
+    teeth: ["11", "21", "22"],
+    metal: "gold14k",
+    stones: "none",
+    size: "2.0",
+    stoneCount: 6,
+    stoneTeeth: ["11", "21", "22"],
+    stoneLayout: "11:0.1;21:2.3;22:4.5",
+    stoneProfiles: {
+      "11": { type:"natural", clarity:"vvs", color:"#f4f8ff", shape:"round", manual:true },
+      "21": { type:"cubicZirconia", clarity:"commercial", color:"#6bbcf2", shape:"square", manual:true },
+      "22": { type:"vvsMoissanite", clarity:"commercial", color:"#f3a8c8", shape:"round", manual:true }
+    }
+  });
+  assert.equal(r.status, "estimate");
+  assert.equal(r.total, 3 * 300 + 60 + 2 * 28 + 2 * 6 + 2 * 3.7);
+  assert.ok(r.lines.some(line => /white VVS natural diamond: 2/.test(line.label)));
+  assert.ok(r.lines.some(line => /ice blue Cubic Zirconia: 2/.test(line.label)));
+  assert.ok(r.lines.some(line => /pink VVS Moissanite: 2/.test(line.label)));
+});
+
+test("per-tooth stone styling survives the quote URL round trip", () => {
+  const cfg = E.calculate({
+    teeth:["11","21"], stones:"natural", size:"1.5", stoneCount:4,
+    stoneTeeth:["11","21"], stoneLayout:"11:12.13;21:7.8",
+    stoneProfiles:{
+      "11":{type:"natural",clarity:"vvs",color:"#f4f8ff",shape:"round",manual:false},
+      "21":{type:"cubicZirconia",clarity:"commercial",color:"#f3a8c8",shape:"square",manual:true}
+    }
+  }).config;
+  const params = E.toParams(cfg);
+  const restored = E.normalize(Object.fromEntries(new URLSearchParams(params)));
+  assert.deepEqual(restored.stoneProfiles, cfg.stoneProfiles);
+  assert.equal(restored.stoneLayout, "11:12.13;21:7.8");
+});
+
+test("the first explicitly chosen material can price unedited target teeth through the inherited default", () => {
+  const r = E.calculate({
+    teeth:["11","21"], stones:"natural", size:"1.3", stoneCount:4,
+    stoneTeeth:["11","21"], stoneLayout:"11:0.1;21:2.3",
+    stoneProfiles:{
+      "11":{type:"natural",clarity:"commercial",color:"#f4f8ff",shape:"round",manual:true},
+      "21":{type:"natural",clarity:"commercial",color:"#f4f8ff",shape:"round",manual:false}
+    }
+  });
+  assert.equal(r.status,"estimate");
+  assert.equal(r.total,2*100+60+4*6);
+});
