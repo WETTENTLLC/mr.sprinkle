@@ -1,7 +1,7 @@
 (function (root) {
 const catalog = Object.freeze({
     // Bump this whenever any price or pricing rule changes.
-    version: "2026-11-20-owner",
+    version: "2026-11-22-wholesale-2.5x",
     grillz: Object.freeze({
         silver: Object.freeze({ perTooth: 100, label: "Silver", teeth: Object.freeze({ 1: 100, 6: 600, 12: 1200 }) }),
         gold10k: Object.freeze({ perTooth: 240, label: "10K Gold", teeth: Object.freeze({ 1: 240, 6: 1440, 12: 2880 }) }),
@@ -18,15 +18,45 @@ const catalog = Object.freeze({
         curved: 45,
         xl: 60
     }),
+    // Retail stone pricing: wholesale x 2.5, rounded UP to the next dollar,
+    // with a $5 minimum per stone. Source: owner's E GOLD USA wholesale sheet.
+    // Sizes are millimeters; values are per stone.
     naturalDiamonds: Object.freeze({
-        commercial: Object.freeze({ "1.3": 6, "1.5": 8, "2.0": 14, "3.0": 46 }),
-        si: Object.freeze({ "1.3": 7, "1.5": 9, "2.0": 18, "3.0": 58 }),
-        vs: Object.freeze({ "1.3": 8, "1.5": 12, "2.0": 23, "3.0": 74 }),
-        vvs: Object.freeze({ "1.3": 10, "1.5": 14, "2.0": 28, "3.0": 91 })
+        commercial: Object.freeze({
+            "1.3": 10, "1.4": 13, "1.5": 15, "1.6": 18, "1.7": 20, "1.8": 23,
+            "1.9": 28, "2.0": 30, "2.1": 38, "2.2": 40, "2.3": 48, "2.4": 55,
+            "2.5": 63, "2.6": 73, "2.7": 80, "2.8": 90, "2.9": 103, "3.0": 110
+        }),
+        si: Object.freeze({
+            "1.3": 13, "1.4": 15, "1.5": 18, "1.6": 23, "1.7": 25, "1.8": 30,
+            "1.9": 35, "2.0": 40, "2.1": 48, "2.2": 53, "2.3": 60, "2.4": 70,
+            "2.5": 70, "2.6": 93, "2.7": 100, "2.8": 115, "2.9": 128, "3.0": 140
+        }),
+        vs: Object.freeze({
+            "1.3": 15, "1.4": 20, "1.5": 25, "1.6": 30, "1.7": 33, "1.8": 40,
+            "1.9": 45, "2.0": 53, "2.1": 63, "2.2": 70, "2.3": 80, "2.4": 93,
+            "2.5": 95, "2.6": 118, "2.7": 130, "2.8": 148, "2.9": 165, "3.0": 180
+        }),
+        vvs: Object.freeze({
+            "1.3": 20, "1.4": 25, "1.5": 30, "1.6": 38, "1.7": 40, "1.8": 50,
+            "1.9": 58, "2.0": 65, "2.1": 78, "2.2": 88, "2.3": 103, "2.4": 115,
+            "2.5": 118, "2.6": 145, "2.7": 160, "2.8": 183, "2.9": 205, "3.0": 223
+        })
     }),
     alternativeStones: Object.freeze({
-        labGrownDiamond: Object.freeze({ "1.3": 3.3, "1.5": 4, "2.0": 6.3, "3.0": 18.7 }),
-        vvsMoissanite: Object.freeze({ "1.3": 2.5, "1.5": 2.8, "2.0": 3.7, "3.0": 7.6 }),
+        labGrownDiamond: Object.freeze({
+            "1.3": 5, "1.4": 5, "1.5": 5, "1.6": 6, "1.7": 7, "1.8": 9,
+            "1.9": 10, "2.0": 11, "2.1": 16, "2.2": 18, "2.3": 21, "2.4": 24,
+            "2.5": 24, "2.6": 28, "2.7": 30, "2.8": 35, "2.9": 39, "3.0": 42
+        }),
+        vvsMoissanite: Object.freeze({
+            "1.3": 5, "1.4": 5, "1.5": 5, "1.6": 5, "1.7": 5, "1.8": 5,
+            "1.9": 5, "2.0": 5, "2.1": 6, "2.2": 6, "2.3": 7, "2.4": 8,
+            "2.5": 8, "2.6": 10, "2.7": 10, "2.8": 12, "2.9": 13, "3.0": 14
+        }),
+        // CZ supplier pricing is quoted by point/shape/parcel, not a matching
+        // per-mm unit table. Keep the previously approved published CZ prices
+        // until its wholesale basis is reconciled separately.
         cubicZirconia: Object.freeze({ "1.3": 5, "1.5": 5, "2.0": 6, "3.0": 8 })
     }),
     // Owner decision Nov 20, 2026: cut charges are per set (one upper or lower
@@ -50,7 +80,8 @@ const catalog = Object.freeze({
         // Owner decision Nov 20, 2026: setting labor is already included.
         settingLabor: "included",
         // Owner decision Nov 20, 2026: rush ($150) replaces standard shipping ($60).
-        rushReplacesStandardShipping: true
+        rushReplacesStandardShipping: true,
+        stoneRetailFormula: "wholesale x 2.5, rounded up to next dollar; $5 minimum"
     }),
     products: Object.freeze({
         rushDelivery: 150,
