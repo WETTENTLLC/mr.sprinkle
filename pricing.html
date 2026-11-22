@@ -668,10 +668,8 @@
         const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
         const toothGroups = [
-            { jaw: 'upper', label: 'Upper right', teeth: Stone.upper.slice(0,8) },
-            { jaw: 'upper', label: 'Upper left', teeth: Stone.upper.slice(8) },
-            { jaw: 'lower', label: 'Lower right', teeth: Stone.lower.slice(0,8) },
-            { jaw: 'lower', label: 'Lower left', teeth: Stone.lower.slice(8) }
+            { jaw: 'upper', label: 'Upper jaw', teeth: Stone.upper.slice() },
+            { jaw: 'lower', label: 'Lower jaw', teeth: Stone.lower.slice() }
         ];
         const upperSet = new Set(Stone.upper);
         const lowerSet = new Set(Stone.lower);
@@ -748,27 +746,59 @@
             container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide-inner' }));
             group.teeth.forEach((number,index) => {
                 const t = (index - 7.5) / 7.5;
-                const theta = t * 1.35;
+                const theta = t * 1.34;
                 const x = 210 + 148 * Math.sin(theta);
-                const y = 35 + 122 * Math.cos(theta);
-                const centerDistance = Math.min(index, 15-index);
-                const dims = centerDistance <= 2 ? [31,28] :
-                    centerDistance <= 4 ? [27,28] :
-                    centerDistance === 5 ? [22,31] :
-                    centerDistance === 6 ? [22,29] : [25,32];
+                const y = 34 + 122 * Math.cos(theta);
+                const posteriorDistance = Math.min(index, 15-index);
+                const kind = posteriorDistance <= 2 ? 'molar' :
+                    posteriorDistance <= 4 ? 'premolar' :
+                    posteriorDistance === 5 ? 'canine' :
+                    posteriorDistance === 6 ? 'lateral-incisor' : 'central-incisor';
+                const dims = {
+                    molar:[31,27], premolar:[27,28], canine:[21,33],
+                    'lateral-incisor':[22,32], 'central-incisor':[25,34]
+                }[kind];
                 const w = dims[0], h = dims[1];
                 const tooth = svgNode('g', {
                     class:'tooth-choice arch-tooth',
-                    transform:'translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(t*25).toFixed(1)+')',
+                    transform:'translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(t*24).toFixed(1)+')',
                     role:'button', tabindex:'0', 'aria-pressed':'false', 'data-stone-target':'false',
-                    'aria-label':group.label+' tooth '+number, 'data-tooth':number, 'data-jaw':group.jaw
+                    'data-tooth-kind':kind,
+                    'aria-label':group.label+' '+kind.replace('-',' ')+' tooth '+number,
+                    'data-tooth':number, 'data-jaw':group.jaw
                 });
-                const path = 'M '+(-w*.33)+' '+(-h*.50)+' Q 0 '+(-h*.62)+' '+(w*.33)+' '+(-h*.50)+
-                    ' L '+(w*.48)+' '+(h*.18)+' Q '+(w*.42)+' '+(h*.50)+' 0 '+(h*.50)+
-                    ' Q '+(-w*.42)+' '+(h*.50)+' '+(-w*.48)+' '+(h*.18)+' Z';
+                let path;
+                if (kind === 'canine') {
+                    path = 'M '+(-w*.38)+' '+(-h*.47)+' Q '+(-w*.52)+' '+(-h*.18)+' '+(-w*.39)+' '+(h*.24)+
+                        ' Q 0 '+(h*.72)+' '+(w*.39)+' '+(h*.24)+' Q '+(w*.52)+' '+(-h*.18)+' '+(w*.38)+' '+(-h*.47)+' Z';
+                } else if (kind === 'molar') {
+                    path = 'M '+(-w*.39)+' '+(-h*.43)+' Q '+(-w*.57)+' '+(-h*.31)+' '+(-w*.48)+' '+(h*.10)+
+                        ' L '+(-w*.39)+' '+(h*.35)+' Q '+(-w*.22)+' '+(h*.54)+' 0 '+(h*.42)+
+                        ' Q '+(w*.22)+' '+(h*.54)+' '+(w*.39)+' '+(h*.35)+' L '+(w*.48)+' '+(h*.10)+
+                        ' Q '+(w*.57)+' '+(-h*.31)+' '+(w*.39)+' '+(-h*.43)+' Q 0 '+(-h*.55)+' '+(-w*.39)+' '+(-h*.43)+' Z';
+                } else if (kind === 'premolar') {
+                    path = 'M '+(-w*.34)+' '+(-h*.45)+' Q '+(-w*.52)+' '+(-h*.24)+' '+(-w*.42)+' '+(h*.21)+
+                        ' Q '+(-w*.28)+' '+(h*.52)+' 0 '+(h*.42)+' Q '+(w*.28)+' '+(h*.52)+' '+(w*.42)+' '+(h*.21)+
+                        ' Q '+(w*.52)+' '+(-h*.24)+' '+(w*.34)+' '+(-h*.45)+' Q 0 '+(-h*.55)+' '+(-w*.34)+' '+(-h*.45)+' Z';
+                } else {
+                    path = 'M '+(-w*.40)+' '+(-h*.45)+' Q '+(-w*.50)+' '+(-h*.28)+' '+(-w*.46)+' '+(h*.15)+
+                        ' Q '+(-w*.42)+' '+(h*.49)+' 0 '+(h*.49)+' Q '+(w*.42)+' '+(h*.49)+' '+(w*.46)+' '+(h*.15)+
+                        ' Q '+(w*.50)+' '+(-h*.28)+' '+(w*.40)+' '+(-h*.45)+' Q 0 '+(-h*.54)+' '+(-w*.40)+' '+(-h*.45)+' Z';
+                }
                 tooth.appendChild(svgNode('path',{d:path,class:'tooth-crown'}));
-                tooth.appendChild(svgNode('path',{d:'M '+(-w*.18)+' '+(-h*.30)+' Q 0 '+(-h*.40)+' '+(w*.18)+' '+(-h*.30),class:'tooth-shine'}));
-                tooth.appendChild(svgNode('text',{x:0,y:1,class:'tooth-number','text-anchor':'middle','dominant-baseline':'middle'},number));
+                tooth.appendChild(svgNode('path',{
+                    d:'M '+(-w*.20)+' '+(-h*.28)+' Q 0 '+(-h*.38)+' '+(w*.20)+' '+(-h*.28),
+                    class:'tooth-shine'
+                }));
+                if (kind === 'molar' || kind === 'premolar') {
+                    tooth.appendChild(svgNode('path',{
+                        d:kind === 'molar'
+                            ? 'M '+(-w*.22)+' '+(-h*.02)+' Q 0 '+(h*.08)+' '+(w*.22)+' '+(-h*.02)+' M 0 '+(-h*.18)+' L 0 '+(h*.23)
+                            : 'M 0 '+(-h*.20)+' L 0 '+(h*.24),
+                        class:'tooth-groove'
+                    }));
+                }
+                tooth.appendChild(svgNode('text',{x:0,y:2,class:'tooth-number','text-anchor':'middle','dominant-baseline':'middle'},number));
                 tooth.addEventListener('click', () => {
                     if (toothMode === 'stones') {
                         toggleStoneTarget(number);
