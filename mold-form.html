@@ -392,34 +392,49 @@
 
     <main>
         <div class="container">
-            <h1>Book an Appointment or Request a Quote</h1>
-            <div class="instructions">
+            <h1 id="bookingPageTitle">Book an Appointment or Request a Quote</h1>
+            <div class="instructions" id="appointmentLocationInfo">
                 <h2>Appointment-only location</h2>
                 <p><strong>Envy Kutz — Braids &amp; Locs</strong><br>275 E 4th St, Reno, NV 89501<br>Above Davidson's Distillery · Downtown Reno, Nevada</p>
                 <p>In-person appointments are available 10:00 AM–6:00 PM and are required. Requests are not confirmed until the team contacts you. Mobile mold service is separate and may be scheduled outside regular hours, subject to confirmation.</p>
                 <p>Rescheduling and cancellation instructions will be provided with your confirmed appointment.</p>
             </div>
 
+            <section id="configuratorBookingIntro" class="booking-design-summary" hidden>
+                <div class="booking-design-summary__eyebrow">YOUR GRILL MAKER DESIGN</div>
+                <h2>Review your design &amp; estimate</h2>
+                <p>Your selected teeth, metal, stone placement, enamel choices and any artwork are already attached to this booking. Nothing needs to be selected a second time.</p>
+                <div id="configuratorDesignText" class="booking-design-summary__details"></div>
+                <div id="bookingArtworkPreview" class="booking-artwork-preview" hidden>
+                    <img id="bookingArtworkImage" alt="Your uploaded custom grill artwork reference">
+                    <div>
+                        <strong>Custom artwork attached</strong>
+                        <p id="bookingArtworkNotes"></p>
+                        <small id="bookingArtworkFileName"></small>
+                    </div>
+                </div>
+            </section>
+
             <!-- Mold Kit Delivery Option -->
-            <div style="background:rgba(255,215,0,0.08);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:30px;text-align:center">
+            <div id="moldKitPanel" style="background:rgba(255,215,0,0.08);border:2px solid #FFD700;border-radius:15px;padding:25px;margin-bottom:30px;text-align:center">
                 <h2 style="margin-bottom:10px">📦 Can't Come In Person?</h2>
                 <p style="color:#ccc;margin-bottom:15px">A shipped mold kit is listed at <strong style="color:#FFD700">$40</strong>. Contact us to confirm shipping details before placing an order.</p>
                 <div id="moldKitBanner" style="display:none;background:linear-gradient(45deg,#4CAF50,#45a049);padding:12px;border-radius:8px;margin-bottom:15px;font-weight:bold">✅ Mold Kit Delivery Selected — $40 will be added to your order</div>
                 <button type="button" id="moldKitBtn" onclick="toggleMoldKit()" style="background:#FFD700;color:#000;padding:12px 30px;border:none;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer">📦 Add Mold Kit Delivery (+$40)</button>
                 <input type="hidden" id="moldKitDelivery" name="moldKitDelivery" value="no">
             </div>
-            <div style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);padding:30px 20px;border-radius:15px;margin-bottom:30px;text-align:center;box-shadow:0 0 20px rgba(255,215,0,0.4)">
+            <div id="giftCardBookingPanel" style="background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#c41e3a 100%);padding:30px 20px;border-radius:15px;margin-bottom:30px;text-align:center;box-shadow:0 0 20px rgba(255,215,0,0.4)">
                 <h2 style="color:#000;font-size:1.8rem;margin-bottom:10px">🎁 SKIP THE BOOKING? BUY A GIFT CARD! 🎁</h2>
                 <p style="color:#000;font-size:1em;margin-bottom:15px"><strong>Give the gift of luxe.</strong></p>
                 <a href="gift-card.html" style="background:#000;color:#FFD700;padding:12px 30px;font-size:1em;border-radius:8px;display:inline-block;text-decoration:none;font-weight:bold">🎉 BUY A GIFT CARD 🎉</a>
             </div>
             
-            <div class="instructions">
+            <div class="instructions" id="legacyToothInstructions">
                 <h2>Instructions</h2>
                 <p>For a grillz appointment request, click the teeth you are interested in. Tooth selection helps start the conversation and does not determine the final design or price.</p>
             </div>
             
-            <div class="tooth-legend">
+            <div class="tooth-legend" id="legacyToothLegend">
                 <h3 style="color: #FFD700; margin-bottom: 10px;">🦷 Tooth Guide</h3>
                 <div class="legend-grid">
                     <div class="legend-item"><strong>Upper Jaw (Top):</strong></div>
@@ -432,10 +447,10 @@
                 <p style="margin-top: 10px; font-size: 0.9em; color: #FFD700;">💡 <strong>Tip:</strong> Front teeth (11, 21, 41, 31) are most visible when you smile!</p>
             </div>
 
-            <div class="form-container">
-                <h2>Select Your Teeth</h2>
+            <div class="form-container" id="toothSelectionPanel">
+                <h2 id="legacyToothHeading">Select Your Teeth</h2>
                 
-                <div class="tooth-diagram">
+                <div class="tooth-diagram" id="legacyToothDiagram">
                     <div class="jaw-label">Upper Jaw</div>
                     <div class="jaw-row upper-jaw" aria-label="Upper jaw teeth">
                         <button class="tooth" type="button" data-tooth="18" aria-pressed="false" aria-label="Upper right tooth 18">18</button>
@@ -477,7 +492,7 @@
                     </div>
                 </div>
 
-                <div class="selected-teeth">
+                <div class="selected-teeth" id="legacySelectedTeeth">
                     <label>Selected Teeth:</label>
                     <div id="selectedTeethList">None selected</div>
                 </div>
@@ -498,7 +513,7 @@
                         <input type="tel" id="phone" name="phone" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="serviceType">
                         <label for="serviceType">What are you interested in?</label>
                         <select id="serviceType" name="serviceType" required>
                             <option value="grillz">Custom grillz</option>
@@ -510,7 +525,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="appointmentMode">
                         <label for="appointmentMode">Appointment type:</label>
                         <select id="appointmentMode" name="appointmentMode" required>
                             <option value="in-person">In person at Envy Kutz — Braids &amp; Locs, Reno</option>
@@ -518,7 +533,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="materialType">
                         <label for="materialType">Material preference (custom materials require a quote):</label>
                         <select id="materialType" name="materialType">
                             <option value="">Select Material</option>
@@ -533,17 +548,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="appointmentDate">Preferred appointment date (request only):</label>
+                        <label for="appointmentDate">Choose your appointment date:</label>
                         <input type="date" id="appointmentDate" name="appointmentDate">
                     </div>
 
                     <div class="form-group">
-                        <label for="preferredTime">Preferred appointment time (not a confirmed slot):</label>
-                        <input type="time" id="preferredTime" name="preferredTime" min="10:00" max="18:00">
-                        <small id="timePreferenceNote">In-person requests must be within regular hours, 10:00 AM–6:00 PM.</small>
+                        <label for="preferredTime">Choose your preferred appointment time:</label>
+                        <input type="time" id="preferredTime" name="preferredTime" min="10:00" max="17:30" step="1800">
+                        <small id="timePreferenceNote">Choose a preferred start time between 10:00 AM and 5:30 PM. We check the schedule and contact you within 24 hours to confirm availability. Your appointment is not booked until we confirm it.</small>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="budget">
                         <label for="budget">Budget Range:</label>
                         <select id="budget" name="budget">
                             <option value="">Select Budget Range</option>
@@ -556,7 +571,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="diamondType">
                         <label for="diamondType">Diamonds & Gems:</label>
                         <select id="diamondType" name="diamondType">
                             <option value="">No Diamonds/Gems</option>
@@ -571,7 +586,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="gemPlacement">
                         <label for="gemPlacement">Gem Placement Instructions:</label>
                         <textarea id="gemPlacement" name="gemPlacement" rows="3" placeholder="Describe where you want diamonds/gems placed on your selected teeth..."></textarea>
                     </div>
@@ -581,18 +596,18 @@
                         <p>To request enamel artwork, patterns, pictures, characters, lettering or logos, attach a clear reference image and describe the design below. Tell us exactly which teeth should receive it, the colors you want, and any details we should review. This work is individually reviewed and priced by quote; no custom artwork price is calculated here.</p>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="imageDescription">
                         <label for="imageDescription">Custom artwork / enamel design notes:</label>
                         <textarea id="imageDescription" name="imageDescription" rows="4" placeholder="Describe the artwork, enamel colors, exact teeth, placement, and any details you want us to quote..."></textarea>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="referenceImage">
                         <label for="referenceImage">Reference Image:</label>
                         <input type="file" id="referenceImage" name="referenceImage" accept="image/*" style="padding:0.75rem;cursor:pointer">
                         <p style="color:#ccc;font-size:0.85em;margin-top:0.5rem">Upload a clear photo or artwork reference. Custom artwork requests require one image. Maximum single-file size: 25 MB.</p>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" data-configurator-duplicate="design">
                         <label for="design">Additional Design Preferences:</label>
                         <textarea id="design" name="design" rows="4" placeholder="Any other design details, patterns, or special requests..."></textarea>
                     </div>
@@ -603,7 +618,7 @@
                             <label for="deliveryAddress">Street Address:</label>
                             <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Main St">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-configurator-duplicate="rushDelivery">
                             <label for="deliveryCity">City, State, ZIP:</label>
                             <input type="text" id="deliveryCity" name="deliveryCity" placeholder="Reno, NV 89501">
                         </div>
@@ -618,13 +633,13 @@
                         </select>
                     </div>
 
-                    <div class="instructions">
+                    <div class="instructions" id="legacyDepositInformation">
                         <h2>Deposit information</h2>
                         <p>Deposits are required for orders. A typical deposit is approximately 50%, but the amount varies by order. The exact amount and whether shipping is included will be confirmed after quote approval and before payment.</p>
                         <p>Owner-stated policy: deposits are final and nonrefundable unless Mr. Sprinkle is at fault or negligent. Final customer-facing wording is pending legal review. This request form does not collect payment.</p>
                     </div>
 
-                    <div class="form-group" style="background: rgba(255, 0, 0, 0.1); border: 2px solid #ff4444; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
+                    <div class="form-group" id="grillHealthAcknowledgment" style="background: rgba(255, 0, 0, 0.1); border: 2px solid #ff4444; border-radius: 10px; padding: 1.5rem; margin: 2rem 0;">
                         <h3 style="color: #ff4444; margin-bottom: 1rem;">⚠️ HEALTH & SAFETY ACKNOWLEDGMENT</h3>
                         <p style="margin-bottom: 1rem; color: #ffffff;">By checking this box, I acknowledge that:</p>
                         <ul style="margin-bottom: 1rem; padding-left: 20px; color: #ffffff;">
@@ -641,9 +656,9 @@
                     </div>
 
                     <div id="estimateBox" class="instructions" hidden>
-                        <h2>Your Grill Maker estimate</h2>
+                        <h2>Your design &amp; estimated quote</h2>
                         <div id="estimateBoxBody" aria-live="polite"></div>
-                        <p style="font-size:.9rem;color:#bbb">Recalculated here from published prices, and sent with your request exactly as shown. Changing your teeth, material, or rush choice above updates it. This is an estimate, not a payment or order confirmation.</p>
+                        <p style="font-size:.9rem;color:#bbb">This estimate is based on the design you created. Any enamel artwork or other custom work may need an individual quote. We will contact you within 24 hours to confirm appointment availability and your final quote. No payment is taken on this page.</p>
                     </div>
                     <input type="hidden" id="estimateSummary" name="estimateSummary">
                     <input type="hidden" id="estimateTotal" name="estimateTotal">
@@ -655,7 +670,7 @@
                     <input type="hidden" name="_subject" value="NEW MOLD REQUEST - Dental Form Submission">
                     
                     <p id="formStatus" role="status" aria-live="polite"></p>
-                    <button type="submit" class="submit-btn">Send Appointment / Quote Request</button>
+                    <button type="submit" id="moldFormSubmitButton" class="submit-btn">Request Appointment &amp; Confirm Design</button>
                 </form>
             </div>
         </div>
@@ -664,6 +679,7 @@
     <script src="form-to-admin.js"></script>
     <script src="assets/pricing-catalog.js"></script>
     <script src="assets/grill-estimate.js"></script>
+    <script src="assets/grill-artwork-handoff.js?v=20261122-booking-handoff-v1"></script>
     <script>
         let selectedTeeth = [];
 
