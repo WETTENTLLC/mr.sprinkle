@@ -626,7 +626,7 @@
                 const t=(index-7.5)/7.5, theta=t*1.35;
                 const x=210+148*Math.sin(theta), y=35+122*Math.cos(theta);
                 const centerDistance=Math.min(index,15-index);
-                const dims=centerDistance<=1?[24,30]:centerDistance===2?[22,28]:centerDistance===3?[22,30]:centerDistance<=5?[27,28]:[30,27];
+                const dims=centerDistance<=2?[31,28]:centerDistance<=4?[27,28]:centerDistance===5?[22,31]:centerDistance===6?[22,29]:[25,32];
                 const w=dims[0], h=dims[1];
                 const tooth=svgNode('g',{
                     class:'tooth-choice arch-tooth',
