@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Black Friday Takeover | Mr. Sprinkle × Envy Kutz Reno</title>
+  <meta name="description" content="The Mr. Sprinkle × Envy Kutz Black Friday Takeover: 50% off qualifying haircuts and complimentary diamond accents with eligible custom grillz. Limited-time Reno promotion.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://mrsprinklereno.com/black-friday.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mrsprinklereno.com/black-friday.html">
+  <meta property="og:title" content="The Black Friday Takeover | Mr. Sprinkle × Envy Kutz">
+  <meta property="og:description" content="50% off haircuts + complimentary diamond accents with eligible custom grillz. Book the special by Thanksgiving Day.">
+  <meta property="og:image" content="https://mrsprinklereno.com/assets/trans.png">
+  <meta name="theme-color" content="#090909">
+  <link rel="icon" href="assets/trans.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="black-friday.css?v=20261122">
+</head>
+<body>
+  <main class="bf-page">
+    <div class="bf-wrap">
+      <div class="bf-topline">✦ LIMITED-TIME RENO COLLABORATION ✦</div>
+      <div class="bf-brand">
+        <img src="assets/trans.png" alt="Original Mr. Sprinkle logo">
+        <div class="bf-brand-word">MR. SPRINKLE<br><span style="color:#aaa;font-size:.7rem;letter-spacing:.18em">×</span><br>ENVY KUTZ · BRAIDS &amp; LOCS</div>
+      </div>
+
+      <section class="bf-hero" id="bfActive">
+        <p class="bf-page-kicker">THE LOOK. THE ICE. THE MOMENT.</p>
+        <h1>THE BLACK FRIDAY <span>TAKEOVER</span></h1>
+        <p class="bf-hero-copy">Two ways to upgrade your look. Lock in a fresh cut with Envy Kutz or add a little extra shine to your custom grillz with Mr. Sprinkle.</p>
+        <div class="bf-hero-badge">BOOK THE SPECIAL BY THURSDAY · NOVEMBER 26, 2026</div>
+      </section>
+
+      <div class="bf-offer-grid">
+        <article class="bf-offer">
+          <p class="bf-offer-tag">ENVY KUTZ · BRAIDS &amp; LOCS</p>
+          <h2>THE FRESH CUT</h2>
+          <div class="bf-offer-value">50% OFF</div>
+          <p>Take 50% off any qualifying haircut when you book through this Black Friday promotion by Thanksgiving Day.</p>
+          <ul>
+            <li>Book by November 26, 2026</li>
+            <li>Pay the required deposit to secure your future appointment</li>
+            <li>Your haircut appointment can be scheduled for a later date with Envy Kutz</li>
+          </ul>
+          <a class="bf-page-button" href="sms:+15302140676?body=Hi%20Mr.%20Sprinkle!%20I%20want%20to%20claim%20the%20Black%20Friday%2050%25%20off%20haircut%20special%20with%20Envy%20Kutz.%20Please%20send%20me%20the%20deposit%20and%20booking%20steps.">CLAIM THE HAIRCUT DEAL →</a>
+        </article>
+
+        <article class="bf-offer">
+          <p class="bf-offer-tag">MR. SPRINKLE · CUSTOM GRILLZ</p>
+          <h2>ADD SOME ICE</h2>
+          <div class="bf-offer-value">FREE DIAMOND BONUS</div>
+          <p>Get your custom grillz with a complimentary diamond upgrade on an eligible grillz order.</p>
+          <ul>
+            <li>Choose five complimentary qualifying accent diamonds</li>
+            <li>Or ask about one larger accent stone</li>
+            <li>Final stone choice is confirmed with your design before the order is accepted</li>
+          </ul>
+          <a class="bf-page-button" href="pricing.html#configurator">DESIGN YOUR GRILLZ →</a>
+        </article>
+      </div>
+
+      <div class="bf-note"><strong style="color:#f0d28e">A quick note:</strong> The haircut offer applies to bookings made by November 26, 2026, with the required deposit paid to secure the appointment. The grillz bonus is available with eligible custom grillz designs; qualifying stone options and availability are confirmed during the design consultation. Custom setting or labor charges, if applicable, are quoted separately. Offers cannot be combined with other promotions unless confirmed by the providers.</div>
+
+      <section class="bf-steps" aria-label="How to claim the promotion">
+        <div class="bf-step"><b>01 · PICK YOUR SPECIAL</b><p>Choose the haircut offer, the grillz offer, or both.</p></div>
+        <div class="bf-step"><b>02 · SEND YOUR REQUEST</b><p>Use the claim button and tell us you are coming from the Black Friday page.</p></div>
+        <div class="bf-step"><b>03 · CONFIRM &amp; BOOK</b><p>We will confirm eligibility, deposit instructions, design details, and your next steps.</p></div>
+      </section>
+
+      <p class="bf-location"><strong>Envy Kutz — Braids &amp; Locs</strong><br>275 E 4th St, Reno, NV 89501<br><span>Appointments are coordinated in advance.</span></p>
+      <p class="bf-location">Questions? Text Mr. Sprinkle at <a href="sms:+15302140676" style="color:#e8c77f">(530) 214-0676</a>.</p>
+      <p class="bf-footer">Mr. Sprinkle · Your Smile. Your Style. Your Creation. ◆</p>
+    </div>
+    <section class="bf-wrap bf-expired" id="bfExpired" aria-live="polite">
+      <h1>THIS BLACK FRIDAY SPECIAL HAS ENDED</h1>
+      <p>Thank you for checking out the Mr. Sprinkle × Envy Kutz collaboration.</p>
+      <p><a class="bf-page-button" href="index.html">RETURN TO MR. SPRINKLE</a></p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      // Thanksgiving Day 2026, 11:59 PM Pacific Standard Time.
+      const expiresAt = new Date('2026-11-27T07:59:59Z').getTime();
+      if (Date.now() > expiresAt) {
+        document.getElementById('bfActive').hidden = true;
+        document.querySelector('.bf-offer-grid').hidden = true;
+        document.querySelector('.bf-note').hidden = true;
+        document.querySelector('.bf-steps').hidden = true;
+        document.querySelectorAll('.bf-location').forEach(el => el.hidden = true);
+        document.querySelector('.bf-footer').hidden = true;
+        document.getElementById('bfExpired').style.display = 'block';
+      }
+    })();
+  </script>
+</body>
+</html>
