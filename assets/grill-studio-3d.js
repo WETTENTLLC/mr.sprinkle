@@ -40,9 +40,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
     }
   }
 
+  const metalMaterialCache = {};
   function materialForMetal(key) {
-    const data = MATERIALS[key] || MATERIALS.silver;
-    return new THREE.MeshPhysicalMaterial({
+    const materialKey = MATERIALS[key] ? key : "silver";
+    if (metalMaterialCache[materialKey]) return metalMaterialCache[materialKey];
+    const data = MATERIALS[materialKey];
+    metalMaterialCache[materialKey] = new THREE.MeshPhysicalMaterial({
       color: data.color,
       metalness: data.metalness,
       roughness: data.roughness,
@@ -50,6 +53,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       clearcoatRoughness: 0.10,
       envMapIntensity: 1.35
     });
+    return metalMaterialCache[materialKey];
   }
 
   const enamelMaterial = new THREE.MeshPhysicalMaterial({
@@ -119,10 +123,10 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
   function toothDimensions(index) {
     const type = toothClass(index);
     const sizes = {
-      incisor:  [0.29, 0.35, 0.66],
-      canine:   [0.31, 0.36, 0.76],
-      premolar: [0.37, 0.43, 0.65],
-      molar:    [0.46, 0.49, 0.60]
+      incisor:  [0.15, 0.175, 0.33],
+      canine:   [0.155, 0.18, 0.38],
+      premolar: [0.185, 0.215, 0.325],
+      molar:    [0.23, 0.245, 0.30]
     };
     return { type, width: sizes[type][0], depth: sizes[type][1], height: sizes[type][2] };
   }
@@ -160,7 +164,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
     const baseZ = isUpper ? 0.70 : -0.70;
-    const crownZ = isUpper ? 0.28 : -0.28;
+    const crownZ = isUpper ? 0.40 : -0.40;
     const group = new THREE.Group();
     group.name = jaw + " dental stone cast";
 
@@ -313,12 +317,11 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       const isSelected = selected.has(item.number);
       item.cap.visible = isSelected;
       item.cap.material = capMaterial;
+      item.cap.scale.set(1.035, 1.045, 1.025);
       disposeChildMeshes(item.cap);
       if (isSelected) {
         if (lastConfig.design === "fangs" && ["13","23","33","43"].includes(item.number)) {
           item.cap.scale.set(1.04, 1.06, 1.18);
-        } else {
-          item.cap.scale.set(1.035, 1.045, 1.025);
         }
         addDesignDetails(item, lastConfig, capMaterial);
       }
@@ -395,7 +398,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.08;
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+ 
       renderer.domElement.setAttribute("role", "img");
       renderer.domElement.setAttribute("aria-label", "Interactive 3D dental stone model with selected grillz crowns");
       host.replaceChildren(renderer.domElement);
@@ -407,10 +410,8 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       camera.position.set(0, -6.8, 2.0);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      pmremGenerator.compileEquirectangularShader();
       const environment = new RoomEnvironment();
       scene.environment = pmremGenerator.fromScene(environment, 0.04).texture;
-      environment.dispose();
       pmremGenerator.dispose();
 
       scene.add(new THREE.HemisphereLight(0xffffff, 0x6a6256, 2.1));
@@ -485,6 +486,9 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
       }
 
       window.MrSprinkleGrill3D = Object.freeze({ update, setView });
+      window.addEventListener("mr-sprinkle:grill-config", function (event) {
+        if (event.detail) update(event.detail);
+      });
       host.dataset.ready = "true";
       host.setAttribute("aria-label", "Interactive three-dimensional grillz mockup");
       const fallback = document.getElementById("designPreview");
