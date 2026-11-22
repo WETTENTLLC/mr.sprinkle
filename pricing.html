@@ -249,7 +249,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="estimateStones">Stone selection</label>
+                        <label for="estimateStones">Default stone material</label>
                         <select id="estimateStones">
                             <option value="none">No stones</option>
                             <option value="natural">Natural diamond</option>
@@ -819,7 +819,7 @@
             document.getElementById('toothModeStones').setAttribute('aria-pressed', String(toothMode === 'stones'));
             document.getElementById('toothModeHint').textContent = toothMode === 'grill'
                 ? 'Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.'
-                : 'Stone mode: tap a selected grill tooth to include or remove it from the stone layout. Click a selected tooth in the 3D model to open its placement grid.';
+                : 'Stone mode: choose which selected teeth receive stones. Each tooth can use its own material, color and setting shape. Click a tooth in the mouth preview to edit its exact stone positions.';
         }
 
         function buildArchPicker(group) {
