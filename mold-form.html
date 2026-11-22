@@ -1037,7 +1037,12 @@
             // attach file if provided
             const fileInput = document.getElementById('referenceImage');
             if(fileInput.files[0]) formData.set('referenceImage', fileInput.files[0]);
+            const orderReference = 'MS-' + new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+            const submittedAt = new Date().toISOString();
             const payload = {
+                order_reference: orderReference,
+                submitted_at: submittedAt,
+                notification_email: 'wettentertainmentllc@gmail.com',
                 form_type: isConfiguratorBooking ? 'grill_design_appointment' : 'mold_order',
                 booking_flow: isConfiguratorBooking ? 'grill_maker_handoff' : 'general_service_form',
                 appointment_availability_status: isConfiguratorBooking ? 'pending_team_confirmation' : '',
@@ -1066,33 +1071,54 @@
                 pricing_version: formData.get('pricingVersion') || ''
             };
 
+            const statusMessage = document.getElementById('formStatus');
+            if (this.dataset.submitting === 'true') return;
+            this.dataset.submitting = 'true';
+            bookingSubmitButton.disabled = true;
+            bookingSubmitButton.textContent = 'Sending your request…';
+            statusMessage.textContent = 'Securely sending your design and order details. Please keep this page open.';
+
+            // Formspree is the confirmed primary order-delivery channel.
+            // Do not report success based on a no-cors spreadsheet request: browsers cannot verify that response.
+            formData.set('orderReference', orderReference);
+            formData.set('submittedAt', submittedAt);
+            formData.set('bookingFlow', payload.booking_flow);
+            formData.set('appointmentAvailabilityStatus', payload.appointment_availability_status);
+            formData.set('customerContactExpectation', payload.customer_contact_expectation);
+            formData.set('notificationEmail', 'wettentertainmentllc@gmail.com');
+            formData.set('orderDetails', JSON.stringify(payload, null, 2));
+            formData.set('_subject', `${isConfiguratorBooking ? 'NEW GRILL DESIGN APPOINTMENT' : 'NEW MR. SPRINKLE REQUEST'} — ${orderReference}`);
+
             try {
-                // Send to Formspree (email notification)
                 const formResponse = await fetch('https://formspree.io/f/myzpanyg', {
                     method: 'POST',
                     body: formData,
                     headers: {'Accept': 'application/json'}
                 });
-                if (!formResponse.ok) {
-                    throw new Error(`Appointment request submission failed (${formResponse.status}).`);
+                let responseBody = {};
+                try { responseBody = await formResponse.json(); } catch (_) {}
+                if (!formResponse.ok || responseBody.errors) {
+                    const detail = responseBody.errors && responseBody.errors.length
+                        ? responseBody.errors.map(error => error.message).join('; ')
+                        : `HTTP ${formResponse.status}`;
+                    throw new Error(`Order delivery was not confirmed: ${detail}`);
                 }
-
-                // Send to Google Sheets
-                await fetch('https://script.google.com/macros/s/AKfycby49GV35J-gjOajVa0XIQifzFdLNQw3rUcH-r03sYOK66Sw-yeR2e_gD0_cz0hak-aKag/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
-                });
 
                 if (isConfiguratorBooking && window.MrSprinkleArtworkHandoff) {
                     try { await window.MrSprinkleArtworkHandoff.clear(); } catch (_) {}
                 }
-                window.location.href = isConfiguratorBooking ? 'thank-you.html?booking=grillz' : 'thank-you.html';
+                window.location.href = isConfiguratorBooking
+                    ? `thank-you.html?booking=grillz&ref=${encodeURIComponent(orderReference)}`
+                    : `thank-you.html?ref=${encodeURIComponent(orderReference)}`;
             } catch(err) {
                 console.error(err);
-                document.getElementById('formStatus').textContent =
-                    'We could not submit your request. Please try again or text (530) 214-0676.';
+                this.dataset.submitting = 'false';
+                bookingSubmitButton.disabled = false;
+                bookingSubmitButton.textContent = isConfiguratorBooking
+                    ? 'Request My Appointment & Confirm Design'
+                    : 'Request Appointment & Confirm Design';
+                statusMessage.textContent =
+                    'Your request was not confirmed as delivered. Please try again or text (530) 214-0676. Your design has not been marked as submitted.';
             }
         });
         
