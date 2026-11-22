@@ -314,11 +314,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         if (isUpper) {
           const cupidPeaks = 0.105 * Math.exp(-Math.pow((Math.abs(u) - 0.19) / 0.105, 2));
           const cupidDip = 0.052 * Math.exp(-Math.pow(u / 0.075, 2));
-          outerZ = 1.28 * taper + cupidPeaks - cupidDip;
-          innerZ = 0.79 * taper;
+          outerZ = 1.15 * taper + cupidPeaks - cupidDip;
+          innerZ = 0.66 * taper;
         } else {
-          innerZ = -0.79 * taper;
-          outerZ = -1.34 * taper;
+          innerZ = -0.66 * taper;
+          outerZ = -1.22 * taper;
         }
         const z = outerZ + (innerZ - outerZ) * t;
         const fullness = Math.sin(Math.PI * t) * taper;
@@ -346,7 +346,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
   function createOralCavity() {
     const shape = new THREE.Shape();
-    shape.absellipse(0, 0, 2.12, 0.91, 0, Math.PI * 2, false, 0);
+    shape.absellipse(0, 0, 2.12, 0.82, 0, Math.PI * 2, false, 0);
     const geometry = new THREE.ShapeGeometry(shape, 88);
     geometry.rotateX(Math.PI / 2);
     const cavity = new THREE.Mesh(geometry, oralCavityMaterial);
@@ -384,8 +384,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       const taper = Math.pow(Math.max(0.0005, 1 - u * u), 0.43);
       const theta = Math.asin(Math.max(-0.995, Math.min(0.995, x / 2.08)));
       const y = -1.18 * Math.cos(theta) - 0.215;
-      upperWetlinePoints.push(new THREE.Vector3(x, y - 0.012, 0.79 * taper));
-      lowerWetlinePoints.push(new THREE.Vector3(x, y - 0.018, -0.79 * taper));
+      upperWetlinePoints.push(new THREE.Vector3(x, y - 0.012, 0.66 * taper));
+      lowerWetlinePoints.push(new THREE.Vector3(x, y - 0.018, -0.66 * taper));
     }
     const upperWetline = new THREE.Mesh(
       new THREE.TubeGeometry(new THREE.CatmullRomCurve3(upperWetlinePoints), 100, 0.022, 8, false),
@@ -402,7 +402,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
   function createJaw(jaw) {
     const isUpper = jaw === "upper";
-    const crownZ = isUpper ? 0.55 : -0.55;
+    const crownZ = isUpper ? 0.45 : -0.45;
     const group = new THREE.Group();
     group.name = jaw + " open dental-model gum arch";
 
