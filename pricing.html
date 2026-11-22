@@ -693,6 +693,9 @@
         const stoneStatus = document.getElementById('stoneLayoutStatus');
         const stoneCapacityNotice = document.getElementById('stoneCapacityNotice');
         const stoneGridTitle = document.getElementById('stoneGridTitle');
+        const stoneMaterialByTooth = document.getElementById('stoneMaterialByTooth');
+        const stoneColorPicker = document.getElementById('stoneColorPicker');
+        const stoneColorLabel = document.getElementById('stoneColorLabel');
         const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
         const toothGroups = [
@@ -706,6 +709,7 @@
         let stoneTargetsAuto = true;
         let activeStoneTooth = '';
         let stoneShape = 'round';
+        let stoneProfiles = {};
         let layoutState = Stone.createDefault([], 0);
         let moveSource = null;
         let editorOpen = false;
@@ -732,6 +736,55 @@
                 lower: teeth.filter(tooth => lowerSet.has(tooth)).length
             };
         }
+        function defaultStoneColor() { return '#f4f8ff'; }
+        function ensureStoneProfile(number) {
+            const key = String(number);
+            if (!stoneProfiles[key]) {
+                stoneProfiles[key] = {
+                    type:stones.value !== 'none' ? stones.value : 'natural',
+                    clarity:document.getElementById('estimateClarity').value || 'commercial',
+                    color:defaultStoneColor(),
+                    shape:stoneShape,
+                    manual:false
+                };
+            }
+            return stoneProfiles[key];
+        }
+        function activeStoneProfile() {
+            return activeStoneTooth ? ensureStoneProfile(activeStoneTooth) : null;
+        }
+        function profileHasStoneType(profile) {
+            return Boolean(profile && (profile.manual || stones.value !== 'none'));
+        }
+        const stoneColorNames = {
+            '#f4f8ff':'Diamond white','#f3a8c8':'Pink','#6bbcf2':'Ice blue',
+            '#8c72dc':'Purple','#dd5454':'Ruby red','#65bb86':'Emerald green',
+            '#e5bf70':'Champagne','#30343b':'Black'
+        };
+        function renderStoneProfileControls() {
+            const profile = activeStoneProfile();
+            const disabled = !profile;
+            stoneMaterialByTooth.disabled = disabled;
+            stoneColorPicker.disabled = disabled;
+            document.querySelectorAll('[data-stone-color]').forEach(button => {
+                button.disabled = disabled;
+                button.setAttribute('aria-pressed', String(Boolean(profile && button.dataset.stoneColor.toLowerCase() === profile.color.toLowerCase())));
+            });
+            if (!profile) {
+                stoneMaterialByTooth.value = 'natural';
+                stoneColorPicker.value = '#f4f8ff';
+                stoneColorLabel.textContent = 'Choose a stone tooth';
+            } else {
+                stoneMaterialByTooth.value = profile.type || 'natural';
+                stoneColorPicker.value = profile.color || '#f4f8ff';
+                stoneColorLabel.textContent = stoneColorNames[(profile.color || '').toLowerCase()] || 'Custom color';
+                stoneShape = profile.shape || 'round';
+                document.querySelectorAll('[data-stone-shape]').forEach(button => {
+                    button.setAttribute('aria-pressed', String(button.dataset.stoneShape === stoneShape));
+                });
+            }
+        }
+
         function currentLayoutKey() {
             return stoneTargets.join(',') + '|' + String(stoneCountInput.value || '0') + '|' +
                 String(document.getElementById('estimateStoneSize').value || '1.3');
@@ -900,9 +953,11 @@
             } else {
                 activeStoneTooth = '';
             }
-            document.getElementById('toggleStoneEditor').disabled = !stoneTargets.length || stones.value === 'none';
-            document.getElementById('autoPlaceStones').disabled = !stoneTargets.length || stones.value === 'none';
-            document.getElementById('removeSelectedStone').disabled = !moveSource || stones.value === 'none';
+            document.getElementById('toggleStoneEditor').disabled = !stoneTargets.length;
+            document.getElementById('autoPlaceStones').disabled = !stoneTargets.length;
+            document.getElementById('removeSelectedStone').disabled = !moveSource;
+            stoneTargets.forEach(ensureStoneProfile);
+            renderStoneProfileControls();
             syncArchVisuals();
         }
 
@@ -914,10 +969,12 @@
             stoneTargetsAuto = false;
             if (stoneTargets.includes(String(number))) {
                 stoneTargets = stoneTargets.filter(tooth => tooth !== String(number));
+                delete stoneProfiles[String(number)];
                 if (activeStoneTooth === String(number)) activeStoneTooth = stoneTargets[0] || '';
             } else {
                 stoneTargets = stoneTargets.concat(String(number));
                 activeStoneTooth = String(number);
+                ensureStoneProfile(String(number));
             }
             rebuildLayout();
             renderStoneTargets();
@@ -926,12 +983,14 @@
 
         function renderStoneEditor() {
             stoneEditor.hidden = !editorOpen;
-            if (!editorOpen || !activeStoneTooth || stones.value === 'none') {
+            if (!editorOpen || !activeStoneTooth) {
                 stoneGrid.replaceChildren();
                 return;
             }
             stoneGrid.replaceChildren();
             stoneGridTitle.textContent = 'Tooth ' + activeStoneTooth + ' · individual stone positions';
+            const activeProfile = activeStoneProfile();
+            const activeShape = activeProfile && activeProfile.shape ? activeProfile.shape : stoneShape;
             const occupied = new Set((layoutState.placements[activeStoneTooth] || []).map(Number));
             const allowedCells = new Set(Stone.allowedCells(layoutState.stoneSize));
             for (let cell = 0; cell < 25; cell++) {
@@ -939,7 +998,7 @@
                 button.type = 'button';
                 button.className = 'stone-slot';
                 button.dataset.cell = String(cell);
-                button.dataset.stoneShape = stoneShape;
+                button.dataset.stoneShape = activeShape;
                 button.dataset.stoneSize = layoutState.stoneSize;
                 button.setAttribute('role', 'gridcell');
                 button.setAttribute('aria-pressed', String(occupied.has(cell)));
@@ -979,8 +1038,9 @@
             }
             const placedOnTooth = (layoutState.placements[activeStoneTooth] || []).length;
             const totalPlaced = layoutState.placedCount;
-            document.getElementById('removeSelectedStone').disabled = !moveSource || stones.value === 'none';
-            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. Guides adapt to ' + layoutState.stoneSize + ' mm stones. Tap an empty guide to add, or select a gem then tap an empty guide to move it.', false);
+            document.getElementById('removeSelectedStone').disabled = !moveSource;
+            const materialLabel = activeProfile && activeProfile.type ? activeProfile.type : 'choose material';
+            setStatus('Tooth ' + activeStoneTooth + ': ' + placedOnTooth + ' stones · ' + totalPlaced + ' placed across ' + stoneTargets.length + ' selected stone teeth. ' + materialLabel + ' · ' + layoutState.stoneSize + ' mm guides. Tap an empty guide to add or a gem to move it.', false);
         }
 
         function handleStoneCellClick(cell, occupied) {
@@ -1007,8 +1067,8 @@
                 setStatus('Stone selected. Tap or drag it to an empty guide to reposition it.', false);
                 return;
             }
-            if (stones.value === 'none') {
-                setStatus('Choose a stone type before adding stones to the mockup.', true);
+            if (!profileHasStoneType(activeStoneProfile())) {
+                setStatus('Choose a stone material for tooth ' + activeStoneTooth + ' before adding stones.', true);
                 return;
             }
             layoutState = Stone.add(layoutState, activeStoneTooth, cell, layoutState.requestedCount);
@@ -1039,8 +1099,9 @@
             const requested = Math.max(0, Math.floor(Number(stoneCountInput.value) || 0));
             const capacity = stoneTargets.length * (layoutState.capacityPerTooth || Stone.capacityPerTooth);
             const placed = layoutState.placedCount;
-            if (!requested || stones.value === 'none') {
-                stoneCapacityNotice.textContent = 'Stone positions remain editable and the published estimate updates from the stone type and count.';
+            const anyStoneType = stones.value !== 'none' || stoneTargets.some(number => profileHasStoneType(ensureStoneProfile(number)));
+            if (!requested || !anyStoneType) {
+                stoneCapacityNotice.textContent = 'Choose which teeth receive stones, then assign a material and color to each tooth. The estimate will follow your exact layout.';
                 stoneCapacityNotice.classList.remove('is-warning');
                 return;
             }
@@ -1074,7 +1135,8 @@
                 stoneShape,
                 stoneTeeth:stoneTargets.slice(),
                 stoneLayout:layoutState.placements,
-                stoneLayoutSerialized:Stone.serialize(layoutState)
+                stoneLayoutSerialized:Stone.serialize(layoutState),
+                stoneProfiles:Object.fromEntries(stoneTargets.map(number => [number, Object.assign({}, ensureStoneProfile(number))]))
             };
         }
 
@@ -1135,6 +1197,16 @@
                 stoneTargets = filtered;
             }
             if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
+            Object.keys(stoneProfiles).forEach(number => {
+                if (!stoneTargets.includes(number)) delete stoneProfiles[number];
+            });
+            stoneTargets.forEach(number => {
+                const profile = ensureStoneProfile(number);
+                if (!profile.manual && stones.value !== 'none') {
+                    profile.type = stones.value;
+                    profile.clarity = document.getElementById('estimateClarity').value || 'commercial';
+                }
+            });
 
             const layoutKey = currentLayoutKey();
             if (!opts.preserveLayout && (targetChanged || selectedSignature !== lastSelectedSignature || layoutKey !== lastLayoutInputKey)) {
@@ -1143,7 +1215,11 @@
             lastSelectedSignature = selectedSignature;
 
             document.getElementById('fangExtensionField').hidden = design.value !== 'fangs';
-            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural';
+            const hasNaturalOnTooth = stoneTargets.some(number => {
+                const profile = ensureStoneProfile(number);
+                return profile.manual && profile.type === 'natural';
+            });
+            document.getElementById('estimateClarityField').hidden = stones.value !== 'natural' && !hasNaturalOnTooth;
             document.getElementById('estimateStoneSizeField').hidden = stones.value === 'none';
 
             const raw = readConfig();
@@ -1163,9 +1239,13 @@
             renderStoneCapacity();
             renderStoneEditor();
             renderDesignPreview(c);
-            document.getElementById('stoneCountHint').textContent = stones.value === 'none'
-                ? 'Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.'
-                : 'Estimate uses ' + c.stoneCount + ' stones at ' + c.size + ' mm. Stone setting labor is included in published pricing.';
+            const anyStoneType = stones.value !== 'none' || stoneTargets.some(number => {
+                const profile = ensureStoneProfile(number);
+                return profile.manual && profile.type !== 'none';
+            });
+            document.getElementById('stoneCountHint').textContent = !anyStoneType
+                ? 'Assign a stone material to each tooth receiving stones. Setting labor is included in published pricing.'
+                : 'Estimate uses ' + c.stoneCount + ' stones at ' + c.size + ' mm across your selected tooth profiles. Setting labor is included in published pricing.';
             renderEstimate(est);
             if (est.ok) {
                 quoteLink.href = 'mold-form.html?' + new URLSearchParams(E.toParams(c)).toString();
@@ -1240,12 +1320,41 @@
         document.querySelectorAll('[data-stone-shape]').forEach(button => {
             button.addEventListener('click', () => {
                 stoneShape = button.dataset.stoneShape === 'square' ? 'square' : 'round';
+                const profile = activeStoneProfile();
+                if (profile) { profile.shape = stoneShape; profile.manual = true; }
+                renderStoneEditor();
+                updateEstimate({ preserveLayout:true });
+            });
+        });
+        stoneMaterialByTooth.addEventListener('change', () => {
+            const profile = activeStoneProfile();
+            if (!profile) return;
+            profile.type = stoneMaterialByTooth.value;
+            profile.manual = true;
+            if (profile.type === 'natural') profile.clarity = document.getElementById('estimateClarity').value || 'commercial';
+            updateEstimate({ preserveLayout:true });
+        });
+        stoneColorPicker.addEventListener('input', () => {
+            const profile = activeStoneProfile();
+            if (!profile) return;
+            profile.color = stoneColorPicker.value.toLowerCase();
+            profile.manual = true;
+            updateEstimate({ preserveLayout:true });
+        });
+        document.querySelectorAll('[data-stone-color]').forEach(button => {
+            button.addEventListener('click', () => {
+                const profile = activeStoneProfile();
+                if (!profile) return;
+                profile.color = button.dataset.stoneColor.toLowerCase();
+                profile.manual = true;
+                renderStoneProfileControls();
                 updateEstimate({ preserveLayout:true });
             });
         });
         document.getElementById('stoneEditTooth').addEventListener('change', event => {
             activeStoneTooth = event.target.value;
             moveSource = null;
+            renderStoneProfileControls();
             renderStoneEditor();
         });
         document.getElementById('toggleStoneEditor').addEventListener('click', toggleStoneEditor);
