@@ -407,3 +407,12 @@
 }
 .grill-artwork-upload textarea:focus,.grill-artwork-upload input:focus{outline:2px solid var(--sprinkle-teal);outline-offset:1px}
 .grill-artwork-upload #grillArtworkHandoffStatus{margin:2px 0 0;font-size:.72rem;line-height:1.45}
+
+
+/* Reference-matched smile composition: show the complete two-arch grill on phones. */
+@media(max-width:620px){
+  .grill-3d-viewport--smile{
+    height:auto;min-height:0;aspect-ratio:1.28 / 1;
+    border-radius:12px;
+  }
+}
