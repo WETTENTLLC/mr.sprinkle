@@ -42,6 +42,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   let referenceSampleImage = null;
   let referenceSampleHits = null;
   let referenceSampleReady = false;
+  let isReferenceSampleMode = true;
 
   function setReferenceSampleVisible(visible) {
     if (referenceSampleImage) referenceSampleImage.style.display = visible && referenceSampleReady ? "block" : "none";
@@ -111,9 +112,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       })
       .then(function () {
         referenceSampleReady = true;
-        if (lastConfig && (!Array.isArray(lastConfig.teeth) || lastConfig.teeth.length === 16)) {
-          setReferenceSampleVisible(true);
-        }
+        setReferenceSampleVisible(isReferenceSampleMode);
       })
       .catch(function (error) {
         console.warn("Reference pavé sample could not be loaded; using live 3D preview.", error);
@@ -901,6 +900,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const requested = config || {};
     const requestedTeeth = Array.isArray(requested.teeth) ? requested.teeth.map(String) : [];
     const isSample = requestedTeeth.length === 0;
+    isReferenceSampleMode = isSample;
     lastConfig = isSample ? samplePaveConfig() : requested;
     setReferenceSampleVisible(isSample);
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
