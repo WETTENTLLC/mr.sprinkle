@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "brand": "Mr. Sprinkle",
+  "collection": "Digital Grillz Collection",
+  "status": "concept-preview",
+  "gameIntegration": {
+    "status": "not_available",
+    "authorizedOnly": true,
+    "notes": "Do not advertise as GTA VI compatible or sell as an in-game item until a documented, authorized integration path and platform requirements exist."
+  },
+  "exportTargets": [
+    "glTF/GLB",
+    "FBX",
+    "OBJ"
+  ],
+  "futureAssetRequirements": [
+    "source CAD or editable 3D master",
+    "game-specific scale and pivot metadata",
+    "optimized mesh and LOD variants per platform specification",
+    "PBR material and texture set",
+    "jaw/tooth attachment metadata",
+    "thumbnail renders",
+    "license and provenance record"
+  ],
+  "designs": [
+    {
+      "id": "MS-GOLD-SLUGS-001",
+      "name": "Classic Gold Slugs",
+      "metal": "14K yellow gold",
+      "stones": "none",
+      "status": "preview-concept"
+    },
+    {
+      "id": "MS-SILVER-SLUGS-001",
+      "name": "Polished Silver",
+      "metal": "silver",
+      "stones": "none",
+      "status": "preview-concept"
+    },
+    {
+      "id": "MS-GOLD-FANGS-001",
+      "name": "Gold Fangs",
+      "metal": "14K yellow gold",
+      "stones": "none",
+      "status": "preview-concept"
+    },
+    {
+      "id": "MS-BLACK-ICE-001",
+      "name": "Black Ice",
+      "metal": "silver",
+      "stones": "black",
+      "status": "preview-concept"
+    },
+    {
+      "id": "MS-DIAMOND-SMILE-001",
+      "name": "Diamond Smile",
+      "metal": "silver",
+      "stones": "clear lab-grown diamond look",
+      "status": "preview-concept"
+    },
+    {
+      "id": "MS-DEEP-CUT-001",
+      "name": "Deep Cut Silver",
+      "metal": "silver",
+      "stones": "none",
+      "status": "preview-concept"
+    }
+  ]
+}
