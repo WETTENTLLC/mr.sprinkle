@@ -70,6 +70,9 @@
   }
   function sync(){
     current={...current,metal:$("avatarMetal").value,coverage:$("avatarCoverage").value,jaw:$("avatarJaw").value,stones:$("avatarStones").value,detail:$("avatarDetail").value,finish:$("avatarFinish").value};
+    const activePreset=presets[$("avatarPreset").value]||presets["gold-slugs"];
+    const stillPreset=["metal","coverage","jaw","stones","detail"].every(key=>current[key]===activePreset[key]);
+    current.label=stillPreset?activePreset.label:"Custom Grillz";
     const spec=buildConfig();
     window.__MrSprinkleGrillConfig=spec;
     if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==="function")window.MrSprinkleGrill3D.update(spec);
