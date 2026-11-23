@@ -45,7 +45,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   let isReferenceSampleMode = true;
   const referenceSampleToothHits = Object.create(null);
 
-  // Keep the supplied photo as the permanent visual foundation during customization.
   // The supplied reference photo is a design reference only. Never place it over
   // the interactive renderer: customers must always see the live 3D mouth model.
   function setReferenceSampleVisible() {
