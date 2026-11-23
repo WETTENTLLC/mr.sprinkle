@@ -23,7 +23,7 @@
     </script>
     <script src="assets/grill-artwork-handoff.js?v=20261122-booking-handoff-v1"></script>
     <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
-    <script src="assets/pricing-catalog.js?v=20261122-wholesale-25x"></script>
+    <script src="assets/pricing-catalog.js?v=20261123-cz-color-enamel"></script>
     <script src="assets/grill-estimate.js"></script>
     <script src="assets/grill-preview.js"></script>
     <script type="application/ld+json">
@@ -92,7 +92,28 @@
         .product-card .info{padding:20px}
         .product-card h3{color:#FFD700;margin-bottom:10px}
         @media(max-width:768px){body{padding-top:130px}h1{font-size:1.8rem}.grid{grid-template-columns:1fr}}
-        .configurator{background:#111;border:1px solid #b99a5b;border-radius:16px;padding:24px}
+
+        .explore-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+        .explore-card{perspective:1100px;min-height:230px}
+        .explore-card__inner{position:relative;min-height:230px;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+        .explore-card.is-flipped .explore-card__inner{transform:rotateY(180deg)}
+        .explore-card__face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:22px;border:1px solid #b99a5b;border-radius:16px;background:linear-gradient(145deg,#201c12,#090909);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+        .explore-card__front h3,.explore-card__back h3{color:#e3c782;margin:0;font-size:1.25rem}
+        .explore-card__front p,.explore-card__back p{color:#d0c8b8;line-height:1.55}
+        .explore-card__back{transform:rotateY(180deg);background:linear-gradient(145deg,#282113,#101010)}
+        .explore-card__action{align-self:flex-start;border:1px solid #c9aa68;background:#c9aa68;color:#111;padding:10px 16px;border-radius:999px;font-weight:700;cursor:pointer}
+        .explore-card__action.secondary{background:transparent;color:#e3c782}
+        .explore-card__action:focus-visible{outline:2px solid #fff;outline-offset:3px}
+        .pricing-disclosure{margin:18px 0;border:1px solid #5c5037;border-radius:12px;background:#111}
+        .pricing-disclosure summary{padding:16px 18px;color:#e3c782;font-weight:700;cursor:pointer;list-style:none}
+        .pricing-disclosure summary::-webkit-details-marker{display:none}
+        .pricing-disclosure summary:after{content:"＋";float:right}
+        .pricing-disclosure[open] summary:after{content:"−"}
+        .pricing-disclosure__body{padding:0 18px 18px;color:#ccc;line-height:1.6}
+        .quote-pill{display:inline-block;border:1px solid #c9aa68;color:#e3c782;padding:4px 9px;border-radius:999px;font-size:.78rem}
+        @media(max-width:650px){.explore-grid{grid-template-columns:1fr}.explore-card,.explore-card__inner{min-height:215px}}
+        @media(prefers-reduced-motion:reduce){.explore-card__inner{transition:none}}
+\n        .configurator{background:#111;border:1px solid #b99a5b;border-radius:16px;padding:24px}
         .configurator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
         .configurator label{display:block;color:#d9c18a;font-weight:bold;margin:0 0 6px}
         .configurator select,.configurator input{width:100%;padding:11px;background:#1d1d1d;color:#fff;border:1px solid #71664e;border-radius:6px}
@@ -154,6 +175,61 @@
         <h1>Custom Grillz Pricing</h1>
         <p style="text-align:center;color:#bbb;margin-bottom:16px">Approved published prices are listed below. Custom designs and quote-only services are never assigned an unapproved price.</p>
         <p style="text-align:center;color:#bbb;margin-bottom:40px">Text (530) 214-0676 &nbsp;•&nbsp; Appointment only at Envy Kutz — Braids &amp; Locs, 275 E 4th St, Reno, NV 89501</p>
+
+        <section class="section" aria-labelledby="exploreOptionsHeading">
+            <div class="section-title" id="exploreOptionsHeading">Explore Your Options</div>
+            <p class="note">Start with the essentials. Flip a card to discover more details, then open the pricing sections below whenever you want the full breakdown.</p>
+            <div class="explore-grid">
+                <article class="explore-card" data-explore-card>
+                    <div class="explore-card__inner">
+                        <div class="explore-card__face explore-card__front">
+                            <div><span class="quote-pill">Start here</span><h3>Gold &amp; Silver Grillz</h3><p>Choose your teeth, metal, color, and finish. Select exactly the teeth you want—no fixed set required.</p></div>
+                            <button class="explore-card__action" type="button" aria-expanded="false">Flip to explore</button>
+                        </div>
+                        <div class="explore-card__face explore-card__back">
+                            <div><h3>Make it yours</h3><p>Explore individual teeth, upper or lower arches, bridges, fangs, and special finishes. Gold prices can change with the supplier market; final quotes are confirmed before production.</p></div>
+                            <button class="explore-card__action secondary" type="button" aria-expanded="true">Flip back</button>
+                        </div>
+                    </div>
+                </article>
+                <article class="explore-card" data-explore-card>
+                    <div class="explore-card__inner">
+                        <div class="explore-card__face explore-card__front">
+                            <div><span class="quote-pill">Add some shine</span><h3>Diamonds &amp; Color Stones</h3><p>Explore natural diamonds, lab-grown stones, moissanite, CZ, opal, and colored accents.</p></div>
+                            <button class="explore-card__action" type="button" aria-expanded="false">Flip to explore</button>
+                        </div>
+                        <div class="explore-card__face explore-card__back">
+                            <div><h3>Choose your look</h3><p>Mix stone styles and colors. CZ point sizes, special cuts, and parcels are priced separately from millimeter-based diamonds. Setting labor is included in listed stone prices.</p></div>
+                            <button class="explore-card__action secondary" type="button" aria-expanded="true">Flip back</button>
+                        </div>
+                    </div>
+                </article>
+                <article class="explore-card" data-explore-card>
+                    <div class="explore-card__inner">
+                        <div class="explore-card__face explore-card__front">
+                            <div><span class="quote-pill">Color &amp; detail</span><h3>Custom Enamel</h3><p>Add color and personality with a custom enamel finish.</p></div>
+                            <button class="explore-card__action" type="button" aria-expanded="false">Flip to explore</button>
+                        </div>
+                        <div class="explore-card__face explore-card__back">
+                            <div><h3>Estimated enamel pricing</h3><p><strong>$500–$1,250 estimated retail</strong><br>Final price depends on coverage, colors, and design complexity. Your exact price is confirmed in your quote.</p></div>
+                            <button class="explore-card__action secondary" type="button" aria-expanded="true">Flip back</button>
+                        </div>
+                    </div>
+                </article>
+                <article class="explore-card" data-explore-card>
+                    <div class="explore-card__inner">
+                        <div class="explore-card__face explore-card__front">
+                            <div><span class="quote-pill">One of a kind</span><h3>Custom Tooth Artwork</h3><p>Names, initials, logos, rocket ships, symbols, and original designs.</p></div>
+                            <button class="explore-card__action" type="button" aria-expanded="false">Flip to explore</button>
+                        </div>
+                        <div class="explore-card__face explore-card__back">
+                            <div><h3>Made from your idea</h3><p>Original artwork requires a design/setup quote. Send a reference image and description; we’ll review the artwork, complexity, and production requirements before confirming a price.</p></div>
+                            <button class="explore-card__action secondary" type="button" aria-expanded="true">Flip back</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
 
         <section class="section" id="stone-pricing" aria-labelledby="stonePricingHeading">
             <div class="section-title" id="stonePricingHeading">Stone &amp; Accent Pricing</div>
@@ -1671,6 +1747,15 @@
         bindBookingHandoff(quoteLink);
         bindBookingHandoff(document.getElementById('customArtworkQuoteLink'));
     })();
+    </script>
+    <script>
+    document.querySelectorAll('[data-explore-card]').forEach(card => {
+        const buttons = card.querySelectorAll('.explore-card__action');
+        buttons.forEach(button => button.addEventListener('click', () => {
+            const flipped = card.classList.toggle('is-flipped');
+            card.querySelectorAll('.explore-card__action').forEach(control => control.setAttribute('aria-expanded', String(flipped)));
+        }));
+    });
     </script>
     <script type="module" src="assets/grill-studio-3d.js?v=20261122-smile-viewer-v2-3"></script>
     <script src="assets/site-header.js"></script>
