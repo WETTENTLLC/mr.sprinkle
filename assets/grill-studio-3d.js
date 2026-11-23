@@ -43,12 +43,27 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   let referenceSampleHits = null;
   let referenceSampleReady = false;
   let isReferenceSampleMode = true;
+  const referenceSampleToothHits = Object.create(null);
 
-  function setReferenceSampleVisible(visible) {
-    if (referenceSampleImage) referenceSampleImage.style.display = visible && referenceSampleReady ? "block" : "none";
-    if (referenceSampleHits) referenceSampleHits.style.display = visible && referenceSampleReady ? "block" : "none";
-    if (renderer && renderer.domElement) renderer.domElement.style.opacity = visible && referenceSampleReady ? "0" : "1";
-    if (host) host.dataset.referenceSample = visible && referenceSampleReady ? "true" : "false";
+  // Keep the supplied photo as the permanent visual foundation during customization.
+  function setReferenceSampleVisible() {
+    const showReference = referenceSampleReady;
+    if (referenceSampleImage) referenceSampleImage.style.display = showReference ? "block" : "none";
+    if (referenceSampleHits) referenceSampleHits.style.display = showReference ? "block" : "none";
+    if (renderer && renderer.domElement) renderer.domElement.style.opacity = showReference ? "0" : "1";
+    if (host) host.dataset.referenceSample = showReference ? "true" : "false";
+  }
+
+  function syncReferenceSampleSelection(selected) {
+    Object.keys(referenceSampleToothHits).forEach(function (number) {
+      const hit = referenceSampleToothHits[number];
+      const active = selected.has(number);
+      hit.dataset.selected = active ? "true" : "false";
+      hit.style.borderColor = active ? "rgba(0,188,212,.98)" : "rgba(220,210,190,.18)";
+      hit.style.background = active ? "rgba(0,188,212,.08)" : "rgba(0,0,0,.34)";
+      hit.style.boxShadow = active ? "inset 0 0 0 1px rgba(0,188,212,.25), 0 0 12px rgba(0,188,212,.18)" : "none";
+      hit.setAttribute("aria-pressed", active ? "true" : "false");
+    });
   }
 
   function buildReferenceSampleLayer() {
@@ -90,8 +105,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         background: "transparent", cursor: "pointer", pointerEvents: "auto",
         WebkitTapHighlightColor: "transparent"
       });
-      hit.addEventListener("focus", function () { hit.style.borderColor = "rgba(0,188,212,.9)"; });
-      hit.addEventListener("blur", function () { hit.style.borderColor = "transparent"; });
+      referenceSampleToothHits[String(number)] = hit;
+      hit.setAttribute("aria-pressed", "false");
+      hit.addEventListener("focus", function () { hit.style.outline = "2px solid rgba(0,188,212,.95)"; });
+      hit.addEventListener("blur", function () { hit.style.outline = "none"; });
       hit.addEventListener("click", function () {
         if (typeof window.MrSprinkleGrillSelectTooth === "function") {
           window.MrSprinkleGrillSelectTooth(String(number));
@@ -112,10 +129,10 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       })
       .then(function () {
         referenceSampleReady = true;
-        setReferenceSampleVisible(isReferenceSampleMode);
+        setReferenceSampleVisible();
       })
       .catch(function (error) {
-        console.warn("Reference pavé sample could not be loaded; using live 3D preview.", error);
+        console.warn("Reference pavé sample could not be loaded; using the 3D fallback.", error);
         referenceSampleReady = false;
       });
   }
@@ -902,8 +919,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const isSample = requestedTeeth.length === 0;
     isReferenceSampleMode = isSample;
     lastConfig = isSample ? samplePaveConfig() : requested;
-    setReferenceSampleVisible(isSample);
+    setReferenceSampleVisible();
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
+    syncReferenceSampleSelection(isSample ? new Set() : selected);
     const look = MATERIALS[lastConfig.metal] || MATERIALS.silver;
     const capMaterial = materialForMetal(lastConfig.metal);
     const selectedList = Array.from(selected);
@@ -926,7 +944,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const materialLabel = look.label;
     const statusText = isSample
       ? "Sample full-pavé grill · select teeth to create your own design"
-      : count + " selected tooth" + (count === 1 ? "" : "s") + " · " + materialLabel;
+      : count + " selected tooth" + (count === 1 ? "" : "s") + " · reference smile retained · " + materialLabel;
     setStatus(statusText, false);
 
     const note = document.getElementById("grill3DMaterialNote");
@@ -938,7 +956,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         ? "Illustrative silver pavé sample across both arches. Your tooth selections, stone choices and estimate remain independent until you customize the design."
         : (lastConfig.metal === "quote"
           ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
-          : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
+          : "Reference-photo design preview · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
     }
     render();
   }
