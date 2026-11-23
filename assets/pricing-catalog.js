@@ -1,7 +1,7 @@
 (function (root) {
 const catalog = Object.freeze({
     // Bump this whenever any price or pricing rule changes.
-    version: "2026-11-22-wholesale-2.5x",
+    version: "2026-11-23-wholesale-2.5x-cz-color-enamel",
     grillz: Object.freeze({
         silver: Object.freeze({ perTooth: 100, label: "Silver", teeth: Object.freeze({ 1: 100, 6: 600, 12: 1200 }) }),
         gold10k: Object.freeze({ perTooth: 240, label: "10K Gold", teeth: Object.freeze({ 1: 240, 6: 1440, 12: 2880 }) }),
@@ -59,6 +59,27 @@ const catalog = Object.freeze({
         // until its wholesale basis is reconciled separately.
         cubicZirconia: Object.freeze({ "1.3": 5, "1.5": 5, "2.0": 6, "3.0": 8 })
     }),
+    // Owner wholesale sheet: CZ and specialty stones are point/parcel priced,
+    // so keep them separate from the mm-based diamond selector.
+    cubicZirconiaByPoint: Object.freeze({
+        standard: Object.freeze({ 2: 8, 4: 10, 6: 15, 8: 20, 10: 28, 15: 33, 20: 50, 25: 63, 50: 88 }),
+        specialCut: Object.freeze({ 10: 50, 12: 55, 15: 65, 20: 100, 25: 125, 35: 150, 50: 200 }),
+        roundParcel: Object.freeze({ small: 100, medium: 113, large: 125, xlarge: 150 }),
+        princessParcel: Object.freeze({ small: 100, medium: 113, large: 125, xlarge: 150 })
+    }),
+    specialtyStones: Object.freeze({
+        syntheticOpal: 300,
+        genuineOpal: 400,
+        motherOfPearl: 400,
+        ruby: 400,
+        sapphire: 400,
+        emerald: 400,
+        citrine: 400,
+        blueLapis: 400,
+        onyx: 400
+    }),
+    enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250, basis: "design complexity; estimate only" }),
+    customToothArtwork: Object.freeze({ quoteRequired: true, setupFee: null, examples: Object.freeze(["names", "initials", "logos", "rocket ships", "symbols", "original artwork"]), quoteInputs: Object.freeze(["reference artwork", "design complexity", "production requirements"]) }),
     // Owner decision Nov 20, 2026: cut charges are per set (one upper or lower
     // piece) and were doubled from the earlier $15 / $10 / $20 / $15.
     customCuts: Object.freeze({
@@ -81,7 +102,7 @@ const catalog = Object.freeze({
         settingLabor: "included",
         // Owner decision Nov 20, 2026: rush ($150) replaces standard shipping ($60).
         rushReplacesStandardShipping: true,
-        stoneRetailFormula: "wholesale x 2.5, rounded up to next dollar; $5 minimum"
+        stoneRetailFormula: "wholesale x 2.5, rounded up to next dollar; $5 minimum; point and parcel stones remain separately priced"
     }),
     products: Object.freeze({
         rushDelivery: 150,
