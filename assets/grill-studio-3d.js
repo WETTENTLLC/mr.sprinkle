@@ -974,7 +974,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
           renderer.setSize(width, height, false);
-          render();
+          setFrontCamera();
         });
         resizeObserver.observe(host);
       } else {
@@ -984,7 +984,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
           renderer.setSize(width, height, false);
-          render();
+          setFrontCamera();
         });
       }
 
