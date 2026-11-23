@@ -382,10 +382,13 @@
   .grill-3d-viewport--smile{height:470px;min-height:410px;border-radius:10px}
 }
 
-/* Keep the mouth wide and close like the approved product reference */
-.grill-3d-viewport--smile{height:440px;min-height:400px}
-@media(max-width:900px){.grill-3d-viewport--smile{height:410px;min-height:370px}}
-@media(max-width:620px){.grill-3d-viewport--smile{height:280px;min-height:260px}}
+/* Keep the complete smile large and legible on phones as well as desktop. */
+.grill-3d-viewport--smile{
+  height:560px;min-height:500px;
+  background:radial-gradient(ellipse at 50% 48%,#281317 0%,#10090b 66%,#070506 100%);
+}
+@media(max-width:900px){.grill-3d-viewport--smile{height:500px;min-height:450px}}
+@media(max-width:620px){.grill-3d-viewport--smile{height:390px;min-height:360px}}
 
 /* Artwork upload stays with the Grill Maker design through appointment booking */
 .grill-artwork-upload{
