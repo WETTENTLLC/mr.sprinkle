@@ -611,6 +611,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
       const jawSign = item.jaw === "upper" ? -1 : 1;
       const placedCells = new Set(targetCells);
+      const outlineMaterial = new THREE.MeshBasicMaterial({
+        color: 0x55565a,
+        transparent: true,
+        opacity: 0.42,
+        depthWrite: false,
+        side: THREE.DoubleSide
+      });
       // A quiet 5×5 seat map remains visible on every stone-enabled tooth.
       // Empty seats read as subtle squares; occupied seats become jeweled settings.
       for (let cell = 0; cell < 25; cell++) {
@@ -628,19 +635,12 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
         if (!isPlaced) {
           const edge = Math.max(0.0035, seatSize * 0.075);
-          const outlineMaterial = new THREE.MeshBasicMaterial({
-            color: 0x55565a,
-            transparent: true,
-            opacity: 0.42,
-            depthWrite: false,
-            side: THREE.DoubleSide
-          });
           const frontY = surfaceY - 0.006;
           const bars = [
-            [seatSize, edge, 0, 0],
-            [seatSize, edge, 0, seatSize - edge],
-            [edge, seatSize, -seatSize / 2 + edge / 2, seatSize / 2],
-            [edge, seatSize, seatSize / 2 - edge / 2, seatSize / 2]
+            [seatSize, edge, 0, -seatSize / 2 + edge / 2],
+            [seatSize, edge, 0, seatSize / 2 - edge / 2],
+            [edge, seatSize, -seatSize / 2 + edge / 2, 0],
+            [edge, seatSize, seatSize / 2 - edge / 2, 0]
           ];
           bars.forEach(function (bar) {
             const mesh = new THREE.Mesh(new THREE.BoxGeometry(bar[0], 0.004, bar[1]), outlineMaterial);
