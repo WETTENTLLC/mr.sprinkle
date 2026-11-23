@@ -419,7 +419,8 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /renderer\.domElement\.style\.opacity = "1"/);
   assert.match(model, /design reference only/);
   assert.doesNotMatch(model, /permanent visual foundation during customization/);
-  assert.match(model, /window\.MrSprinkleGrillSelectTooth\(String\(number\)\)/);
+  assert.match(model, /window\.MrSprinkleGrillSelectTooth\(toothNumber\)/);
+  assert.match(model, /renderer\.domElement\.addEventListener\("pointerup", handlePointerUp\)/);
   assert.match(model, /function makeBrilliantCutGeometry/);
   assert.match(model, /Four polished micro-prongs make each round stone read as a real setting/);
   assert.match(stoneCss, /height:390px;min-height:360px/);
