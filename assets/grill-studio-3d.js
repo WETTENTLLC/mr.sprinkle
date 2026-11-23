@@ -921,7 +921,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     lastConfig = isSample ? samplePaveConfig() : requested;
     setReferenceSampleVisible();
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
-    syncReferenceSampleSelection(selected);
+    syncReferenceSampleSelection(isSample ? new Set() : selected);
     const look = MATERIALS[lastConfig.metal] || MATERIALS.silver;
     const capMaterial = materialForMetal(lastConfig.metal);
     const selectedList = Array.from(selected);
