@@ -1,7 +1,7 @@
 (function (root) {
 const catalog = Object.freeze({
     // Bump this whenever any price or pricing rule changes.
-    version: "2026-11-23-wholesale-2.5x-cz-color",
+    version: "2026-11-23-wholesale-2.5x-cz-color-enamel",
     grillz: Object.freeze({
         silver: Object.freeze({ perTooth: 100, label: "Silver", teeth: Object.freeze({ 1: 100, 6: 600, 12: 1200 }) }),
         gold10k: Object.freeze({ perTooth: 240, label: "10K Gold", teeth: Object.freeze({ 1: 240, 6: 1440, 12: 2880 }) }),
@@ -78,7 +78,7 @@ const catalog = Object.freeze({
         blueLapis: 400,
         onyx: 400
     }),
-    enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250 }),
+    enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250, basis: "design complexity; estimate only" }),\n    customToothArtwork: Object.freeze({ quoteRequired: true, setupFee: null, examples: Object.freeze(["names", "initials", "logos", "rocket ships", "symbols", "original artwork"]), quoteInputs: Object.freeze(["reference artwork", "design complexity", "production requirements"]) }),
     // Owner decision Nov 20, 2026: cut charges are per set (one upper or lower
     // piece) and were doubled from the earlier $15 / $10 / $20 / $15.
     customCuts: Object.freeze({
