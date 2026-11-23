@@ -113,7 +113,8 @@
         .quote-pill{display:inline-block;border:1px solid #c9aa68;color:#e3c782;padding:4px 9px;border-radius:999px;font-size:.78rem}
         @media(max-width:650px){.explore-grid{grid-template-columns:1fr}.explore-card,.explore-card__inner{min-height:215px}}
         @media(prefers-reduced-motion:reduce){.explore-card__inner{transition:none}}
-\n        .configurator{background:#111;border:1px solid #b99a5b;border-radius:16px;padding:24px}
+
+        .configurator{background:#111;border:1px solid #b99a5b;border-radius:16px;padding:24px}
         .configurator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
         .configurator label{display:block;color:#d9c18a;font-weight:bold;margin:0 0 6px}
         .configurator select,.configurator input{width:100%;padding:11px;background:#1d1d1d;color:#fff;border:1px solid #71664e;border-radius:6px}
@@ -836,15 +837,23 @@
         const type = document.getElementById('clipType').value;
         const delivery = document.getElementById('clipDelivery').value;
         const deliveryNote = delivery === 'ship' ? 'Ship to me (shipping fee applies)' : 'Local pickup/drop-off';
-        let details = `Type: ${type === 'custom' ? 'Custom' : 'Standard'}\nPrice: ${type === 'custom' ? '$15' : '$10'}\nDelivery: ${deliveryNote}`;
+        let details = `Type: ${type === 'custom' ? 'Custom' : 'Standard'}
+Price: ${type === 'custom' ? '$15' : '$10'}
+Delivery: ${deliveryNote}`;
         if(type === 'custom'){
             const text = document.getElementById('clipText').value.trim().toUpperCase();
             const color = document.getElementById('clipColor').value;
             if(!text){ alert('Please enter your custom text (up to 10 letters).'); return; }
             if(!color){ alert('Please select a base color.'); return; }
-            details += `\nCustom Text: ${text}\nBase Color: ${color}`;
+            details += `
+Custom Text: ${text}
+Base Color: ${color}`;
         }
-        const body = encodeURIComponent(`Hi! I'd like to order an ATM Clip.\n\n${details}\n\nPlease let me know next steps!`);
+        const body = encodeURIComponent(`Hi! I'd like to order an ATM Clip.
+
+${details}
+
+Please let me know next steps!`);
         window.open(`https://mail.google.com/mail/?view=cm&to=mrsprinklereno@gmail.com&su=${encodeURIComponent('ATM Clip Order')}&body=${body}`);
     }
     </script>
