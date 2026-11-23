@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Grillz Avatar Studio | Mr. Sprinkle</title>
+  <meta name="description" content="Create a digital grillz look with Mr. Sprinkle. Customize your avatar's smile, metal finish, stones and tooth coverage, then save your design concept.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://mrsprinklereno.com/avatar-studio.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mr. Sprinkle Digital Grillz Avatar Studio">
+  <meta property="og:description" content="Build your digital smile. Choose your grillz style, customize the look and save your concept.">
+  <meta property="og:image" content="https://mrsprinklereno.com/assets/trans.png">
+  <link rel="icon" type="image/png" href="assets/trans.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/site-header.css">
+  <link rel="stylesheet" href="assets/avatar-studio.css?v=20261122-mvp1">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body class="ms-page-has-header avatar-studio-page">
+<header class="ms-site-header">
+  <div class="ms-header-inner">
+    <a class="ms-site-brand" href="index.html" aria-label="Mr. Sprinkle home"><img src="assets/trans.png" alt="Mr. Sprinkle"></a>
+    <button class="ms-menu-toggle" type="button" aria-expanded="false" aria-controls="ms-primary-nav" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <nav class="ms-primary-nav" id="ms-primary-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#services">Shop Grillz</a></li>
+        <li><a href="pricing.html#configurator">Grill Maker</a></li>
+        <li><a href="avatar-studio.html" aria-current="page">Avatar Studio</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a class="ms-nav-cta" href="mold-form.html">Book Appointment</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="avatar-shell">
+  <section class="avatar-hero">
+    <p class="avatar-eyebrow">MR. SPRINKLE DIGITAL LAB · EXPERIMENTAL STUDIO</p>
+    <h1>Build your <span>digital smile.</span></h1>
+    <p>Put your style on your avatar. Customize a grillz concept, preview the look in 3D, and save your design card for sharing or a physical custom order.</p>
+    <div class="avatar-hero-tags"><span>LIVE 3D SMILE PREVIEW</span><span>CUSTOM LOOKS</span><span>DESIGN EXPORT</span></div>
+  </section>
+
+  <section class="avatar-workspace" aria-label="Digital grillz avatar studio">
+    <div class="avatar-preview-column">
+      <div class="avatar-panel avatar-portrait-panel">
+        <div class="avatar-panel-head"><div><span class="avatar-step">01 / YOUR CHARACTER</span><h2>Avatar look</h2></div><span class="avatar-live-dot">LIVE PREVIEW</span></div>
+        <div class="avatar-portrait-stage">
+          <div class="avatar-orbit avatar-orbit-one"></div><div class="avatar-orbit avatar-orbit-two"></div>
+          <svg id="avatarPortrait" viewBox="0 0 420 470" role="img" aria-label="Stylized avatar portrait wearing your selected digital grillz">
+            <defs>
+              <linearGradient id="skinTone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9a17b"/><stop offset=".55" stop-color="#a96d50"/><stop offset="1" stop-color="#714334"/></linearGradient>
+              <linearGradient id="hoodieTone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#37383d"/><stop offset="1" stop-color="#111216"/></linearGradient>
+              <linearGradient id="lipTone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a95d5c"/><stop offset="1" stop-color="#71343b"/></linearGradient>
+              <linearGradient id="goldTone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".45" stop-color="#d9ad45"/><stop offset="1" stop-color="#8e5d18"/></linearGradient>
+              <linearGradient id="silverTone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="#c6ced9"/><stop offset="1" stop-color="#69717e"/></linearGradient>
+            </defs>
+            <ellipse cx="210" cy="454" rx="145" ry="23" fill="#000" opacity=".45"/>
+            <path d="M72 455 Q80 352 145 338 L275 338 Q340 352 348 455Z" fill="url(#hoodieTone)" stroke="#555" stroke-width="2"/>
+            <path d="M157 340 Q210 390 263 340 L286 455 L134 455Z" fill="#202126"/>
+            <path d="M155 324 L155 365 Q210 405 265 365 L265 324Z" fill="url(#skinTone)"/>
+            <path d="M115 171 Q105 82 210 70 Q315 82 305 171 L294 283 Q278 347 210 357 Q142 347 126 283Z" fill="url(#skinTone)" stroke="#57372d" stroke-width="2"/>
+            <path d="M111 184 Q82 92 149 52 Q211 14 280 52 Q342 94 309 191 L290 139 Q269 106 231 112 Q171 123 128 157Z" fill="#171719"/>
+            <path d="M122 150 Q135 86 204 81 Q277 75 299 143 Q276 118 244 117 Q185 114 143 156Z" fill="#27272b"/>
+            <path d="M145 190 Q170 175 190 189" fill="none" stroke="#38251f" stroke-width="7" stroke-linecap="round"/>
+            <path d="M231 189 Q254 175 276 190" fill="none" stroke="#38251f" stroke-width="7" stroke-linecap="round"/>
+            <ellipse cx="169" cy="203" rx="8" ry="10" fill="#171719"/><ellipse cx="253" cy="203" rx="8" ry="10" fill="#171719"/>
+            <circle cx="171" cy="200" r="2.5" fill="#fff"/><circle cx="255" cy="200" r="2.5" fill="#fff"/>
+            <path d="M211 204 Q198 244 208 250 Q217 255 227 248" fill="none" stroke="#87533f" stroke-width="5" stroke-linecap="round"/>
+            <path d="M169 278 Q210 259 251 278 Q210 317 169 278Z" fill="url(#lipTone)" stroke="#6a3537" stroke-width="2"/>
+            <path d="M174 278 Q210 270 246 278 Q210 289 174 278Z" fill="#f0d8c8" opacity=".9"/>
+            <g id="avatarTeeth"></g>
+            <path d="M168 280 Q210 312 252 280" fill="none" stroke="#54252b" stroke-width="3"/>
+            <path d="M137 247 Q144 264 153 267 M283 247 Q276 264 267 267" fill="none" stroke="#7d4d3d" stroke-width="2" opacity=".5"/>
+            <text x="210" y="430" text-anchor="middle" fill="#d8c28d" font-size="11" letter-spacing="4">MR. SPRINKLE DIGITAL LAB</text>
+          </svg>
+          <div class="avatar-stage-label"><span>CHARACTER PREVIEW</span><strong id="avatarStyleLabel">14K GOLD · CLASSIC SLUGS</strong></div>
+        </div>
+        <p class="avatar-panel-note">Stylized character preview for exploring your look. This is not a GTA VI character export or an exact likeness of a game avatar.</p>
+      </div>
+
+      <div class="avatar-panel avatar-3d-panel">
+        <div class="avatar-panel-head"><div><span class="avatar-step">02 / PRODUCT DETAIL</span><h2>3D smile preview</h2></div><span class="avatar-live-dot">INTERACTIVE</span></div>
+        <div id="grill3DViewport" class="avatar-3d-viewport" aria-label="Interactive 3D mouth preview showing the selected grillz design"></div>
+        <p id="grill3DStatus" class="avatar-status" role="status" aria-live="polite">Loading the 3D smile preview…</p>
+        <p id="grill3DMaterialNote" class="avatar-panel-note">Concept visualization only. Final physical fit and contours are confirmed from an approved mold.</p>
+        <div id="designPreview" class="avatar-fallback">Your 3D smile preview will appear here. If 3D is unavailable, your character preview remains visible.</div>
+      </div>
+    </div>
+
+    <aside class="avatar-panel avatar-controls">
+      <div class="avatar-panel-head"><div><span class="avatar-step">03 / MAKE IT YOURS</span><h2>Customize your grillz</h2></div></div>
+      <div class="avatar-control-group">
+        <label for="avatarPreset">Start with a style</label>
+        <select id="avatarPreset">
+          <option value="gold-slugs">Classic Gold Slugs</option>
+          <option value="silver-slugs">Polished Silver</option>
+          <option value="gold-fangs">Gold Fangs</option>
+          <option value="black-ice">Black Ice</option>
+          <option value="diamond-smile">Diamond Smile</option>
+          <option value="deep-cut">Deep Cut Silver</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarMetal">Metal appearance</label>
+        <select id="avatarMetal">
+          <option value="gold14k">14K Yellow Gold</option>
+          <option value="silver">Polished Silver</option>
+          <option value="gold10k">10K Yellow Gold</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarCoverage">Teeth coverage</label>
+        <select id="avatarCoverage">
+          <option value="4">4 teeth</option>
+          <option value="6" selected>6 teeth</option>
+          <option value="8">8 teeth</option>
+          <option value="full">Full upper arch</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarJaw">Placement</label>
+        <select id="avatarJaw">
+          <option value="upper" selected>Upper teeth</option>
+          <option value="lower">Lower teeth</option>
+          <option value="both">Upper + lower</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarStones">Stone style</label>
+        <select id="avatarStones">
+          <option value="none">No stones</option>
+          <option value="clear">Clear / diamond look</option>
+          <option value="black">Black stones</option>
+          <option value="pink">Pink stones</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarDetail">Metal detailing</label>
+        <select id="avatarDetail">
+          <option value="none">Smooth finish</option>
+          <option value="centerSplit">Center split</option>
+          <option value="deepBar">Deep / bar cuts</option>
+          <option value="openFace">Open-face detail</option>
+          <option value="diamondDust">Diamond-dust texture</option>
+        </select>
+      </div>
+      <div class="avatar-control-group">
+        <label for="avatarFinish">Character style</label>
+        <select id="avatarFinish">
+          <option value="street">Streetwear</option>
+          <option value="clean">Clean look</option>
+        </select>
+      </div>
+      <div class="avatar-spec-card">
+        <span>YOUR DIGITAL SPEC</span>
+        <strong id="avatarSpecTitle">Classic Gold Slugs</strong>
+        <p id="avatarSpecSummary">6 upper teeth · 14K yellow gold · no stones</p>
+        <small>Digital concept only — not a retail quote.</small>
+      </div>
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-primary" id="saveAvatarPng">Save avatar image</button>
+        <button type="button" class="avatar-btn avatar-btn-secondary" id="saveAvatarSpec">Download design file</button>
+        <a class="avatar-btn avatar-btn-outline" id="requestAvatarQuote" href="sms:+15302140676">Request this design</a>
+      </div>
+    </aside>
+  </section>
+
+  <section class="avatar-future-panel">
+    <div><span class="avatar-step">BUILT FOR WHAT'S NEXT</span><h2>Made for your world. Ready for the next level.</h2><p>We're building a reusable digital grillz catalog with structured design specifications and 3D preview assets. If authorized game-creator tools or accessory integrations become available, these designs can be prepared for the supported format.</p></div>
+    <div class="avatar-future-stamp"><span>MR.</span><strong>SPRINKLE</strong><span>DIGITAL COLLECTION / 001</span></div>
+  </section>
+  <p class="avatar-disclaimer">Mr. Sprinkle is an independent custom jewelry brand and is not affiliated with, endorsed by, or sponsored by Rockstar Games or Grand Theft Auto. This studio currently creates shareable design concepts and physical-order requests; it does not upload accessories into GTA VI or any other game.</p>
+</main>
+
+<footer class="avatar-footer"><a href="index.html">Mr. Sprinkle</a><span>Custom Grillz · Jewelry · Digital Design</span><a href="pricing.html#configurator">Open the Grill Maker</a></footer>
+<script src="assets/site-header.js"></script>
+<script src="assets/avatar-studio.js?v=20261122-mvp1"></script>
+<script type="module" src="assets/grill-studio-3d.js?v=20261122-smile-viewer-v2-3"></script>
+</body>
+</html>
