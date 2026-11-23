@@ -14,11 +14,13 @@
   const stoneNames={none:"no stones",clear:"clear stones",black:"black stones",pink:"pink stones"};
   const frontUpper=["13","12","11","21","22","23","14","24"];
   const frontLower=["43","42","41","31","32","33","44","34"];
+  const fullUpper=["18","17","16","15","14","13","12","11","21","22","23","24","25","26","27","28"];
+  const fullLower=["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"];
   const metalColors={gold14k:"#d9ad45",gold10k:"#b9832e",silver:"#c6ced9"};
   let current={...presets["gold-slugs"]};
-  function countList(value){return value==="full"?8:Number(value)||6}
+  function countList(value){return value==="full"?16:Number(value)||6}
   function teethFor(jaw,count){
-    const upper=frontUpper.slice(0,count),lower=frontLower.slice(0,count);
+    const upper=count===16?fullUpper:frontUpper.slice(0,count),lower=count===16?fullLower:frontLower.slice(0,count);
     return jaw==="both"?upper.concat(lower):jaw==="lower"?lower:upper;
   }
   function stoneColor(){return current.stones==="black"?"#17191d":current.stones==="pink"?"#df72a5":"#f4f8ff"}
@@ -54,6 +56,9 @@
       heart.setAttribute("d","M210 286 C201 278 190 282 210 299 C230 282 219 278 210 286Z");heart.setAttribute("fill","none");heart.setAttribute("stroke",color);heart.setAttribute("stroke-width",2);group.appendChild(heart);
     }
     $("avatarStyleLabel").textContent=(metalNames[current.metal]||"Custom metal").toUpperCase()+" · "+current.label.toUpperCase();
+    $("avatarPortrait").dataset.finish=current.finish||"street";
+    $("avatarHoodie").setAttribute("fill",current.finish==="clean"?"#263344":"url(#hoodieTone)");
+    $("avatarStageLabel").querySelector("span").textContent=current.finish==="clean"?"CLEAN AVATAR PREVIEW":"STREETWEAR AVATAR PREVIEW";
   }
   function buildConfig(){
     const teeth=teethFor(current.jaw,countList(current.coverage));
@@ -64,7 +69,7 @@
     return {teeth,metal:current.metal,design:current.design==="fangs"?"fangs":"classic",stones,stoneCount:stones==="none"?0:teeth.length*5,size:"1.3",stoneShape:"round",stoneTeeth:stones==="none"?[]:teeth,stoneLayout,stoneProfiles,cuts:current.detail==="none"?[]:[current.detail]};
   }
   function sync(){
-    current={...current,metal:$("avatarMetal").value,coverage:$("avatarCoverage").value,jaw:$("avatarJaw").value,stones:$("avatarStones").value,detail:$("avatarDetail").value};
+    current={...current,metal:$("avatarMetal").value,coverage:$("avatarCoverage").value,jaw:$("avatarJaw").value,stones:$("avatarStones").value,detail:$("avatarDetail").value,finish:$("avatarFinish").value};
     const spec=buildConfig();
     window.__MrSprinkleGrillConfig=spec;
     if(window.MrSprinkleGrill3D&&typeof window.MrSprinkleGrill3D.update==="function")window.MrSprinkleGrill3D.update(spec);
@@ -83,7 +88,7 @@
   $("avatarPreset").addEventListener("change",()=>applyPreset($("avatarPreset").value));
   controls.slice(1).forEach(id=>$(id).addEventListener("change",sync));
   $("saveAvatarSpec").addEventListener("click",()=>{
-    const payload={brand:"Mr. Sprinkle",schemaVersion:"1.0.0",designId:"MS-"+current.label.toUpperCase().replace(/[^A-Z0-9]+/g,"-"),createdAt:new Date().toISOString(),label:current.label,avatar:{style:$("avatarFinish").value},configuration:buildConfig(),commercialStatus:"concept-only-no-game-integration",notes:"Digital concept only. Confirm physical materials, stone setting, fit and final price separately. No GTA VI or Rockstar integration is included."};
+    const payload={brand:"Mr. Sprinkle",schemaVersion:"1.0.0",designId:"MS-"+current.label.toUpperCase().replace(/[^A-Z0-9]+/g,"-"),createdAt:new Date().toISOString(),label:current.label,avatar:{style:current.finish||"street"},configuration:buildConfig(),commercialStatus:"concept-only-no-game-integration",notes:"Digital concept only. Confirm physical materials, stone setting, fit and final price separately. No GTA VI or Rockstar integration is included."};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="mr-sprinkle-digital-grillz-design.json";a.click();URL.revokeObjectURL(url);
   });
   $("saveAvatarPng").addEventListener("click",()=>{
