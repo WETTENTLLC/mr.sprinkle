@@ -944,7 +944,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const materialLabel = look.label;
     const statusText = isSample
       ? "Sample full-pavé grill · select teeth to create your own design"
-      : count + " selected tooth" + (count === 1 ? "" : "s") + " · " + materialLabel;
+      : count + " selected tooth" + (count === 1 ? "" : "s") + " · reference smile retained · " + materialLabel;
     setStatus(statusText, false);
 
     const note = document.getElementById("grill3DMaterialNote");
@@ -956,7 +956,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         ? "Illustrative silver pavé sample across both arches. Your tooth selections, stone choices and estimate remain independent until you customize the design."
         : (lastConfig.metal === "quote"
           ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
-          : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
+          : "Reference-photo design preview · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
     }
     render();
   }
