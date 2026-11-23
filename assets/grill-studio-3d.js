@@ -185,11 +185,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
 
   function toothClass(index) {
+    // The arch is ordered from the back molars toward the midline and back
+    // out again. Distance 7 is the central incisor; distance 0 is the last molar.
     const centerDistance = Math.min(index, 15 - index);
-    if (centerDistance <= 2) return "molar";
-    if (centerDistance <= 4) return "premolar";
+    if (centerDistance >= 6) return "incisor";
     if (centerDistance === 5) return "canine";
-    return "incisor";
+    if (centerDistance >= 3) return "premolar";
+    return "molar";
   }
 
   function toothDimensions(index) {
