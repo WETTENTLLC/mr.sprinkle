@@ -78,7 +78,8 @@ const catalog = Object.freeze({
         blueLapis: 400,
         onyx: 400
     }),
-    enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250, basis: "design complexity; estimate only" }),\n    customToothArtwork: Object.freeze({ quoteRequired: true, setupFee: null, examples: Object.freeze(["names", "initials", "logos", "rocket ships", "symbols", "original artwork"]), quoteInputs: Object.freeze(["reference artwork", "design complexity", "production requirements"]) }),
+    enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250, basis: "design complexity; estimate only" }),
+    customToothArtwork: Object.freeze({ quoteRequired: true, setupFee: null, examples: Object.freeze(["names", "initials", "logos", "rocket ships", "symbols", "original artwork"]), quoteInputs: Object.freeze(["reference artwork", "design complexity", "production requirements"]) }),
     // Owner decision Nov 20, 2026: cut charges are per set (one upper or lower
     // piece) and were doubled from the earlier $15 / $10 / $20 / $15.
     customCuts: Object.freeze({
