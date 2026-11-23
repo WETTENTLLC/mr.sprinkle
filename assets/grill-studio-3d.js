@@ -530,6 +530,55 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     );
   }
 
+  // A faceted brilliant-cut stone with a flat table, crown facets and pavilion.
+  // Its table faces the viewer (negative Y in this model's local coordinates).
+  function makeBrilliantCutGeometry(diameter) {
+    const r = diameter * 0.5;
+    const segments = 8;
+    const vertices = [];
+    const indices = [];
+    const rings = [
+      { radius: r * 0.48, y: -diameter * 0.48, offset: 0 },
+      { radius: r,        y: -diameter * 0.16, offset: Math.PI / segments },
+      { radius: r * 0.91, y:  diameter * 0.08, offset: 0 },
+      { radius: r * 0.34, y:  diameter * 0.36, offset: Math.PI / segments }
+    ];
+    rings.forEach(function (ring) {
+      for (let i = 0; i < segments; i++) {
+        const a = (i / segments) * Math.PI * 2 + ring.offset;
+        vertices.push(Math.cos(a) * ring.radius, ring.y, Math.sin(a) * ring.radius);
+      }
+    });
+    const tableCenter = vertices.length / 3;
+    vertices.push(0, -diameter * 0.53, 0);
+    const culet = vertices.length / 3;
+    vertices.push(0, diameter * 0.46, 0);
+    for (let i = 0; i < segments; i++) {
+      const n = (i + 1) % segments;
+      indices.push(tableCenter, n, i);
+      for (let ring = 0; ring < rings.length - 1; ring++) {
+        const a = ring * segments + i;
+        const b = ring * segments + n;
+        const c = (ring + 1) * segments + n;
+        const d = (ring + 1) * segments + i;
+        indices.push(a, b, d, b, c, d);
+      }
+      const a = (rings.length - 1) * segments + i;
+      const b = (rings.length - 1) * segments + n;
+      indices.push(a, b, culet);
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  const prongMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xe2e5e9, metalness: 0.96, roughness: 0.16,
+    clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.8
+  });
+
   function addEnamelOverlay(item, profile) {
     if (!profile || !/^#[0-9a-f]{6}$/i.test(String(profile.color || ""))) return;
     const cap = item.cap;
@@ -670,15 +719,34 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
         const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
-          : new THREE.OctahedronGeometry(fitDiameter * 0.56, 1);
+          : makeBrilliantCutGeometry(fitDiameter);
         const gem = new THREE.Mesh(shape, stoneMaterial);
         const gemPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth - gemHalfDepth, z * cap.scale.z);
         gem.position.copy(gemPoint);
         gem.scale.set(1 / cap.scale.x, 1 / cap.scale.y, 1 / cap.scale.z);
-        if (stoneShape !== "square") gem.scale.y *= 0.48;
+        if (stoneShape !== "square") gem.scale.y *= 0.92;
         gem.userData.designDetail = true;
         gem.userData.stoneCell = cell;
+        gem.castShadow = true;
+        gem.receiveShadow = true;
         cap.add(gem);
+
+        // Four polished micro-prongs make each round stone read as a real setting.
+        if (stoneShape !== "square") {
+          const prongRadius = Math.max(0.006, fitDiameter * 0.075);
+          const prongGeo = new THREE.SphereGeometry(prongRadius, 8, 6);
+          [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function (corner) {
+            const prong = new THREE.Mesh(prongGeo, metalMaterial);
+            const px = x + corner[0] * fitDiameter * 0.34;
+            const pz = z + corner[1] * fitDiameter * 0.34;
+            const py = surfaceY - mountDepth - fitDiameter * 0.30;
+            prong.position.copy(capLocalPoint(cap, px * cap.scale.x, py, pz * cap.scale.z));
+            prong.scale.set(1 / cap.scale.x, 1 / cap.scale.y, 1 / cap.scale.z);
+            prong.userData.designDetail = true;
+            prong.userData.stoneCell = cell;
+            cap.add(prong);
+          });
+        }
       }
     }
 
@@ -771,7 +839,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function setFrontCamera() {
     if (!camera) return;
     camera.up.set(0, 0, 1);
-    camera.position.set(0.12, -6.45, 0.95);
+    camera.position.set(0.08, -5.55, 0.78);
     camera.lookAt(0, -0.12, 0);
     camera.updateProjectionMatrix();
     render();
@@ -821,7 +889,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       scene.background = new THREE.Color(0x090607);
 
       camera = new THREE.PerspectiveCamera(34, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0.12, -6.45, 0.95);
+      camera.position.set(0.08, -5.55, 0.78);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
