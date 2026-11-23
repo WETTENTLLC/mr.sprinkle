@@ -607,29 +607,56 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const targetCells = stoneTargets.includes(item.number) && Array.isArray(placements[item.number])
       ? placements[item.number].map(Number).filter(cell => Number.isInteger(cell) && cell >= 0 && cell < 25)
       : [];
-    if (stoneType !== "none" && totalStoneCount > 0 && targetCells.length) {
+    if (stoneTargets.includes(item.number)) {
       const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
       const jawSign = item.jaw === "upper" ? -1 : 1;
-      targetCells.forEach(function (cell) {
+      const placedCells = new Set(targetCells);
+      const outlineMaterial = new THREE.MeshBasicMaterial({
+        color: 0x55565a,
+        transparent: true,
+        opacity: 0.42,
+        depthWrite: false,
+        side: THREE.DoubleSide
+      });
+      // A quiet 5×5 seat map remains visible on every stone-enabled tooth.
+      // Empty seats read as subtle squares; occupied seats become jeweled settings.
+      for (let cell = 0; cell < 25; cell++) {
         const column = cell % 5;
         const row = Math.floor(cell / 5);
-        // Keep the 5×5 diagram aligned to the visible crown face:
-        // upper teeth run from gum (top row) toward the incisal edge;
-        // lower teeth run from the incisal edge (top row) toward the gum.
         const x = ((column - 2) / 2) * dims.width * 0.68;
         const verticalFraction = item.jaw === "upper"
           ? 0.18 + row * 0.15
           : 0.78 - row * 0.15;
         const z = jawSign * dims.height * verticalFraction;
         const frontSurface = crownFrontSurfaceY(dims, item.jaw, x, z);
+        const surfaceY = cap.position.y + frontSurface * cap.scale.y;
+        const seatSize = Math.min(stoneDiameter * 0.82, dims.width * 0.20, dims.height * 0.105);
+        const isPlaced = placedCells.has(cell) && stoneType !== "none" && totalStoneCount > 0;
+
+        if (!isPlaced) {
+          const edge = Math.max(0.0035, seatSize * 0.075);
+          const frontY = surfaceY - 0.006;
+          const bars = [
+            [seatSize, edge, 0, -seatSize / 2 + edge / 2],
+            [seatSize, edge, 0, seatSize / 2 - edge / 2],
+            [edge, seatSize, -seatSize / 2 + edge / 2, 0],
+            [edge, seatSize, seatSize / 2 - edge / 2, 0]
+          ];
+          bars.forEach(function (bar) {
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(bar[0], 0.004, bar[1]), outlineMaterial);
+            const local = capLocalPoint(cap, x * cap.scale.x + bar[2], frontY, z * cap.scale.z + bar[3]);
+            mesh.position.copy(local);
+            mesh.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
+            mesh.userData.designDetail = true;
+            mesh.userData.stoneCell = cell;
+            cap.add(mesh);
+          });
+          continue;
+        }
+
         const fitDiameter = Math.min(stoneDiameter, dims.width * 0.52, dims.height * 0.34);
         const mountDepth = Math.max(0.010, fitDiameter * 0.18);
         const gemHalfDepth = fitDiameter * (stoneShape === "square" ? 0.14 : 0.27);
-
-        // A shallow metal seat sits flush on the curved crown surface.
-        // Both setting and stone are transformed back into cap-local space
-        // so the cap's own scale never lifts a stone off its tooth.
-        const surfaceY = cap.position.y + frontSurface * cap.scale.y;
         const mount = new THREE.Mesh(
           new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
           metalMaterial
@@ -652,7 +679,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         gem.userData.designDetail = true;
         gem.userData.stoneCell = cell;
         cap.add(gem);
-      });
+      }
     }
 
     if (cuts.includes("diamondDust")) {
