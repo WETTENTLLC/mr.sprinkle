@@ -315,14 +315,14 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
           const cupidPeaks = 0.105 * Math.exp(-Math.pow((Math.abs(u) - 0.19) / 0.105, 2));
           const cupidDip = 0.052 * Math.exp(-Math.pow(u / 0.075, 2));
           outerZ = 1.15 * taper + cupidPeaks - cupidDip;
-          innerZ = 0.66 * taper;
+          innerZ = 0.84 * taper;
         } else {
-          innerZ = -0.66 * taper;
+          innerZ = -0.84 * taper;
           outerZ = -1.22 * taper;
         }
         const z = outerZ + (innerZ - outerZ) * t;
         const fullness = Math.sin(Math.PI * t) * taper;
-        const lipBulge = (isUpper ? 0.075 : 0.105) * fullness;
+        const lipBulge = (isUpper ? 0.045 : 0.060) * fullness;
         const y = archY - 0.205 - lipBulge - 0.018 * taper;
         positions.push(x, y, z);
       }
@@ -384,8 +384,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       const taper = Math.pow(Math.max(0.0005, 1 - u * u), 0.43);
       const theta = Math.asin(Math.max(-0.995, Math.min(0.995, x / 2.08)));
       const y = -1.18 * Math.cos(theta) - 0.215;
-      upperWetlinePoints.push(new THREE.Vector3(x, y - 0.012, 0.66 * taper));
-      lowerWetlinePoints.push(new THREE.Vector3(x, y - 0.018, -0.66 * taper));
+      upperWetlinePoints.push(new THREE.Vector3(x, y - 0.012, 0.84 * taper));
+      lowerWetlinePoints.push(new THREE.Vector3(x, y - 0.018, -0.84 * taper));
     }
     const upperWetline = new THREE.Mesh(
       new THREE.TubeGeometry(new THREE.CatmullRomCurve3(upperWetlinePoints), 100, 0.022, 8, false),
@@ -408,7 +408,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const archCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ);
     const gumBand = new THREE.Mesh(
-      new THREE.TubeGeometry(archCurve, 88, 0.225, 32, false),
+      new THREE.TubeGeometry(archCurve, 88, 0.17, 32, false),
       gumMaterial
     );
     gumBand.castShadow = true;
@@ -657,7 +657,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       ? placements[item.number].map(Number).filter(cell => Number.isInteger(cell) && cell >= 0 && cell < 25)
       : [];
     if (stoneTargets.includes(item.number)) {
-      const stoneDiameter = ({ "1.3": 0.047, "1.5": 0.055, "2.0": 0.073, "3.0": 0.108 })[String(config.size)] || 0.055;
+      const stoneDiameter = ({ "1.3": 0.026, "1.5": 0.030, "2.0": 0.040, "3.0": 0.060 })[String(config.size)] || 0.030;
       const jawSign = item.jaw === "upper" ? -1 : 1;
       const placedCells = new Set(targetCells);
       const outlineMaterial = new THREE.MeshBasicMaterial({
@@ -674,8 +674,8 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         const row = Math.floor(cell / 5);
         const x = ((column - 2) / 2) * dims.width * 0.68;
         const verticalFraction = item.jaw === "upper"
-          ? 0.18 + row * 0.15
-          : 0.78 - row * 0.15;
+          ? 0.32 + row * 0.09
+          : 0.68 - row * 0.09;
         const z = jawSign * dims.height * verticalFraction;
         const frontSurface = crownFrontSurfaceY(dims, item.jaw, x, z);
         const surfaceY = cap.position.y + frontSurface * cap.scale.y;
@@ -706,16 +706,18 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         const fitDiameter = Math.min(stoneDiameter, dims.width * 0.52, dims.height * 0.34);
         const mountDepth = Math.max(0.010, fitDiameter * 0.18);
         const gemHalfDepth = fitDiameter * (stoneShape === "square" ? 0.14 : 0.27);
-        const mount = new THREE.Mesh(
-          new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
-          metalMaterial
-        );
-        const mountPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth * 0.5, z * cap.scale.z);
-        mount.position.copy(mountPoint);
-        mount.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
-        mount.userData.designDetail = true;
-        mount.userData.stoneCell = cell;
-        cap.add(mount);
+        if (!config.paveSample) {
+          const mount = new THREE.Mesh(
+            new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
+            metalMaterial
+          );
+          const mountPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth * 0.5, z * cap.scale.z);
+          mount.position.copy(mountPoint);
+          mount.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
+          mount.userData.designDetail = true;
+          mount.userData.stoneCell = cell;
+          cap.add(mount);
+        }
 
         const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
@@ -792,8 +794,32 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     }
   }
 
+  function samplePaveConfig() {
+    const sampleTeeth = UPPER.slice(4, 12).concat(LOWER.slice(4, 12));
+    const layout = {};
+    sampleTeeth.forEach(function (number) { layout[number] = Array.from({ length: 25 }, function (_, i) { return i; }); });
+    return {
+      design: "standard",
+      metal: "silver",
+      teeth: sampleTeeth,
+      stones: "natural",
+      stoneShape: "round",
+      size: "1.3",
+      stoneCount: sampleTeeth.length * 25,
+      stoneTeeth: sampleTeeth,
+      stoneLayout: layout,
+      stoneProfiles: {},
+      enamelProfiles: {},
+      cuts: [],
+      paveSample: true
+    };
+  }
+
   function update(config) {
-    lastConfig = config || {};
+    const requested = config || {};
+    const requestedTeeth = Array.isArray(requested.teeth) ? requested.teeth.map(String) : [];
+    const isSample = requestedTeeth.length === 0;
+    lastConfig = isSample ? samplePaveConfig() : requested;
     const selected = new Set(Array.isArray(lastConfig.teeth) ? lastConfig.teeth.map(String) : []);
     const look = MATERIALS[lastConfig.metal] || MATERIALS.silver;
     const capMaterial = materialForMetal(lastConfig.metal);
@@ -815,9 +841,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const count = selectedList.length;
     const materialLabel = look.label;
-    const statusText = count
-      ? count + " selected tooth" + (count === 1 ? "" : "s") + " · " + materialLabel
-      : "Select any tooth or combination to see your grill mockup";
+    const statusText = isSample
+      ? "Sample full-pavé grill · select teeth to create your own design"
+      : count + " selected tooth" + (count === 1 ? "" : "s") + " · " + materialLabel;
     setStatus(statusText, false);
 
     const note = document.getElementById("grill3DMaterialNote");
@@ -825,9 +851,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       const stoneNote = lastConfig.stones && lastConfig.stones !== "none" && Number(lastConfig.stoneCount) > 0
         ? " The exact tooth-by-tooth stone layout is shown in this preview. Final setting, clearances and fit are verified against your approved mold."
         : "";
-      note.textContent = (lastConfig.metal === "quote"
-        ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
-        : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
+      note.textContent = isSample
+        ? "Illustrative silver pavé sample across both arches. Your tooth selections, stone choices and estimate remain independent until you customize the design."
+        : (lastConfig.metal === "quote"
+          ? "Illustrative custom-metal appearance only. Exact alloy and final finish are confirmed in your custom quote."
+          : "Live concept mockup · final crown contours and fit are confirmed from your approved mold.") + stoneNote;
     }
     render();
   }
@@ -838,9 +866,14 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
   function setFrontCamera() {
     if (!camera) return;
+    const aspect = Math.max(0.55, camera.aspect || 1);
+    // Preserve a consistent horizontal smile width on narrow phone viewports.
+    camera.fov = Math.max(34, Math.min(64,
+      2 * Math.atan(Math.tan(17 * Math.PI / 180) * 1.5 / aspect) * 180 / Math.PI
+    ));
     camera.up.set(0, 0, 1);
-    camera.position.set(0.08, -5.55, 0.78);
-    camera.lookAt(0, -0.12, 0);
+    camera.position.set(0.02, -4.8, 0.58);
+    camera.lookAt(0, -0.10, 0);
     camera.updateProjectionMatrix();
     render();
   }
@@ -889,7 +922,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       scene.background = new THREE.Color(0x090607);
 
       camera = new THREE.PerspectiveCamera(34, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 100);
-      camera.position.set(0.08, -5.55, 0.78);
+      camera.position.set(0.02, -4.8, 0.58);
 
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const environment = new RoomEnvironment();
