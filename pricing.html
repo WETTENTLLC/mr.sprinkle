@@ -146,6 +146,48 @@
         .stone-count-hint{display:block;color:#bbb;font-size:.88rem;line-height:1.5;margin-top:7px}
         .quick-coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}
         .quick-coverage input:disabled{opacity:.7;cursor:not-allowed}
+
+        /* Know Your Gold education */
+        .gold-lead{max-width:900px;margin:0 auto 22px;color:#d7d0c0;font-size:1.08rem;line-height:1.7;text-align:center}
+        .gold-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;padding:28px;border:1px solid #8e7138;border-radius:18px;background:radial-gradient(circle at 80% 20%,rgba(210,174,91,.16),transparent 44%),linear-gradient(135deg,#211b10,#090909);overflow:hidden}
+        .gold-hero__copy h2{font-size:clamp(1.7rem,4vw,2.6rem);line-height:1.1;margin:12px 0;color:#f2d58c}
+        .gold-hero__copy p{color:#d4cbb8;line-height:1.7}
+        .gold-eyebrow{color:#d4b66e;letter-spacing:.16em;font-size:.76rem;font-weight:800}
+        .gold-hero__art{width:100%;height:auto;filter:drop-shadow(0 18px 25px #000)}
+        .gold-section-heading{display:flex;gap:16px;align-items:flex-start;margin:42px 0 18px}
+        .gold-section-heading>span{display:grid;place-items:center;flex:0 0 44px;height:44px;border:1px solid #b99a5b;border-radius:50%;color:#f0d58f;font-weight:800}
+        .gold-section-heading h2{margin:0 0 6px;color:#f0d58f;font-size:1.5rem}
+        .gold-section-heading p{color:#bdb5a6;line-height:1.55}
+        .karat-visual{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:20px;background:#101010;border:1px solid #504329;border-radius:14px}
+        .karat-item{display:grid;gap:9px;text-align:center}.karat-item strong{font-size:1.35rem;color:#f3d78e}.karat-item b{font-size:.86rem;color:#d4c7a5}
+        .karat-bar{height:12px;background:#333;border-radius:20px;overflow:hidden}.karat-bar i{display:block;height:100%;background:linear-gradient(90deg,#8c5a12,#ffe6a0,#c18a29);border-radius:20px}
+        .gold-fineprint{font-size:.82rem;color:#9e9789;margin-top:10px;line-height:1.5}
+        .gold-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0}
+        .gold-info-card{background:linear-gradient(160deg,#1b1914,#0c0c0c);border:1px solid #4d422d;border-radius:14px;padding:20px}
+        .gold-info-card svg{display:block;width:100%;height:115px;margin-bottom:10px}
+        .gold-info-card h3{color:#ecd18a;margin:0 0 9px}.gold-info-card p{color:#c7c0b2;line-height:1.6;font-size:.94rem}
+        .gold-callout{padding:22px;border-left:4px solid #d2b36d;background:#19160f;border-radius:0 12px 12px 0;margin:18px 0;color:#d8cfbd;line-height:1.7}
+        .gold-callout strong{display:block;color:#f3d88e;font-size:1.2rem;margin-bottom:5px}
+        .gold-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+        .gold-compare__panel{padding:22px;border:1px solid #6d5b34;border-radius:14px;background:#15140f}
+        .gold-compare__panel--caution{border-color:#70514a;background:#171111}
+        .gold-compare__panel h3{color:#efd48d;margin:7px 0 12px}.gold-compare__panel ul{padding-left:20px;color:#d0c9bb;line-height:1.7}
+        .gold-check,.gold-caution{font-size:1.5rem;color:#e4c77c;font-weight:900}.gold-caution{color:#e0a18d}
+        .care-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+        .care-steps article{padding:18px;background:#141414;border:1px solid #49402d;border-radius:13px}
+        .care-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#d5b76c;color:#17130a;font-weight:900;margin-bottom:12px}
+        .care-steps h3{color:#efd48d;margin-bottom:8px;font-size:1.05rem}.care-steps p{color:#c8c1b4;line-height:1.55;font-size:.91rem}
+        .gold-warning{margin:20px 0;padding:18px;border:1px solid #8d5948;background:#21130f;color:#e4c9bd;border-radius:12px;line-height:1.65}
+        .gold-warning strong{color:#ffd0b8}
+        .gold-checklist{border:1px solid #51452e;border-radius:14px;overflow:hidden}
+        .gold-checklist>div{display:grid;grid-template-columns:145px 1fr;gap:14px;padding:14px 18px;border-bottom:1px solid #342f25;color:#cfc7b7;line-height:1.5}
+        .gold-checklist>div:last-child{border-bottom:0}.gold-checklist b{color:#f0d58f}
+        .gold-brand-promise p{max-width:850px;margin:12px auto;color:#ddd;line-height:1.7}
+        .gold-disclaimer{color:#aaa;font-size:.85rem;line-height:1.6;margin:22px 0}
+        .gold-sources{display:grid;gap:9px;padding:20px;border:1px solid #49402d;border-radius:14px;background:#101010}
+        .gold-sources h3{color:#ecd18a;margin-bottom:4px}.gold-sources a{color:#d9bd79;text-decoration:underline;line-height:1.5}
+        @media(max-width:760px){.gold-hero{grid-template-columns:1fr}.gold-hero__art{max-height:190px}.gold-info-grid{grid-template-columns:1fr}.care-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:520px){.karat-visual{grid-template-columns:1fr;gap:14px}.karat-item{grid-template-columns:46px 1fr 95px;align-items:center;text-align:left}.gold-compare{grid-template-columns:1fr}.gold-checklist>div{grid-template-columns:1fr;gap:3px}.gold-section-heading h2{font-size:1.25rem}.gold-hero{padding:20px}}
     </style>
 </head>
 <body>
@@ -235,47 +277,126 @@
 
         <section class="section" id="know-your-gold" aria-labelledby="knowYourGoldHeading">
             <div class="section-title" id="knowYourGoldHeading">Know Your Gold. Know What Goes in Your Mouth.</div>
-            <p class="note">A grill can look impressive in a photo and still leave important questions unanswered. Before comparing prices, compare the actual metal, craftsmanship, fit, and care that come with the piece.</p>
-            <div class="grid">
-                <article class="card">
-                    <h3>1. Ask what the metal actually is</h3>
-                    <p>“Gold color” is not the same as a stated gold karat. Ask whether the piece is 10K, 14K, or another clearly identified alloy—or whether it is plated, filled, or made with a different base metal. Ask for the metal description in writing.</p>
+            <p class="gold-lead">A grill is jewelry you wear inside your mouth. The color in a photo cannot tell you its alloy, its strength, how it was finished, or how it will fit. Learn what to ask before you buy.</p>
+
+            <div class="gold-hero">
+                <div class="gold-hero__copy">
+                    <span class="gold-eyebrow">THE MR. SPRINKLE STANDARD</span>
+                    <h2>Don't shop by the shine alone.</h2>
+                    <p>Two pieces can look almost identical in a picture and be made from very different materials. Compare the actual metal, documented composition, construction, custom fit, finishing, and what the quote includes—not just the number of teeth in a promotion.</p>
+                    <a class="cta-btn" href="mold-form.html">Build Your Custom Grillz</a>
+                </div>
+                <svg class="gold-hero__art" viewBox="0 0 520 300" role="img" aria-labelledby="goldHeroTitle goldHeroDesc">
+                    <title id="goldHeroTitle">Gold grillz craftsmanship illustration</title>
+                    <desc id="goldHeroDesc">A polished gold dental grill displayed on a dark jeweler's work surface.</desc>
+                    <defs><linearGradient id="goldMetal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0a8"/><stop offset=".25" stop-color="#b77a19"/><stop offset=".52" stop-color="#ffe58a"/><stop offset=".76" stop-color="#8c5610"/><stop offset="1" stop-color="#f6d878"/></linearGradient><linearGradient id="goldShadow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#40301a"/><stop offset="1" stop-color="#080808"/></linearGradient></defs>
+                    <ellipse cx="260" cy="250" rx="205" ry="22" fill="#000" opacity=".55"/>
+                    <path d="M65 104 Q260 35 455 104 L430 192 Q260 265 90 192Z" fill="url(#goldShadow)" stroke="#a47b32" stroke-width="3"/>
+                    <path d="M91 122 Q260 70 429 122 L408 173 Q260 227 112 173Z" fill="url(#goldMetal)" stroke="#ffe7a0" stroke-width="4"/>
+                    <g fill="#f7e5b5" stroke="#7b4d0d" stroke-width="3">
+                      <path d="M112 121 Q145 105 175 113 L174 178 Q145 187 119 167Z"/><path d="M177 109 Q210 99 237 104 L237 190 Q207 193 179 181Z"/>
+                      <path d="M241 103 Q260 101 279 103 L279 192 Q260 195 241 192Z"/><path d="M283 104 Q312 99 343 109 L341 181 Q313 193 283 190Z"/>
+                      <path d="M347 113 Q378 105 408 121 L401 167 Q375 187 346 178Z"/>
+                    </g>
+                    <g fill="none" stroke="#fff4c8" stroke-width="3" opacity=".75"><path d="M124 132l42-12"/><path d="M190 119l37-8"/><path d="M290 114l42 7"/><path d="M354 123l39 12"/></g>
+                    <path d="M91 201 Q260 250 429 201" fill="none" stroke="#d2ad58" stroke-width="2" opacity=".7"/>
+                    <circle cx="431" cy="62" r="5" fill="#ffe9a0"/><path d="M431 43v38M412 62h38" stroke="#ffe9a0" opacity=".7"/>
+                </svg>
+            </div>
+
+            <div class="gold-section-heading"><span>01</span><div><h2>Know the karat—not just the color</h2><p>Karat describes the proportion of gold by weight in the alloy. The remaining portion is made up of other metals.</p></div></div>
+            <div class="karat-visual" role="img" aria-label="Gold content by karat: 10 karat is 41.7 percent gold, 14 karat is 58.3 percent, 18 karat is 75 percent, 22 karat is 91.7 percent, and 24 karat is nearly pure gold.">
+                <div class="karat-item"><strong>10K</strong><div class="karat-bar"><i style="width:41.7%"></i></div><b>41.7% gold</b></div>
+                <div class="karat-item"><strong>14K</strong><div class="karat-bar"><i style="width:58.3%"></i></div><b>58.3% gold</b></div>
+                <div class="karat-item"><strong>18K</strong><div class="karat-bar"><i style="width:75%"></i></div><b>75.0% gold</b></div>
+                <div class="karat-item"><strong>22K</strong><div class="karat-bar"><i style="width:91.7%"></i></div><b>91.7% gold</b></div>
+                <div class="karat-item"><strong>24K</strong><div class="karat-bar"><i style="width:99.9%"></i></div><b>Nearly pure</b></div>
+            </div>
+            <p class="gold-fineprint">Percentages are standard karat calculations (karat ÷ 24). They describe gold content—not hardness, quality, dental suitability, or safety by themselves.</p>
+
+            <div class="gold-info-grid">
+                <article class="gold-info-card">
+                    <svg viewBox="0 0 160 120" role="img" aria-label="Illustration of a soft pure gold ingot"><rect x="23" y="42" width="114" height="49" rx="8" fill="#d8aa45" stroke="#ffdf86" stroke-width="3"/><path d="M37 42l12-20h62l12 20" fill="#f1cb69" stroke="#ffdf86" stroke-width="3"/><path d="M52 57h55" stroke="#fff0b0" stroke-width="5" stroke-linecap="round"/><text x="80" y="80" text-anchor="middle" fill="#4b310d" font-size="16" font-weight="bold">24K</text></svg>
+                    <h3>Why not pure 24K?</h3>
+                    <p>Pure gold is very soft and malleable. Dental alloys combine gold with selected metals to change strength and working properties. The right alloy depends on the intended use and its tested properties.</p>
                 </article>
-                <article class="card">
-                    <h3>2. Understand what karat means</h3>
-                    <p>24K is pure gold. 14K means 14 parts gold out of 24; 10K means 10 parts gold out of 24. Gold is alloyed with other metals to make jewelry more durable. A lower price may reflect a different metal content, weight, construction, or design—not simply a better deal.</p>
+                <article class="gold-info-card">
+                    <svg viewBox="0 0 160 120" role="img" aria-label="Illustration of a documented metal alloy composition card"><rect x="25" y="12" width="110" height="96" rx="9" fill="#171717" stroke="#d8b866" stroke-width="3"/><path d="M44 36h72M44 53h72M44 70h48" stroke="#d8b866" stroke-width="5" stroke-linecap="round"/><circle cx="111" cy="82" r="11" fill="#d8b866"/><path d="M105 82l4 4 8-9" fill="none" stroke="#171717" stroke-width="3"/></svg>
+                    <h3>Ask for the alloy details</h3>
+                    <p>“Dental gold” should not be just a sales label. Ask for the manufacturer's product name, full alloy composition, intended dental application, and available technical or biocompatibility documentation.</p>
                 </article>
-                <article class="card">
-                    <h3>3. Fit and finish matter</h3>
-                    <p>A removable grill should be made for the wearer’s actual teeth. Poor fit, rough edges, or contact with gums and opposing teeth can cause irritation or wear. Ask how impressions or scans are handled, how the fit is checked, and how edges are finished.</p>
-                </article>
-                <article class="card">
-                    <h3>4. Ask what is included</h3>
-                    <p>Compare the full quote: metal and karat, approximate weight or construction, stone quality, setting work, custom design, impression or fitting fees, and any additional charges. A headline price may not include everything shown in the promotion.</p>
+                <article class="gold-info-card">
+                    <svg viewBox="0 0 160 120" role="img" aria-label="Illustration of a custom dental impression and fitted grill"><path d="M28 29q52-24 104 0l-10 49q-42 22-84 0z" fill="#d9cdb5" stroke="#a99576" stroke-width="3"/><path d="M40 47q40-16 80 0l-8 23q-32 15-64 0z" fill="#b9892f" stroke="#ffe49a" stroke-width="3"/><path d="M50 53v16m20-20v24m20-24v24m20-20v16" stroke="#fff0bc" stroke-width="4"/></svg>
+                    <h3>Fit is part of quality</h3>
+                    <p>A custom appearance is not a substitute for a clinically safe fit. Poorly fitting removable grills can irritate tissues, trap debris, or rub against teeth. Have a dentist assess your oral health and fit concerns.</p>
                 </article>
             </div>
-            <div class="cta-box">
-                <h2>Mr. Sprinkle: Quality Is Not a Guess.</h2>
-                <p style="color:#ddd;line-height:1.7;max-width:820px;margin:0 auto">We believe customers deserve clear answers about the materials and work behind their grillz. We focus on quality materials, careful custom fabrication, thoughtful finishing, and a fit designed around your teeth—not a one-size-fits-all promise. We will explain what your quote includes before production begins.</p>
-                <p class="note" style="max-width:820px;margin:14px auto 0">We do not claim that every lower-priced grill is unsafe. Price by itself cannot establish metal content or safety. Ask questions, verify the materials, and have your dentist advise you before wearing oral jewelry.</p>
+
+            <div class="gold-section-heading"><span>02</span><div><h2>What makes a dental alloy different?</h2><p>It is the documented formula and performance—not a magic karat number.</p></div></div>
+            <div class="gold-callout">
+                <strong>Gold is soft by nature.</strong>
+                <p>The ADA explains that gold used in dental alloys is combined with other metals—such as copper, silver, platinum, or other durable metals—to improve strength. Dental alloys are evaluated for mechanical properties and biocompatibility. Two alloys with the same gold percentage can still behave differently.</p>
+            </div>
+            <p>Dental noble-metal alloys are used in specific dental restorations such as crowns and bridges. FDA guidance addresses their mechanical properties, labeling, and biocompatibility. That does <strong>not</strong> mean every product marketed as “dental gold” is automatically FDA-approved for removable grillz, nor does it certify a particular supplier's alloy. We believe in identifying the actual material and asking for its documentation.</p>
+
+            <div class="gold-section-heading"><span>03</span><div><h2>Tarnish resistance is not a free pass</h2><p>Good alloy selection helps—but care and oral health still matter.</p></div></div>
+            <div class="gold-compare">
+                <div class="gold-compare__panel">
+                    <span class="gold-check">✓</span><h3>What a well-formulated noble alloy can offer</h3>
+                    <ul><li>Strong resistance to corrosion compared with many less-noble alloys</li><li>Durability designed around the alloy's intended dental application</li><li>More transparent material selection when the composition is documented</li></ul>
+                </div>
+                <div class="gold-compare__panel gold-compare__panel--caution">
+                    <span class="gold-caution">!</span><h3>What it does not mean</h3>
+                    <ul><li>Never tarnishes or changes appearance</li><li>Safe to smoke, eat, or drink with removable grillz in</li><li>Safe to wear all day or overnight</li><li>Replaces brushing, flossing, or dental checkups</li></ul>
+                </div>
+            </div>
+            <p>Studies show that corrosion behavior varies among dental alloys—even among gold-based alloys. Composition and microstructure matter. A premium material can still collect plaque and food debris, and removable grillz can create hygiene and fit problems.</p>
+
+            <div class="gold-section-heading"><span>04</span><div><h2>Wear it responsibly. Keep your natural teeth first.</h2><p>A simple routine for removable grillz.</p></div></div>
+            <div class="care-steps">
+                <article><div class="care-icon">01</div><h3>Remove before eating</h3><p>Food and debris can get trapped between the grill and teeth. The ADA recommends removing removable grills before meals.</p></article>
+                <article><div class="care-icon">02</div><h3>Remove before brushing</h3><p>Brush natural teeth with fluoride toothpaste and floss daily. Clean the grill separately every day.</p></article>
+                <article><div class="care-icon">03</div><h3>Clean gently</h3><p>Use a soft brush and a cleaning method recommended for the actual alloy. Avoid household chemicals and jewelry cleaners.</p></article>
+                <article><div class="care-icon">04</div><h3>Limit wear time</h3><p>Do not sleep in removable grillz or treat them as permanent. Ask your dentist about your individual risks.</p></article>
+            </div>
+            <div class="gold-warning"><strong>Important:</strong> We do not recommend smoking, eating, or drinking beverages with removable grillz in place. Dental-gold alloy does not remove the oral-health risks of smoking, protect natural teeth from decay, or make continuous wear safe. If you notice soreness, swelling, bleeding, pain, or a change in fit, stop wearing the grill and contact a dentist.</div>
+
+            <div class="gold-section-heading"><span>05</span><div><h2>Compare the whole piece—not just the headline price</h2><p>Before you buy, make sure you know exactly what is included.</p></div></div>
+            <div class="gold-checklist">
+                <div><b>Material</b><span>Exact karat, alloy name, composition, and whether any parts are plated or mixed-metal.</span></div>
+                <div><b>Craftsmanship</b><span>Construction, thickness, finish, stone setting, and edge quality.</span></div>
+                <div><b>Fit</b><span>How impressions or scans are obtained, how fit is evaluated, and who handles dental concerns.</span></div>
+                <div><b>Full price</b><span>Whether design, stones, setting, impression, fitting, and other fees are included.</span></div>
+                <div><b>Care</b><span>Written cleaning, storage, wear-time, and maintenance instructions.</span></div>
+            </div>
+
+            <div class="cta-box gold-brand-promise">
+                <h2>Mr. Sprinkle: Know What You're Buying.</h2>
+                <p>We want every customer to understand the difference between gold color, gold karat, and a documented dental alloy. We believe in clear quotes, thoughtful custom fabrication, careful finishing, and honest conversations about materials and fit.</p>
+                <p><strong>Our recommendation:</strong> Ask us about our dental-gold option and request the material details before deciding. We will explain what is confirmed for your piece and what is included in your quote.</p>
                 <a class="cta-btn" href="mold-form.html">Start Your Custom Grillz Request</a>
             </div>
+
             <details class="pricing-disclosure">
-                <summary>Questions to ask before you buy</summary>
-                <div class="pricing-disclosure__body">
-                    <ul>
-                        <li>What exact metal and karat is used throughout the piece?</li>
-                        <li>Is any part plated, filled, hollow, or made from a different base metal?</li>
-                        <li>Can you provide a written description of the materials?</li>
-                        <li>How will the grill be custom-fitted to my teeth?</li>
-                        <li>Are the edges and surfaces finished to reduce rubbing or irritation?</li>
-                        <li>Does the quoted price include stones, setting, impressions, fitting, and all design work?</li>
-                        <li>What cleaning and wear instructions should I follow?</li>
-                    </ul>
-                </div>
+                <summary>Questions to ask any grillz seller</summary>
+                <div class="pricing-disclosure__body"><ul>
+                    <li>What is the exact alloy name and full composition?</li>
+                    <li>Can I see the supplier's technical sheet or material certificate?</li>
+                    <li>Is the alloy intended for dental use, and for which application?</li>
+                    <li>Is any part plated, filled, soldered, or made from a different metal?</li>
+                    <li>How is the grill custom-fitted, finished, and checked for rough edges?</li>
+                    <li>What is included in the total price, including impressions and setting?</li>
+                    <li>What are the cleaning and wear instructions?</li>
+                </ul></div>
             </details>
-            <p class="note">Oral-health note: Removable grills can trap food and plaque, irritate tissues, and contribute to tooth or gum problems. Remove before eating, clean daily, limit wear, and speak with your dentist before getting one.</p>
-            <p class="note">Consumer references: <a href="https://www.mouthhealthy.org/all-topics-a-z/grills/" target="_blank" rel="noopener">American Dental Association — Grills</a> · <a href="https://consumer.ftc.gov/articles/buying-platinum-gold-and-silver-jewelry" target="_blank" rel="noopener">Federal Trade Commission — Understanding gold karat and plating</a></p>
+            <p class="gold-disclaimer">Educational information only—not dental advice, a diagnosis, or a guarantee that any grill is safe for every person. Removable grillz have potential oral-health risks. Talk with a dentist before wearing one. Material performance depends on the exact alloy and its documentation.</p>
+            <div class="gold-sources">
+                <h3>Explore the research and dental guidance</h3>
+                <a href="https://www.mouthhealthy.org/all-topics-a-z/grills/" target="_blank" rel="noopener">American Dental Association — Grills and oral care</a>
+                <a href="https://www.ada.org/resources/ada-library/oral-health-topics/materials-for-indirect-restorations" target="_blank" rel="noopener">American Dental Association — Dental restorative materials and metal alloys</a>
+                <a href="https://www.fda.gov/medical-devices/guidance-documents-medical-devices-and-radiation-emitting-products/dental-noble-metal-alloys-class-ii-special-controls-guidance-document-industry-and-fda-staff" target="_blank" rel="noopener">U.S. FDA — Dental noble-metal alloy guidance</a>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/27061513/" target="_blank" rel="noopener">Peer-reviewed study — Corrosion behavior of gold-based dental alloys</a>
+            </div>
         </section>
 
         <section class="section" id="stone-pricing" aria-labelledby="stonePricingHeading">
