@@ -46,12 +46,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   const referenceSampleToothHits = Object.create(null);
 
   // Keep the supplied photo as the permanent visual foundation during customization.
+  // The supplied reference photo is a design reference only. Never place it over
+  // the interactive renderer: customers must always see the live 3D mouth model.
   function setReferenceSampleVisible() {
-    const showReference = referenceSampleReady;
-    if (referenceSampleImage) referenceSampleImage.style.display = showReference ? "block" : "none";
-    if (referenceSampleHits) referenceSampleHits.style.display = showReference ? "block" : "none";
-    if (renderer && renderer.domElement) renderer.domElement.style.opacity = showReference ? "0" : "1";
-    if (host) host.dataset.referenceSample = showReference ? "true" : "false";
+    if (referenceSampleImage) referenceSampleImage.style.display = "none";
+    if (referenceSampleHits) referenceSampleHits.style.display = "none";
+    if (renderer && renderer.domElement) renderer.domElement.style.opacity = "1";
+    if (host) host.dataset.referenceSample = "false";
   }
 
   function syncReferenceSampleSelection(selected) {
@@ -67,74 +68,17 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
 
   function buildReferenceSampleLayer() {
+    // Keep the renderer full-size and visible. Do not fetch or overlay the
+    // supplied reference photo; all tooth selection and rendering is genuine 3D.
     host.style.position = "relative";
     renderer.domElement.style.position = "absolute";
     renderer.domElement.style.inset = "0";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
-    renderer.domElement.style.transition = "opacity .18s ease";
-    referenceSampleImage = document.createElement("img");
-    referenceSampleImage.alt = "Mr. Sprinkle full silver diamond pavé grill sample across upper and lower arches";
-    referenceSampleImage.decoding = "async";
-    referenceSampleImage.draggable = false;
-    Object.assign(referenceSampleImage.style, {
-      position: "absolute", inset: "0", width: "100%", height: "100%",
-      objectFit: "contain", display: "none", zIndex: "3", pointerEvents: "none"
-    });
-    referenceSampleHits = document.createElement("div");
-    referenceSampleHits.className = "grill-reference-hit-layer";
-    Object.assign(referenceSampleHits.style, {
-      position: "absolute", inset: "0", zIndex: "4", display: "none",
-      pointerEvents: "none"
-    });
-    const visibleTeeth = UPPER.slice(4, 12).concat(LOWER.slice(4, 12));
-    const centers = [8, 20, 32, 44, 56, 68, 80, 92];
-    visibleTeeth.forEach(function (number, index) {
-      const isUpper = index < 8;
-      const column = index % 8;
-      const hit = document.createElement("button");
-      hit.type = "button";
-      hit.className = "grill-reference-tooth-hit";
-      hit.setAttribute("aria-label", "Customize tooth " + number);
-      hit.title = "Customize tooth " + number;
-      Object.assign(hit.style, {
-        position: "absolute", left: centers[column] + "%", top: isUpper ? "23%" : "51%",
-        width: "12.5%", height: isUpper ? "29%" : "27%",
-        transform: "translateX(-50%)", padding: "0", margin: "0",
-        border: "1px solid transparent", borderRadius: "18%",
-        background: "transparent", cursor: "pointer", pointerEvents: "auto",
-        WebkitTapHighlightColor: "transparent"
-      });
-      referenceSampleToothHits[String(number)] = hit;
-      hit.setAttribute("aria-pressed", "false");
-      hit.addEventListener("focus", function () { hit.style.outline = "2px solid rgba(0,188,212,.95)"; });
-      hit.addEventListener("blur", function () { hit.style.outline = "none"; });
-      hit.addEventListener("click", function () {
-        if (typeof window.MrSprinkleGrillSelectTooth === "function") {
-          window.MrSprinkleGrillSelectTooth(String(number));
-        }
-      });
-      referenceSampleHits.appendChild(hit);
-    });
-    host.appendChild(referenceSampleImage);
-    host.appendChild(referenceSampleHits);
-    fetch("assets/grill-reference.webp.b64?v=20261123-reference-photo-v1", { cache: "force-cache" })
-      .then(function (response) {
-        if (!response.ok) throw new Error("Reference image unavailable");
-        return response.text();
-      })
-      .then(function (encoded) {
-        referenceSampleImage.src = "data:image/webp;base64," + encoded.trim();
-        return referenceSampleImage.decode ? referenceSampleImage.decode() : Promise.resolve();
-      })
-      .then(function () {
-        referenceSampleReady = true;
-        setReferenceSampleVisible();
-      })
-      .catch(function (error) {
-        console.warn("Reference pavé sample could not be loaded; using the 3D fallback.", error);
-        referenceSampleReady = false;
-      });
+    renderer.domElement.style.opacity = "1";
+    renderer.domElement.style.transition = "none";
+    host.dataset.referenceSample = "false";
+    referenceSampleReady = false;
   }
 
   const metalMaterialCache = {};
