@@ -1465,7 +1465,7 @@ Please let me know next steps!`);
                 return;
             }
             if (layoutState.unplacedCount > 0) {
-                stoneCapacityNotice.textContent = requested + ' stones requested, but the current ' + stoneTargets.length + ' target tooth/tooth surfaces hold ' + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
+                stoneCapacityNotice.textContent = requested + ' stones requested, but ' + stoneTargets.length + (stoneTargets.length === 1 ? ' selected tooth holds ' : ' selected teeth hold ') + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
                 stoneCapacityNotice.classList.add('is-warning');
             } else {
                 stoneCapacityNotice.textContent = requested + ' stones placed across ' + stoneTargets.length + ' selected teeth. Move individual stones in the grid; changing the layout does not change the count.';
