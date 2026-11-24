@@ -90,3 +90,19 @@ test("stone selection requires a valid positive quantity", () => {
   assert.equal(result.ok, false);
   assert.match(result.error, /whole number of stones from 1 to 100/);
 });
+
+const stripeMode = require("../lib/stripe-mode");
+
+test("only Stripe test-mode secret keys are accepted", () => {
+  assert.equal(stripeMode.isSandboxSecretKey("sk_test_example"), true);
+  assert.equal(stripeMode.isSandboxSecretKey("sk_live_example"), false);
+  assert.equal(stripeMode.isSandboxSecretKey(""), false);
+  assert.equal(stripeMode.isSandboxSecretKey(undefined), false);
+});
+
+test("only explicitly non-live webhook events are accepted", () => {
+  assert.equal(stripeMode.isSandboxEvent({ livemode: false }), true);
+  assert.equal(stripeMode.isSandboxEvent({ livemode: true }), false);
+  assert.equal(stripeMode.isSandboxEvent({}), false);
+  assert.equal(stripeMode.isSandboxEvent(null), false);
+});
