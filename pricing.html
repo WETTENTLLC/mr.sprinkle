@@ -11,22 +11,14 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
-    <link rel="stylesheet" href="assets/grill-studio.css?v=20261124-luxury-mouth-v2">
+    <link rel="stylesheet" href="assets/grill-studio.css?v=20261124-master-design-v1">
     <link rel="stylesheet" href="assets/grill-stone-editor.css?v=20261123-reference-photo-v1">
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
-      }
-    }
-    </script>
     <script src="assets/grill-artwork-handoff.js?v=20261122-booking-handoff-v1"></script>
     <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js?v=20261124-approved-pair-addons"></script>
     <script src="assets/grill-estimate.js"></script>
-    <script src="assets/grill-preview.js?v=20261124-technical-diagram"></script>
-    <script type="module" src="assets/grill-studio-3d.js?v=20261124-luxury-mouth-v2"></script>
+    <script src="assets/grill-preview.js?v=20261124-legacy-fallback"></script>
+    <script src="assets/grill-maker-2d.js?v=20261124-master-design-v1"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -363,13 +355,12 @@
                         <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
                     </section>
                     <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
-                        <div class="grill-studio-panel__eyebrow"><span>02</span> Live 3D grill studio</div>
-                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Interactive front-facing 3D mouth <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
-                        <h3 id="grillMockupHeading">Preview your custom grillz in a live 3D smile.</h3>
-                        <p class="grill-studio-panel__lead">Select teeth, switch metals, add diamonds, and adjust each stone layout. The 3D mouth preview updates with your selected teeth, metal, stones, and finish while the estimate and booking details stay in sync.</p>
-                        <div id="grill3DViewport" class="grill-3d-viewport grill-3d-viewport--mouth" data-ready="loading" role="img" aria-label="Interactive front-facing 3D mouth and custom grillz preview"></div>
-                        <p id="grill3DStatus" class="grill-3d-status" aria-live="polite">Preparing your live 3D studio…</p>
-                        <p id="grill3DMaterialNote" class="grill-3d-material-note">Illustrative design preview. Final contours and fit are confirmed from your approved mold.</p>
+                        <div class="grill-studio-panel__eyebrow"><span>02</span> Precision 2D grill designer</div>
+                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> 16 individual crowns · 640 square settings <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
+                        <h3 id="grillMockupHeading">Build your grill. Every square is yours.</h3>
+                        <p class="grill-studio-panel__lead">Eight teeth across each arch, with the fangs in positions two and seven. Every tooth has forty precisely spaced square settings. Choose a metal, add stones, and color individual settings. No mouth, lips, or gums—just your grill design.</p>
+                        <div id="grillMaker2D" class="grill-maker-2d" data-ready="loading" aria-label="Interactive 2D grill designer"></div>
+                        <p class="grill-3d-material-note">Illustrative design preview. Final crown contours, thickness, and fit are confirmed from your approved mold.</p>
                         <div id="designPreview" class="preview-teeth" hidden aria-live="polite"></div>
                     </section>
                 </div>
@@ -538,7 +529,7 @@
                     <div id="stonePlacementEditor" class="stone-placement-editor" hidden>
                         <div class="stone-placement-editor__head">
                             <strong id="stoneGridTitle">Stone placement grid</strong>
-                            <span>5 × 5 crown surface</span>
+                            <span>5 × 8 crown surface · 40 positions</span>
                         </div>
                         <div id="stonePlacementGrid" class="stone-placement-grid" role="grid" aria-label="Individual stone placement positions"></div>
                         <p id="stoneLayoutStatus" class="stone-layout-status" aria-live="polite">Choose a stone-bearing tooth to edit its positions.</p>
@@ -948,6 +939,8 @@ Please let me know next steps!`);
         let activeStoneTooth = '';
         let stoneShape = 'round';
         let stoneProfiles = {};
+        let stoneCellColors = {};
+        let activeStoneCell = null;
         let enamelProfiles = {};
         let activeEnamelTooth = '';
         let layoutState = Stone.createDefault([], 0);
@@ -1142,15 +1135,13 @@ Please let me know next steps!`);
             container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide' }));
             container.appendChild(svgNode('path', { d:'M 60 67 Q 74 164 210 180 Q 346 164 360 67', class:'arch-guide-inner' }));
             group.teeth.forEach((number,index) => {
-                const t = (index - 7.5) / 7.5;
-                const theta = t * 1.34;
-                const x = 210 + 148 * Math.sin(theta);
-                const y = 34 + 122 * Math.cos(theta);
-                const posteriorDistance = Math.min(index, 15-index);
-                const kind = posteriorDistance <= 2 ? 'molar' :
-                    posteriorDistance <= 4 ? 'premolar' :
-                    posteriorDistance === 5 ? 'canine' :
-                    posteriorDistance === 6 ? 'lateral-incisor' : 'central-incisor';
+                const t = (index - 3.5) / 3.5;
+                const theta = t * 0.88;
+                const x = 210 + 145 * Math.sin(theta);
+                const y = 36 + 122 * Math.cos(theta);
+                const kind = (index === 1 || index === 6) ? 'canine' :
+                    (index === 0 || index === 7) ? 'premolar' :
+                    (index === 2 || index === 5) ? 'lateral-incisor' : 'central-incisor';
                 const dims = {
                     molar:[31,27], premolar:[27,28], canine:[21,33],
                     'lateral-incisor':[22,32], 'central-incisor':[25,34]
@@ -1222,6 +1213,47 @@ Please let me know next steps!`);
                 window.MrSprinkleGrillPreview.render(designPreview, config);
             }
         }
+
+        window.addEventListener('mr-sprinkle:select-tooth', event => {
+            const number = String(event.detail && event.detail.tooth || '');
+            const button = Array.from(document.querySelectorAll('.arch-tooth')).find(item => item.dataset.tooth === number);
+            if (!button) return;
+            if (toothMode === 'stones') { toggleStoneTarget(number); return; }
+            button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'));
+            updateEstimate();
+        });
+        window.addEventListener('mr-sprinkle:select-stone-cell', event => {
+            const number = String(event.detail && event.detail.tooth || '');
+            const cell = Number(event.detail && event.detail.cell);
+            if (!Number.isInteger(cell) || cell < 0 || cell >= 40) return;
+            const button = Array.from(document.querySelectorAll('.arch-tooth')).find(item => item.dataset.tooth === number);
+            if (!button) return;
+            if (button.getAttribute('aria-pressed') !== 'true') {
+                button.setAttribute('aria-pressed', 'true');
+                updateEstimate();
+            }
+            if (!stoneTargets.includes(number)) toggleStoneTarget(number);
+            activeStoneTooth = number;
+            activeStoneCell = cell;
+            ensureStoneProfile(number);
+            if (!(layoutState.placements[number] || []).includes(cell)) {
+                const profile = ensureStoneProfile(number);
+                if (stones.value === 'none') stones.value = profile.type || 'natural';
+                layoutState = Stone.add(layoutState, number, cell, layoutState.requestedCount);
+                stoneCountInput.value = String(layoutState.placedCount);
+                lastLayoutInputKey = currentLayoutKey();
+            }
+            editorOpen = true;
+            document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
+            renderStoneTargets();
+            renderStoneProfileControls();
+            renderStoneEditor();
+            updateEstimate({ preserveLayout:true });
+            const color = (stoneCellColors[number] || {})[cell] || ensureStoneProfile(number).color || '#f4f8ff';
+            stoneColorPicker.value = color;
+            stoneColorLabel.textContent = stoneColorNames[color.toLowerCase()] || 'Custom color';
+            setStatus('Editing square ' + (cell + 1) + ' of 40 on tooth ' + number + '. Change its gemstone color independently.', false);
+        });
 
         function renderStoneTargets() {
             const selected = selectedNumbers();
@@ -1304,6 +1336,7 @@ Please let me know next steps!`);
                 return;
             }
             activeStoneTooth = key;
+            activeStoneCell = null;
             editorOpen = true;
             document.getElementById('toggleStoneEditor').textContent = 'Close placement grid';
             renderStoneTargets();
@@ -1321,11 +1354,13 @@ Please let me know next steps!`);
             if (stoneTargets.includes(String(number))) {
                 stoneTargets = stoneTargets.filter(tooth => tooth !== String(number));
                 delete stoneProfiles[String(number)];
+                delete stoneCellColors[String(number)];
                 if (moveSource && moveSource.tooth === String(number)) moveSource = null;
                 if (activeStoneTooth === String(number)) activeStoneTooth = stoneTargets[0] || '';
             } else {
                 stoneTargets = stoneTargets.concat(String(number));
                 activeStoneTooth = String(number);
+                activeStoneCell = null;
                 editorOpen = true;
                 ensureStoneProfile(String(number));
             }
@@ -1346,7 +1381,7 @@ Please let me know next steps!`);
             const activeShape = activeProfile && activeProfile.shape ? activeProfile.shape : stoneShape;
             const occupied = new Set((layoutState.placements[activeStoneTooth] || []).map(Number));
             const allowedCells = new Set(Stone.allowedCells(layoutState.stoneSize));
-            for (let cell = 0; cell < 25; cell++) {
+            for (let cell = 0; cell < 40; cell++) {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'stone-slot';
@@ -1418,6 +1453,7 @@ Please let me know next steps!`);
                 }
             }
             if (occupied) {
+                activeStoneCell = cell;
                 moveSource = { tooth:activeStoneTooth, cell };
                 renderStoneEditor();
                 setStatus('Stone selected. Tap or drag it to an empty guide to reposition it.', false);
@@ -1428,6 +1464,7 @@ Please let me know next steps!`);
                 return;
             }
             layoutState = Stone.add(layoutState, activeStoneTooth, cell, layoutState.requestedCount);
+            activeStoneCell = cell;
             stoneCountInput.value = String(layoutState.placedCount);
             lastLayoutInputKey = currentLayoutKey();
             moveSource = null;
@@ -1436,7 +1473,15 @@ Please let me know next steps!`);
 
         function moveStoneToCell(tooth, destinationCell) {
             if (!moveSource) return;
-            layoutState = Stone.move(layoutState, moveSource.tooth, moveSource.cell, tooth, destinationCell);
+            const fromTooth = moveSource.tooth;
+            const fromCell = moveSource.cell;
+            layoutState = Stone.move(layoutState, fromTooth, fromCell, tooth, destinationCell);
+            if (stoneCellColors[fromTooth] && stoneCellColors[fromTooth][fromCell]) {
+                stoneCellColors[tooth] = stoneCellColors[tooth] || {};
+                stoneCellColors[tooth][destinationCell] = stoneCellColors[fromTooth][fromCell];
+                delete stoneCellColors[fromTooth][fromCell];
+            }
+            activeStoneCell = destinationCell;
             moveSource = null;
             lastLayoutInputKey = currentLayoutKey();
             updateEstimate({ preserveLayout:true });
@@ -1491,6 +1536,7 @@ Please let me know next steps!`);
                 stoneShape,
                 stoneTeeth:stoneTargets.slice(),
                 stoneLayout:layoutState.placements,
+                stoneCellColors:Object.fromEntries(Object.entries(stoneCellColors).filter(([number]) => stoneTargets.includes(number)).map(([number, colors]) => [number, Object.assign({}, colors)])),
                 stoneLayoutSerialized:Stone.serialize(layoutState),
                 stoneProfiles:Object.fromEntries(stoneTargets.map(number => [number, Object.assign({}, ensureStoneProfile(number))])),
                 enamelProfiles:Object.fromEntries(Object.entries(enamelProfiles).filter(([number]) => teeth.includes(number)).map(([number, profile]) => [number, Object.assign({}, profile)]))
@@ -1556,6 +1602,9 @@ Please let me know next steps!`);
             if (!stoneTargets.includes(activeStoneTooth)) activeStoneTooth = stoneTargets[0] || '';
             Object.keys(stoneProfiles).forEach(number => {
                 if (!stoneTargets.includes(number)) delete stoneProfiles[number];
+            });
+            Object.keys(stoneCellColors).forEach(number => {
+                if (!stoneTargets.includes(number)) delete stoneCellColors[number];
             });
             Object.keys(enamelProfiles).forEach(number => {
                 if (!selected.includes(number)) delete enamelProfiles[number];
@@ -1708,8 +1757,13 @@ Please let me know next steps!`);
         stoneColorPicker.addEventListener('input', () => {
             const profile = activeStoneProfile();
             if (!profile) return;
-            profile.color = stoneColorPicker.value.toLowerCase();
-            profile.manual = true;
+            if (activeStoneCell !== null && (layoutState.placements[activeStoneTooth] || []).includes(activeStoneCell)) {
+                stoneCellColors[activeStoneTooth] = stoneCellColors[activeStoneTooth] || {};
+                stoneCellColors[activeStoneTooth][activeStoneCell] = stoneColorPicker.value.toLowerCase();
+            } else {
+                profile.color = stoneColorPicker.value.toLowerCase();
+                profile.manual = true;
+            }
             if (stones.value === 'none') stones.value = profile.type || 'natural';
             updateEstimate({ preserveLayout:true });
         });
@@ -1717,8 +1771,13 @@ Please let me know next steps!`);
             button.addEventListener('click', () => {
                 const profile = activeStoneProfile();
                 if (!profile) return;
-                profile.color = button.dataset.stoneColor.toLowerCase();
-                profile.manual = true;
+                if (activeStoneCell !== null && (layoutState.placements[activeStoneTooth] || []).includes(activeStoneCell)) {
+                    stoneCellColors[activeStoneTooth] = stoneCellColors[activeStoneTooth] || {};
+                    stoneCellColors[activeStoneTooth][activeStoneCell] = button.dataset.stoneColor.toLowerCase();
+                } else {
+                    profile.color = button.dataset.stoneColor.toLowerCase();
+                    profile.manual = true;
+                }
                 if (stones.value === 'none') stones.value = profile.type || 'natural';
                 renderStoneProfileControls();
                 updateEstimate({ preserveLayout:true });
