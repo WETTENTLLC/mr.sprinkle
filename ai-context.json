@@ -113,8 +113,11 @@
     "customCutsPerSet": {
       "diamond/dust cut": 30,
       "center/split line": 20,
-      "open face/window cut": 40,
-      "deep/bar cut": 30
+      "open face/window cut": 40
+    },
+    "customCutsPerPair": {
+      "individual-tooth fabrication": 10,
+      "deep/bar cut": 15
     }
   },
   "quoteBased": [
@@ -163,7 +166,7 @@
     },
     {
       "question": "Are custom cuts charged per tooth?",
-      "answer": "No. Custom cuts are charged per set: Diamond/Dust $30, Center/Split $20, Open Face/Window $40, and Deep/Bar $30. An upper piece and a lower piece are separate sets; a single special piece counts as one set."
+      "answer": "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair of teeth. Diamond/Dust is $30 per upper or lower piece, Center/Split is $20 per upper or lower piece, and Open Face/Window is $40 per upper or lower piece."
     },
     {
       "question": "Can customers from Tahoe, the Bay Area, or Seattle book a local office?",
@@ -172,7 +175,7 @@
   ],
   "pricingNotes": [
     "Grillz are priced per tooth using the current published catalog.",
-    "Custom cuts are charged per set: Diamond/Dust $30, Center/Split $20, Open Face/Window $40, Deep/Bar $30. An upper piece and a lower piece are separate sets.",
+    "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair. Diamond/Dust $30, Center/Split $20, and Open Face/Window $40 are charged per upper or lower piece.",
     "Stone-setting labor is included in the published pricing.",
     "Custom finishes and designs outside the published catalog require a custom quote.",
     "Rush shipping is $150 and replaces standard $60 shipping; rush eligibility and capacity must be confirmed.",
@@ -228,7 +231,7 @@
   },
   "pricingRules": {
     "grillzPricing": "per tooth, using the published per-tooth catalog",
-    "customCuts": "charged per set: an upper grillz piece and a lower grillz piece are separate sets; a single special piece is one set",
+    "customCuts": "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair of teeth. Diamond/Dust is $30 per upper/lower set, Center/Split is $20 per upper/lower set, and Open Face/Window is $40 per upper/lower set.",
     "stoneSettingLabor": "included in published pricing",
     "rushShipping": "$150 and replaces the $60 standard shipping charge",
     "quoteOnly": "18K gold, white gold, platinum, custom finishes, and other non-catalog designs require a custom quote"
