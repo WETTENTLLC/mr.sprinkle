@@ -286,6 +286,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const lowerCenter = positions.length / 3;
     positions.push(0,0,0);
+    for (let segment = 0; segment < segments; segment++) {
+      const next = (segment + 1) % segments;
+      if (sign > 0) indices.push(lowerCenter, next, segment);
+      else indices.push(lowerCenter, segment, next);
+    }
 
     // Build a contoured occlusal/incisal surface instead of closing the crown
     // with a flat fan. Intermediate polar rings carry the same cusp profile as
