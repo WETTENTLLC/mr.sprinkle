@@ -107,7 +107,8 @@ test("AI context pricing rules match the published pricing catalog", () => {
   assert.equal(catalog.customCuts.diamondDust, 30);
   assert.equal(catalog.customCuts.centerSplit, 20);
   assert.equal(catalog.customCuts.openFace, 40);
-  assert.equal(catalog.customCuts.deepBar, 30);
+  assert.equal(catalog.customCuts.individualFabrication, 10);
+  assert.equal(catalog.customCuts.deepBar, 15);
   assert.equal(catalog.rules.settingLabor, "included");
 });
 
