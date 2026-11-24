@@ -3,6 +3,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 
 const read = (file) => fs.readFileSync(path.join(__dirname, "..", file), "utf8");
 const json = (file) => JSON.parse(read(file));
@@ -370,6 +371,16 @@ test("grill designer renders a dental-arch diagram without changing the estimate
   assert.doesNotMatch(preview, /calculate\(|catalog\.grillz|knownSubtotal/);
 });
 
+
+test("luxury 3D renderer module parses as browser JavaScript", () => {
+  const renderer = read("assets/grill-studio-3d.js");
+  assert.doesNotThrow(() => execFileSync(process.execPath, ["--input-type=module", "--check"], { input: renderer }));
+  const html = read("pricing.html");
+  const importMap = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
+  assert.ok(importMap, "Three.js import map is present");
+  const parsed = JSON.parse(importMap[1]);
+  assert.equal(parsed.imports.three, "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js");
+});
 
 test("customer-facing Grill Maker restores the interactive luxury 3D mouth renderer", () => {
   const html = read("pricing.html");
