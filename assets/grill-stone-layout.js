@@ -1,7 +1,7 @@
 /*
  * Mr. Sprinkle stone-layout engine.
- * Deterministic customer-editable 5 x 5 placement grids for each selected tooth.
- * Shared by the browser UI, 3D renderer, and Node regression tests.
+ * Deterministic customer-editable 5 x 8 placement grids (40 seats) for each selected tooth.
+ * Shared by the browser UI, 2D grill renderer, and Node regression tests.
  */
 (function (root, factory) {
   const api = factory();
