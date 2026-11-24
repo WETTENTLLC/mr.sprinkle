@@ -1,0 +1,10 @@
+{
+  "name": "mr-sprinkle-stripe-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated server-side Stripe Checkout API for Mr. Sprinkle",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "stripe": "^18.5.0"
+  }
+}
