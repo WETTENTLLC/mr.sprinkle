@@ -935,7 +935,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     const materialLabel = look.label;
     const statusText = isSample
       ? "Sample full-pavé grill · select teeth to create your own design"
-      : count + " selected tooth" + (count === 1 ? "" : "s") + " · reference smile retained · " + materialLabel;
+      : count + (count === 1 ? " selected tooth" : " selected teeth") + " · reference smile retained · " + materialLabel;
     setStatus(statusText, false);
 
     const note = document.getElementById("grill3DMaterialNote");
