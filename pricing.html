@@ -1490,6 +1490,7 @@ Please let me know next steps!`);
         function removeSelectedStone() {
             if (!moveSource) return;
             layoutState = Stone.remove(layoutState, moveSource.tooth, moveSource.cell);
+            if (stoneCellColors[moveSource.tooth]) delete stoneCellColors[moveSource.tooth][moveSource.cell];
             stoneCountInput.value = String(layoutState.placedCount);
             lastLayoutInputKey = currentLayoutKey();
             moveSource = null;
