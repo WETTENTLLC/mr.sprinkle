@@ -4,7 +4,7 @@ const estimate = require("../lib/grill-estimate");
 const catalog = require("../lib/pricing-catalog");
 
 test("backend pricing catalog carries the approved version", () => {
-  assert.equal(catalog.version, "2026-11-24-approved-pair-addons");
+  assert.equal(catalog.version, "2026-11-24-permanent-single-tooth-premium");
 });
 
 test("six silver teeth include standard shipping", () => {
@@ -109,9 +109,9 @@ test("only explicitly non-live webhook events are accepted", () => {
 
 
 test("permanent single-tooth design is priced as a separate $40-per-tooth premium", () => {
-  const six = E.calculate({ metal: "silver", upperCount: 6, cuts: "permanentSingleTooth" });
+  const six = estimate.calculate({ metal: "silver", upperCount: 6, cuts: "permanentSingleTooth" });
   assert.equal(six.total, 6 * 100 + 6 * 40 + 60);
   assert.ok(six.lines.some(line => line.label.includes("$40 per tooth") && line.amount === 240));
-  const eight = E.calculate({ metal: "gold10k", lowerCount: 8, cuts: "permanentSingleTooth" });
+  const eight = estimate.calculate({ metal: "gold10k", lowerCount: 8, cuts: "permanentSingleTooth" });
   assert.equal(eight.total, 8 * 240 + 8 * 40 + 60);
 });
