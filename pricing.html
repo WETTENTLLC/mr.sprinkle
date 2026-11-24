@@ -11,14 +11,22 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
-    <link rel="stylesheet" href="assets/grill-studio.css?v=20261124-technical-diagram">
+    <link rel="stylesheet" href="assets/grill-studio.css?v=20261124-luxury-mouth-v2">
     <link rel="stylesheet" href="assets/grill-stone-editor.css?v=20261123-reference-photo-v1">
-    <!-- Three.js import map removed: customer preview is now the lightweight technical diagram. -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+      }
+    }
+    </script>
     <script src="assets/grill-artwork-handoff.js?v=20261122-booking-handoff-v1"></script>
     <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js?v=20261124-approved-pair-addons"></script>
     <script src="assets/grill-estimate.js"></script>
     <script src="assets/grill-preview.js?v=20261124-technical-diagram"></script>
+    <script type="module" src="assets/grill-studio-3d.js?v=20261124-luxury-mouth-v2"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -355,11 +363,14 @@
                         <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
                     </section>
                     <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
-                        <div class="grill-studio-panel__eyebrow"><span>02</span> Technical design preview</div>
-                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Front-facing arch diagram <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
-                        <h3 id="grillMockupHeading">Build your exact tooth layout.</h3>
-                        <p class="grill-studio-panel__lead">A clean, front-facing design schematic updates as you select teeth, metal, and finish options. Selected FDI positions are highlighted; final contours and fit are confirmed from your approved mold.</p>
-                        <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
+                        <div class="grill-studio-panel__eyebrow"><span>02</span> Live 3D grill studio</div>
+                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Photoreal-style front view <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
+                        <h3 id="grillMockupHeading">See your custom grillz come to life.</h3>
+                        <p class="grill-studio-panel__lead">Select teeth, switch metals, add diamonds, and adjust each stone layout. The mouth preview updates with your design while the estimate and order details stay in sync.</p>
+                        <div id="grill3DViewport" class="grill-3d-viewport grill-3d-viewport--mouth" data-ready="loading" role="img" aria-label="Interactive front-facing 3D mouth and custom grillz preview"></div>
+                        <p id="grill3DStatus" class="grill-3d-status" aria-live="polite">Preparing your live 3D studio…</p>
+                        <p id="grill3DMaterialNote" class="grill-3d-material-note">Illustrative design preview. Final contours and fit are confirmed from your approved mold.</p>
+                        <div id="designPreview" class="preview-teeth" hidden aria-live="polite"></div>
                     </section>
                 </div>
                 <div class="grill-materials">
@@ -1206,11 +1217,11 @@ Please let me know next steps!`);
 
         function renderDesignPreview(config) {
             window.__MrSprinkleGrillConfig = config;
-            if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
+            window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config', { detail: config }));
+            if (window.MrSprinkleGrill3D) window.MrSprinkleGrill3D.update(config);
+            if (designPreview && designPreview.dataset.fallback === 'true' && window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
                 window.MrSprinkleGrillPreview.render(designPreview, config);
-                return;
             }
-            designPreview.textContent = 'The design diagram could not load. Your selected teeth and estimate are still available below.';
         }
 
         function renderStoneTargets() {
