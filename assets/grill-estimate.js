@@ -75,6 +75,21 @@
                 enamelProfiles[tooth] = { color, finish: "enamel", enabled: true };
             }
         });
+        let cellColorsRaw = r.stoneCellColors || r.stoneCellColorsSerialized || {};
+        if (typeof cellColorsRaw === "string") {
+            try { cellColorsRaw = JSON.parse(cellColorsRaw); } catch (_) { cellColorsRaw = {}; }
+        }
+        const stoneCellColors = {};
+        stoneTeeth.forEach((tooth) => {
+            const rawCells = cellColorsRaw && typeof cellColorsRaw === "object" ? (cellColorsRaw[tooth] || {}) : {};
+            const colors = {};
+            Object.keys(rawCells).forEach((cell) => {
+                const index = Number(cell);
+                const color = String(rawCells[cell] || "");
+                if (Number.isInteger(index) && index >= 0 && index < 40 && /^#[0-9a-f]{6}$/i.test(color)) colors[index] = color.toLowerCase();
+            });
+            if (Object.keys(colors).length) stoneCellColors[tooth] = colors;
+        });
         const customArtwork = ["true", "1", "yes"].includes(String(r.customArtwork || "").toLowerCase());
         const stoneShape = r.stoneShape === "square" ? "square" : "round";
         const stoneLayout = typeof r.stoneLayoutSerialized === "string"
@@ -97,6 +112,7 @@
             stoneTeeth: hasStoneTeeth ? stoneTeeth : teeth.slice(),
             stoneLayout,
             stoneProfiles,
+            stoneCellColors,
             enamelProfiles,
             customArtwork,
             cuts: Array.from(new Set(cuts))
@@ -295,6 +311,7 @@
             stoneTeeth: (c.stoneTeeth || []).join(","),
             stoneLayout: c.stoneLayoutSerialized || c.stoneLayout || "",
             stoneProfiles: JSON.stringify(c.stoneProfiles || {}),
+            stoneCellColors: JSON.stringify(c.stoneCellColors || {}),
             enamelProfiles: JSON.stringify(c.enamelProfiles || {}),
             customArtwork: c.customArtwork ? "true" : "false",
             pv: catalog.version
