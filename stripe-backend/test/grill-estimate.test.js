@@ -106,3 +106,12 @@ test("only explicitly non-live webhook events are accepted", () => {
   assert.equal(stripeMode.isSandboxEvent({}), false);
   assert.equal(stripeMode.isSandboxEvent(null), false);
 });
+
+
+test("permanent single-tooth design is priced as a separate $40-per-tooth premium", () => {
+  const six = E.calculate({ metal: "silver", upperCount: 6, cuts: "permanentSingleTooth" });
+  assert.equal(six.total, 6 * 100 + 6 * 40 + 60);
+  assert.ok(six.lines.some(line => line.label.includes("$40 per tooth") && line.amount === 240));
+  const eight = E.calculate({ metal: "gold10k", lowerCount: 8, cuts: "permanentSingleTooth" });
+  assert.equal(eight.total, 8 * 240 + 8 * 40 + 60);
+});
