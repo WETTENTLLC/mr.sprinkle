@@ -1,9 +1,12 @@
 const Stripe = require("stripe");
 const crypto = require("node:crypto");
 const estimateEngine = require("../lib/grill-estimate");
+const stripeMode = require("../lib/stripe-mode");
 
 const stripe = () => {
-  if (!process.env.STRIPE_SECRET_KEY) throw new Error("Stripe is not configured");
+  if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) {
+    throw new Error("Sandbox Stripe secret key is not configured");
+  }
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 };
 
@@ -32,6 +35,10 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) {
+      return res.status(503).json({ error: "Sandbox checkout is not configured." });
+    }
+
     const body = req.body || {};
     const config = body.configuration && typeof body.configuration === "object"
       ? body.configuration
