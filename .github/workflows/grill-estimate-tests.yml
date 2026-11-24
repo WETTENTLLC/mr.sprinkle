@@ -36,4 +36,4 @@ jobs:
           node-version: "20"
 
       - name: Run site regression tests
-        run: node --test tests/grill-estimate.test.js tests/site-seo.test.js
+        run: node --test tests/grill-estimate.test.js tests/site-seo.test.js tests/grill-studio-3d-audit.test.js
