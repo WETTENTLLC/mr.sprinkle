@@ -377,10 +377,10 @@ test("precision 2D Grill Maker renderer parses and exposes 640 individual settin
   assert.doesNotThrow(() => execFileSync(process.execPath, ["--check"], { input: renderer }));
   assert.match(renderer, /const UPPER=\["14","13","12","11","21","22","23","24"\]/);
   assert.match(renderer, /const LOWER=\["44","43","42","41","31","32","33","34"\]/);
-  assert.match(renderer, /index===0\|\|index===7\?"fang"/);
-  assert.match(renderer, /index===1\|\|index===6\?"oval"/);
-  assert.match(renderer, /index===2\|\|index===5\?"rounded"/);
-  assert.match(renderer, /const HEIGHTS=\[332,286,310,330,330,310,286,332\]/);
+  assert.match(renderer, /index===1\|\|index===6\?"fang"/);
+  assert.doesNotMatch(renderer, /"oval"/);
+  assert.match(renderer, /index===0\|\|index===2\|\|index===5\|\|index===7\?"rounded"/);
+  assert.match(renderer, /const HEIGHTS=\[332,370,310,330,330,310,370,332\]/);
   assert.match(renderer, /function toothPath\(w,h,shape,jaw\)/);
   assert.match(renderer, /row<8/);
   assert.match(renderer, /col<5/);
