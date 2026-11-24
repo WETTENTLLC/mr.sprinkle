@@ -426,6 +426,7 @@ test("customers can choose stone-bearing teeth and edit forty square per-tooth p
   assert.match(html, /function selectActiveStoneTooth/);
   assert.match(html, /data-stone-shape="square"/);
   assert.doesNotMatch(html, /data-stone-shape="round"/);
+  assert.doesNotMatch(html, /<button type="button"\s*\n\s*<button/);
   assert.ok(html.includes("let stoneShape = 'square'"));
   assert.match(html, /id="stonePlacementGrid"/);
   assert.match(html, /data-stone-material="natural"/);
