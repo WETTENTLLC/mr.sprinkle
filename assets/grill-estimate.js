@@ -245,7 +245,9 @@
             const pairs = c.design === "grillz" ? Math.ceil(toothCount / 2) : 1;
             c.cuts.forEach((cut) => {
                 const each = catalog.customCuts[cut];
-                if (catalog.pairBasedCuts.includes(cut)) {
+                if (catalog.perToothCuts && catalog.perToothCuts.includes(cut)) {
+                    add(`${catalog.customCutLabels[cut]}: ${money(each)} per tooth × ${toothCount} teeth`, each * toothCount);
+                } else if (catalog.pairBasedCuts.includes(cut)) {
                     add(`${catalog.customCutLabels[cut]}: ${money(each)} per 2 teeth × ${pairs} ${pairs === 1 ? "pair" : "pairs"}`, each * pairs);
                 } else {
                     add(`${catalog.customCutLabels[cut]}: ${money(each)} per set × ${sets} ${sets === 1 ? "set" : "sets"}`, each * sets);
