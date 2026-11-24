@@ -39,7 +39,7 @@
         const defs = svg.querySelector("defs");
         const rowLabelY = jaw === "upper" ? 25 : 345;
         svg.appendChild(node("text", {
-            x: 18, y: rowLabelY, fill: "#d9c18a", "font-size": 14,
+            x: 18, y: rowLabelY, fill: "#665a43", "font-size": 14,
             "font-family": "Arial, sans-serif", "font-weight": "700"
         }, jaw === "upper" ? "UPPER ARCH" : "LOWER ARCH"));
 
@@ -56,8 +56,8 @@
             const rotation = t * (jaw === "upper" ? -13 : 13);
             const isSelected = selected.has(tooth);
             const group = node("g", { transform: `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rotation.toFixed(1)})` });
-            const fill = isSelected ? `url(#${metal.id})` : "#e8e3da";
-            const stroke = isSelected ? metal.stroke : "#aaa398";
+            const fill = isSelected ? `url(#${metal.id})` : "#fffdf8";
+            const stroke = isSelected ? metal.stroke : "#b9ad99";
 
             group.appendChild(node("path", {
                 d: crownPath(width, height, jaw, config.design === "fangs" && isSelected),
@@ -84,7 +84,7 @@
             if (isSelected) {
                 const labelY = jaw === "upper" ? y + height / 2 + 15 : y + height / 2 + 15;
                 svg.appendChild(node("text", {
-                    x, y: labelY, fill: "#f3e5bd", "font-size": 13,
+                    x, y: labelY, fill: "#3a3022", "font-size": 13,
                     "font-family": "Arial, sans-serif", "font-weight": "700",
                     "text-anchor": "middle"
                 }, tooth));
@@ -98,7 +98,7 @@
         });
         svg.appendChild(node("polyline", {
             points: points.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" "),
-            fill: "none", stroke: jaw === "upper" ? "#a75b50" : "#9b5a56",
+            fill: "none", stroke: jaw === "upper" ? "#bd8b80" : "#bd8b80",
             "stroke-width": 2.5, opacity: .78, "stroke-linecap": "round", "stroke-linejoin": "round"
         }));
     }
@@ -121,7 +121,8 @@
             "aria-label": "Schematic upper and lower dental arch. Selected teeth are shown in the chosen grill material.",
             preserveAspectRatio: "xMidYMid meet"
         });
-        svg.appendChild(node("title", {}, "Mr. Sprinkle Grillz design preview"));
+        svg.appendChild(node("rect", { x: 0, y: 0, width: 800, height: 370, rx: 14, fill: "#f6f2e9" }));
+        svg.appendChild(node("title", {}, "Mr. Sprinkle Grillz technical design preview"));
         svg.appendChild(node("desc", {}, "A simplified front-facing dental arch diagram. Highlighted tooth numbers match the selected FDI teeth. This illustration is not dental CAD or a manufacturing model."));
         const defs = node("defs", {});
         const gradient = node("linearGradient", { id: metal.id, x1: "0", y1: "0", x2: "0.9", y2: "1" });
@@ -148,7 +149,7 @@
                 ? `Approximate coverage only: ${upper} upper and ${lower} lower teeth. No exact tooth positions have been chosen, so no crowns are highlighted.`
                 : "Choose exact teeth to highlight the grill coverage. Count-only selections remain approximate.";
         } else if (Number(c.stoneCount) > 0 && c.stones !== "none") {
-            note.textContent = `Selected FDI teeth are highlighted. ${c.stoneCount} ${metal.label} design stone(s) are included in the estimate; exact stone positions are not captured in this preview.`;
+            note.textContent = `Selected FDI teeth are highlighted. ${c.stoneCount} ${metal.label} design stone(s) are included in the estimate; use the stone placement editor below to choose exact positions on each selected tooth.`;
         } else if (c.cuts && c.cuts.length) {
             note.textContent = "Highlighted caps follow your selected teeth. Cut styling is indicated schematically; final engraving and fit require design confirmation.";
         } else {
