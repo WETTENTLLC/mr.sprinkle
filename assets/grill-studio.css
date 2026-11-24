@@ -134,3 +134,22 @@
 @media(prefers-reduced-motion:reduce){
   .tooth-arch-picker .tooth-crown{transition:none}
 }
+
+
+/* Customer-facing Grill Maker: restrained technical diagram replaces the
+   rejected procedural mouth renderer. */
+.preview-teeth{
+  display:block; width:100%; min-height:320px; margin:16px 0 0; padding:18px;
+  overflow:hidden; border:1px solid #c9b98f; border-radius:12px;
+  background:linear-gradient(145deg,#f6f2e9 0%,#e8e0d0 100%);
+  color:#26221b; box-shadow:0 12px 28px rgba(0,0,0,.22);
+}
+.preview-meta{
+  margin:0 0 12px; color:#665a43; font-size:.78rem; font-weight:800;
+  letter-spacing:.06em; text-transform:uppercase;
+}
+.preview-arch{display:block;width:100%;height:auto;max-height:390px}
+.preview-note{
+  margin:12px 0 0; padding-top:10px; border-top:1px solid #d4c8b2;
+  color:#625947; font-size:.78rem; line-height:1.5;
+}
