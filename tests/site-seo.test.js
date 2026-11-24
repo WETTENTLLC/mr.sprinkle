@@ -371,22 +371,22 @@ test("grill designer renders a dental-arch diagram without changing the estimate
 });
 
 
-test("customer-facing Grill Maker uses the clean technical diagram instead of the old 3D mouth renderer", () => {
+test("customer-facing Grill Maker restores the interactive luxury 3D mouth renderer", () => {
   const html = read("pricing.html");
-  const preview = read("assets/grill-preview.js");
-  assert.match(html, /assets\/grill-preview\.js/);
-  assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
-  assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
-  assert.match(html, /id="designPreview"/);
-  assert.doesNotMatch(html, /three@0\.187\.0|grill-studio-3d\.js|grill3DViewport/);
-  assert.match(preview, /UPPER ARCH/);
-  assert.match(preview, /LOWER ARCH/);
-  assert.match(preview, /selected\.has\(tooth\)/);
-  assert.match(preview, /use the stone placement editor below to choose exact positions/);
-  assert.match(html, /data-metal-swatch="gold14k"/);
+  const renderer = read("assets/grill-studio-3d.js");
+  const css = read("assets/grill-studio.css");
+  assert.match(html, /id="grill3DViewport"/);
+  assert.match(html, /assets\/grill-studio-3d\.js/);
+  assert.match(html, /"three": "https:\/\/cdn\.jsdelivr\.net\/npm\/three@0\.187\.0/);
+  assert.match(html, /mr-sprinkle:grill-config/);
+  assert.match(renderer, /function createSmileLips/);
+  assert.match(renderer, /function createJaw/);
+  assert.match(renderer, /function addDesignDetails/);
+  assert.match(renderer, /sampleTeeth = UPPER\.slice\(5, 11\)/);
+  assert.doesNotMatch(renderer, /Array\.from\(\{ length: 25 \}/);
+  assert.match(css, /grill-3d-viewport--mouth/);
   assert.match(html, /id="selectUpperTeeth"/);
   assert.match(html, /id="selectLowerTeeth"/);
-  assert.doesNotMatch(html, /estimateUpperCount|estimateLowerCount/);
 });
 
 test("Sprinkle Studio renders one complete 16-tooth arch per jaw", () => {
