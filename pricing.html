@@ -476,7 +476,7 @@
                     <div class="stone-layout-toolbar">
                         <div class="stone-shape-choice" role="group" aria-label="Stone setting shape">
                             <span class="stone-toolbar-label">Setting layout</span>
-                            <button type="button" data-stone-shape="round" aria-pressed="true"><span class="shape-symbol shape-symbol--round"></span>Round</button>
+                            <button type="button" 
                             <button type="button" data-stone-shape="square" aria-pressed="false"><span class="shape-symbol shape-symbol--square"></span>Square</button>
                         </div>
                         <div class="stone-tooth-editor-select">
@@ -937,7 +937,7 @@ Please let me know next steps!`);
         let stoneTargets = [];
         let stoneTargetsAuto = true;
         let activeStoneTooth = '';
-        let stoneShape = 'round';
+        let stoneShape = 'square';
         let stoneProfiles = {};
         let stoneCellColors = {};
         let activeStoneCell = null;
@@ -1127,7 +1127,7 @@ Please let me know next steps!`);
             document.getElementById('toothModeStones').setAttribute('aria-pressed', String(toothMode === 'stones'));
             document.getElementById('toothModeHint').textContent = toothMode === 'grill'
                 ? 'Select the teeth that will receive grillz. Switch to stone mode to choose which of those teeth receive diamonds or other stones.'
-                : 'Stone mode: choose which selected teeth receive stones. Each tooth can use its own material, color and setting shape. Click a tooth in the mouth preview to edit its exact stone positions.';
+                : 'Stone mode: choose which selected teeth receive stones. Each tooth can use its own material, color and setting shape. Click a tooth or one of its square settings in the 2D grill design to edit its exact stone positions.';
         }
 
         function buildArchPicker(group) {
