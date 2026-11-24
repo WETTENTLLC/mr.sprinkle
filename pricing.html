@@ -1218,7 +1218,6 @@ Please let me know next steps!`);
         function renderDesignPreview(config) {
             window.__MrSprinkleGrillConfig = config;
             window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config', { detail: config }));
-            if (window.MrSprinkleGrill3D) window.MrSprinkleGrill3D.update(config);
             if (designPreview && designPreview.dataset.fallback === 'true' && window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
                 window.MrSprinkleGrillPreview.render(designPreview, config);
             }
