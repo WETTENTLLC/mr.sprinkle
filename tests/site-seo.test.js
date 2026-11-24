@@ -436,9 +436,13 @@ test("customers can choose stone-bearing teeth and edit round or square per-toot
   assert.match(layout, /function createDefault\(targets, requestedCount, options\)/);
   assert.match(layout, /function move\(/);
   assert.match(layout, /function allowedCells\(size\)/);
+  assert.match(layout, /const SIZE_CAPACITY = Object.freeze\(\{ "1\.3":40/);
+  assert.match(layout, /const UPPER = \["14","13","12","11","21","22","23","24"\]/);
   assert.match(model, /placements\[item\.number\]/);
   assert.match(model, /stoneProfiles\[item\.number\]/);
   assert.match(model, /materialForStone\(stoneType, stoneColor\)/);
+  assert.match(read("assets/grill-estimate.js"), /stoneCellColors: JSON\.stringify/);
+  assert.match(read("mold-form.html"), /Individual square colors/);
   assert.match(model, /RoundedBoxGeometry/);
   assert.match(css, /\.stone-placement-grid/);
   assert.match(css, /\.stone-slot\[data-stone-shape="square"\]/);
