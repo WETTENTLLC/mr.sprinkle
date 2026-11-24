@@ -956,6 +956,68 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     if (renderer && scene && camera && !disposed) renderer.render(scene, camera);
   }
 
+  // Development-facing inventory for validating the complete procedural arch.
+  // This describes the on-screen mockup only; it is not a dental scan or CAD fit.
+  function getToothInventory() {
+    if (modelRoot) modelRoot.updateMatrixWorld(true);
+    return toothMeshes.map(function (item) {
+      const position = item.root.getWorldPosition(new THREE.Vector3());
+      const geometry = item.enamel.geometry;
+      const bounds = geometry.boundingBox || (geometry.computeBoundingBox(), geometry.boundingBox);
+      return Object.freeze({
+        fdi: item.number,
+        jaw: item.jaw,
+        class: item.type,
+        dimensions: Object.freeze({
+          width: item.dimensions.width,
+          depth: item.dimensions.depth,
+          height: item.dimensions.height
+        }),
+        position: Object.freeze({
+          x: Number(position.x.toFixed(5)),
+          y: Number(position.y.toFixed(5)),
+          z: Number(position.z.toFixed(5))
+        }),
+        rotationZ: Number(item.root.rotation.z.toFixed(5)),
+        vertexCount: geometry.getAttribute("position").count,
+        triangleCount: geometry.index ? geometry.index.count / 3 : 0,
+        localBounds: Object.freeze({
+          width: Number((bounds.max.x - bounds.min.x).toFixed(5)),
+          depth: Number((bounds.max.y - bounds.min.y).toFixed(5)),
+          height: Number((bounds.max.z - bounds.min.z).toFixed(5))
+        }),
+        capVisible: item.cap.visible,
+        capScale: Object.freeze({
+          x: item.cap.scale.x,
+          y: item.cap.scale.y,
+          z: item.cap.scale.z
+        })
+      });
+    });
+  }
+
+  function getGeometryDiagnostics() {
+    const inventory = getToothInventory();
+    const counts = inventory.reduce(function (out, tooth) {
+      out[tooth.class] = (out[tooth.class] || 0) + 1;
+      out[tooth.jaw] = (out[tooth.jaw] || 0) + 1;
+      return out;
+    }, {});
+    return Object.freeze({
+      toothCount: inventory.length,
+      upperCount: inventory.filter(function (tooth) { return tooth.jaw === "upper"; }).length,
+      lowerCount: inventory.filter(function (tooth) { return tooth.jaw === "lower"; }).length,
+      classCounts: Object.freeze({
+        incisor: inventory.filter(function (tooth) { return tooth.class === "incisor"; }).length,
+        canine: inventory.filter(function (tooth) { return tooth.class === "canine"; }).length,
+        premolar: inventory.filter(function (tooth) { return tooth.class === "premolar"; }).length,
+        molar: inventory.filter(function (tooth) { return tooth.class === "molar"; }).length
+      }),
+      selectedTeeth: inventory.filter(function (tooth) { return tooth.capVisible; }).map(function (tooth) { return tooth.fdi; }),
+      inventory: inventory
+    });
+  }
+
   function setFrontCamera() {
     if (!camera) return;
     const aspect = Math.max(0.55, camera.aspect || 1);
@@ -1081,7 +1143,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         });
       }
 
-      window.MrSprinkleGrill3D = Object.freeze({ update });
+      window.MrSprinkleGrill3D = Object.freeze({ update, getToothInventory, getGeometryDiagnostics });
       window.addEventListener("mr-sprinkle:grill-config", function (event) {
         if (event.detail) update(event.detail);
       });
