@@ -448,7 +448,7 @@
                     </div>
                     <div id="estimateStoneCountField">
                         <label for="estimateStoneCount">Approximate number of stones</label>
-                        <input id="estimateStoneCount" type="number" min="0" max="100" step="1" value="0" aria-describedby="stoneCountHint">
+                        <input id="estimateStoneCount" type="number" min="0" max="640" step="1" value="0" aria-describedby="stoneCountHint">
                         <span id="stoneCountHint" class="stone-count-hint" aria-live="polite">Enter a rough stone count, even before choosing a stone type. Setting labor is included in published pricing.</span>
                     </div>
                 </div>
@@ -1098,7 +1098,7 @@ Please let me know next steps!`);
                 String(document.getElementById('estimateStoneSize').value || '1.3');
         }
         function rebuildLayout() {
-            const requested = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
+            const requested = Math.max(0, Math.min(640, Math.floor(Number(stoneCountInput.value) || 0)));
             layoutState = Stone.createDefault(stoneTargets, requested, { size:document.getElementById('estimateStoneSize').value });
             lastLayoutInputKey = currentLayoutKey();
             moveSource = null;
@@ -1519,7 +1519,7 @@ Please let me know next steps!`);
         function readConfig() {
             const teeth = selectedNumbers();
             const counts = selectedCountFromNumbers(teeth);
-            const requestedCount = Math.max(0, Math.min(100, Math.floor(Number(stoneCountInput.value) || 0)));
+            const requestedCount = Math.max(0, Math.min(640, Math.floor(Number(stoneCountInput.value) || 0)));
             return {
                 design:design.value,
                 metal:metal.value,
