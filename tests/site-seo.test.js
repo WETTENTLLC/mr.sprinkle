@@ -398,6 +398,8 @@ test("customer-facing Grill Maker uses the approved flat 2D master design", () =
   assert.doesNotMatch(html, /assets\/grill-studio-3d\.js/);
   assert.doesNotMatch(html, /<script type="importmap">/);
   assert.match(html, /40 positions/);
+  assert.match(html, /pointed fangs at the two outer ends/);
+  assert.doesNotMatch(html, /fangs in positions two and seven/);
   assert.match(html, /id="estimateStoneCount" type="number" min="0" max="640"/);
   assert.ok(read("assets/grill-stone-layout.js").includes("Math.min(640"), "stone layout supports up to 640 placements");
   assert.match(html, /stoneCellColors:/);
