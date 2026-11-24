@@ -286,17 +286,58 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const lowerCenter = positions.length / 3;
     positions.push(0,0,0);
-    const upperCenter = positions.length / 3;
-    positions.push(0,0,sign * dimensions.height * 1.035);
+
+    // Build a contoured occlusal/incisal surface instead of closing the crown
+    // with a flat fan. Intermediate polar rings carry the same cusp profile as
+    // the crown wall, creating smooth incisor edges, canine tips, paired
+    // premolar cusps and four-cusp molar tables while retaining one tooth mesh.
+    const topProfile = profile[profile.length - 1];
+    const topRings = [];
+    [0.25, 0.50, 0.75].forEach(function (radial) {
+      const start = positions.length / 3;
+      topRings.push(start);
+      for (let segment = 0; segment < segments; segment++) {
+        const angle = (segment / segments) * Math.PI * 2;
+        const nx = Math.cos(angle);
+        const ny = Math.sin(angle);
+        const x = nx * dimensions.width * topProfile[1] * radial;
+        const y = ny * dimensions.depth * topProfile[2] * radial;
+        const cusp = cuspProfile(kind, nx, ny);
+        const z = sign * dimensions.height * (1 + 0.095 * cusp);
+        positions.push(x, y, z);
+      }
+    });
+
+    const topCenter = positions.length / 3;
+    positions.push(0, 0, sign * dimensions.height * (1 + 0.095 * cuspProfile(kind, 0, 0)));
     const topStart = (ringCount - 1) * segments;
+
+    // Fan from the crown center to the innermost contour ring.
+    const innerStart = topRings[0];
     for (let segment = 0; segment < segments; segment++) {
       const next = (segment + 1) % segments;
-      if (sign > 0) {
-        indices.push(lowerCenter,next,segment,upperCenter,topStart + segment,topStart + next);
-      } else {
-        indices.push(lowerCenter,segment,next,upperCenter,topStart + next,topStart + segment);
+      if (sign > 0) indices.push(topCenter, innerStart + segment, innerStart + next);
+      else indices.push(topCenter, innerStart + next, innerStart + segment);
+    }
+
+    // Join each contoured ring and the original crown perimeter with consistent
+    // winding so the upper and lower arches have outward-facing normals.
+    const connectedRings = topRings.concat([topStart]);
+    for (let ring = 0; ring < connectedRings.length - 1; ring++) {
+      const currentStart = connectedRings[ring];
+      const nextStart = connectedRings[ring + 1];
+      for (let segment = 0; segment < segments; segment++) {
+        const next = (segment + 1) % segments;
+        const a = currentStart + segment;
+        const b = currentStart + next;
+        const c = nextStart + next;
+        const d = nextStart + segment;
+        if (sign > 0) indices.push(a, b, d, b, c, d);
+        else indices.push(a, d, b, b, d, c);
       }
     }
+
+    // Preserve a closed cervical base without changing the crown's tooth ID.
 
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
     geometry.setIndex(indices);
