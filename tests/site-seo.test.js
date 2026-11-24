@@ -501,3 +501,14 @@ test("intro video remains playable and the native entry links bypass the overlay
   assert.match(html, /href="#home"[^>]*data-intro-action="skip"/);
   assert.match(html, /<main id="home">/);
 });
+
+
+test("3D crowns use a contoured tooth-specific occlusal surface rather than a flat cap", () => {
+  const model = read("assets/grill-studio-3d.js");
+  assert.match(model, /Build a contoured occlusal\/incisal surface instead of closing the crown/);
+  assert.match(model, /const topRings = \[\];/);
+  assert.match(model, /cuspProfile\(kind, nx, ny\)/);
+  assert.match(model, /const connectedRings = topRings\.concat\(\[topStart\]\)/);
+  assert.match(model, /if \(sign > 0\) indices\.push\(a, b, d, b, c, d\)/);
+  assert.match(model, /if \(sign > 0\) indices\.push\(topCenter, innerStart \+ segment, innerStart \+ next\)/);
+});
