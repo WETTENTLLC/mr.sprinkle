@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" href="assets/trans.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/site-header.css">
-    <link rel="stylesheet" href="assets/grill-studio.css">
+    <link rel="stylesheet" href="assets/grill-studio.css?v=20261124-technical-diagram">
     <link rel="stylesheet" href="assets/grill-stone-editor.css?v=20261123-reference-photo-v1">
     <script type="importmap">
     {
@@ -25,7 +25,7 @@
     <script src="assets/grill-stone-layout.js?v=20261122-layout-v1"></script>
     <script src="assets/pricing-catalog.js?v=20261124-approved-pair-addons"></script>
     <script src="assets/grill-estimate.js"></script>
-    <script src="assets/grill-preview.js"></script>
+    <script src="assets/grill-preview.js?v=20261124-technical-diagram"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -362,13 +362,10 @@
                         <div id="exactToothSummary" class="grill-selection-summary" aria-live="polite">0 teeth selected — choose a tooth above to start your design.</div>
                     </section>
                     <section class="grill-studio-panel" aria-labelledby="grillMockupHeading">
-                        <div class="grill-studio-panel__eyebrow"><span>02</span> Live product mockup</div>
-                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Close-up smile view <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
-                        <h3 id="grillMockupHeading">Your smile. Your design.</h3>
-                        <p class="grill-studio-panel__lead">Start with our full silver pavé reference sample, then select any visible tooth in the sample or any tooth in the map to customize your own grillz.</p>
-                        <div id="grill3DViewport" class="grill-3d-viewport grill-3d-viewport--mouth grill-3d-viewport--smile" aria-label="Close-up 3D mouth preview with sculpted lips, gums and customizable upper and lower grillz"></div>
-                        <p id="grill3DStatus" class="grill-3d-status" role="status" aria-live="polite">Loading your smile preview. Your tooth map remains available as a fallback.</p>
-                        <p id="grill3DMaterialNote" class="grill-3d-material-note">The mockup is a design visualization. Final contours and fit are confirmed from your approved mold.</p>
+                        <div class="grill-studio-panel__eyebrow"><span>02</span> Technical design preview</div>
+                        <div class="mouth-preview-kicker"><span class="mouth-preview-kicker__dot"></span> Front-facing arch diagram <span class="mouth-preview-kicker__tag">LIVE DESIGN</span></div>
+                        <h3 id="grillMockupHeading">Build your exact tooth layout.</h3>
+                        <p class="grill-studio-panel__lead">A clean, front-facing design schematic updates as you select teeth, metal, and finish options. Selected FDI positions are highlighted; final contours and fit are confirmed from your approved mold.</p>
                         <div id="designPreview" class="preview-teeth" aria-live="polite">Choose teeth to preview your design.</div>
                     </section>
                 </div>
@@ -1216,11 +1213,6 @@ Please let me know next steps!`);
 
         function renderDesignPreview(config) {
             window.__MrSprinkleGrillConfig = config;
-            if (window.MrSprinkleGrill3D && typeof window.MrSprinkleGrill3D.update === 'function') {
-                window.MrSprinkleGrill3D.update(config);
-            } else {
-                window.dispatchEvent(new CustomEvent('mr-sprinkle:grill-config', { detail:config }));
-            }
             if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === 'function') {
                 window.MrSprinkleGrillPreview.render(designPreview, config);
                 return;
@@ -1811,7 +1803,6 @@ Please let me know next steps!`);
         }));
     });
     </script>
-    <script type="module" src="assets/grill-studio-3d.js?v=20261124-contoured-crowns-v1"></script>
-    <script src="assets/site-header.js"></script>
+        <script src="assets/site-header.js"></script>
 </body>
 </html>
