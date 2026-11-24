@@ -151,6 +151,7 @@
 .mouth-preview-kicker{display:flex;align-items:center;gap:8px;margin:0 0 9px;color:#8ce3df;font-size:.68rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
 .mouth-preview-kicker__dot{width:7px;height:7px;border-radius:50%;background:#22c6c8;box-shadow:0 0 9px rgba(34,198,200,.8)}
 .mouth-preview-kicker__tag{margin-left:auto;padding:4px 7px;border:1px solid rgba(214,179,107,.38);border-radius:4px;color:#e6ca8f;font-size:.6rem;letter-spacing:.12em}
-.preview-teeth{display:none!important}
+.preview-teeth{display:none}
+.preview-teeth[data-fallback="true"]{display:block}
 @media(max-width:900px){.grill-studio-workspace{grid-template-columns:1fr}.grill-3d-viewport--mouth{height:460px;min-height:360px}}
 @media(max-width:620px){.grill-studio-panel{padding:13px}.grill-3d-viewport--mouth{height:340px;min-height:300px}}
