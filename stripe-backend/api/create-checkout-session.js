@@ -53,7 +53,7 @@ module.exports = async function handler(req, res) {
     }
 
     const customerEmail = typeof body.customerEmail === "string" ? body.customerEmail.trim() : "";
-    if (customerEmail && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customerEmail)) {
+    if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       return res.status(400).json({ error: "Please provide a valid email address." });
     }
 
