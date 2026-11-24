@@ -30,7 +30,22 @@ test("stones priced, labor included, no quote", () => {
 test("decimal stone prices round to cents", () => assert.equal(total({ upperCount: 1, stones: "labGrownDiamond", size: "1.3", stoneCount: 3 }), 100 + 15 + 60));
 test("cut charged once per set: upper only", () => assert.equal(total({ upperCount: 6, cuts: "diamondDust" }), 600 + 30 + 60));
 test("cut charged per set: upper + lower = 2 sets", () => assert.equal(total({ upperCount: 6, lowerCount: 6, cuts: "openFace,centerSplit" }), 1200 + 80 + 40 + 60));
-test("cut on fangs = 1 set", () => assert.equal(total({ design: "fangs", cuts: "deepBar" }), 180 + 30 + 60));
+test("deep/bar cut on fangs is one pair", () => assert.equal(total({ design: "fangs", cuts: "deepBar" }), 180 + 15 + 60));
+test("individual fabrication is $10 per pair of selected teeth", () => {
+  const r = E.calculate({ metal: "gold14k", teeth: "18,17,16,15,14,13,12,11", cuts: "individualFabrication" });
+  assert.equal(r.total, 8 * 300 + 4 * 10 + 60);
+  assert.ok(r.lines.some((line) => line.label.includes("$10 per 2 teeth") && line.amount === 40));
+});
+test("deep/bar cut is $15 per pair of selected teeth", () => {
+  const r = E.calculate({ metal: "gold14k", teeth: "18,17,16,15,14,13,12,11", cuts: "deepBar" });
+  assert.equal(r.total, 8 * 300 + 4 * 15 + 60);
+  assert.ok(r.lines.some((line) => line.label.includes("$15 per 2 teeth") && line.amount === 60));
+});
+test("approved 8-tooth 14K pair add-ons total $2,500 before shipping", () => {
+  const r = E.calculate({ metal: "gold14k", teeth: "18,17,16,15,14,13,12,11", cuts: "individualFabrication,deepBar" });
+  assert.equal(r.total, 2500 + 60);
+  assert.equal(r.lines.filter((line) => /per 2 teeth/.test(line.label)).reduce((sum, line) => sum + line.amount, 0), 100);
+});
 test("rush replaces standard shipping", () => {
   const r = E.calculate({ upperCount: 1, shipping: "rush" });
   assert.equal(r.total, 250); assert.ok(!r.lines.some((l) => /Standard/.test(l.label)));
