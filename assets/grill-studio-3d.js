@@ -143,11 +143,11 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
 
   const gumMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xb85161, roughness: 0.38, metalness: 0,
+    color: 0x9b4a55, roughness: 0.31, metalness: 0,
     clearcoat: 0.46, clearcoatRoughness: 0.22
   });
   const gumHighlightMaterial = new THREE.MeshStandardMaterial({
-    color: 0xe18d91, roughness: 0.42, metalness: 0
+    color: 0xc87983, roughness: 0.34, metalness: 0
   });
   const castMaterial = new THREE.MeshPhysicalMaterial({
     color: 0xe9e3d5, roughness: 0.72, metalness: 0.015,
@@ -357,7 +357,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     depthWrite: true
   });
   const upperLipMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x743038,
+    color: 0x68333a,
     roughness: 0.245,
     metalness: 0,
     clearcoat: 0.92,
@@ -366,7 +366,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
     sheenColor: 0x9f5158
   });
   const lowerLipMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x91404a,
+    color: 0x82404a,
     roughness: 0.225,
     metalness: 0,
     clearcoat: 0.96,
@@ -497,7 +497,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const archCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ);
     const gumBand = new THREE.Mesh(
-      new THREE.TubeGeometry(archCurve, 88, 0.17, 32, false),
+      new THREE.TubeGeometry(archCurve, 88, 0.125, 32, false),
       gumMaterial
     );
     gumBand.castShadow = true;
@@ -506,7 +506,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
     const gumLineCurve = makeArchCurve(jaw, 2.02, 1.18, crownZ + (isUpper ? -0.12 : 0.12));
     const gumLine = new THREE.Mesh(
-      new THREE.TubeGeometry(gumLineCurve, 88, 0.035, 12, false),
+      new THREE.TubeGeometry(gumLineCurve, 88, 0.022, 12, false),
       gumHighlightMaterial
     );
     group.add(gumLine);
@@ -756,9 +756,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         depthWrite: false,
         side: THREE.DoubleSide
       });
-      // A quiet 5×5 seat map remains visible on every stone-enabled tooth.
-      // Empty seats read as subtle squares; occupied seats become jeweled settings.
-      for (let cell = 0; cell < 25; cell++) {
+      // Render only the stones the customer actually selected. Empty 5×5 seat
+      // outlines looked like a spreadsheet overlay and are intentionally omitted.
+      targetCells.forEach(function (cell) {
         const column = cell % 5;
         const row = Math.floor(cell / 5);
         const x = ((column - 2) / 2) * dims.width * 0.68;
@@ -768,45 +768,19 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         const z = jawSign * dims.height * verticalFraction;
         const frontSurface = crownFrontSurfaceY(dims, item.jaw, x, z);
         const surfaceY = cap.position.y + frontSurface * cap.scale.y;
-        const seatSize = Math.min(stoneDiameter * 0.82, dims.width * 0.20, dims.height * 0.105);
-        const isPlaced = placedCells.has(cell) && stoneType !== "none" && totalStoneCount > 0;
-
-        if (!isPlaced) {
-          const edge = Math.max(0.0035, seatSize * 0.075);
-          const frontY = surfaceY - 0.006;
-          const bars = [
-            [seatSize, edge, 0, -seatSize / 2 + edge / 2],
-            [seatSize, edge, 0, seatSize / 2 - edge / 2],
-            [edge, seatSize, -seatSize / 2 + edge / 2, 0],
-            [edge, seatSize, seatSize / 2 - edge / 2, 0]
-          ];
-          bars.forEach(function (bar) {
-            const mesh = new THREE.Mesh(new THREE.BoxGeometry(bar[0], 0.004, bar[1]), outlineMaterial);
-            const local = capLocalPoint(cap, x * cap.scale.x + bar[2], frontY, z * cap.scale.z + bar[3]);
-            mesh.position.copy(local);
-            mesh.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
-            mesh.userData.designDetail = true;
-            mesh.userData.stoneCell = cell;
-            cap.add(mesh);
-          });
-          continue;
-        }
-
         const fitDiameter = Math.min(stoneDiameter, dims.width * 0.52, dims.height * 0.34);
         const mountDepth = Math.max(0.010, fitDiameter * 0.18);
         const gemHalfDepth = fitDiameter * (stoneShape === "square" ? 0.14 : 0.27);
-        if (!config.paveSample) {
-          const mount = new THREE.Mesh(
-            new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
-            metalMaterial
-          );
-          const mountPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth * 0.5, z * cap.scale.z);
-          mount.position.copy(mountPoint);
-          mount.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
-          mount.userData.designDetail = true;
-          mount.userData.stoneCell = cell;
-          cap.add(mount);
-        }
+        const mount = new THREE.Mesh(
+          new THREE.CylinderGeometry(fitDiameter * 0.53, fitDiameter * 0.53, mountDepth / cap.scale.y, 20),
+          metalMaterial
+        );
+        const mountPoint = capLocalPoint(cap, x * cap.scale.x, surfaceY - mountDepth * 0.5, z * cap.scale.z);
+        mount.position.copy(mountPoint);
+        mount.scale.set(1 / cap.scale.x, 1, 1 / cap.scale.z);
+        mount.userData.designDetail = true;
+        mount.userData.stoneCell = cell;
+        cap.add(mount);
 
         const shape = stoneShape === "square"
           ? new RoundedBoxGeometry(fitDiameter, Math.max(0.014, fitDiameter * 0.28), fitDiameter, 2, fitDiameter * 0.12)
@@ -822,7 +796,6 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
         gem.receiveShadow = true;
         cap.add(gem);
 
-        // Four polished micro-prongs make each round stone read as a real setting.
         if (stoneShape !== "square") {
           const prongRadius = Math.max(0.006, fitDiameter * 0.075);
           const prongGeo = new THREE.SphereGeometry(prongRadius, 8, 6);
@@ -838,7 +811,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
             cap.add(prong);
           });
         }
-      }
+      });
     }
 
     if (cuts.includes("diamondDust")) {
@@ -884,23 +857,25 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   }
 
   function samplePaveConfig() {
-    const sampleTeeth = UPPER.slice(4, 12).concat(LOWER.slice(4, 12));
+    // Curated showroom sample: a restrained six-tooth smile in each arch,
+    // polished 14K gold with three visible stones per crown (not a 25-seat grid).
+    const sampleTeeth = UPPER.slice(5, 11).concat(LOWER.slice(5, 11));
     const layout = {};
-    sampleTeeth.forEach(function (number) { layout[number] = Array.from({ length: 25 }, function (_, i) { return i; }); });
+    sampleTeeth.forEach(function (number) { layout[number] = [6, 12, 18]; });
     return {
       design: "standard",
-      metal: "silver",
+      metal: "gold14k",
       teeth: sampleTeeth,
       stones: "natural",
       stoneShape: "round",
-      size: "1.3",
-      stoneCount: sampleTeeth.length * 25,
+      size: "1.5",
+      stoneCount: sampleTeeth.length * 3,
       stoneTeeth: sampleTeeth,
       stoneLayout: layout,
       stoneProfiles: {},
       enamelProfiles: {},
       cuts: [],
-      paveSample: true
+      paveSample: false
     };
   }
 
@@ -1061,7 +1036,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
   function init() {
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.65));
       renderer.setSize(host.clientWidth || 640, host.clientHeight || 390, false);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1086,13 +1061,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 
       scene.add(new THREE.HemisphereLight(0xfff1e8, 0x382c31, 2.35));
 
-      const key = new THREE.DirectionalLight(0xffe5c1, 3.4);
+      const key = new THREE.DirectionalLight(0xffe8cb, 3.0);
       key.position.set(-3.4, -4.0, 4.4);
       key.castShadow = true;
       key.shadow.mapSize.set(1024, 1024);
       scene.add(key);
 
-      const fill = new THREE.DirectionalLight(0xffb7b5, 1.6);
+      const fill = new THREE.DirectionalLight(0xffc7c1, 1.15);
       fill.position.set(4, -2.5, 1.5);
       scene.add(fill);
 
@@ -1107,7 +1082,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       createJaw("lower");
       createSmileLips();
 
-      const frontFill = new THREE.DirectionalLight(0xffffff, 2.25);
+      const frontFill = new THREE.DirectionalLight(0xffffff, 1.75);
       frontFill.position.set(0, -5, 0.2);
       scene.add(frontFill);
 
