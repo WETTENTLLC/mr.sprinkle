@@ -415,7 +415,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /stoneCount: sampleTeeth.length \* 25/);
   assert.match(model, /Sample full-pavé grill/);
   assert.match(stoneCss, /aspect-ratio:1\.105 \/ 1/);
-  assert.match(html, /live-3d-mouth-v1/);
+  assert.match(html, /contoured-crowns-v1/);
   assert.match(model, /function buildReferenceSampleLayer/);
   assert.doesNotMatch(model, /assets\/grill-reference\.webp\.b64/);
   assert.doesNotMatch(model, /grill-reference-tooth-hit/);
