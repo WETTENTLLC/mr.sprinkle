@@ -1136,7 +1136,13 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
       host.replaceChildren();
       setStatus("3D preview is unavailable in this browser. The flat design diagram remains available below.", true);
       const fallback = document.getElementById("designPreview");
-      if (fallback) fallback.hidden = false;
+      if (fallback) {
+        fallback.hidden = false;
+        fallback.dataset.fallback = "true";
+        if (window.MrSprinkleGrillPreview && typeof window.MrSprinkleGrillPreview.render === "function") {
+          window.MrSprinkleGrillPreview.render(fallback, window.__MrSprinkleGrillConfig || {});
+        }
+      }
     }
   }
 
