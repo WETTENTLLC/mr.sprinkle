@@ -1,11 +1,12 @@
 /* Mr. Sprinkle Grill Designer 2.0: precision flat 2D pavé renderer.
-   8 crowns per arch; fangs in positions 2 and 7; 40 individually addressable squares per crown. */
+   8 crowns per arch; reference-matched silhouettes mirrored across each arch; 40 square settings per crown. */
 (function(root){
 "use strict";
 const NS="http://www.w3.org/2000/svg";
 const UPPER=["14","13","12","11","21","22","23","24"];
 const LOWER=["44","43","42","41","31","32","33","34"];
-const WIDTHS=[174,166,174,206,206,174,166,174];
+const WIDTHS=[168,154,176,214,214,176,154,168];
+const HEIGHTS=[332,286,310,330,330,310,286,332];
 const METALS={
  silver:{a:"#ffffff",b:"#c7cdd5",c:"#737d8b",edge:"#f3f6fa",seat:"#b8c0cb"},
  gold10k:{a:"#fff0a6",b:"#d29a36",c:"#754411",edge:"#ffe6a0",seat:"#bd8528"},
@@ -21,10 +22,19 @@ function node(tag,attrs,text){
  return n;
 }
 function safe(v){return String(v||"").replace(/[^a-zA-Z0-9_-]/g,"");}
-function toothPath(w,h,fang,jaw){
- if(fang&&jaw==="upper")return "M "+(-w*.39)+" "+(-h*.46)+" Q "+(-w*.54)+" "+(-h*.23)+" "+(-w*.40)+" "+(h*.10)+" Q "+(-w*.20)+" "+(h*.43)+" 0 "+(h*.50)+" Q "+(w*.20)+" "+(h*.43)+" "+(w*.40)+" "+(h*.10)+" Q "+(w*.54)+" "+(-h*.23)+" "+(w*.39)+" "+(-h*.46)+" Q 0 "+(-h*.56)+" "+(-w*.39)+" "+(-h*.46)+" Z";
- if(fang&&jaw==="lower")return "M "+(-w*.39)+" "+(h*.46)+" Q "+(-w*.54)+" "+(h*.23)+" "+(-w*.40)+" "+(-h*.10)+" Q "+(-w*.20)+" "+(-h*.43)+" 0 "+(-h*.50)+" Q "+(w*.20)+" "+(-h*.43)+" "+(w*.40)+" "+(-h*.10)+" Q "+(w*.54)+" "+(h*.23)+" "+(w*.39)+" "+(h*.46)+" Q 0 "+(h*.56)+" "+(-w*.39)+" "+(h*.46)+" Z";
- return "M "+(-w*.40)+" "+(-h*.43)+" Q "+(-w*.50)+" "+(-h*.51)+" "+(-w*.37)+" "+(-h*.53)+" Q 0 "+(-h*.60)+" "+(w*.37)+" "+(-h*.53)+" Q "+(w*.50)+" "+(-h*.51)+" "+(w*.40)+" "+(-h*.43)+" Q "+(w*.50)+" "+(-h*.20)+" "+(w*.47)+" "+(h*.20)+" Q "+(w*.43)+" "+(h*.52)+" 0 "+(h*.53)+" Q "+(-w*.43)+" "+(h*.52)+" "+(-w*.47)+" "+(h*.20)+" Q "+(-w*.50)+" "+(-h*.20)+" "+(-w*.40)+" "+(-h*.43)+" Z";
+function toothPath(w,h,shape,jaw){
+ const upper=jaw==="upper";
+ if(shape==="fang"){
+  if(upper)return "M "+(-w*.38)+" "+(-h*.37)+" Q "+(-w*.51)+" "+(-h*.55)+" 0 "+(-h*.54)+" Q "+(w*.51)+" "+(-h*.55)+" "+(w*.38)+" "+(-h*.37)+" Q "+(w*.35)+" "+(h*.02)+" 0 "+(h*.50)+" Q "+(-w*.35)+" "+(h*.02)+" "+(-w*.38)+" "+(-h*.37)+" Z";
+  return "M "+(-w*.38)+" "+(h*.37)+" Q "+(-w*.51)+" "+(h*.55)+" 0 "+(h*.54)+" Q "+(w*.51)+" "+(h*.55)+" "+(w*.38)+" "+(h*.37)+" Q "+(w*.35)+" "+(-h*.02)+" 0 "+(-h*.50)+" Q "+(-w*.35)+" "+(-h*.02)+" "+(-w*.38)+" "+(h*.37)+" Z";
+ }
+ if(shape==="oval"){
+  return "M 0 "+(-h*.51)+" C "+(w*.37)+" "+(-h*.51)+" "+(w*.48)+" "+(-h*.30)+" "+(w*.47)+" 0 C "+(w*.46)+" "+(h*.34)+" "+(w*.28)+" "+(h*.51)+" 0 "+(h*.51)+" C "+(-w*.28)+" "+(h*.51)+" "+(-w*.46)+" "+(h*.34)+" "+(-w*.47)+" 0 C "+(-w*.48)+" "+(-h*.30)+" "+(-w*.37)+" "+(-h*.51)+" 0 "+(-h*.51)+" Z";
+ }
+ if(shape==="rounded"){
+  return "M "+(-w*.42)+" "+(-h*.43)+" Q "+(-w*.48)+" "+(-h*.50)+" "+(-w*.32)+" "+(-h*.51)+" Q 0 "+(-h*.55)+" "+(w*.32)+" "+(-h*.51)+" Q "+(w*.48)+" "+(-h*.50)+" "+(w*.42)+" "+(-h*.43)+" Q "+(w*.49)+" "+(-h*.20)+" "+(w*.47)+" "+(h*.18)+" Q "+(w*.44)+" "+(h*.49)+" "+(w*.22)+" "+(h*.51)+" Q 0 "+(h*.54)+" "+(-w*.22)+" "+(h*.51)+" Q "+(-w*.44)+" "+(h*.49)+" "+(-w*.47)+" "+(h*.18)+" Q "+(-w*.49)+" "+(-h*.20)+" "+(-w*.42)+" "+(-h*.43)+" Z";
+ }
+ return "M "+(-w*.43)+" "+(-h*.43)+" Q "+(-w*.48)+" "+(-h*.49)+" "+(-w*.35)+" "+(-h*.51)+" Q 0 "+(-h*.55)+" "+(w*.35)+" "+(-h*.51)+" Q "+(w*.48)+" "+(-h*.49)+" "+(w*.43)+" "+(-h*.43)+" Q "+(w*.48)+" "+(-h*.20)+" "+(w*.48)+" "+(h*.28)+" Q "+(w*.47)+" "+(h*.51)+" "+(w*.27)+" "+(h*.52)+" Q 0 "+(h*.55)+" "+(-w*.27)+" "+(h*.52)+" Q "+(-w*.47)+" "+(h*.51)+" "+(-w*.48)+" "+(h*.28)+" Q "+(-w*.48)+" "+(-h*.20)+" "+(-w*.43)+" "+(-h*.43)+" Z";
 }
 function addMetal(defs,metal,id){
  const g=node("linearGradient",{id:id,x1:"0",y1:"0",x2:"1",y2:"1"});
@@ -44,8 +54,10 @@ function addGem(defs,color){
  defs.appendChild(g);return id;
 }
 function makeTooth(tooth,index,jaw,position,config,metal,defs){
- const w=WIDTHS[index],h=332,fang=index===1||index===6;
- const d=toothPath(w,h,fang,jaw),g=node("g",{class:"ms2d-tooth","data-tooth":tooth,"data-jaw":jaw,tabindex:"0",role:"button","aria-label":jaw+" tooth "+tooth+" with forty customizable square settings"});
+ const w=WIDTHS[index],h=HEIGHTS[index];
+ const shape=index===0||index===7?"fang":index===1||index===6?"oval":index===2||index===5?"rounded":"square";
+ const fang=shape==="fang";
+ const d=toothPath(w,h,shape,jaw),g=node("g",{class:"ms2d-tooth","data-tooth":tooth,"data-jaw":jaw,tabindex:"0",role:"button","aria-label":jaw+" tooth "+tooth+" with forty customizable square settings"});
  const t=node("g",{transform:"translate("+position.x+" "+position.y+")"});
  const selected=new Set((config.teeth||[]).map(String)),sample=selected.size===0,onSet=sample||selected.has(tooth);
  if(!onSet){
@@ -112,8 +124,8 @@ function render(config){
  const bg=node("linearGradient",{id:"ms2d-bg",x1:"0",y1:"0",x2:"0",y2:"1"});
  bg.append(node("stop",{offset:"0%","stop-color":"#050505"}),node("stop",{offset:"100%","stop-color":"#000"}));defs.appendChild(bg);svg.appendChild(defs);
  svg.appendChild(node("rect",{x:0,y:0,width:1600,height:820,fill:"url(#ms2d-bg)"}));
- let x=52;const top=[],bottom=[];
- for(let i=0;i<8;i++){const w=WIDTHS[i];top.push({x:x+w/2,y:214});bottom.push({x:x+w/2,y:620});x+=w+8;}
+ let x=67;const top=[],bottom=[];
+ for(let i=0;i<8;i++){const w=WIDTHS[i];top.push({x:x+w/2,y:214});bottom.push({x:x+w/2,y:620});x+=w+6;}
  const upper=node("g",{class:"ms2d-arch ms2d-arch--upper"}),lower=node("g",{class:"ms2d-arch ms2d-arch--lower"});
  UPPER.forEach((tooth,i)=>upper.appendChild(makeTooth(tooth,i,"upper",top[i],c,metal,defs)));
  LOWER.forEach((tooth,i)=>lower.appendChild(makeTooth(tooth,i,"lower",bottom[i],c,metal,defs)));
