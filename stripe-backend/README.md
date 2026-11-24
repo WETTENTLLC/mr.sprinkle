@@ -43,7 +43,7 @@ The server recalculates the total with the website's estimate engine and creates
 
 Project: `mr-sprinkle-stripe-backend`; root directory: `stripe-backend`; Node.js 20+.
 
-Set these environment variables in Vercel Preview settings only for the initial sandbox:
+Set these environment variables in Vercel Preview settings only for the initial sandbox. The API rejects any Stripe secret key that does not begin with `sk_test_`, and the webhook rejects events where Stripe reports `livemode: true`:
 
 - `STRIPE_SECRET_KEY`: sandbox secret key, stored only in Vercel
 - `STRIPE_WEBHOOK_SECRET`: signing secret from Stripe CLI or the sandbox webhook endpoint
@@ -51,7 +51,7 @@ Set these environment variables in Vercel Preview settings only for the initial 
 
 No Stripe secrets belong in GitHub or browser code.
 
-## Sandbox test plan
+## Automated tests\n\nRun `npm test` from this folder. GitHub Actions runs the pricing and sandbox-guard tests for changes under `stripe-backend/`.\n\n## Sandbox test plan
 
 1. Add the sandbox secret key in Vercel Preview environment settings.
 2. Configure Stripe CLI forwarding to the deployed webhook URL and save its signing secret in Vercel.
