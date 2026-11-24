@@ -372,41 +372,42 @@ test("grill designer renders a dental-arch diagram without changing the estimate
 });
 
 
-test("luxury 3D renderer module parses as browser JavaScript", () => {
-  const renderer = read("assets/grill-studio-3d.js");
-  assert.doesNotThrow(() => execFileSync(process.execPath, ["--input-type=module", "--check"], { input: renderer }));
-  const html = read("pricing.html");
-  const importMap = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
-  assert.ok(importMap, "Three.js import map is present");
-  const parsed = JSON.parse(importMap[1]);
-  assert.equal(parsed.imports.three, "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js");
+test("precision 2D Grill Maker renderer parses and exposes 640 individual settings", () => {
+  const renderer = read("assets/grill-maker-2d.js");
+  assert.doesNotThrow(() => execFileSync(process.execPath, ["--check"], { input: renderer }));
+  assert.match(renderer, /const UPPER=\["14","13","12","11","21","22","23","24"\]/);
+  assert.match(renderer, /const LOWER=\["44","43","42","41","31","32","33","34"\]/);
+  assert.match(renderer, /index===1\|\|index===6/);
+  assert.match(renderer, /row<8/);
+  assert.match(renderer, /col<5/);
+  assert.match(renderer, /positionsPerTooth:40,totalPositions:640/);
+  assert.match(renderer, /stoneCellColors/);
+  assert.match(renderer, /mr-sprinkle:select-stone-cell/);
 });
 
-test("customer-facing Grill Maker restores the interactive luxury 3D mouth renderer", () => {
+test("customer-facing Grill Maker uses the approved flat 2D master design", () => {
   const html = read("pricing.html");
-  const renderer = read("assets/grill-studio-3d.js");
   const css = read("assets/grill-studio.css");
-  assert.match(html, /id="grill3DViewport"/);
-  assert.match(html, /assets\/grill-studio-3d\.js/);
-  assert.match(html, /"three": "https:\/\/cdn\.jsdelivr\.net\/npm\/three@0\.187\.0/);
-  assert.match(html, /mr-sprinkle:grill-config/);
-  assert.match(renderer, /function createSmileLips/);
-  assert.match(renderer, /function createJaw/);
-  assert.match(renderer, /function addDesignDetails/);
-  assert.match(renderer, /sampleTeeth = UPPER\.slice\(5, 11\)/);
-  assert.doesNotMatch(renderer, /Array\.from\(\{ length: 25 \}/);
-  assert.match(css, /grill-3d-viewport--mouth/);
+  assert.match(html, /id="grillMaker2D"/);
+  assert.match(html, /assets\/grill-maker-2d\.js/);
+  assert.doesNotMatch(html, /id="grill3DViewport"/);
+  assert.doesNotMatch(html, /assets\/grill-studio-3d\.js/);
+  assert.doesNotMatch(html, /<script type="importmap">/);
+  assert.match(html, /40 positions/);
+  assert.match(html, /stoneCellColors:/);
+  assert.match(css, /\.grill-maker-2d/);
   assert.match(html, /id="selectUpperTeeth"/);
   assert.match(html, /id="selectLowerTeeth"/);
 });
 
-test("Sprinkle Studio renders one complete 16-tooth arch per jaw", () => {
+test("Sprinkle Studio renders the approved eight-tooth center set per jaw", () => {
   const html = read("pricing.html");
   const script = html.slice(html.indexOf("const toothGroups = ["), html.indexOf("const SVG_NS", html.indexOf("const toothGroups = [")));
   assert.match(script, /label: 'Upper jaw', teeth: Stone\.upper\.slice\(\)/);
   assert.match(script, /label: 'Lower jaw', teeth: Stone\.lower\.slice\(\)/);
   assert.doesNotMatch(script, /Upper right|Upper left|Lower right|Lower left/);
   assert.match(html, /data-tooth-kind/);
+  assert.match(read("assets/grill-stone-layout.js"), /const ROWS = 8;/);
   assert.match(html, /central-incisor/);
   assert.match(html, /lateral-incisor/);
   assert.match(html, /tooth-groove/);
