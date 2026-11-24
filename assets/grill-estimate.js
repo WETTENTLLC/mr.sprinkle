@@ -221,12 +221,19 @@
             out.notes.push(`About ${c.stoneCount} stones planned — choose a stone type on the tooth(s) receiving stones to price them.`);
         }
 
-        // Custom cuts: charged once per set (each upper or lower piece)
+        // Most finish cuts are charged per upper/lower piece. Individual-tooth
+        // fabrication and deep/bar work are charged per pair of selected teeth.
         if (c.cuts.length) {
             const sets = c.design === "grillz" ? (c.upperCount > 0 ? 1 : 0) + (c.lowerCount > 0 ? 1 : 0) : 1;
+            const toothCount = c.upperCount + c.lowerCount;
+            const pairs = c.design === "grillz" ? Math.ceil(toothCount / 2) : 1;
             c.cuts.forEach((cut) => {
                 const each = catalog.customCuts[cut];
-                add(`${catalog.customCutLabels[cut]}: ${money(each)} per set × ${sets} ${sets === 1 ? "set" : "sets"}`, each * sets);
+                if (catalog.pairBasedCuts.includes(cut)) {
+                    add(`${catalog.customCutLabels[cut]}: ${money(each)} per 2 teeth × ${pairs} ${pairs === 1 ? "pair" : "pairs"}`, each * pairs);
+                } else {
+                    add(`${catalog.customCutLabels[cut]}: ${money(each)} per set × ${sets} ${sets === 1 ? "set" : "sets"}`, each * sets);
+                }
             });
         }
         if (c.finish === "custom") out.quoteReasons.push("custom finishes are priced per design");
