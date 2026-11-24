@@ -1,7 +1,7 @@
 (function (root) {
 const catalog = Object.freeze({
     // Bump this whenever any price or pricing rule changes.
-    version: "2026-11-23-wholesale-2.5x-cz-color-enamel",
+    version: "2026-11-24-approved-pair-addons",
     grillz: Object.freeze({
         silver: Object.freeze({ perTooth: 100, label: "Silver", teeth: Object.freeze({ 1: 100, 6: 600, 12: 1200 }) }),
         gold10k: Object.freeze({ perTooth: 240, label: "10K Gold", teeth: Object.freeze({ 1: 240, 6: 1440, 12: 2880 }) }),
@@ -80,15 +80,18 @@ const catalog = Object.freeze({
     }),
     enamelRetailRange: Object.freeze({ minimum: 500, maximum: 1250, basis: "design complexity; estimate only" }),
     customToothArtwork: Object.freeze({ quoteRequired: true, setupFee: null, examples: Object.freeze(["names", "initials", "logos", "rocket ships", "symbols", "original artwork"]), quoteInputs: Object.freeze(["reference artwork", "design complexity", "production requirements"]) }),
-    // Owner decision Nov 20, 2026: cut charges are per set (one upper or lower
-    // piece) and were doubled from the earlier $15 / $10 / $20 / $15.
+    // Owner-approved Nov 22, 2026: individual fabrication and deep/bar work
+    // are priced per pair of teeth. The other finish cuts remain per arch piece.
     customCuts: Object.freeze({
+        individualFabrication: 10,
         diamondDust: 30,
         centerSplit: 20,
         openFace: 40,
-        deepBar: 30
+        deepBar: 15
     }),
+    pairBasedCuts: Object.freeze(["individualFabrication", "deepBar"]),
     customCutLabels: Object.freeze({
+        individualFabrication: "Individual-tooth fabrication",
         diamondDust: "Diamond / Dust cut",
         centerSplit: "Center / Split line",
         openFace: "Open face / Window cut",
@@ -97,7 +100,7 @@ const catalog = Object.freeze({
     rules: Object.freeze({
         // Owner decision Nov 20, 2026: any tooth count is priced per tooth.
         grillzPricing: "perTooth",
-        customCutBasis: "perSet",
+        customCutBasis: "mixed",
         // Owner decision Nov 20, 2026: setting labor is already included.
         settingLabor: "included",
         // Owner decision Nov 20, 2026: rush ($150) replaces standard shipping ($60).
