@@ -63,7 +63,7 @@
   function makeResult(targets, placements, requestedCount, capacity, size) {
     const selected = uniqueTeeth(targets);
     const clean = normalizeLayout(placements, selected);
-    const requested = Math.max(0, Math.min(100, Math.floor(Number(requestedCount) || 0)));
+    const requested = Math.max(0, Math.min(640, Math.floor(Number(requestedCount) || 0)));
     const perToothCapacity = capacity || capacityForSize(size);
     const placedCount = count(clean);
     return {
@@ -83,7 +83,7 @@
     const size = options && options.size ? String(options.size) : "1.3";
     const perToothCapacity = capacityForSize(size);
     const selected = uniqueTeeth(targets);
-    const requested = Math.max(0, Math.min(100, Math.floor(Number(requestedCount) || 0)));
+    const requested = Math.max(0, Math.min(640, Math.floor(Number(requestedCount) || 0)));
     const placements = {};
     selected.forEach(tooth => { placements[tooth] = []; });
     if (!selected.length || !requested) return makeResult(selected, placements, requested, perToothCapacity, size);
