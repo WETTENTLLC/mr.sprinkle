@@ -1465,7 +1465,7 @@ Please let me know next steps!`);
                 return;
             }
             if (layoutState.unplacedCount > 0) {
-                stoneCapacityNotice.textContent = requested + ' stones requested, but the current ' + stoneTargets.length + ' target tooth/tooth surfaces hold ' + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
+                stoneCapacityNotice.textContent = requested + ' stones requested, but ' + stoneTargets.length + (stoneTargets.length === 1 ? ' selected tooth holds ' : ' selected teeth hold ') + capacity + ' placement guides. ' + placed + ' are displayed; select additional grill teeth as stone targets or reduce the stone count.';
                 stoneCapacityNotice.classList.add('is-warning');
             } else {
                 stoneCapacityNotice.textContent = requested + ' stones placed across ' + stoneTargets.length + ' selected teeth. Move individual stones in the grid; changing the layout does not change the count.';
@@ -1809,7 +1809,7 @@ Please let me know next steps!`);
         }));
     });
     </script>
-    <script type="module" src="assets/grill-studio-3d.js?v=20261123-live-3d-mouth-v1"></script>
+    <script type="module" src="assets/grill-studio-3d.js?v=20261124-contoured-crowns-v1"></script>
     <script src="assets/site-header.js"></script>
 </body>
 </html>

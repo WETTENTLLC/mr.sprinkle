@@ -415,7 +415,7 @@ test("Sprinkle Studio 3D uses exact arch selection and a pinned live mockup", ()
   assert.match(model, /stoneCount: sampleTeeth.length \* 25/);
   assert.match(model, /Sample full-pavé grill/);
   assert.match(stoneCss, /aspect-ratio:1\.105 \/ 1/);
-  assert.match(html, /live-3d-mouth-v1/);
+  assert.match(html, /contoured-crowns-v1/);
   assert.match(model, /function buildReferenceSampleLayer/);
   assert.doesNotMatch(model, /assets\/grill-reference\.webp\.b64/);
   assert.doesNotMatch(model, /grill-reference-tooth-hit/);
@@ -500,4 +500,25 @@ test("intro video remains playable and the native entry links bypass the overlay
   assert.doesNotMatch(js, /if \(reduceMotion && video\) video\.pause\(\)/);
   assert.match(html, /href="#home"[^>]*data-intro-action="skip"/);
   assert.match(html, /<main id="home">/);
+});
+
+
+test("3D crowns use a contoured tooth-specific occlusal surface rather than a flat cap", () => {
+  const model = read("assets/grill-studio-3d.js");
+  assert.match(model, /Build a contoured occlusal\/incisal surface instead of closing the crown/);
+  assert.match(model, /const topRings = \[\];/);
+  assert.match(model, /cuspProfile\(kind, nx, ny\)/);
+  assert.match(model, /const connectedRings = topRings\.concat\(\[topStart\]\)/);
+  assert.match(model, /if \(sign > 0\) indices\.push\(a, b, d, b, c, d\)/);
+  assert.match(model, /if \(sign > 0\) indices\.push\(topCenter, innerStart \+ segment, innerStart \+ next\)/);
+});
+
+
+test("Grill Maker status uses correct singular and plural tooth terminology", () => {
+  const model = read("assets/grill-studio-3d.js");
+  const pricing = read("pricing.html");
+  assert.match(model, /count === 1 \? " selected tooth" : " selected teeth"/);
+  assert.match(pricing, /stoneTargets\.length === 1 \? ' selected tooth holds ' : ' selected teeth hold '/);
+  assert.doesNotMatch(model, /selected tooth" \+ \(count === 1 \? "" : "s"\)/);
+  assert.doesNotMatch(pricing, /target tooth\/tooth surfaces/);
 });
