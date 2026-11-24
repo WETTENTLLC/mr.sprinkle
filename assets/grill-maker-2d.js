@@ -49,7 +49,6 @@ function makeTooth(tooth,index,jaw,position,config,metal,defs){
  const t=node("g",{transform:"translate("+position.x+" "+position.y+")"});
  const selected=new Set((config.teeth||[]).map(String)),sample=selected.size===0,onSet=sample||selected.has(tooth);
  if(!onSet){
-  t.appendChild(node("path",{d:d,fill:"#080808",stroke:"#262626","stroke-width":2,opacity:.4}));
   g.appendChild(t);
   g.addEventListener("click",()=>root.dispatchEvent(new CustomEvent("mr-sprinkle:select-tooth",{detail:{tooth:tooth}})));
   return g;
