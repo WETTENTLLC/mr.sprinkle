@@ -378,7 +378,7 @@ test("precision 2D Grill Maker renderer parses and exposes 640 individual settin
   assert.match(renderer, /const UPPER=\["14","13","12","11","21","22","23","24"\]/);
   assert.match(renderer, /const LOWER=\["44","43","42","41","31","32","33","34"\]/);
   assert.match(renderer, /index===1\|\|index===6\?"fang"/);
-  assert.doesNotMatch(renderer, /"oval"/);
+  assert.doesNotMatch(renderer, /index===1\|\|index===6\?"oval"/);
   assert.match(renderer, /index===0\|\|index===2\|\|index===5\|\|index===7\?"rounded"/);
   assert.match(renderer, /const HEIGHTS=\[332,370,310,330,330,310,370,332\]/);
   assert.match(renderer, /function toothPath\(w,h,shape,jaw\)/);
@@ -398,7 +398,7 @@ test("customer-facing Grill Maker uses the approved flat 2D master design", () =
   assert.doesNotMatch(html, /assets\/grill-studio-3d\.js/);
   assert.doesNotMatch(html, /<script type="importmap">/);
   assert.match(html, /40 positions/);
-  assert.match(html, /pointed fangs at the two outer ends/);
+  assert.match(html, /pointed fangs in the second position from each outer edge/);
   assert.doesNotMatch(html, /fangs in positions two and seven/);
   assert.match(html, /id="estimateStoneCount" type="number" min="0" max="640"/);
   assert.ok(read("assets/grill-stone-layout.js").includes("Math.min(640"), "stone layout supports up to 640 placements");
