@@ -872,6 +872,7 @@
                     `; Cuts: ${c.cuts.length ? c.cuts.join(', ') : 'none'}` +
                     `; Stone shape default: ${c.stoneShape}; Stone teeth: ${c.stoneTeeth.length ? c.stoneTeeth.join(', ') : 'none'}; Stone placements: ${c.stoneLayout || 'not specified'}` +
                     `; Tooth stone profiles: ${toothStoneProfiles || 'inherit default material'}` +
+                    `; Individual square colors: ${JSON.stringify(c.stoneCellColors || {})}` +
                     `; Enamel finishes: ${toothEnamelProfiles || 'none'}` +
                     `; Custom artwork request: ${customArtworkRequested ? 'yes — image and written design notes required' : 'no'}`;
                 setHidden('configuratorOptions', opts);
