@@ -6,7 +6,7 @@ const NS="http://www.w3.org/2000/svg";
 const UPPER=["14","13","12","11","21","22","23","24"];
 const LOWER=["44","43","42","41","31","32","33","34"];
 const WIDTHS=[168,154,176,214,214,176,154,168];
-const HEIGHTS=[332,286,310,330,330,310,286,332];
+const HEIGHTS=[332,370,310,330,330,310,370,332];
 const METALS={
  silver:{a:"#ffffff",b:"#c7cdd5",c:"#737d8b",edge:"#f3f6fa",seat:"#b8c0cb"},
  gold10k:{a:"#fff0a6",b:"#d29a36",c:"#754411",edge:"#ffe6a0",seat:"#bd8528"},
@@ -55,7 +55,7 @@ function addGem(defs,color){
 }
 function makeTooth(tooth,index,jaw,position,config,metal,defs){
  const w=WIDTHS[index],h=HEIGHTS[index];
- const shape=index===0||index===7?"fang":index===1||index===6?"oval":index===2||index===5?"rounded":"square";
+ const shape=index===1||index===6?"fang":index===0||index===2||index===5||index===7?"rounded":"square";
  const fang=shape==="fang";
  const d=toothPath(w,h,shape,jaw),g=node("g",{class:"ms2d-tooth","data-tooth":tooth,"data-jaw":jaw,tabindex:"0",role:"button","aria-label":jaw+" tooth "+tooth+" with forty customizable square settings"});
  const t=node("g",{transform:"translate("+position.x+" "+position.y+")"});
