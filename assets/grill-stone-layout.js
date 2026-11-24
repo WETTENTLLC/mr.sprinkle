@@ -10,12 +10,12 @@
 })(typeof window !== "undefined" ? window : globalThis, function () {
   "use strict";
 
-  const ROWS = 5;
+  const ROWS = 8;
   const COLUMNS = 5;
   const CAPACITY_PER_TOOTH = ROWS * COLUMNS;
-  const SIZE_CAPACITY = Object.freeze({ "1.3":25, "1.5":16, "2.0":9, "3.0":4 });
-  const UPPER = ["18","17","16","15","14","13","12","11","21","22","23","24","25","26","27","28"];
-  const LOWER = ["48","47","46","45","44","43","42","41","31","32","33","34","35","36","37","38"];
+  const SIZE_CAPACITY = Object.freeze({ "1.3":40, "1.5":30, "2.0":20, "3.0":10 });
+  const UPPER = ["14","13","12","11","21","22","23","24"];
+  const LOWER = ["44","43","42","41","31","32","33","34"];
   const VALID = new Set(UPPER.concat(LOWER));
 
   const centerFirstCells = Array.from({ length: CAPACITY_PER_TOOTH }, (_, cell) => cell)
@@ -38,20 +38,8 @@
 
   function allowedCells(size) {
     const key = String(size || "1.3");
-    const positions = {
-      "1.3": [0,1,2,3,4],
-      "1.5": [0,1,3,4],
-      "2.0": [0,2,4],
-      "3.0": [0,4]
-    }[key] || [0,1,2,3,4];
-    const allowed = [];
-    positions.forEach(row => positions.forEach(column => allowed.push(row * COLUMNS + column)));
-    return allowed.sort((a,b) => {
-      const ax=a%COLUMNS, ay=Math.floor(a/COLUMNS), bx=b%COLUMNS, by=Math.floor(b/COLUMNS);
-      const da=Math.pow(ax-2,2)+Math.pow(ay-2,2);
-      const db=Math.pow(bx-2,2)+Math.pow(by-2,2);
-      return da-db || ay-by || ax-bx;
-    });
+    const limit = SIZE_CAPACITY[key] || CAPACITY_PER_TOOTH;
+    return centerFirstCells.slice(0, limit).sort((a,b) => a-b);
   }
 
   function normalizeLayout(layout, targets) {
