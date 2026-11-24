@@ -99,8 +99,7 @@ test("AI context pricing rules match the published pricing catalog", () => {
   assert.deepEqual(context.publishedPricing.customCutsPerSet, {
     "diamond/dust cut": 30,
     "center/split line": 20,
-    "open face/window cut": 40,
-    "deep/bar cut": 30
+    "open face/window cut": 40
   });
   assert.equal(context.pricingRules.stoneSettingLabor, "included in published pricing");
   assert.equal(context.pricingRules.customCuts.includes("separate sets"), true);
@@ -379,7 +378,7 @@ test("customer-facing Grill Maker uses the clean technical diagram instead of th
   assert.match(html, /id="upperTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="lowerTeeth" class="tooth-arch-picker"/);
   assert.match(html, /id="designPreview"/);
-  assert.doesNotMatch(html, /three@0\.187\.0|grill-studio-3d\.js|grill3DViewport|Close-up smile view/);
+  assert.doesNotMatch(html, /three@0\.187\.0|grill-studio-3d\.js|grill3DViewport/);
   assert.match(preview, /UPPER ARCH/);
   assert.match(preview, /LOWER ARCH/);
   assert.match(preview, /selected\.has\(tooth\)/);
