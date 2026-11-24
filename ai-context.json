@@ -231,7 +231,7 @@
   },
   "pricingRules": {
     "grillzPricing": "per tooth, using the published per-tooth catalog",
-    "customCuts": "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair of teeth. Diamond/Dust is $30 per upper/lower set, Center/Split is $20 per upper/lower set, and Open Face/Window is $40 per upper/lower set.",
+    "customCuts": "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair of teeth. Diamond/Dust is $30 per upper/lower set, Center/Split is $20 per upper/lower set, and Open Face/Window is $40 per upper/lower set; an upper piece and lower piece are separate sets.",
     "stoneSettingLabor": "included in published pricing",
     "rushShipping": "$150 and replaces the $60 standard shipping charge",
     "quoteOnly": "18K gold, white gold, platinum, custom finishes, and other non-catalog designs require a custom quote"
