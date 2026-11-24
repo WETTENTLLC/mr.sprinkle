@@ -1,4 +1,5 @@
 const Stripe = require("stripe");
+const stripeMode = require("../lib/stripe-mode");
 
 module.exports.config = { api: { bodyParser: false } };
 
@@ -17,8 +18,8 @@ module.exports = async function handler(req, res) {
     return res.status(405).send("Method not allowed");
   }
 
-  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
-    return res.status(503).send("Webhook is not configured");
+  if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY) || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return res.status(503).send("Sandbox webhook is not configured");
   }
 
   const signature = req.headers["stripe-signature"];
@@ -34,6 +35,12 @@ module.exports = async function handler(req, res) {
     return res.status(400).send("Invalid webhook signature");
   }
 
+  // Reject live-mode events even if a webhook secret was misconfigured.
+  if (!stripeMode.isSandboxEvent(event)) {
+    console.error("Rejected non-sandbox Stripe webhook event:", event.id);
+    return res.status(400).send("Only sandbox Stripe events are accepted");
+  }
+
   // Deliberately do not mark orders paid or fulfill products here yet.
   // Connect this verified event to durable order storage before enabling fulfillment.
   switch (event.type) {
@@ -41,10 +48,10 @@ module.exports = async function handler(req, res) {
     case "checkout.session.async_payment_succeeded":
     case "checkout.session.async_payment_failed":
     case "checkout.session.expired":
-      console.info("Verified Stripe event:", event.type, event.id);
+      console.info("Verified sandbox Stripe event:", event.type, event.id);
       break;
     default:
-      console.info("Verified Stripe event ignored:", event.type);
+      console.info("Verified sandbox Stripe event ignored:", event.type);
   }
 
   return res.status(200).json({ received: true });
