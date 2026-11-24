@@ -381,6 +381,8 @@ test("precision 2D Grill Maker renderer parses and exposes 640 individual settin
   assert.match(renderer, /row<8/);
   assert.match(renderer, /col<5/);
   assert.match(renderer, /positionsPerTooth:40,totalPositions:640/);
+  assert.match(read("assets/grill-stone-layout.js"), /Math\\.min\\(640/);
+  assert.match(html, /id="estimateStoneCount" type="number" min="0" max="640"/);
   assert.match(renderer, /stoneCellColors/);
   assert.match(renderer, /mr-sprinkle:select-stone-cell/);
 });
