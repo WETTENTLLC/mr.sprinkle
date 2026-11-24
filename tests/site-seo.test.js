@@ -381,8 +381,6 @@ test("precision 2D Grill Maker renderer parses and exposes 640 individual settin
   assert.match(renderer, /row<8/);
   assert.match(renderer, /col<5/);
   assert.match(renderer, /positionsPerTooth:40,totalPositions:640/);
-  assert.match(read("assets/grill-stone-layout.js"), /Math\\.min\\(640/);
-  assert.match(html, /id="estimateStoneCount" type="number" min="0" max="640"/);
   assert.match(renderer, /stoneCellColors/);
   assert.match(renderer, /mr-sprinkle:select-stone-cell/);
 });
@@ -396,6 +394,8 @@ test("customer-facing Grill Maker uses the approved flat 2D master design", () =
   assert.doesNotMatch(html, /assets\/grill-studio-3d\.js/);
   assert.doesNotMatch(html, /<script type="importmap">/);
   assert.match(html, /40 positions/);
+  assert.match(html, /id="estimateStoneCount" type="number" min="0" max="640"/);
+  assert.match(read("assets/grill-stone-layout.js"), /Math\.min\(640/);
   assert.match(html, /stoneCellColors:/);
   assert.match(css, /\.grill-maker-2d/);
   assert.match(html, /id="selectUpperTeeth"/);
