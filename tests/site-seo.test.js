@@ -512,3 +512,13 @@ test("3D crowns use a contoured tooth-specific occlusal surface rather than a fl
   assert.match(model, /if \(sign > 0\) indices\.push\(a, b, d, b, c, d\)/);
   assert.match(model, /if \(sign > 0\) indices\.push\(topCenter, innerStart \+ segment, innerStart \+ next\)/);
 });
+
+
+test("Grill Maker status uses correct singular and plural tooth terminology", () => {
+  const model = read("assets/grill-studio-3d.js");
+  const pricing = read("pricing.html");
+  assert.match(model, /count === 1 \? " selected tooth" : " selected teeth"/);
+  assert.match(pricing, /stoneTargets\.length === 1 \? ' selected tooth holds ' : ' selected teeth hold '/);
+  assert.doesNotMatch(model, /selected tooth" \+ \(count === 1 \? "" : "s"\)/);
+  assert.doesNotMatch(pricing, /target tooth\/tooth surfaces/);
+});
