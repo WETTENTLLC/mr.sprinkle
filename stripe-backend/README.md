@@ -35,9 +35,15 @@ Request body:
 }
 ```
 
-The server recalculates the total with the website's estimate engine and creates a hosted Stripe Checkout Session for that amount. The request must never be trusted to provide a price.
+The server recalculates the total with the website's estimate engine and creates a Stripe Checkout Session in `ui_mode: form`. It returns `client_secret` JSON for the browser's embedded Checkout Form SDK. The request must never be trusted to provide a price.
 
-`POST /api/webhook` verifies Stripe signatures against the raw request body. It currently acknowledges verified events only; it does not yet persist orders or trigger fulfillment.
+`POST /api/webhook` verifies Stripe signatures against the raw request body. Gift-card payment events continue through the existing idempotent gift-card issuance and email-delivery flow. Grill Maker order persistence and fulfillment are not yet implemented by this webhook; a successful Grill Maker payment must not be treated as a production work order until that workflow is completed.
+
+## Embedded Checkout client
+
+The static site loads Stripe.js directly from `https://js.stripe.com/dahlia/stripe.js` and uses `assets/stripe-checkout-form.js` to initialize and mount the embedded form. Set the public `pk_test_...` publishable key in the `stripe-publishable-key` meta tag on `pricing.html` and `gift-card.html`. This key is intended for browser use; never place a secret key in either page.
+
+Both endpoints share the Checkout Studio settings in `lib/checkout-form-options.js`. The session mode remains `payment`, the existing server-calculated `line_items` remain unchanged, and `payment_method_collection` is intentionally omitted because it is only configured for subscription mode.
 
 ## Vercel settings
 
@@ -55,11 +61,11 @@ No Stripe secrets belong in GitHub or browser code.
 
 1. Add the sandbox secret key in Vercel Preview environment settings.
 2. Configure Stripe CLI forwarding to the deployed webhook URL and save its signing secret in Vercel.
-3. Test a valid published-price configuration and compare the Checkout amount with the website estimate.
+3. Test a valid published-price configuration and compare the Checkout amount with the website estimate. Confirm the embedded form collects the required billing address and offers the configured shipping countries.
 4. Test invalid configurations and quote-only configurations; they must not create a Checkout Session.
 5. Use Stripe test card `4242 4242 4242 4242` with any future expiry, CVC, and postal code.
 6. Test declined card `4000 0000 0000 9995`, cancelled Checkout, and webhook signature rejection.
-7. Verify successful and failed event delivery in Stripe.
+7. Verify successful and failed event delivery in Stripe. For gift cards, confirm issuance and email delivery. For Grill Maker payments, verify the payment in Stripe; order persistence and fulfillment still need a separate implementation before production launch.
 
 ## Production gate
 
