@@ -221,16 +221,19 @@ test("customer intake routes use verified Formspree responses and the WETT notif
   assert.doesNotMatch(grill + nails + ambassador, /mode:\s*['"]no-cors['"]/);
 });
 
-test("gift card checkout does not display a fake redeemable code and passes face value to PayPal", () => {
+test("gift card checkout uses the dedicated Stripe endpoint and validates face value", () => {
   const fs = require("node:fs");
   const path = require("node:path");
-  const html = fs.readFileSync(path.join(__dirname, "..", "gift-card.html"), "utf8");
-  assert.match(html, /ISSUED AFTER PAYMENT/);
-  assert.match(html, /itemName-giftCard/);
-  assert.match(html, /custom-giftCard/);
-  assert.match(html, /invoice-giftCard/);
-  assert.match(html, /wettentertainmentllc@gmail\.com/);
-  assert.match(html, /\(amount - 100\) % 50/);
+  const root = path.join(__dirname, "..");
+  const html = fs.readFileSync(path.join(root, "gift-card.html"), "utf8");
+  const api = fs.readFileSync(path.join(root, "stripe-backend", "api", "create-gift-card-checkout.js"), "utf8");
+  assert.match(html, /Continue to Secure Checkout/);
+  assert.match(html, /create-gift-card-checkout/);
+  assert.match(html, /mrsprinklereno\\.com\\/gift-card\\.html/);
+  assert.doesNotMatch(html, /paypal\\.com/);
+  assert.match(api, /face < 100/);
+  assert.match(api, /face > 1500/);
+  assert.match(api, /gift_card_reference/);
 });
 
 
