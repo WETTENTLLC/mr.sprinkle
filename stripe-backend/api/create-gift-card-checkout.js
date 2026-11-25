@@ -17,13 +17,13 @@ module.exports = async function handler(req, res) {
     const face = Number(req.body && req.body.faceValue);
     if (!Number.isInteger(face) || face < 100 || face > 1500 || (face - 100) % 50 !== 0) return res.status(400).json({error:"Choose $100 to $1,500 in $50 increments."});
     const email = String(req.body.email || "").trim();
-    if (email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address."});
+    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address for gift-card delivery."});
     const ref = crypto.randomUUID();
     const pay = Math.round(face * 90);
     const session = await stripe().checkout.sessions.create({
       mode:"payment", payment_method_types:["card"],
       line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:pay,product_data:{name:"Mr. Sprinkle Gift Card",description:"Gift card face value $"+face.toFixed(2)+" (10% promotional discount)"}}}],
-      ...(email ? {customer_email:email} : {}),
+      customer_email:email,
       client_reference_id:ref,
       metadata:{product_type:"gift_card",gift_card_reference:ref,face_value_cents:String(face*100),discount_percent:"10"},
       payment_intent_data:{metadata:{product_type:"gift_card",gift_card_reference:ref}},
