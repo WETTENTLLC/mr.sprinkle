@@ -2,12 +2,13 @@ const Stripe = require("stripe");
 const crypto = require("node:crypto");
 const estimateEngine = require("../lib/grill-estimate");
 const stripeMode = require("../lib/stripe-mode");
+const checkoutFormOptions = require("../lib/checkout-form-options");
 
 const stripe = () => {
   if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) {
     throw new Error("Sandbox Stripe secret key is not configured");
   }
-  return new Stripe(process.env.STRIPE_SECRET_KEY);
+  return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2026-03-25.dahlia" });
 };
 
 const allowedOrigins = () => new Set(
@@ -72,6 +73,7 @@ module.exports = async function handler(req, res) {
     const orderReference = crypto.randomUUID();
     const description = estimateEngine.summaryText(estimate).slice(0, 4500);
     const session = await stripe().checkout.sessions.create({
+      ...checkoutFormOptions(),
       mode: "payment",
       line_items: [{
         quantity: 1,
@@ -98,13 +100,12 @@ module.exports = async function handler(req, res) {
           pricing_version: estimate.version
         }
       },
-      success_url: "https://mrsprinklereno.com/payment-success.html?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https://mrsprinklereno.com/payment-cancelled.html"
+      return_url: "https://mrsprinklereno.com/payment-success.html?session_id={CHECKOUT_SESSION_ID}"
     }, { idempotencyKey: orderReference });
 
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({
-      checkoutUrl: session.url,
+      client_secret: session.client_secret,
       orderReference,
       amount: estimate.total,
       currency: "usd",
