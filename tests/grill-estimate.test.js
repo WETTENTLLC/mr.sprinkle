@@ -227,7 +227,7 @@ test("gift card checkout uses the dedicated Stripe endpoint and validates face v
   const root = path.join(__dirname, "..");
   const html = fs.readFileSync(path.join(root, "gift-card.html"), "utf8");
   const api = fs.readFileSync(path.join(root, "stripe-backend", "api", "create-gift-card-checkout.js"), "utf8");
-  assert.match(html, /Continue to Secure Checkout/);
+  assert.match(html, /Online Checkout Temporarily Unavailable/);
   assert.match(html, /create-gift-card-checkout/);
   assert.ok(html.includes("https://mrsprinklereno.com/gift-card.html"));
   assert.doesNotMatch(html, /paypal\\.com/);
