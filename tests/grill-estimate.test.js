@@ -233,7 +233,7 @@ test("gift card checkout mounts the embedded Stripe form and preserves gift-card
   assert.match(html, /Continue to Secure Payment/);
   assert.match(html, /create-gift-card-checkout/);
   assert.ok(html.includes("https://mrsprinklereno.com/gift-card.html"));
-  assert.doesNotMatch(html, /paypal\\.com/);
+  assert.equal(html.includes("paypal.com"), false);
   assert.match(api, /face < 100/);
   assert.match(api, /face > 1500/);
   assert.match(api, /gift_card_reference/);
