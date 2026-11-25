@@ -10,7 +10,7 @@ amount.addEventListener("input",update);
 btn.addEventListener("click",async()=>{
   const n=Number(amount.value),email=document.getElementById("email").value.trim();
   if(!Number.isInteger(n)||n<100||n>1500||(n-100)%50!==0){status.textContent="Choose an amount from $100 to $1,500 in $50 increments.";return;}
-  if(!email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){status.textContent="Enter a valid email address for gift-card delivery.";document.getElementById("email").focus();return;}
+  if(!email||!email.includes("@")||!email.slice(email.lastIndexOf("@")+1).includes(".")){status.textContent="Enter a valid email address for gift-card delivery.";document.getElementById("email").focus();return;}
   try{await window.MrSprinkleCheckoutForm.start({endpoint:"https://mr-sprinkle-stripe-backend.vercel.app/api/create-gift-card-checkout",payload:{faceValue:n,email},container:formHost,status,button:btn});}
   catch(_error){}
 });
