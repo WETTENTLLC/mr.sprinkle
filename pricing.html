@@ -1894,7 +1894,7 @@ Please let me know next steps!`);
                 status.textContent = 'This design needs a custom quote before payment.';
                 return;
             }
-            if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+            if (!email || !email.includes('@') || !email.slice(email.lastIndexOf('@') + 1).includes('.')) {
                 status.textContent = 'Enter a valid email address to continue.';
                 document.getElementById('grillMakerCustomerEmail').focus();
                 return;
