@@ -14,6 +14,10 @@
 | R-06 | Supabase gift card tables store encrypted gift card code ciphertext and hashed code; service_role has full table privileges. | Medium | Keep service key server-side, restrict access to backend only, test encryption-key rotation and redemption idempotency, audit access. | Schema inspected; operational controls pending. |
 | R-07 | Public PHP and legacy integrations exist in repository; server security guide documents environment-based secrets and least-privilege MySQL. | High | Inventory every deployed PHP endpoint and retire unused test/setup scripts; verify auth, input validation, CSRF protections, and least-privilege DB accounts. | Static sample reviewed; full endpoint inventory pending. |
 | R-08 | No confirmed evidence yet of formal access reviews, MFA coverage, incident exercises, restore tests, vendor agreements, or data retention schedule. | High | Assign owners, perform and record these controls; lack of evidence is not proof they do not exist. | Evidence collection pending. |
+| R-09 | The public repository's ambassador dashboard accepts an ambassador code as the login credential and stores it directly in the session; no password hashing, second factor, or throttling was evident in the inspected page. | Critical | Replace code-only login with individual password authentication using password_hash/password_verify, session regeneration, CSRF protection, rate limiting/lockout, and secure cookie settings. Review whether codes are guessable and rotate them if necessary. | Static source reviewed; production exposure and active use not verified. |
+| R-10 | The ambassador backend exposes an unauthenticated stats lookup by ambassador code. If codes are known or guessed, it can reveal ambassador identity/status and commission totals. | High | Require authenticated ambassador identity and authorization on every stats request; avoid relying on obscurity of referral codes. Return only the requesting ambassador's own data. | Static source reviewed; production route exposure not verified. |
+| R-11 | The older ambassador-backend.php booking handler trusts a submitted ambassador code and applies a 10% discount without validating that the code belongs to an active ambassador. It also sends customer fields into HTML email without output encoding. | High | Validate active ambassador records server-side, centralize pricing rules, validate inputs, escape email HTML, and add abuse/rate controls. Retire duplicate legacy handlers after mapping live callers. | Static source reviewed; production route exposure not verified. |
+| R-12 | business-admin.php uses a single environment-configured admin password. The inspected login compares the password directly and has session/CSRF handling, but no MFA or login throttling was evident in the inspected portion. | High | Add password hashing where credential storage applies, MFA, rate limiting, audit events, session idle/absolute expiry, and secure cookie settings. Verify HTTPS is always enforced. | Static source reviewed; full page and live hosting configuration not verified. |
 
 ## Immediate verification checklist
 - [ ] Test unauthenticated access to every admin URL and API.
@@ -27,6 +31,8 @@
 - [ ] Verify backups and complete a documented restore test.
 - [ ] Create vendor inventory, data inventory, retention schedule, and incident contact list.
 - [ ] Complete a documented HIPAA applicability decision before collecting PHI.
+- [ ] Replace ambassador code-only login and protect ambassador stats lookup.
+- [ ] Validate ambassador status before applying discounts or creating referral commissions.
 
 ## Status language for investor materials
 Permitted: Mr. Sprinkle is implementing a security program aligned to selected SOC 2 Trust Services Criteria and ISO/IEC 27001 control objectives. The company is conducting a gap assessment and remediation.
