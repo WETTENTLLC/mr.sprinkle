@@ -9,7 +9,7 @@ This branch adds a dedicated Stripe Checkout endpoint and webhook fulfillment fo
 - `SUPABASE_SERVICE_ROLE_KEY`: Supabase server-only service role key. Never expose in browser code.
 - `GIFT_CARD_ENCRYPTION_KEY`: base64-encoded 32-byte random key used to encrypt deliverable codes at rest.
 - `RESEND_API_KEY`: Resend API key for gift-card delivery email.
-- `GIFT_CARD_FROM_EMAIL`: verified sender address in Resend (optional).
+- `GIFT_CARD_FROM_EMAIL`: verified sender address in Resend (required).\n- `GIFT_CARD_REDEMPTION_ADMIN_KEY`: high-entropy secret for staff-only redemption calls (required before redemption use).
 
 Set variables only in Vercel's encrypted environment settings. Do not commit secrets.
 
@@ -25,5 +25,5 @@ The checkout endpoint is `/api/create-gift-card-checkout`. The public gift-card 
 - Configure and verify the webhook in Stripe test mode.
 - Run a test purchase and confirm a gift-card record, issuance transaction, and delivery email.
 - Test duplicate webhook delivery and balance/redemption flows.
-- Add a controlled redemption endpoint and staff/admin workflow before accepting gift cards as tender.
+- The private `/api/gift-card-balance` endpoint supports balance checks by code.\n- The `/api/redeem-gift-card` endpoint requires a server-side `GIFT_CARD_REDEMPTION_ADMIN_KEY`; only authorized staff systems should call it.\n- Integrate the authorized redemption endpoint into the order checkout/admin workflow before accepting gift cards as tender.
 - Only then separately review live-mode readiness and Stripe account eligibility.
