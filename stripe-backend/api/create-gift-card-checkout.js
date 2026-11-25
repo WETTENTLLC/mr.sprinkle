@@ -1,9 +1,10 @@
 const Stripe = require("stripe");
 const crypto = require("node:crypto");
 const stripeMode = require("../lib/stripe-mode");
+const checkoutFormOptions = require("../lib/checkout-form-options");
 const stripe = () => {
   if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) throw new Error("Sandbox Stripe key is not configured");
-  return new Stripe(process.env.STRIPE_SECRET_KEY);
+  return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2026-03-25.dahlia" });
 };
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -21,15 +22,15 @@ module.exports = async function handler(req, res) {
     const ref = crypto.randomUUID();
     const pay = Math.round(face * 90);
     const session = await stripe().checkout.sessions.create({
-      mode:"payment", payment_method_types:["card"],
+      ...checkoutFormOptions(),
+      mode:"payment",
       line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:pay,product_data:{name:"Mr. Sprinkle Gift Card",description:"Gift card face value $"+face.toFixed(2)+" (10% promotional discount)"}}}],
       customer_email:email,
       client_reference_id:ref,
       metadata:{product_type:"gift_card",gift_card_reference:ref,face_value_cents:String(face*100),discount_percent:"10"},
       payment_intent_data:{metadata:{product_type:"gift_card",gift_card_reference:ref}},
-      success_url:"https://mrsprinklereno.com/gift-card-success.html?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url:"https://mrsprinklereno.com/gift-card.html"
+      return_url:"https://mrsprinklereno.com/gift-card-success.html?session_id={CHECKOUT_SESSION_ID}"
     },{idempotencyKey:"gift-card-"+ref});
-    return res.status(200).json({checkoutUrl:session.url});
+    return res.status(200).json({client_secret:session.client_secret});
   } catch(e) { console.error("Gift card checkout error",e.message); return res.status(503).json({error:"Gift-card checkout is not configured yet. Please contact us."}); }
 };
