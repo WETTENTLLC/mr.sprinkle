@@ -141,7 +141,7 @@ test("both existing payment endpoints use form mode and return client secrets", 
   for (const file of ["api/create-checkout-session.js", "api/create-gift-card-checkout.js"]) {
     const source = fs.readFileSync(path.join(root, file), "utf8");
     assert.match(source, /checkoutFormOptions\(\)/);
-    assert.match(source, /apiVersion: "2026-03-25\\.dahlia"/);
+    assert.ok(source.includes('apiVersion: "2026-03-25.dahlia"'));
     assert.match(source, /mode:\s*"payment"/);
     assert.match(source, /client_secret:\s*session\.client_secret/);
     assert.doesNotMatch(source, /success_url:|cancel_url:|checkoutUrl:\s*session\.url/);
