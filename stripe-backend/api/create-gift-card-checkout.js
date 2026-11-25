@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
     const face = Number(req.body && req.body.faceValue);
     if (!Number.isInteger(face) || face < 100 || face > 1500 || (face - 100) % 50 !== 0) return res.status(400).json({error:"Choose $100 to $1,500 in $50 increments."});
     const email = String(req.body.email || "").trim();
-    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address for gift-card delivery."});
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address for gift-card delivery."});
     const ref = crypto.randomUUID();
     const pay = Math.round(face * 90);
     const session = await stripe().checkout.sessions.create({
