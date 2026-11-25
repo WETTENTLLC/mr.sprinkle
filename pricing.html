@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Grillz Pricing &amp; Designer | Reno, NV | Mr. Sprinkle</title>
+    <meta name="stripe-publishable-key" content="pk_test_REPLACE_WITH_STRIPE_PUBLISHABLE_KEY">
+    <script src="https://js.stripe.com/dahlia/stripe.js"></script>
     <meta name="description" content="Explore Mr. Sprinkle's published grillz prices and interactive tooth designer in Reno, Sparks, and nearby Northern Nevada. Compare metals, stones, custom cuts, and request a personal quote.">
     <link rel="canonical" href="https://mrsprinklereno.com/pricing.html">
     <meta name="geo.region" content="US-NV">
@@ -585,6 +587,15 @@
                         <h3>Ready to take this design forward?</h3>
                         <p>Your selected teeth, metal, stone placements, enamel colors, artwork image and design notes will travel with your request. On the next page, you will only confirm your design, choose an appointment date and preferred time, and enter your contact details.</p>
                         <a id="estimateQuoteLink" class="cta-btn" href="mold-form.html?quote=configurator">Continue with this design</a>
+                        <div class="grill-maker-payment" style="margin-top:24px;padding:22px;border:1px solid #b99a5b;border-radius:12px;background:#101010">
+                            <h3 style="color:#e3c782">Purchase this design</h3>
+                            <p class="note">For designs with published pricing, you can pay securely here. Custom artwork and quote-only designs must continue through the booking/quote process.</p>
+                            <label for="grillMakerCustomerEmail">Email address</label>
+                            <input id="grillMakerCustomerEmail" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;padding:12px;margin:8px 0 14px;background:#1d1d1d;color:#fff;border:1px solid #71664e;border-radius:6px">
+                            <button id="grillMakerPayButton" type="button" disabled style="background:#d4af37;color:#090909;border:0;border-radius:8px;padding:14px 22px;font-weight:bold;cursor:pointer">Continue to Secure Payment</button>
+                            <p id="grillMakerPaymentStatus" class="note" role="status" aria-live="polite"></p>
+                            <div id="grillMakerCheckoutForm" hidden aria-label="Secure Grill Maker payment form"></div>
+                        </div>
                     </div>
                 </div>
                 <p class="note">Standard fulfillment estimate: production generally 2–7 business days, plus approximately 2–3 days shipping to the main office and 2–3 days back to the customer. The customer-facing expectation is at least approximately two weeks. Simple, undecorated designs may take approximately 2 days in production; this is not a guaranteed delivery time. Rush shipping is next-day to and from the main office with production priority and a minimum 4-day completion expectation; eligibility and capacity must be confirmed. Estimates are not guarantees.</p>
@@ -1666,6 +1677,9 @@ Please let me know next steps!`);
                 customArtworkQuoteLink.href = 'mold-form.html?' + customHandoff.toString();
             }
             window.__MrSprinkleGrillConfig = c;
+            window.__MrSprinkleGrillCheckoutEligible = Boolean(est.ok && est.status === 'estimate' && Number.isFinite(est.total));
+            const paymentButton = document.getElementById('grillMakerPayButton');
+            if (paymentButton) paymentButton.disabled = !window.__MrSprinkleGrillCheckoutEligible;
         }
 
         function setToothMode(mode) {
@@ -1865,6 +1879,42 @@ Please let me know next steps!`);
         }));
     });
     </script>
-        <script src="assets/site-header.js"></script>
+        <script src="assets/stripe-checkout-form.js"></script>
+    <script>
+    (function () {
+        const button = document.getElementById('grillMakerPayButton');
+        if (!button) return;
+        const status = document.getElementById('grillMakerPaymentStatus');
+        const formHost = document.getElementById('grillMakerCheckoutForm');
+        button.addEventListener('click', async function () {
+            const email = document.getElementById('grillMakerCustomerEmail').value.trim();
+            const artworkInput = document.getElementById('grillArtworkReference');
+            const artworkNotes = document.getElementById('grillArtworkNotes');
+            if (!window.__MrSprinkleGrillCheckoutEligible || !window.__MrSprinkleGrillConfig) {
+                status.textContent = 'This design needs a custom quote before payment.';
+                return;
+            }
+            if (!email || !email.includes('@') || !email.slice(email.lastIndexOf('@') + 1).includes('.')) {
+                status.textContent = 'Enter a valid email address to continue.';
+                document.getElementById('grillMakerCustomerEmail').focus();
+                return;
+            }
+            if ((artworkInput && artworkInput.files && artworkInput.files.length) || (artworkNotes && artworkNotes.value.trim())) {
+                status.textContent = 'Custom artwork requires a personal quote. Please use Continue with this design.';
+                return;
+            }
+            try {
+                await window.MrSprinkleCheckoutForm.start({
+                    endpoint: 'https://mr-sprinkle-stripe-backend.vercel.app/api/create-checkout-session',
+                    payload: { configuration: window.__MrSprinkleGrillConfig, customerEmail: email },
+                    container: formHost,
+                    status,
+                    button
+                });
+            } catch (_error) {}
+        });
+    })();
+    </script>
+    <script src="assets/site-header.js"></script>
 </body>
 </html>

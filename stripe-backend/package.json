@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Isolated server-side Stripe Checkout API for Mr. Sprinkle",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test"
   },
   "dependencies": {
-    "stripe": "^18.5.0"
+    "stripe": "^23.2.0"
   }
 }

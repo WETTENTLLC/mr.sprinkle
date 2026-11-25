@@ -115,3 +115,35 @@ test("permanent single-tooth design is priced as a separate $40-per-tooth premiu
   const eight = estimate.calculate({ metal: "gold10k", lowerCount: 8, cuts: "permanentSingleTooth" });
   assert.equal(eight.total, 8 * 240 + 8 * 40 + 60);
 });
+
+
+const checkoutFormOptions = require("../lib/checkout-form-options");
+
+test("embedded Checkout form options match the configured Checkout Studio fields", () => {
+  const options = checkoutFormOptions();
+  assert.equal(options.ui_mode, "form");
+  assert.equal(options.billing_address_collection, "required");
+  assert.deepEqual(options.phone_number_collection, { enabled: false });
+  assert.deepEqual(options.automatic_tax, { enabled: true });
+  assert.equal(options.submit_type, "auto");
+  assert.deepEqual(options.saved_payment_method_options, { payment_method_save: "enabled" });
+  assert.equal(options.integration_identifier, "custom_embedded_web_0001");
+  assert.ok(options.shipping_address_collection.allowed_countries.includes("US"));
+  assert.ok(options.shipping_address_collection.allowed_countries.includes("CA"));
+  assert.ok(options.shipping_address_collection.allowed_countries.includes("AU"));
+  assert.ok(options.shipping_address_collection.allowed_countries.includes("ZA"));
+});
+
+test("both existing payment endpoints use form mode and return client secrets", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const root = path.join(__dirname, "..");
+  for (const file of ["api/create-checkout-session.js", "api/create-gift-card-checkout.js"]) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    assert.match(source, /checkoutFormOptions\(\)/);
+    assert.ok(source.includes('apiVersion: "2026-03-25.dahlia"'));
+    assert.match(source, /mode:\s*"payment"/);
+    assert.match(source, /client_secret:\s*session\.client_secret/);
+    assert.doesNotMatch(source, /success_url:|cancel_url:|checkoutUrl:\s*session\.url/);
+  }
+});

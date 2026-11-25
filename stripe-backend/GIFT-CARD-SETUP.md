@@ -1,4 +1,4 @@
-# Gift Card Stripe Checkout (Sandbox)
+# Gift Card Stripe Embedded Checkout (Sandbox)
 
 This branch adds a dedicated Stripe Checkout endpoint and webhook fulfillment for gift cards.
 
@@ -18,10 +18,11 @@ Create a test-mode webhook at `https://<backend-domain>/api/webhook` for:
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
 
-The checkout endpoint is `/api/create-gift-card-checkout`. The public gift-card page must be deployed with the backend URL in its fetch call. This branch currently targets sandbox Stripe only.
+The checkout endpoint is `/api/create-gift-card-checkout`. It creates a `ui_mode: form` Checkout Session and returns `client_secret`; `gift-card.html` loads Stripe.js Dahlia and mounts the shared `assets/stripe-checkout-form.js` client. This branch currently targets sandbox Stripe only.
 
 ## Before customer launch
-- Configure all environment variables and redeploy the backend.
+- Configure the sandbox publishable key in the `stripe-publishable-key` meta tag in `gift-card.html` and redeploy the static site.
+- Configure all server environment variables and redeploy the backend.
 - Configure and verify the webhook in Stripe test mode.
 - Run a test purchase and confirm a gift-card record, issuance transaction, and delivery email.
 - Test duplicate webhook delivery and balance/redemption flows.
