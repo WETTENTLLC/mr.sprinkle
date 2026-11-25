@@ -227,8 +227,8 @@ test("gift card checkout mounts the embedded Stripe form and preserves gift-card
   const root = path.join(__dirname, "..");
   const html = fs.readFileSync(path.join(root, "gift-card.html"), "utf8");
   const api = fs.readFileSync(path.join(root, "stripe-backend", "api", "create-gift-card-checkout.js"), "utf8");
-  assert.match(html, /js\\.stripe\\.com\\/dahlia\\/stripe\\.js/);
-  assert.match(html, /stripe-checkout-form\\.js/);
+  assert.ok(html.includes("https://js.stripe.com/dahlia/stripe.js"));
+  assert.ok(html.includes("stripe-checkout-form.js"));
   assert.match(html, /giftCardCheckoutForm/);
   assert.match(html, /Continue to Secure Payment/);
   assert.match(html, /create-gift-card-checkout/);
@@ -237,7 +237,7 @@ test("gift card checkout mounts the embedded Stripe form and preserves gift-card
   assert.match(api, /face < 100/);
   assert.match(api, /face > 1500/);
   assert.match(api, /gift_card_reference/);
-  assert.match(api, /client_secret:session\\.client_secret/);
+  assert.ok(api.includes("client_secret:session.client_secret"));
 });
 
 
@@ -259,5 +259,5 @@ test("Grill Maker offers embedded checkout only for published-price estimates", 
   assert.match(html, /grillMakerCheckoutForm/);
   assert.match(html, /__MrSprinkleGrillCheckoutEligible/);
   assert.match(html, /create-checkout-session/);
-  assert.match(html, /js\\.stripe\\.com\\/dahlia\\/stripe\\.js/);
+  assert.ok(html.includes("https://js.stripe.com/dahlia/stripe.js"));
 });
