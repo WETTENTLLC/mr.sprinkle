@@ -93,9 +93,11 @@ test("stone selection requires a valid positive quantity", () => {
 
 const stripeMode = require("../lib/stripe-mode");
 
-test("only Stripe live-mode secret keys are accepted", () => {
+test("only live-mode standard and restricted Stripe secret keys are accepted", () => {
   assert.equal(stripeMode.isLiveSecretKey("sk_live_example"), true);
+  assert.equal(stripeMode.isLiveSecretKey("rk_live_example"), true);
   assert.equal(stripeMode.isLiveSecretKey("sk_test_example"), false);
+  assert.equal(stripeMode.isLiveSecretKey("rk_test_example"), false);
   assert.equal(stripeMode.isLiveSecretKey(""), false);
   assert.equal(stripeMode.isLiveSecretKey(undefined), false);
 });
