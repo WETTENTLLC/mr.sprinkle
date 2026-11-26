@@ -1,0 +1,26 @@
+diff --git a/stripe-backend/api/create-gift-card-checkout.js b/stripe-backend/api/create-gift-card-checkout.js
+index 7327eb6..c5f2b38 100644
+--- a/stripe-backend/api/create-gift-card-checkout.js
++++ b/stripe-backend/api/create-gift-card-checkout.js
+@@ -3,7 +3,7 @@ const crypto = require("node:crypto");
+ const stripeMode = require("../lib/stripe-mode");
+ const stripe = () => {
+   if (!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY)) throw new Error("Live Stripe key is not configured");
+-  return new Stripe(process.env.STRIPE_SECRET_KEY);
++  return new Stripe(process.env.STRIPE_SECRET_KEY, { timeout: 10000, maxNetworkRetries: 0 });
+ };
+ module.exports = async function handler(req, res) {
+   res.setHeader("Cache-Control", "no-store");
+@@ -31,5 +31,11 @@ module.exports = async function handler(req, res) {
+       cancel_url:"https://mrsprinklereno.com/gift-card.html"
+     },{idempotencyKey:"gift-card-"+ref});
+     return res.status(200).json({checkoutUrl:session.url});
+-  } catch(e) { console.error("Gift card checkout error",e.message); return res.status(503).json({error:"Gift-card checkout is not configured yet. Please contact us."}); }
++  } catch(e) {
++    console.error("Gift card checkout error", e.type || e.message);
++    if (e.message === "Live Stripe key is not configured") {
++      return res.status(503).json({ error: "Stripe live key is not configured." });
++    }
++    return res.status(503).json({ error: "Stripe request failed: " + (e.type || "unknown") + ". Please try again." });
++  }
+ };
