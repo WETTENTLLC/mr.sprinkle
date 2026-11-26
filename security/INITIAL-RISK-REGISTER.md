@@ -1,0 +1,47 @@
+# Mr. Sprinkle Security Risk Register
+
+**Status:** Initial technical review — 2026-11-25  
+**Scope:** Public website, connected source repository, Vercel projects, Supabase project, payment backend, and administrative workflows.  
+**Important:** Preliminary register based on limited configuration inspection, not a penetration test or independent audit.
+
+| ID | Risk / observation | Initial severity | Required action | Evidence / status |
+|---|---|---:|---|---|
+| R-01 | Admin dashboard is a static page in the public site repository. The inspected page has noindex metadata, but noindex is not authentication. | Critical | Verify whether live admin page exposes customer or ambassador data or privileged actions. Remove public access or move behind server-side authentication/authorization. | Source reviewed; live access test pending. |
+| R-02 | Admin dashboard instructions say the connected Google Sheet is shared as Anyone with the link can view. | High | Remove public link sharing; restrict access to named accounts; inspect sheet contents and access logs; rotate exposed credentials if any. | Source reviewed; sharing setting not yet verified. |
+| R-03 | Vercel main project has production environment variables recorded with empty values for SUPABASE_SERVICE_ROLE_KEY, STRIPE_PUB_KEY, SUPABASE_URL, STRIPE, and STRIPE_WEBHOOK_SECRET. | High | Determine whether these are intentionally blank placeholders or actual production configuration. Configure only through Vercel secret settings; never commit values. Verify application behavior without exposing values. | Metadata inspected; values were not decrypted. |
+| R-04 | Separate Stripe backend project currently reports no environment variables. | High | Keep payment fulfillment disabled until required sandbox secrets and integrations are configured and verified. Never accept live payments on an incomplete backend. | Metadata inspected. |
+| R-05 | Four Supabase tables have RLS enabled but no policies. Current table grants returned only postgres and service_role, not anon/authenticated. | Medium / controlled | Preserve deny-by-default posture. Do not add broad policies. Verify service-role use is server-only and run negative access tests using anon/authenticated credentials. | Grants and policies queried; advisor reports 4 RLS-enabled-no-policy informational findings. |
+| R-06 | Supabase gift card tables store encrypted gift card code ciphertext and hashed code; service_role has full table privileges. | Medium | Keep service key server-side, restrict access to backend only, test encryption-key rotation and redemption idempotency, audit access. | Schema inspected; operational controls pending. |
+| R-07 | Public PHP and legacy integrations exist in repository; server security guide documents environment-based secrets and least-privilege MySQL. | High | Inventory every deployed PHP endpoint and retire unused test/setup scripts; verify auth, input validation, CSRF protections, and least-privilege DB accounts. | Static sample reviewed; full endpoint inventory pending. |
+| R-08 | No confirmed evidence yet of formal access reviews, MFA coverage, incident exercises, restore tests, vendor agreements, or data retention schedule. | High | Assign owners, perform and record these controls; lack of evidence is not proof they do not exist. | Evidence collection pending. |
+| R-09 | The public repository's ambassador dashboard accepts an ambassador code as the login credential and stores it directly in the session; no password hashing, second factor, or throttling was evident in the inspected page. | Critical | Replace code-only login with individual password authentication using password_hash/password_verify, session regeneration, CSRF protection, rate limiting/lockout, and secure cookie settings. Review whether codes are guessable and rotate them if necessary. | Static source reviewed; production exposure and active use not verified. |
+| R-10 | The ambassador backend exposes an unauthenticated stats lookup by ambassador code. If codes are known or guessed, it can reveal ambassador identity/status and commission totals. | High | Require authenticated ambassador identity and authorization on every stats request; avoid relying on obscurity of referral codes. Return only the requesting ambassador's own data. | Static source reviewed; production route exposure not verified. |
+| R-11 | The older ambassador-backend.php booking handler trusts a submitted ambassador code and applies a 10% discount without validating that the code belongs to an active ambassador. It also sends customer fields into HTML email without output encoding. | High | Validate active ambassador records server-side, centralize pricing rules, validate inputs, escape email HTML, and add abuse/rate controls. Retire duplicate legacy handlers after mapping live callers. | Static source reviewed; production route exposure not verified. |
+| R-13 | The static admin dashboard inserts Google Sheet values into HTML with `innerHTML` and interpolates sheet-controlled fields into inline event handlers. If an untrusted application/order value reaches those cells, it may enable stored or DOM-based script injection in an administrator's browser. | High | Remove direct HTML interpolation; render untrusted values with `textContent`/DOM APIs, validate identifiers, and move privileged actions behind authenticated server-side endpoints. Treat the dashboard as untrusted until replaced or protected. | Static source reviewed; exploitability and live exposure not tested. |
+| R-15 | The separate static `ambassador-portal.html` treats submission of an ambassador code as a successful login by calling the unauthenticated stats endpoint. The code is an attribution identifier, not a strong authentication factor. | Critical | Replace with individual credentials, server-issued sessions, authorization bound to the authenticated ambassador, and rate-limited login. Do not expose commission data from code-only lookups. | Static source reviewed; live exposure not verified. |
+| R-16 | Three legacy booking implementations disagree: two apply 10% discounts and 20% commissions, while the tiered implementation applies 5% discounts and monthly 10%/15%/20% commissions. All accept a submitted code without consistent active-status validation. | High | Identify the actual production booking path and approved commercial rules; consolidate only after regression coverage; validate active ambassador server-side and calculate all prices/commissions server-side. | Static source reviewed; active route and deployed rules not verified. |
+| R-14 | The static admin dashboard stores ambassador records in browser `localStorage` and uses a Google Apps Script endpoint for sheet writes; no server-side identity/role enforcement is present in the page itself. | High | Replace browser-held admin data and direct write workflows with a server-side authenticated API; rotate/restrict Apps Script deployment access and review its execution permissions. | Static source reviewed; Apps Script deployment settings and actual access not verified. |
+| R-12 | business-admin.php uses a single environment-configured admin password. The inspected login compares the password directly and has session/CSRF handling, but no MFA or login throttling was evident in the inspected portion. | High | Add password hashing where credential storage applies, MFA, rate limiting, audit events, session idle/absolute expiry, and secure cookie settings. Verify HTTPS is always enforced. | Static source reviewed; full page and live hosting configuration not verified. |
+
+## Immediate verification checklist
+- [ ] Test unauthenticated access to every admin URL and API.
+- [ ] Remove anyone-with-link sharing from business/customer spreadsheets.
+- [ ] Enable MFA on all administrative platforms.
+- [ ] Verify no secrets in repository history, client-side JavaScript, build output, or logs; rotate any exposed secret.
+- [ ] Confirm Vercel production variables are correct without disclosing values.
+- [ ] Confirm backend project deployment target and payment mode before enabling checkout.
+- [ ] Confirm Supabase public/anon/authenticated roles cannot read or write private tables.
+- [ ] Inventory all production routes, forms, PHP scripts, and third-party integrations.
+- [ ] Verify backups and complete a documented restore test.
+- [ ] Create vendor inventory, data inventory, retention schedule, and incident contact list.
+- [ ] Complete a documented HIPAA applicability decision before collecting PHI.
+- [ ] Replace ambassador code-only login and protect ambassador stats lookup.
+- [ ] Validate ambassador status before applying discounts or creating referral commissions.
+- [ ] Remove unsafe HTML interpolation from the static admin dashboard and replace browser-side privileged actions with authenticated server-side operations.
+- [ ] Map the active PHP/Google Apps Script/Formspree workflow and resolve conflicting legacy discount/commission calculations before changing booking behavior.
+- [ ] Review Google Apps Script deployment permissions and restrict spreadsheet access to named accounts.
+
+## Status language for investor materials
+Permitted: Mr. Sprinkle is implementing a security program aligned to selected SOC 2 Trust Services Criteria and ISO/IEC 27001 control objectives. The company is conducting a gap assessment and remediation.
+
+Not permitted unless independently established: SOC 2 certified, SOC 2 compliant, ISO 27001 certified, HIPAA certified, or HIPAA compliant.
