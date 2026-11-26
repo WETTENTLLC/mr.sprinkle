@@ -8,8 +8,10 @@ This branch adds a dedicated Stripe Checkout endpoint and webhook fulfillment fo
 - `SUPABASE_URL`: URL for the existing Mr-Sprinkle-Orders project.
 - `SUPABASE_SERVICE_ROLE_KEY`: Supabase server-only service role key. Never expose in browser code.
 - `GIFT_CARD_ENCRYPTION_KEY`: base64-encoded 32-byte random key used to encrypt deliverable codes at rest.
-- `RESEND_API_KEY`: Resend API key for gift-card delivery email.
-- `GIFT_CARD_FROM_EMAIL`: verified sender address in Resend (required).\n- `GIFT_CARD_REDEMPTION_ADMIN_KEY`: high-entropy secret for staff-only redemption calls (required before redemption use).
+- `GMAIL_USER`: Gmail address gift cards are sent from (mrsprinklereno@gmail.com).
+- `GMAIL_APP_PASSWORD`: Gmail app password for that account (16 characters, generated in the Google account with 2-step verification on — never the account password).
+- `GIFT_CARD_FROM_EMAIL`: sender address shown on gift-card emails — use the same Gmail address as `GMAIL_USER` (required).
+- `GIFT_CARD_REDEMPTION_ADMIN_KEY`: high-entropy secret for staff-only redemption calls (required before redemption use).
 
 Set variables only in Vercel's encrypted environment settings. Do not commit secrets.
 

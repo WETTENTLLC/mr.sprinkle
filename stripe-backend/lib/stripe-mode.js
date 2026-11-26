@@ -1,13 +1,13 @@
 "use strict";
 
-// This isolated backend is intentionally sandbox-only until a separate,
-// explicitly approved production rollout is completed.
-function isSandboxSecretKey(value) {
-  return typeof value === "string" && value.startsWith("sk_test_");
+// Production rollout: this backend now runs in live mode. Live keys and
+// live Stripe events are required; test-mode keys and events are rejected.
+function isLiveSecretKey(value) {
+  return typeof value === "string" && value.startsWith("sk_live_");
 }
 
-function isSandboxEvent(event) {
-  return Boolean(event && event.livemode === false);
+function isLiveEvent(event) {
+  return Boolean(event && event.livemode === true);
 }
 
-module.exports = { isSandboxSecretKey, isSandboxEvent };
+module.exports = { isLiveSecretKey, isLiveEvent };

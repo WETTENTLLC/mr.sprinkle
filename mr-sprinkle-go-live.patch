@@ -1,0 +1,171 @@
+diff --git a/stripe-backend/GIFT-CARD-SETUP.md b/stripe-backend/GIFT-CARD-SETUP.md
+index 9dd30f2..9a349bc 100644
+--- a/stripe-backend/GIFT-CARD-SETUP.md
++++ b/stripe-backend/GIFT-CARD-SETUP.md
+@@ -8,8 +8,10 @@ This branch adds a dedicated Stripe Checkout endpoint and webhook fulfillment fo
+ - `SUPABASE_URL`: URL for the existing Mr-Sprinkle-Orders project.
+ - `SUPABASE_SERVICE_ROLE_KEY`: Supabase server-only service role key. Never expose in browser code.
+ - `GIFT_CARD_ENCRYPTION_KEY`: base64-encoded 32-byte random key used to encrypt deliverable codes at rest.
+-- `RESEND_API_KEY`: Resend API key for gift-card delivery email.
+-- `GIFT_CARD_FROM_EMAIL`: verified sender address in Resend (required).\n- `GIFT_CARD_REDEMPTION_ADMIN_KEY`: high-entropy secret for staff-only redemption calls (required before redemption use).
++- `GMAIL_USER`: Gmail address gift cards are sent from (mrsprinklereno@gmail.com).
++- `GMAIL_APP_PASSWORD`: Gmail app password for that account (16 characters, generated in the Google account with 2-step verification on — never the account password).
++- `GIFT_CARD_FROM_EMAIL`: sender address shown on gift-card emails — use the same Gmail address as `GMAIL_USER` (required).
++- `GIFT_CARD_REDEMPTION_ADMIN_KEY`: high-entropy secret for staff-only redemption calls (required before redemption use).
+ 
+ Set variables only in Vercel's encrypted environment settings. Do not commit secrets.
+ 
+diff --git a/stripe-backend/api/create-checkout-session.js b/stripe-backend/api/create-checkout-session.js
+index 24e38ec..2a98053 100644
+--- a/stripe-backend/api/create-checkout-session.js
++++ b/stripe-backend/api/create-checkout-session.js
+@@ -4,8 +4,8 @@ const estimateEngine = require("../lib/grill-estimate");
+ const stripeMode = require("../lib/stripe-mode");
+ 
+ const stripe = () => {
+-  if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) {
+-    throw new Error("Sandbox Stripe secret key is not configured");
++  if (!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY)) {
++    throw new Error("Live Stripe secret key is not configured");
+   }
+   return new Stripe(process.env.STRIPE_SECRET_KEY);
+ };
+@@ -35,8 +35,8 @@ module.exports = async function handler(req, res) {
+   }
+ 
+   try {
+-    if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) {
+-      return res.status(503).json({ error: "Sandbox checkout is not configured." });
++    if (!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY)) {
++      return res.status(503).json({ error: "Live checkout is not configured." });
+     }
+ 
+     const body = req.body || {};
+diff --git a/stripe-backend/api/create-gift-card-checkout.js b/stripe-backend/api/create-gift-card-checkout.js
+index 3ba0c42..7327eb6 100644
+--- a/stripe-backend/api/create-gift-card-checkout.js
++++ b/stripe-backend/api/create-gift-card-checkout.js
+@@ -2,7 +2,7 @@ const Stripe = require("stripe");
+ const crypto = require("node:crypto");
+ const stripeMode = require("../lib/stripe-mode");
+ const stripe = () => {
+-  if (!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY)) throw new Error("Sandbox Stripe key is not configured");
++  if (!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY)) throw new Error("Live Stripe key is not configured");
+   return new Stripe(process.env.STRIPE_SECRET_KEY);
+ };
+ module.exports = async function handler(req, res) {
+diff --git a/stripe-backend/api/webhook.js b/stripe-backend/api/webhook.js
+index 7f25924..499acde 100644
+--- a/stripe-backend/api/webhook.js
++++ b/stripe-backend/api/webhook.js
+@@ -1,19 +1,20 @@
+ const Stripe = require("stripe");
++const nodemailer = require("nodemailer");
+ const crypto = require("node:crypto");
+ const stripeMode = require("../lib/stripe-mode");
+ module.exports.config = { api: { bodyParser: false } };
+ function raw(req){return new Promise((resolve,reject)=>{const a=[];req.on("data",c=>a.push(Buffer.from(c)));req.on("end",()=>resolve(Buffer.concat(a)));req.on("error",reject);});}
+-function env(){for(const k of ["STRIPE_SECRET_KEY","STRIPE_WEBHOOK_SECRET","SUPABASE_URL","SUPABASE_SERVICE_ROLE_KEY","GIFT_CARD_ENCRYPTION_KEY","RESEND_API_KEY","GIFT_CARD_FROM_EMAIL"])if(!process.env[k])throw new Error("Missing "+k);if(!stripeMode.isSandboxSecretKey(process.env.STRIPE_SECRET_KEY))throw new Error("Sandbox Stripe key required");}
++function env(){for(const k of ["STRIPE_SECRET_KEY","STRIPE_WEBHOOK_SECRET","SUPABASE_URL","SUPABASE_SERVICE_ROLE_KEY","GIFT_CARD_ENCRYPTION_KEY","GMAIL_USER","GMAIL_APP_PASSWORD","GIFT_CARD_FROM_EMAIL"])if(!process.env[k])throw new Error("Missing "+k);if(!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY))throw new Error("Live Stripe key required");}
+ async function db(path,method="GET",body){const r=await fetch(process.env.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/"+path,{method,headers:{apikey:process.env.SUPABASE_SERVICE_ROLE_KEY,Authorization:"Bearer "+process.env.SUPABASE_SERVICE_ROLE_KEY,"Content-Type":"application/json",Prefer:"return=representation,resolution=ignore-duplicates"},...(body?{body:JSON.stringify(body)}:{})});const t=await r.text();if(!r.ok)throw new Error("Supabase "+r.status+": "+t);return t?JSON.parse(t):[];}
+ function key(){const k=Buffer.from(process.env.GIFT_CARD_ENCRYPTION_KEY,"base64");if(k.length!==32)throw new Error("GIFT_CARD_ENCRYPTION_KEY must be base64-encoded 32 bytes");return k;}
+ function encrypt(code){const iv=crypto.randomBytes(12),c=crypto.createCipheriv("aes-256-gcm",key(),iv),data=Buffer.concat([c.update(code,"utf8"),c.final()]);return [iv.toString("base64"),c.getAuthTag().toString("base64"),data.toString("base64")].join(".");}
+ function decrypt(blob){const [iv,tag,data]=blob.split(".");const d=crypto.createDecipheriv("aes-256-gcm",key(),Buffer.from(iv,"base64"));d.setAuthTag(Buffer.from(tag,"base64"));return Buffer.concat([d.update(Buffer.from(data,"base64")),d.final()]).toString("utf8");}
+-async function send(email,code,value){const r=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.GIFT_CARD_FROM_EMAIL,to:[email],subject:"Your Mr. Sprinkle Gift Card",html:"<div style='background:#080808;color:#fff;padding:28px;font-family:Arial'><h1 style='color:#d4af37'>Mr. Sprinkle Luxury Gift Card</h1><p>Your gift card is ready.</p><h2 style='color:#d4af37'>$"+(value/100).toFixed(2)+" value</h2><p>Gift card code:</p><h2 style='letter-spacing:2px'>"+code+"</h2><p>Keep this code private. Contact wettentertainmentllc@gmail.com for assistance.</p></div>"})});if(!r.ok)throw new Error("Gift card email failed: "+await r.text());}
++async function send(email,code,value){const transporter=nodemailer.createTransport({host:"smtp.gmail.com",port:465,secure:true,auth:{user:process.env.GMAIL_USER,pass:process.env.GMAIL_APP_PASSWORD}});await transporter.sendMail({from:process.env.GIFT_CARD_FROM_EMAIL,to:email,subject:"Your Mr. Sprinkle Gift Card",html:"<div style='background:#080808;color:#fff;padding:28px;font-family:Arial'><h1 style='color:#d4af37'>Mr. Sprinkle Luxury Gift Card</h1><p>Your gift card is ready.</p><h2 style='color:#d4af37'>$"+(value/100).toFixed(2)+" value</h2><p>Gift card code:</p><h2 style='letter-spacing:2px'>"+code+"</h2><p>Keep this code private. Contact wettentertainmentllc@gmail.com for assistance.</p></div>"});}
+ module.exports=async function(req,res){if(req.method!=="POST"){res.setHeader("Allow","POST");return res.status(405).send("Method not allowed");}
+-try{env();const event=new Stripe(process.env.STRIPE_SECRET_KEY).webhooks.constructEvent(await raw(req),req.headers["stripe-signature"],process.env.STRIPE_WEBHOOK_SECRET);if(!stripeMode.isSandboxEvent(event))return res.status(400).send("Sandbox events only");
++try{env();const event=new Stripe(process.env.STRIPE_SECRET_KEY).webhooks.constructEvent(await raw(req),req.headers["stripe-signature"],process.env.STRIPE_WEBHOOK_SECRET);if(!stripeMode.isLiveEvent(event))return res.status(400).send("Live events only");
+ const eventPath="stripe_webhook_events?stripe_event_id=eq."+encodeURIComponent(event.id);
+ const prior=await db(eventPath);if(prior[0]?.processing_status==="processed"||prior[0]?.processing_status==="ignored")return res.status(200).json({received:true,duplicate:true});
+-if(!prior.length)await db("stripe_webhook_events?on_conflict=stripe_event_id","POST",{stripe_event_id:event.id,event_type:event.type,livemode:false,processing_status:"received",payload:event});
++if(!prior.length)await db("stripe_webhook_events?on_conflict=stripe_event_id","POST",{stripe_event_id:event.id,event_type:event.type,livemode:event.livemode,processing_status:"received",payload:event});
+ await db(eventPath,"PATCH",{processing_status:"received",attempt_count:(prior[0]?.attempt_count||0)+1,last_error:null});
+ if(event.type==="checkout.session.completed"||event.type==="checkout.session.async_payment_succeeded"){
+  const s=event.data.object;if(s.payment_status!=="paid"||s.metadata?.product_type!=="gift_card"){await db(eventPath,"PATCH",{processing_status:"ignored",processed_at:new Date().toISOString()});return res.status(200).json({received:true,ignored:true});}
+diff --git a/stripe-backend/lib/stripe-mode.js b/stripe-backend/lib/stripe-mode.js
+index 3f1a567..111e099 100644
+--- a/stripe-backend/lib/stripe-mode.js
++++ b/stripe-backend/lib/stripe-mode.js
+@@ -1,13 +1,13 @@
+ "use strict";
+ 
+-// This isolated backend is intentionally sandbox-only until a separate,
+-// explicitly approved production rollout is completed.
+-function isSandboxSecretKey(value) {
+-  return typeof value === "string" && value.startsWith("sk_test_");
++// Production rollout: this backend now runs in live mode. Live keys and
++// live Stripe events are required; test-mode keys and events are rejected.
++function isLiveSecretKey(value) {
++  return typeof value === "string" && value.startsWith("sk_live_");
+ }
+ 
+-function isSandboxEvent(event) {
+-  return Boolean(event && event.livemode === false);
++function isLiveEvent(event) {
++  return Boolean(event && event.livemode === true);
+ }
+ 
+-module.exports = { isSandboxSecretKey, isSandboxEvent };
++module.exports = { isLiveSecretKey, isLiveEvent };
+diff --git a/stripe-backend/package.json b/stripe-backend/package.json
+index 107289f..f5dbb9f 100644
+--- a/stripe-backend/package.json
++++ b/stripe-backend/package.json
+@@ -8,6 +8,7 @@
+     "test": "node --test"
+   },
+   "dependencies": {
+-    "stripe": "^18.5.0"
++    "stripe": "^18.5.0",
++    "nodemailer": "^6.9.14"
+   }
+ }
+diff --git a/stripe-backend/test/grill-estimate.test.js b/stripe-backend/test/grill-estimate.test.js
+index 79481b4..f63bbdb 100644
+--- a/stripe-backend/test/grill-estimate.test.js
++++ b/stripe-backend/test/grill-estimate.test.js
+@@ -93,18 +93,18 @@ test("stone selection requires a valid positive quantity", () => {
+ 
+ const stripeMode = require("../lib/stripe-mode");
+ 
+-test("only Stripe test-mode secret keys are accepted", () => {
+-  assert.equal(stripeMode.isSandboxSecretKey("sk_test_example"), true);
+-  assert.equal(stripeMode.isSandboxSecretKey("sk_live_example"), false);
+-  assert.equal(stripeMode.isSandboxSecretKey(""), false);
+-  assert.equal(stripeMode.isSandboxSecretKey(undefined), false);
++test("only Stripe live-mode secret keys are accepted", () => {
++  assert.equal(stripeMode.isLiveSecretKey("sk_live_example"), true);
++  assert.equal(stripeMode.isLiveSecretKey("sk_test_example"), false);
++  assert.equal(stripeMode.isLiveSecretKey(""), false);
++  assert.equal(stripeMode.isLiveSecretKey(undefined), false);
+ });
+ 
+-test("only explicitly non-live webhook events are accepted", () => {
+-  assert.equal(stripeMode.isSandboxEvent({ livemode: false }), true);
+-  assert.equal(stripeMode.isSandboxEvent({ livemode: true }), false);
+-  assert.equal(stripeMode.isSandboxEvent({}), false);
+-  assert.equal(stripeMode.isSandboxEvent(null), false);
++test("only explicitly live webhook events are accepted", () => {
++  assert.equal(stripeMode.isLiveEvent({ livemode: true }), true);
++  assert.equal(stripeMode.isLiveEvent({ livemode: false }), false);
++  assert.equal(stripeMode.isLiveEvent({}), false);
++  assert.equal(stripeMode.isLiveEvent(null), false);
+ });
+ 
+ 
+diff --git a/stripe-backend/vercel.json b/stripe-backend/vercel.json
+deleted file mode 100644
+index d17b1ab..0000000
+--- a/stripe-backend/vercel.json
++++ /dev/null
+@@ -1,9 +0,0 @@
+-{
+-  "version": 2,
+-  "builds": [
+-    { "src": "api/**/*.js", "use": "@vercel/node" }
+-  ],
+-  "routes": [
+-    { "src": "/api/(.*)", "dest": "/api/$1" }
+-  ]
+-}

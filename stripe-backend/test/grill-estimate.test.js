@@ -93,18 +93,18 @@ test("stone selection requires a valid positive quantity", () => {
 
 const stripeMode = require("../lib/stripe-mode");
 
-test("only Stripe test-mode secret keys are accepted", () => {
-  assert.equal(stripeMode.isSandboxSecretKey("sk_test_example"), true);
-  assert.equal(stripeMode.isSandboxSecretKey("sk_live_example"), false);
-  assert.equal(stripeMode.isSandboxSecretKey(""), false);
-  assert.equal(stripeMode.isSandboxSecretKey(undefined), false);
+test("only Stripe live-mode secret keys are accepted", () => {
+  assert.equal(stripeMode.isLiveSecretKey("sk_live_example"), true);
+  assert.equal(stripeMode.isLiveSecretKey("sk_test_example"), false);
+  assert.equal(stripeMode.isLiveSecretKey(""), false);
+  assert.equal(stripeMode.isLiveSecretKey(undefined), false);
 });
 
-test("only explicitly non-live webhook events are accepted", () => {
-  assert.equal(stripeMode.isSandboxEvent({ livemode: false }), true);
-  assert.equal(stripeMode.isSandboxEvent({ livemode: true }), false);
-  assert.equal(stripeMode.isSandboxEvent({}), false);
-  assert.equal(stripeMode.isSandboxEvent(null), false);
+test("only explicitly live webhook events are accepted", () => {
+  assert.equal(stripeMode.isLiveEvent({ livemode: true }), true);
+  assert.equal(stripeMode.isLiveEvent({ livemode: false }), false);
+  assert.equal(stripeMode.isLiveEvent({}), false);
+  assert.equal(stripeMode.isLiveEvent(null), false);
 });
 
 
