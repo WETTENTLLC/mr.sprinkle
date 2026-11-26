@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
       customer_email:email,
       client_reference_id:ref,
       metadata:{product_type:"gift_card",gift_card_reference:ref,face_value_cents:String(face*100),discount_percent:"10"},
-      payment_intent_data:{metadata:{product_type:"gift_card",gift_card_reference:ref}},
+      payment_intent_data:{statement_descriptor_suffix:"GRILLZ USA",metadata:{product_type:"gift_card",gift_card_reference:ref}},
       success_url:"https://mrsprinklereno.com/gift-card-success.html?session_id={CHECKOUT_SESSION_ID}",
       cancel_url:"https://mrsprinklereno.com/gift-card.html"
     },{idempotencyKey:"gift-card-"+ref});
