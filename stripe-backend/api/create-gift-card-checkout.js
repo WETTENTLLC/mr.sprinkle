@@ -2,8 +2,19 @@ const Stripe = require("stripe");
 const crypto = require("node:crypto");
 const stripeMode = require("../lib/stripe-mode");
 const stripe = () => {
-  if (!stripeMode.isLiveSecretKey(process.env.STRIPE_SECRET_KEY)) throw new Error("Live Stripe key is not configured");
-  return new Stripe(process.env.STRIPE_SECRET_KEY, { timeout: 10000, maxNetworkRetries: 0 });
+  const rawKey = process.env.STRIPE_SECRET_KEY;
+  const key = typeof rawKey === "string" ? rawKey.trim() : "";
+  if (!stripeMode.isLiveSecretKey(key)) {
+    // Safe diagnostics only: never log the key or any portion of its value.
+    console.error("Stripe key configuration diagnostic", {
+      variablePresent: typeof rawKey === "string" && rawKey.length > 0,
+      rawLength: typeof rawKey === "string" ? rawKey.length : 0,
+      trimmedLength: key.length,
+      acceptedLivePrefix: stripeMode.isLiveSecretKey(key)
+    });
+    throw new Error("Live Stripe key is not configured");
+  }
+  return new Stripe(key, { timeout: 10000, maxNetworkRetries: 0 });
 };
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -17,7 +28,7 @@ module.exports = async function handler(req, res) {
     const face = Number(req.body && req.body.faceValue);
     if (!Number.isInteger(face) || face < 100 || face > 1500 || (face - 100) % 50 !== 0) return res.status(400).json({error:"Choose $100 to $1,500 in $50 increments."});
     const email = String(req.body.email || "").trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address for gift-card delivery."});
+    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return res.status(400).json({error:"Enter a valid email address for gift-card delivery."});
     const ref = crypto.randomUUID();
     const pay = Math.round(face * 90);
     const session = await stripe().checkout.sessions.create({
