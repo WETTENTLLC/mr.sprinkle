@@ -1,7 +1,7 @@
 (function (root) {
 const catalog = Object.freeze({
     // Bump this whenever any price or pricing rule changes.
-    version: "2026-11-24-approved-pair-addons",
+    version: "2026-11-24-permanent-single-tooth-premium",
     grillz: Object.freeze({
         silver: Object.freeze({ perTooth: 100, label: "Silver", teeth: Object.freeze({ 1: 100, 6: 600, 12: 1200 }) }),
         gold10k: Object.freeze({ perTooth: 240, label: "10K Gold", teeth: Object.freeze({ 1: 240, 6: 1440, 12: 2880 }) }),
@@ -84,14 +84,17 @@ const catalog = Object.freeze({
     // are priced per pair of teeth. The other finish cuts remain per arch piece.
     customCuts: Object.freeze({
         individualFabrication: 10,
+        permanentSingleTooth: 40,
         diamondDust: 30,
         centerSplit: 20,
         openFace: 40,
         deepBar: 15
     }),
     pairBasedCuts: Object.freeze(["individualFabrication", "deepBar"]),
+    perToothCuts: Object.freeze(["permanentSingleTooth"]),
     customCutLabels: Object.freeze({
         individualFabrication: "Individual-tooth fabrication",
+        permanentSingleTooth: "Permanent single-tooth design",
         diamondDust: "Diamond / Dust cut",
         centerSplit: "Center / Split line",
         openFace: "Open face / Window cut",

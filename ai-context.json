@@ -118,6 +118,11 @@
     "customCutsPerPair": {
       "individual-tooth fabrication": 10,
       "deep/bar cut": 15
+    },
+    "permanentSingleToothDesign": {
+      "pricePerTooth": 40,
+      "basis": "per selected tooth",
+      "description": "Individually crafted separate teeth with space between teeth for flossing and a permanent-looking gold-teeth aesthetic; premium design upgrade, not a dental appliance."
     }
   },
   "quoteBased": [
@@ -171,6 +176,10 @@
     {
       "question": "Can customers from Tahoe, the Bay Area, or Seattle book a local office?",
       "answer": "No. The only in-person appointment venue is Envy Kutz — Braids & Locs in Reno, Nevada. Customers in nearby Northern Nevada communities may request availability; mobile mold and shipping arrangements must be confirmed individually. There are no Mr. Sprinkle offices in Tahoe, the Bay Area, or Seattle."
+    },
+    {
+      "question": "What is the permanent single-tooth design upgrade?",
+      "answer": "The permanent single-tooth design is a $40-per-tooth premium upgrade. Each tooth is individually crafted with spacing between teeth to allow flossing and create a permanent-looking gold-teeth aesthetic. It is a removable grillz design, not a dental appliance."
     }
   ],
   "pricingNotes": [
@@ -180,7 +189,8 @@
     "Custom finishes and designs outside the published catalog require a custom quote.",
     "Rush shipping is $150 and replaces standard $60 shipping; rush eligibility and capacity must be confirmed.",
     "The exact teeth included in published 6-tooth and 12-tooth tiers should be confirmed with the customer before the order is accepted.",
-    "Never present quote-based materials or services with an invented fixed price."
+    "Never present quote-based materials or services with an invented fixed price.",
+    "Permanent single-tooth design is a separate $40-per-tooth premium upgrade; do not confuse it with standard individual-tooth fabrication at $10 per pair."
   ],
   "unconfirmedBusinessRules": [
     "Definitions of the published 6-tooth and 12-tooth sets",
@@ -234,6 +244,7 @@
     "customCuts": "Individual-tooth fabrication is $10 per pair of teeth and deep/bar cuts are $15 per pair of teeth. Diamond/Dust is $30 per upper/lower set, Center/Split is $20 per upper/lower set, and Open Face/Window is $40 per upper/lower set; an upper piece and lower piece are separate sets.",
     "stoneSettingLabor": "included in published pricing",
     "rushShipping": "$150 and replaces the $60 standard shipping charge",
-    "quoteOnly": "18K gold, white gold, platinum, custom finishes, and other non-catalog designs require a custom quote"
+    "quoteOnly": "18K gold, white gold, platinum, custom finishes, and other non-catalog designs require a custom quote",
+    "permanentSingleToothDesign": "$40 per selected tooth, separate from the $10-per-pair individual-tooth fabrication option."
   }
 }

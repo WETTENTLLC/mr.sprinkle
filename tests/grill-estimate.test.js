@@ -244,3 +244,12 @@ test("Grill Maker captures referral codes and includes them in the owner notific
   assert.match(html, /urlParams\.get\("ref"\)/);
   assert.match(html, /ambassador_code: formData\.get\('ambassadorCode'\)/);
 });
+
+
+test("permanent single-tooth design is a separate $40-per-tooth premium upgrade", () => {
+  const six = E.calculate({ metal: "silver", upperCount: 6, cuts: "permanentSingleTooth" });
+  assert.equal(six.total, 6 * 100 + 6 * 40 + 60);
+  assert.ok(six.lines.some(line => line.label.includes("$40 per tooth") && line.amount === 240));
+  const eight = E.calculate({ metal: "gold10k", lowerCount: 8, cuts: "permanentSingleTooth" });
+  assert.equal(eight.total, 8 * 240 + 8 * 40 + 60);
+});
